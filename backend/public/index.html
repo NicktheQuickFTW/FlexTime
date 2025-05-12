@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FlexTime Dashboard</title>
+  <style>
+    body { font-family: Arial; margin: 0; padding: 0; background: #f0f4f8; }
+    .header { background: #0a2463; color: white; padding: 20px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    .card { background: white; border-radius: 5px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    .status { color: green; font-weight: bold; }
+    .flex-row { display: flex; flex-wrap: wrap; gap: 20px; }
+    .flex-col { flex: 1; min-width: 300px; }
+    footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="container">
+      <h1>FlexTime Scheduling System</h1>
+    </div>
+  </div>
+  
+  <div class="container">
+    <div class="card">
+      <h2>System Status</h2>
+      <p class="status">✓ All Services Running</p>
+      <p>Version: 1.0.0</p>
+    </div>
+    
+    <div class="flex-row">
+      <div class="flex-col">
+        <div class="card">
+          <h2>Big 12 Scheduling</h2>
+          <p>Advanced scheduling algorithms for Big 12 Championship sports</p>
+          <ul>
+            <li>Multi-Variable Optimization</li>
+            <li>League-Specific Adaptability</li>
+            <li>Travel Partner System for Tennis</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="flex-col">
+        <div class="card">
+          <h2>Intelligence Engine</h2>
+          <p>AI-powered recommendations based on historical data</p>
+          <ul>
+            <li>Pattern Recognition</li>
+            <li>Historical Data Analysis</li>
+            <li>Continuous Learning System</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    
+    <div class="card">
+      <h2>API Endpoints</h2>
+      <ul>
+        <li><code>/api/status</code> - API Status</li>
+        <li><code>/api/schedule</code> - Scheduling API</li>
+        <li><code>/api/intelligence-engine</code> - Intelligence Engine API</li>
+      </ul>
+    </div>
+  </div>
+  
+  <footer>
+    <p>FlexTime Scheduling System v2.1.0 | HELiiX Platform</p>
+  </footer>
+</body>
+</html>

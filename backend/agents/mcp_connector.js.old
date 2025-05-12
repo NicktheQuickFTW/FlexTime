@@ -1,0 +1,304 @@
+/**
+ * MCP Server Connector for the FlexTime multi-agent system.
+ * 
+ * This module implements the integration with the Model Context Protocol server
+ * to enable AI-enhanced capabilities across the agent system.
+ */
+
+const axios = require('axios');
+const logger = require('../../utils/logger');
+
+/**
+ * Connector for interacting with the Model Context Protocol server.
+ */
+class MCPConnector {
+  /**
+   * Initialize a new MCP Server Connector.
+   * 
+   * @param {object} config - Configuration options
+   * @param {string} config.serverUrl - URL of the MCP server
+   * @param {string} config.apiKey - API key for authentication
+   * @param {number} config.timeout - Request timeout in milliseconds
+   * @param {boolean} config.enableCaching - Whether to enable response caching
+   */
+  constructor(config = {}) {
+    this.serverUrl = config.serverUrl || process.env.MCP_SERVER_URL || 'http://localhost:3000/api';
+    this.apiKey = config.apiKey || process.env.MCP_API_KEY;
+    this.timeout = config.timeout || 30000;
+    this.enableCaching = config.enableCaching !== false;
+    
+    // Initialize cache
+    this.responseCache = {};
+    
+    // Initialize HTTP client
+    this.client = axios.create({
+      baseURL: this.serverUrl,
+      timeout: this.timeout,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${this.apiKey}`
+      }
+    });
+    
+    logger.info('MCP Server Connector initialized');
+  }
+  
+  /**
+   * Send a request to the MCP server.
+   * 
+   * @param {string} model - AI model to use
+   * @param {string} prompt - Prompt text
+   * @param {object} context - Context data
+   * @param {string} cacheKey - Key for caching (null to disable caching)
+   * @returns {Promise<object>} Model response
+   */
+  async sendRequest(model, prompt, context = {}, cacheKey = null) {
+    // Check cache if enabled and key provided
+    if (this.enableCaching && cacheKey && this.responseCache[cacheKey]) {
+      logger.info(`Using cached response for key: ${cacheKey}`);
+      return this.responseCache[cacheKey];
+    }
+    
+    try {
+      // Prepare request payload
+      const payload = {
+        model,
+        prompt,
+        context,
+        options: {
+          temperature: 0.2,
+          max_tokens: 2000
+        }
+      };
+      
+      logger.info(`Sending request to MCP server (model: ${model})`);
+      
+      // Send request to MCP server
+      const response = await this.client.post('/generate', payload);
+      
+      // Cache response if enabled and key provided
+      if (this.enableCaching && cacheKey) {
+        this.responseCache[cacheKey] = response.data;
+      }
+      
+      return response.data;
+    } catch (error) {
+      logger.error(`MCP server request failed: ${error.message}`);
+      
+      // Provide fallback response
+      return {
+        status: 'error',
+        error: error.message,
+        content: null
+      };
+    }
+  }
+  
+  /**
+   * Check if the MCP server is available.
+   * 
+   * @returns {Promise<boolean>} Whether the server is available
+   */
+  async checkAvailability() {
+    try {
+      const response = await this.client.get('/status');
+      return response.data.status === 'ok';
+    } catch (error) {
+      logger.error(`MCP server availability check failed: ${error.message}`);
+      return false;
+    }
+  }
+  
+  /**
+   * Clear the response cache.
+   * 
+   * @param {string} cacheKey - Specific key to clear (null to clear all)
+   */
+  clearCache(cacheKey = null) {
+    if (cacheKey) {
+      delete this.responseCache[cacheKey];
+      logger.info(`Cleared cache for key: ${cacheKey}`);
+    } else {
+      this.responseCache = {};
+      logger.info('Cleared entire response cache');
+    }
+  }
+  
+  /**
+   * Get available AI models from the MCP server.
+   * 
+   * @returns {Promise<Array<object>>} List of available models
+   */
+  async getAvailableModels() {
+    try {
+      const response = await this.client.get('/models');
+      return response.data.models;
+    } catch (error) {
+      logger.error(`Failed to get available models: ${error.message}`);
+      return [];
+    }
+  }
+  
+  /**
+   * Send a batch of requests to the MCP server.
+   * 
+   * @param {Array<object>} requests - List of request objects
+   * @returns {Promise<Array<object>>} List of responses
+   */
+  async sendBatchRequests(requests) {
+    try {
+      const payload = {
+        requests: requests.map(req => ({
+          model: req.model,
+          prompt: req.prompt,
+          context: req.context || {},
+          options: req.options || {
+            temperature: 0.2,
+            max_tokens: 2000
+          }
+        }))
+      };
+      
+      logger.info(`Sending batch request to MCP server (${requests.length} requests)`);
+      
+      const response = await this.client.post('/batch', payload);
+      return response.data.responses;
+    } catch (error) {
+      logger.error(`MCP server batch request failed: ${error.message}`);
+      
+      // Provide fallback responses
+      return requests.map(() => ({
+        status: 'error',
+        error: error.message,
+        content: null
+      }));
+    }
+  }
+  
+  /**
+   * Stream a response from the MCP server.
+   * 
+   * @param {string} model - AI model to use
+   * @param {string} prompt - Prompt text
+   * @param {object} context - Context data
+   * @param {function} onChunk - Callback for each response chunk
+   * @returns {Promise<object>} Complete model response
+   */
+  async streamResponse(model, prompt, context = {}, onChunk) {
+    try {
+      // Prepare request payload
+      const payload = {
+        model,
+        prompt,
+        context,
+        options: {
+          temperature: 0.2,
+          max_tokens: 2000,
+          stream: true
+        }
+      };
+      
+      logger.info(`Streaming response from MCP server (model: ${model})`);
+      
+      // Send streaming request to MCP server
+      const response = await this.client.post('/generate/stream', payload, {
+        responseType: 'stream'
+      });
+      
+      let fullContent = '';
+      
+      // Process the stream
+      response.data.on('data', (chunk) => {
+        const chunkData = JSON.parse(chunk.toString());
+        fullContent += chunkData.content || '';
+        
+        if (onChunk && typeof onChunk === 'function') {
+          onChunk(chunkData);
+        }
+      });
+      
+      // Return a promise that resolves when the stream ends
+      return new Promise((resolve, reject) => {
+        response.data.on('end', () => {
+          resolve({
+            status: 'success',
+            content: fullContent
+          });
+        });
+        
+        response.data.on('error', (error) => {
+          reject(error);
+        });
+      });
+    } catch (error) {
+      logger.error(`MCP server streaming request failed: ${error.message}`);
+      
+      // Provide fallback response
+      return {
+        status: 'error',
+        error: error.message,
+        content: null
+      };
+    }
+  }
+  
+  /**
+   * Get embedding for a text input.
+   * 
+   * @param {string} text - Text to embed
+   * @param {string} model - Embedding model to use
+   * @returns {Promise<object>} Embedding response
+   */
+  async getEmbedding(text, model = 'text-embedding-ada-002') {
+    try {
+      const payload = {
+        model,
+        input: text
+      };
+      
+      logger.info(`Getting embedding from MCP server (model: ${model})`);
+      
+      const response = await this.client.post('/embeddings', payload);
+      return response.data;
+    } catch (error) {
+      logger.error(`MCP server embedding request failed: ${error.message}`);
+      
+      // Provide fallback response
+      return {
+        status: 'error',
+        error: error.message,
+        embedding: null
+      };
+    }
+  }
+  
+  /**
+   * Configure the MCP connector.
+   * 
+   * @param {object} config - Configuration options
+   */
+  configure(config = {}) {
+    if (config.serverUrl) {
+      this.serverUrl = config.serverUrl;
+      this.client.defaults.baseURL = config.serverUrl;
+    }
+    
+    if (config.apiKey) {
+      this.apiKey = config.apiKey;
+      this.client.defaults.headers.Authorization = `Bearer ${config.apiKey}`;
+    }
+    
+    if (config.timeout) {
+      this.timeout = config.timeout;
+      this.client.defaults.timeout = config.timeout;
+    }
+    
+    if (config.enableCaching !== undefined) {
+      this.enableCaching = config.enableCaching;
+    }
+    
+    logger.info('MCP Server Connector reconfigured');
+  }
+}
+
+module.exports = MCPConnector;

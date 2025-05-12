@@ -1,0 +1,705 @@
+{
+  "id": "3f22325e-dc1f-4533-9f7b-714a7fddf1b1",
+  "name": "Big Tournament 2025",
+  "sport": "Basketball",
+  "season": "2025-2026",
+  "start_date": "2025-11-01T00:00:00.000Z",
+  "end_date": "2026-03-15T00:00:00.000Z",
+  "games": [
+    {
+      "id": "f0e2f53d-c05b-4441-ae6a-fd679aa45ae5",
+      "date": "2026-02-01",
+      "time": "19:30",
+      "home_team": "North University",
+      "away_team": "East College",
+      "venue": "North University Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "f749bba8-9610-48d7-8a15-c80114ec8ef3",
+      "date": "2025-11-07",
+      "time": "00:30",
+      "home_team": "North University",
+      "away_team": "South University",
+      "venue": "North University Arena",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "0639395a-3e39-49c4-a586-04df19653227",
+      "date": "2025-11-13",
+      "time": "02:30",
+      "home_team": "North University",
+      "away_team": "West College",
+      "venue": "North University Arena"
+    },
+    {
+      "id": "d8d0cafa-5db7-43a4-8c08-41360bcdf4db",
+      "date": "2025-12-10",
+      "time": "23:00",
+      "home_team": "North University",
+      "away_team": "Central State",
+      "venue": "North University Arena",
+      "special_designation": "Championship",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "e7786d83-a96e-462c-9e05-fcd42d19f7a4",
+      "date": "2026-03-12",
+      "time": "00:30",
+      "home_team": "North University",
+      "away_team": "Mountain Tech",
+      "venue": "North University Arena",
+      "special_designation": "Championship",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "69a6566f-34e4-430c-a32b-3ee86f55e387",
+      "date": "2026-01-27",
+      "time": "20:00",
+      "home_team": "North University",
+      "away_team": "Coastal University",
+      "venue": "North University Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "5e8da0d4-814d-4565-8be1-713d0ca9c697",
+      "date": "2026-01-06",
+      "time": "23:00",
+      "home_team": "North University",
+      "away_team": "Lake College",
+      "venue": "North University Arena",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "406aba2b-373b-4252-b235-bc418ddf08b9",
+      "date": "2026-03-12",
+      "time": "17:00",
+      "home_team": "East College",
+      "away_team": "North University",
+      "venue": "East College Arena",
+      "special_designation": "Championship",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "11d6c277-0cfe-4a6e-be5e-78e8870d141c",
+      "date": "2025-12-05",
+      "time": "01:30",
+      "home_team": "East College",
+      "away_team": "South University",
+      "venue": "East College Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "493dbe2b-f85e-431c-b664-5f45fb7eb024",
+      "date": "2026-01-18",
+      "time": "19:30",
+      "home_team": "East College",
+      "away_team": "West College",
+      "venue": "East College Arena",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "c1b18874-ad2d-4d8a-8eac-455f421382cd",
+      "date": "2026-01-04",
+      "time": "22:30",
+      "home_team": "East College",
+      "away_team": "Central State",
+      "venue": "East College Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "dc8a4576-141a-4140-bcf1-18a89780f245",
+      "date": "2025-12-05",
+      "time": "00:30",
+      "home_team": "East College",
+      "away_team": "Mountain Tech",
+      "venue": "East College Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "e77221c9-7863-4c79-bbf6-e0d9156ccb34",
+      "date": "2026-02-27",
+      "time": "01:30",
+      "home_team": "East College",
+      "away_team": "Coastal University",
+      "venue": "East College Arena",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "44bf4628-6679-49aa-b5c9-e83fe17752ca",
+      "date": "2025-11-25",
+      "time": "20:00",
+      "home_team": "East College",
+      "away_team": "Lake College",
+      "venue": "East College Arena",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "5c22ab2d-71cb-41be-8eb8-cbe88793a6e2",
+      "date": "2026-03-03",
+      "time": "23:00",
+      "home_team": "South University",
+      "away_team": "North University",
+      "venue": "South University Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "39734761-7dd8-4fd0-8ee0-ad3768ca8e9e",
+      "date": "2026-01-10",
+      "time": "00:30",
+      "home_team": "South University",
+      "away_team": "East College",
+      "venue": "South University Arena",
+      "special_designation": "Season Opener"
+    },
+    {
+      "id": "c1351361-86d6-4719-8cb3-05a64e870d2f",
+      "date": "2026-02-13",
+      "time": "02:30",
+      "home_team": "South University",
+      "away_team": "West College",
+      "venue": "South University Arena",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "36bd1f6e-dc17-450f-a91a-b345397679dd",
+      "date": "2025-12-31",
+      "time": "18:30",
+      "home_team": "South University",
+      "away_team": "Central State",
+      "venue": "South University Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "NBC"
+    },
+    {
+      "id": "bbafb7f6-fa01-47bf-8551-b220d81d0046",
+      "date": "2026-01-21",
+      "time": "23:00",
+      "home_team": "South University",
+      "away_team": "Mountain Tech",
+      "venue": "South University Arena",
+      "special_designation": "Championship",
+      "tv_network": "NBC"
+    },
+    {
+      "id": "cfa95e26-a779-4ee3-9ed1-66879694fab6",
+      "date": "2026-01-07",
+      "time": "01:00",
+      "home_team": "South University",
+      "away_team": "Coastal University",
+      "venue": "South University Arena",
+      "special_designation": "Championship",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "4605ff3e-31c5-4a4a-a4e2-4867404fb5b5",
+      "date": "2026-01-19",
+      "time": "18:30",
+      "home_team": "South University",
+      "away_team": "Lake College",
+      "venue": "South University Arena",
+      "special_designation": "Championship",
+      "tv_network": "NBC"
+    },
+    {
+      "id": "6fd4ff15-8f2c-4c06-bbb9-929b3ab92238",
+      "date": "2025-12-22",
+      "time": "02:00",
+      "home_team": "West College",
+      "away_team": "North University",
+      "venue": "West College Arena",
+      "special_designation": "Championship"
+    },
+    {
+      "id": "bbdc5a42-ba7b-4dcb-ab07-ef540911d095",
+      "date": "2026-02-07",
+      "time": "23:30",
+      "home_team": "West College",
+      "away_team": "East College",
+      "venue": "West College Arena",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "9de39ea1-1113-4bb8-a816-71c0604fe77d",
+      "date": "2026-01-30",
+      "time": "23:30",
+      "home_team": "West College",
+      "away_team": "South University",
+      "venue": "West College Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "a1d8799f-d3a2-4581-b457-2aab2998fb4a",
+      "date": "2026-02-22",
+      "time": "00:30",
+      "home_team": "West College",
+      "away_team": "Central State",
+      "venue": "West College Arena",
+      "special_designation": "Championship"
+    },
+    {
+      "id": "aecdd2c5-8cff-4ff1-a789-0048f11dc5d1",
+      "date": "2026-01-01",
+      "time": "18:00",
+      "home_team": "West College",
+      "away_team": "Mountain Tech",
+      "venue": "West College Arena",
+      "special_designation": "Championship",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "d29995bb-39f2-4020-a476-a300db5cbeb7",
+      "date": "2026-02-26",
+      "time": "23:30",
+      "home_team": "West College",
+      "away_team": "Coastal University",
+      "venue": "West College Arena",
+      "tv_network": "CBS"
+    },
+    {
+      "id": "a92307ca-bfa4-4272-9a1e-f285bed2ac8a",
+      "date": "2025-12-23",
+      "time": "02:00",
+      "home_team": "West College",
+      "away_team": "Lake College",
+      "venue": "West College Arena",
+      "special_designation": "Championship",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "c9d500c8-7e90-4b46-88b1-ae8f667da539",
+      "date": "2025-11-22",
+      "time": "00:30",
+      "home_team": "Central State",
+      "away_team": "North University",
+      "venue": "Central State Arena",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "194fc4d7-d0d6-4c26-9f41-6d84042aaa8b",
+      "date": "2025-11-16",
+      "time": "00:00",
+      "home_team": "Central State",
+      "away_team": "East College",
+      "venue": "Central State Arena",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "22fdc58c-9537-4f8a-b5b5-ff322e741f2b",
+      "date": "2025-12-13",
+      "time": "23:30",
+      "home_team": "Central State",
+      "away_team": "South University",
+      "venue": "Central State Arena",
+      "special_designation": "Championship",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "b55daaef-23d5-4af1-aa71-79204fcc00e5",
+      "date": "2026-02-09",
+      "time": "19:00",
+      "home_team": "Central State",
+      "away_team": "West College",
+      "venue": "Central State Arena",
+      "special_designation": "Rivalry Week"
+    },
+    {
+      "id": "caf714f0-1c3c-4665-a7df-0e00459cf145",
+      "date": "2025-11-10",
+      "time": "20:30",
+      "home_team": "Central State",
+      "away_team": "Mountain Tech",
+      "venue": "Central State Arena",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "0249c6b2-1671-407c-b51e-2e233ae08bc2",
+      "date": "2026-02-26",
+      "time": "18:00",
+      "home_team": "Central State",
+      "away_team": "Coastal University",
+      "venue": "Central State Arena",
+      "special_designation": "Championship",
+      "tv_network": "ESPN"
+    },
+    {
+      "id": "90144881-568b-49d6-a5f9-67b4717439e3",
+      "date": "2026-01-20",
+      "time": "22:30",
+      "home_team": "Central State",
+      "away_team": "Lake College",
+      "venue": "Central State Arena",
+      "tv_network": "NBC"
+    },
+    {
+      "id": "e111ac46-f70a-42be-aa47-d837b7e8b501",
+      "date": "2026-01-31",
+      "time": "22:30",
+      "home_team": "Mountain Tech",
+      "away_team": "North University",
+      "venue": "Mountain Tech Arena",
+      "special_designation": "Championship",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "16d4521e-b7b1-4d50-8e01-f14a6bf7a80a",
+      "date": "2025-11-29",
+      "time": "23:30",
+      "home_team": "Mountain Tech",
+      "away_team": "East College",
+      "venue": "Mountain Tech Arena"
+    },
+    {
+      "id": "95d9d1f9-9532-46b2-867c-ff37818d2e89",
+      "date": "2025-11-04",
+      "time": "22:00",
+      "home_team": "Mountain Tech",
+      "away_team": "South University",
+      "venue": "Mountain Tech Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "be2780c3-34b2-43cf-81fc-9e20dc24aec2",
+      "date": "2026-03-01",
+      "time": "02:00",
+      "home_team": "Mountain Tech",
+      "away_team": "West College",
+      "venue": "Mountain Tech Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "ff6e2017-589f-4703-83d9-d1d333abe8ee",
+      "date": "2026-02-09",
+      "time": "19:00",
+      "home_team": "Mountain Tech",
+      "away_team": "Central State",
+      "venue": "Mountain Tech Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "NBC"
+    },
+    {
+      "id": "aad1a061-e233-403f-955a-dfc90460746a",
+      "date": "2026-01-19",
+      "time": "00:00",
+      "home_team": "Mountain Tech",
+      "away_team": "Coastal University",
+      "venue": "Mountain Tech Arena",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "c84cdfde-8890-4abe-af61-4ab6e892c5da",
+      "date": "2025-12-21",
+      "time": "20:30",
+      "home_team": "Mountain Tech",
+      "away_team": "Lake College",
+      "venue": "Mountain Tech Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "NBC"
+    },
+    {
+      "id": "2994cc91-3a53-4ef3-aa6b-17224a8ef692",
+      "date": "2026-01-17",
+      "time": "01:00",
+      "home_team": "Coastal University",
+      "away_team": "North University",
+      "venue": "Coastal University Arena",
+      "special_designation": "Championship",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "af19e67e-791f-40f5-8fc9-34e11fa5ca08",
+      "date": "2025-12-13",
+      "time": "21:30",
+      "home_team": "Coastal University",
+      "away_team": "East College",
+      "venue": "Coastal University Arena",
+      "special_designation": "Championship",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "f9a1da30-10fb-4a84-abd9-335416d960be",
+      "date": "2026-01-04",
+      "time": "21:00",
+      "home_team": "Coastal University",
+      "away_team": "South University",
+      "venue": "Coastal University Arena",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "e84666e4-1b36-4b72-af29-9079d159684d",
+      "date": "2026-01-21",
+      "time": "02:30",
+      "home_team": "Coastal University",
+      "away_team": "West College",
+      "venue": "Coastal University Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "ESPN2"
+    },
+    {
+      "id": "8d4e6c25-99aa-4707-921d-7607ea5e2578",
+      "date": "2026-02-12",
+      "time": "18:30",
+      "home_team": "Coastal University",
+      "away_team": "Central State",
+      "venue": "Coastal University Arena",
+      "special_designation": "Rivalry Week"
+    },
+    {
+      "id": "7cf7398a-82c3-4bf8-86d9-f627abdf301b",
+      "date": "2026-01-02",
+      "time": "23:00",
+      "home_team": "Coastal University",
+      "away_team": "Mountain Tech",
+      "venue": "Coastal University Arena",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "03924926-160a-4f90-ae24-7837fe00bf95",
+      "date": "2025-12-24",
+      "time": "01:00",
+      "home_team": "Coastal University",
+      "away_team": "Lake College",
+      "venue": "Coastal University Arena",
+      "tv_network": "CBS"
+    },
+    {
+      "id": "c44c76da-a31d-4a4d-ab6c-54fa7c870f62",
+      "date": "2026-03-12",
+      "time": "21:00",
+      "home_team": "Lake College",
+      "away_team": "North University",
+      "venue": "Lake College Arena",
+      "special_designation": "Season Opener",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "ddc19df1-f872-4058-824b-3caa076fd955",
+      "date": "2026-02-23",
+      "time": "02:30",
+      "home_team": "Lake College",
+      "away_team": "East College",
+      "venue": "Lake College Arena",
+      "special_designation": "Season Opener"
+    },
+    {
+      "id": "9cc6abae-3008-4225-9ad6-1471b768be0a",
+      "date": "2025-12-14",
+      "time": "20:30",
+      "home_team": "Lake College",
+      "away_team": "South University",
+      "venue": "Lake College Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "FS1"
+    },
+    {
+      "id": "2996b16a-b959-435b-95f3-9f42cebf6dd0",
+      "date": "2025-12-01",
+      "time": "01:00",
+      "home_team": "Lake College",
+      "away_team": "West College",
+      "venue": "Lake College Arena",
+      "tv_network": "CBS"
+    },
+    {
+      "id": "d1bc9c28-23f4-4d82-b4d9-51a195a1e376",
+      "date": "2025-12-19",
+      "time": "22:00",
+      "home_team": "Lake College",
+      "away_team": "Central State",
+      "venue": "Lake College Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "b1218b2f-5f37-478c-aa9a-13831f78bdc6",
+      "date": "2025-11-17",
+      "time": "18:00",
+      "home_team": "Lake College",
+      "away_team": "Mountain Tech",
+      "venue": "Lake College Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "ABC"
+    },
+    {
+      "id": "054be050-19f2-4a4e-ad4e-3c6924d9b74a",
+      "date": "2026-02-20",
+      "time": "21:30",
+      "home_team": "Lake College",
+      "away_team": "Coastal University",
+      "venue": "Lake College Arena",
+      "special_designation": "Rivalry Week",
+      "tv_network": "ABC"
+    }
+  ],
+  "teams": [
+    {
+      "id": "team_1",
+      "name": "North University",
+      "location": {
+        "name": "North University",
+        "latitude": 41.8781,
+        "longitude": -87.6298
+      }
+    },
+    {
+      "id": "team_2",
+      "name": "East College",
+      "location": {
+        "name": "East College",
+        "latitude": 40.7128,
+        "longitude": -74.006
+      }
+    },
+    {
+      "id": "team_3",
+      "name": "South University",
+      "location": {
+        "name": "South University",
+        "latitude": 29.7604,
+        "longitude": -95.3698
+      }
+    },
+    {
+      "id": "team_4",
+      "name": "West College",
+      "location": {
+        "name": "West College",
+        "latitude": 34.0522,
+        "longitude": -118.2437
+      }
+    },
+    {
+      "id": "team_5",
+      "name": "Central State",
+      "location": {
+        "name": "Central State",
+        "latitude": 39.9612,
+        "longitude": -82.9988
+      }
+    },
+    {
+      "id": "team_6",
+      "name": "Mountain Tech",
+      "location": {
+        "name": "Mountain Tech",
+        "latitude": 39.7392,
+        "longitude": -104.9903
+      }
+    },
+    {
+      "id": "team_7",
+      "name": "Coastal University",
+      "location": {
+        "name": "Coastal University",
+        "latitude": 32.7765,
+        "longitude": -79.9311
+      }
+    },
+    {
+      "id": "team_8",
+      "name": "Lake College",
+      "location": {
+        "name": "Lake College",
+        "latitude": 41.4993,
+        "longitude": -81.6944
+      }
+    }
+  ],
+  "venues": [
+    {
+      "id": "venue_1",
+      "name": "North University Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "North University",
+        "latitude": 41.8781,
+        "longitude": -87.6298
+      }
+    },
+    {
+      "id": "venue_2",
+      "name": "East College Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "East College",
+        "latitude": 40.7128,
+        "longitude": -74.006
+      }
+    },
+    {
+      "id": "venue_3",
+      "name": "South University Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "South University",
+        "latitude": 29.7604,
+        "longitude": -95.3698
+      }
+    },
+    {
+      "id": "venue_4",
+      "name": "West College Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "West College",
+        "latitude": 34.0522,
+        "longitude": -118.2437
+      }
+    },
+    {
+      "id": "venue_5",
+      "name": "Central State Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "Central State",
+        "latitude": 39.9612,
+        "longitude": -82.9988
+      }
+    },
+    {
+      "id": "venue_6",
+      "name": "Mountain Tech Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "Mountain Tech",
+        "latitude": 39.7392,
+        "longitude": -104.9903
+      }
+    },
+    {
+      "id": "venue_7",
+      "name": "Coastal University Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "Coastal University",
+        "latitude": 32.7765,
+        "longitude": -79.9311
+      }
+    },
+    {
+      "id": "venue_8",
+      "name": "Lake College Arena",
+      "capacity": 20000,
+      "location": {
+        "name": "Lake College",
+        "latitude": 41.4993,
+        "longitude": -81.6944
+      }
+    }
+  ],
+  "metrics": {
+    "totalDistance": 0,
+    "gameCount": 56,
+    "homeAwayBalance": 1,
+    "constraintSatisfaction": 1
+  }
+}

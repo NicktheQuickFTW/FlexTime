@@ -1,0 +1,81 @@
+version: '3.8'
+
+services:
+  # Backend API and scheduling engine
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: flextime-backend
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - flextime-network
+    restart: unless-stopped
+
+  # Frontend UI
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: flextime-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3001
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - flextime-network
+    restart: unless-stopped
+
+  # PostgreSQL database
+  postgres:
+    image: postgres:14
+    container_name: flextime-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-flextime}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/learning-system/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - flextime-network
+    restart: unless-stopped
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: flextime-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - flextime-network
+    restart: unless-stopped
+
+networks:
+  flextime-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
