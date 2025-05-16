@@ -1,7 +1,7 @@
 /**
- * User Preference Manager for Context7 Integration
+ * User Preference Manager
  * 
- * This component allows users to manage their preferences for the Context7-enhanced
+ * This component allows users to manage their preferences for FlexTime's
  * features, including recommendation types, sports interests, and personalization settings.
  */
 
@@ -168,10 +168,10 @@ const UserPreferenceManager = ({
     <Box sx={{ width: '100%' }}>
       <Box sx={{ mb: 3 }}>
         <Typography variant="h5" component="h2" gutterBottom>
-          Context7 Personalization Settings
+          FlexTime Personalization Settings
         </Typography>
         <Typography variant="body2" color="textSecondary" gutterBottom>
-          Customize how the AI-powered recommendation system works for you
+          Customize how the scheduling recommendation system works for you
         </Typography>
       </Box>
       

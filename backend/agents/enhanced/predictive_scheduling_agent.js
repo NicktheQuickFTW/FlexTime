@@ -384,7 +384,7 @@ class PredictiveSchedulingAgent {
       }
       `;
       
-      // Use Context7 to generate prediction
+      // Use FlexTime AI to generate prediction
       const response = await this.mcpConnector.sendRequest({
         agentId: 'predictive_scheduling',
         taskType: 'schedule_prediction',

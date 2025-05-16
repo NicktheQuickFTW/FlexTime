@@ -13,7 +13,7 @@ const MCPConnector = require('../mcp_connector');
 // MCP config removed, using default config instead
 const mcpConfig = {}; // Empty object as fallback
 
-// Initialize Context7 connector for AI-assisted resolutions
+// Initialize FlexTime connector for AI-assisted resolutions
 const mcpConnector = new MCPConnector(mcpConfig);
 
 /**
@@ -580,7 +580,7 @@ async function tryTeamSwap(schedule, eventIndex, otherEventIndex, eligibleTeams,
       return false;
     }
     
-    // Use Context7 to select the most appropriate replacement team
+    // Use FlexTime AI to select the most appropriate replacement team
     const response = await mcpConnector.sendRequest({
       agentId: 'conflict_resolution',
       taskType: 'team_selection',

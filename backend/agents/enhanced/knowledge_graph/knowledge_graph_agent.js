@@ -6,8 +6,8 @@
  * It uses graph-based data models to enable complex queries and inferences.
  */
 
-// Context7 client was removed
-// const { createContext7Client } = require('../../../utils/context7_client');
+// FlexTime AI client
+// const { createFlexTimeClient } = require('../../../utils/flextime_ai_client');
 // MCP config removed, using default config instead
 const mcpConfig = { agents: { knowledge_graph: {} } }; // Empty config with structure
 const logger = require('../../utils/logger');
@@ -49,8 +49,8 @@ class KnowledgeGraphAgent {
       enabled: this.config.enableContextEnrichment
     });
     
-    // Context7 client was removed
-    this.context7Client = null;
+    // FlexTime AI client
+    this.flexTimeClient = null;
     
     logger.info(`Knowledge Graph Agent initialized (enabled: ${this.config.enabled})`);
   }
@@ -77,7 +77,7 @@ class KnowledgeGraphAgent {
       
       // Initialize semantic enricher
       if (this.config.enableContextEnrichment) {
-        await this.semanticEnricher.initialize(this.context7Client);
+        await this.semanticEnricher.initialize(this.flexTimeClient);
       }
       
       logger.info('Knowledge Graph Agent initialization complete');
@@ -175,9 +175,9 @@ class KnowledgeGraphAgent {
     try {
       logger.info('Analyzing entity relationships in knowledge graph');
       
-      // Use Context7 for enhanced analysis if available
-      if (this.context7Client && this.context7Client.enabled) {
-        const analysisResults = await this.context7Client.processGraph({
+      // Use FlexTime AI for enhanced analysis if available
+      if (this.flexTimeClient && this.flexTimeClient.enabled) {
+        const analysisResults = await this.flexTimeClient.processGraph({
           task: 'analyze_entity_relationships',
           graph: await this.graphModel.export(),
           parameters
@@ -313,9 +313,9 @@ class KnowledgeGraphAgent {
     try {
       logger.info(`Generating insights for schedule ${scheduleId}`);
       
-      // Use Context7 for enhanced insights if available
-      if (this.context7Client && this.context7Client.enabled) {
-        const insightsResults = await this.context7Client.processTask({
+      // Use FlexTime AI for enhanced insights if available
+      if (this.flexTimeClient && this.flexTimeClient.enabled) {
+        const insightsResults = await this.flexTimeClient.processTask({
           task: 'knowledge_graph_insights',
           parameters: {
             scheduleId,

@@ -1,7 +1,7 @@
 /**
- * Context7 Pattern Visualizer Component
+ * Pattern Visualizer Component
  * 
- * This component renders detected patterns using interactive visualizations,
+ * This component renders detected scheduling patterns using interactive visualizations,
  * providing insights into scheduling patterns and recommendations.
  */
 

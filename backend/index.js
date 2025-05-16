@@ -4,10 +4,11 @@ console.log('FlexTime Scheduling System Starting');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const { middleware: { requestMiddleware } } = require('../utils/metrics');
-const metricsRoutes = require('../routes/metrics');
+const { middleware: { requestMiddleware } } = require('./utils/metrics');
+const metricsRoutes = require('./routes/metricsRoutes');
 const scheduleRoutes = require('./routes/scheduleRoutes');
-const intelligenceEngineRoutes = require('./routes/intelligenceEngineRoutes');
+const schedulingServiceRoutes = require('./routes/schedulingServiceRoutes');
+const virtualAssistantRoutes = require('./routes/virtualAssistantRoutes');
 const feedbackSystemRoutes = require('./routes/feedbackSystemRoutes');
 const visualizationRoutes = require('./routes/visualizationRoutes');
 const exportRoutes = require('./routes/exportRoutes');
@@ -47,6 +48,8 @@ app.use(requestMiddleware); // Add metrics middleware
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+const { Sequelize } = require('sequelize');
+
 // Database connection
 async function connectToDatabase() {
   let sequelizeConnection = null;
@@ -55,27 +58,21 @@ async function connectToDatabase() {
   
   // PostgreSQL Connection (Primary Database)
   try {
-    // Check if we're running in Docker environment
-    const isDockerEnvironment = process.env.POSTGRES_URI && process.env.POSTGRES_URI.includes('@postgres:');
-    
-    if (isDockerEnvironment) {
-      console.log('Detected Docker environment, using optimized connection');
-      sequelizeConnection = await connectToDockerPostgres();
-    } else if (process.env.POSTGRES_URI) {
-      // Standard connection for non-Docker environments
-      console.log('Using standard PostgreSQL connection');
-      sequelizeConnection = new Sequelize(process.env.POSTGRES_URI, {
+    // Check for Neon DB connection string
+    if (process.env.NEON_DB_CONNECTION_STRING) {
+      console.log('Using Neon DB connection');
+      sequelizeConnection = new Sequelize(process.env.NEON_DB_CONNECTION_STRING, {
         dialect: 'postgres',
         logging: false,
         dialectOptions: {
-          ssl: process.env.NODE_ENV === 'production' ? {
+          ssl: {
             require: true,
             rejectUnauthorized: false
-          } : false
+          }
         }
       });
     } else {
-      throw new Error('POSTGRES_URI environment variable is not defined');
+      throw new Error('NEON_DB_CONNECTION_STRING environment variable is not defined');
     }
     
     await sequelizeConnection.authenticate();
@@ -91,6 +88,25 @@ async function connectToDatabase() {
 
 // Initialize database connection
 async function setupDatabase() {
+  // Skip database setup if DISABLE_DATABASE is set
+  if (process.env.DISABLE_DATABASE === 'true') {
+    logger.info('Database connections disabled by configuration');
+    
+    // Create a mock database object with minimal functionality
+    const mockDb = {
+      Sport: { findAll: async () => [] },
+      Championship: { findAll: async () => [] },
+      Team: { findAll: async () => [] },
+      Institution: { findAll: async () => [] },
+      Schedule: { findAll: async () => [], findByPk: async () => null },
+      Game: { findAll: async () => [] },
+      sequelize: { transaction: async (fn) => fn({ commit: async () => {}, rollback: async () => {} }) }
+    };
+    
+    // Return the mock db
+    return mockDb;
+  }
+  
   try {
     const sequelize = await connectToDatabase();
     
@@ -104,7 +120,7 @@ async function setupDatabase() {
 
     // Run the fix schedules table script if environment variable is set
     if (process.env.FIX_SCHEDULES_TABLE === 'true') {
-      console.log('Running fix-schedules-table script to create missing tables...');
+      logger.info('Running fix-schedules-table script to create missing tables...');
       await fixSchedulesTables();
     }
 
@@ -152,37 +168,46 @@ async function setupDatabase() {
       debug: process.env.DEBUG_SCHEDULING === 'true'
     });
     
-    // Initialize COMPASS
-    const compass = await initializeCOMPASS(app, db, {
-      core: {
-        refreshFrequency: parseInt(process.env.COMPASS_REFRESH_FREQUENCY || '86400000', 10), // 24 hours
-        weightConfig: {
-          performance: 0.25,
-          resources: 0.20,
-          recruiting: 0.15,
-          prestige: 0.15,
-          talent: 0.15,
-          infrastructure: 0.10
-        }
-      },
-      predictiveAnalytics: {
-        modelUpdateFrequency: parseInt(process.env.PREDICTIVE_MODEL_UPDATE_FREQUENCY || '86400000', 10), // 24 hours
-        ratingSystemWeights: {
-          internalModel: 0.40,
-          netRanking: 0.20,
-          kenpom: 0.15,
-          nationalPolls: 0.10,
-          conferenceStanding: 0.10,
-          socialMedia: 0.05
-        }
+    // Skip COMPASS initialization in dev mode
+    if (process.env.NODE_ENV !== 'development') {
+      try {
+        // Initialize COMPASS
+        const compass = await initializeCOMPASS(app, db, {
+          core: {
+            refreshFrequency: parseInt(process.env.COMPASS_REFRESH_FREQUENCY || '86400000', 10), // 24 hours
+            weightConfig: {
+              performance: 0.25,
+              resources: 0.20,
+              recruiting: 0.15,
+              prestige: 0.15,
+              talent: 0.15,
+              infrastructure: 0.10
+            }
+          },
+          predictiveAnalytics: {
+            modelUpdateFrequency: parseInt(process.env.PREDICTIVE_MODEL_UPDATE_FREQUENCY || '86400000', 10), // 24 hours
+            ratingSystemWeights: {
+              internalModel: 0.40,
+              netRanking: 0.20,
+              kenpom: 0.15,
+              nationalPolls: 0.10,
+              conferenceStanding: 0.10,
+              socialMedia: 0.05
+            }
+          }
+        });
+        
+        // Register COMPASS API endpoints
+        registerCOMPASSEndpoints(app, compass);
+        
+        // Integrate COMPASS with Advanced Metrics System
+        integrateCOMPASSWithMetrics(app, compass);
+      } catch (error) {
+        logger.error(`COMPASS initialization skipped due to error: ${error.message}`);
       }
-    });
-    
-    // Register COMPASS API endpoints
-    registerCOMPASSEndpoints(app, compass);
-    
-    // Integrate COMPASS with Advanced Metrics System
-    integrateCOMPASSWithMetrics(app, compass);
+    } else {
+      logger.info('COMPASS initialization skipped in development mode');
+    }
 
     return db;
   } catch (error) {
@@ -213,13 +238,16 @@ app.get('/api/status', (req, res) => {
 // API Routes
 app.use('/api/metrics', metricsRoutes);
 app.use('/api/schedule', scheduleRoutes);
-app.use('/api/intelligence-engine', intelligenceEngineRoutes);
+app.use('/api/scheduling-service', schedulingServiceRoutes);
+app.use('/api/virtual-assistant', virtualAssistantRoutes);
 app.use('/api/feedback', feedbackSystemRoutes);
 app.use('/api/visualizations', visualizationRoutes);
 app.use('/api/export', exportRoutes);
 
 // Initialize Advanced Metrics System
 const AdvancedMetricsSystem = require('./utils/advanced_metrics_system');
+const logger = require('./utils/logger');
+
 const advancedMetricsSystem = new AdvancedMetricsSystem({
   enablePredictiveModels: process.env.ENABLE_PREDICTIVE_METRICS !== 'false',
   enableRevenueOptimization: process.env.ENABLE_REVENUE_METRICS !== 'false',

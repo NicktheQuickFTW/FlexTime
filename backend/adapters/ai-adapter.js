@@ -5,8 +5,31 @@
  * including OpenAI, Anthropic, and local/mock providers.
  */
 
-const { OpenAI } = require('openai');
-const { Anthropic } = require('anthropic');
+// Mock imports - real providers commented out
+// const { OpenAI } = require('openai');
+// const { Anthropic } = require('anthropic');
+
+// Mock provider objects
+const OpenAI = function() {
+  return {
+    embeddings: {
+      create: async () => ({ data: [{ embedding: [0.1, 0.2, 0.3] }] })
+    },
+    chat: {
+      completions: {
+        create: async () => ({ choices: [{ message: { content: "This is a mock response" } }] })
+      }
+    }
+  };
+};
+
+const Anthropic = function() {
+  return {
+    messages: {
+      create: async () => ({ content: [{ text: "This is a mock Claude response" }] })
+    }
+  };
+};
 const modelConfig = require('../config/ai-services');
 const logger = require('../utils/logger');
 

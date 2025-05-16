@@ -10,16 +10,43 @@ const ConstraintEvaluator = require('../algorithms/improvements/constraint_evalu
 const MemoryOptimizedTravelOptimizer = require('../algorithms/improvements/memory_optimized_travel_optimizer');
 const IncrementalScheduleOptimizer = require('../algorithms/improvements/incremental_schedule_optimizer');
 
-// Import improved agents
-const ParallelSchedulingAgentSystem = require('../agents/improvements/parallel_scheduling_agent');
-const EnhancedFeedbackSystem = require('../agents/improvements/enhanced_feedback_system');
+// Import improved agents - COMMENTED OUT FOR DEVELOPMENT
+// const ParallelSchedulingAgentSystem = require('../agents/improvements/parallel_scheduling_agent');
+// const EnhancedFeedbackSystem = require('../agents/improvements/enhanced_feedback_system');
 
-// Import sport-specific optimizers
-const BasketballScheduleOptimizer = require('../agents/sport_specific/basketball_schedule_optimizer');
+// Mock versions for development
+const ParallelSchedulingAgentSystem = function() {
+  return {
+    initialize: async () => true,
+    optimizeSchedule: async (schedule) => schedule
+  };
+};
+const EnhancedFeedbackSystem = {};
+
+// Import sport-specific optimizers - COMMENTED OUT FOR DEVELOPMENT
+// const BasketballScheduleOptimizer = require('../agents/sport_specific/basketball_schedule_optimizer');
+
+// Mock versions for development
+const BasketballScheduleOptimizer = function() {
+  return {
+    initialize: async () => true,
+    optimizeSchedule: async (schedule) => schedule
+  };
+};
 
 // Import visualization tools
 const ScheduleVisualizationGenerator = require('../utils/visualization/schedule_visualization');
-const EnhancedScheduleAnalysisAgent = require('../agents/specialized/enhanced_schedule_analysis_agent');
+// const EnhancedScheduleAnalysisAgent = require('../agents/specialized/enhanced_schedule_analysis_agent');
+
+// Mock version for development
+const EnhancedScheduleAnalysisAgent = function() {
+  return {
+    analyzeSchedule: async (schedule) => ({ 
+      insights: ["Mock insight from schedule analysis"],
+      metrics: { score: 80 }
+    })
+  };
+};
 
 // Logger for integration logging
 const logger = require('../utils/logger');

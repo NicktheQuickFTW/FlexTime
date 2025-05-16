@@ -3,12 +3,16 @@
  * 
  * This module implements the memory system for agents to store and retrieve
  * experiences, knowledge, and learning outcomes.
+ * 
+ * Note: Migrated from MongoDB to Neon PostgreSQL for better reliability and integration.
  */
 
 const { Pool } = require('pg');
-const Redis = require('ioredis');
-const logger = require('../utils/logger');
-const neonConfig = require('../../config/neon_db_config');
+const logger = require('../../utils/logger');
+const { v4: uuidv4 } = require('uuid');
+
+// Mock memory storage for when database is disabled
+let mockMemories = [];
 
 /**
  * Memory manager for agent memories and experiences.
@@ -17,504 +21,565 @@ class AgentMemoryManager {
   /**
    * Initialize a new Agent Memory Manager.
    * 
-   * @param {object} config - Configuration options (overrides defaults from mcp_config.js)
+   * @param {object} config - Configuration options
    */
   constructor(config = {}) {
-    this.config = { ...mcpConfig.memory, ...config };
-    this.mongoEnabled = this.config.mongodb.enabled;
-    this.redisEnabled = this.config.redis.enabled;
-    
-    // Initialize connections
-    this.mongoClient = null;
-    this.mongoDb = null;
-    this.redisClient = null;
-    
-    // Initialize memory collections
-    this.collections = {
-      experiences: null,
-      knowledge: null,
-      feedback: null,
-      learning: null
+    this.config = {
+      neonDB: {
+        connectionString: process.env.NEON_DB_CONNECTION_STRING || '',
+        ...config.neonDB
+      },
+      ...config
     };
     
-    logger.info('Agent Memory Manager initialized');
-    logger.info(`MongoDB memory enabled: ${this.mongoEnabled}`);
-    logger.info(`Redis memory enabled: ${this.redisEnabled}`);
+    this.connected = false;
+    this.pool = null;
+    this.useMockDatabase = process.env.DISABLE_DATABASE === 'true';
+    
+    if (this.useMockDatabase) {
+      logger.info('Agent Memory Manager initialized with mock database (DB disabled)');
+      // Initialize with mock connected state when database is disabled
+      this.connected = true;
+    } else {
+      logger.info('Agent Memory Manager initialized with Neon DB support');
+    }
   }
   
   /**
-   * Connect to memory storage systems.
+   * Connect to Neon PostgreSQL database.
    * 
-   * @returns {Promise<boolean>} Whether connections were successful
+   * @returns {Promise<boolean>} Whether connection was successful
    */
   async connect() {
-    let success = true;
-    
-    // Connect to MongoDB if enabled
-    if (this.mongoEnabled) {
-      try {
-        logger.info(`Connecting to MongoDB at ${this.config.mongodb.uri}`);
-        this.mongoClient = new MongoClient(this.config.mongodb.uri);
-        await this.mongoClient.connect();
-        this.mongoDb = this.mongoClient.db();
-        
-        // Initialize collections
-        this.collections.experiences = this.mongoDb.collection(`${this.config.mongodb.collection}_experiences`);
-        this.collections.knowledge = this.mongoDb.collection(`${this.config.mongodb.collection}_knowledge`);
-        this.collections.feedback = this.mongoDb.collection(`${this.config.mongodb.collection}_feedback`);
-        this.collections.learning = this.mongoDb.collection(`${this.config.mongodb.collection}_learning`);
-        
-        // Create indexes
-        await this.createIndexes();
-        
-        logger.info('Successfully connected to MongoDB');
-      } catch (error) {
-        logger.error(`Failed to connect to MongoDB: ${error.message}`);
-        success = false;
-      }
+    if (this.connected) {
+      return true;
     }
     
-    // Connect to Redis if enabled
-    if (this.redisEnabled) {
-      try {
-        const redisConfig = {
-          host: this.config.redis.host,
-          port: this.config.redis.port,
-          password: this.config.redis.password,
-          retryStrategy: (times) => {
-            return Math.min(times * 100, 3000);
-          }
-        };
-        
-        logger.info(`Connecting to Redis at ${redisConfig.host}:${redisConfig.port}`);
-        this.redisClient = new Redis(redisConfig);
-        
-        // Test connection
-        await this.redisClient.ping();
-        logger.info('Successfully connected to Redis');
-      } catch (error) {
-        logger.error(`Failed to connect to Redis: ${error.message}`);
-        success = false;
-      }
+    // If database is disabled, use mock implementation
+    if (this.useMockDatabase) {
+      this.connected = true;
+      logger.info('Using mock database implementation (DB disabled)');
+      return true;
     }
     
-    return success;
+    try {
+      // Connect to Neon PostgreSQL
+      this.pool = new Pool({
+        connectionString: this.config.neonDB.connectionString || process.env.NEON_DB_CONNECTION_STRING,
+        ssl: {
+          rejectUnauthorized: false
+        }
+      });
+      
+      // Test connection
+      await this.pool.query('SELECT NOW()');
+      
+      // Ensure tables exist
+      await this._ensureTablesExist();
+      
+      this.connected = true;
+      logger.info('Successfully connected to Neon PostgreSQL database');
+      return true;
+    } catch (error) {
+      // If connection fails but database is disabled flag is true, use mock implementation
+      if (process.env.DISABLE_DATABASE === 'true') {
+        this.useMockDatabase = true;
+        this.connected = true;
+        logger.info('Connection failed but using mock database (DB disabled)');
+        return true;
+      }
+      
+      logger.error(`Failed to connect to Neon PostgreSQL: ${error.message}`);
+      return false;
+    }
   }
   
   /**
-   * Create indexes for MongoDB collections.
+   * Ensure required database tables exist.
    * 
    * @private
    */
-  async createIndexes() {
-    // Experiences collection indexes
-    await this.collections.experiences.createIndex({ agentId: 1 });
-    await this.collections.experiences.createIndex({ timestamp: 1 });
-    await this.collections.experiences.createIndex({ tags: 1 });
+  async _ensureTablesExist() {
+    // Create agent_memories table if it doesn't exist
+    await this.pool.query(`
+      CREATE TABLE IF NOT EXISTS agent_memories (
+        id UUID PRIMARY KEY,
+        agent_id TEXT,
+        type TEXT NOT NULL,
+        content JSONB NOT NULL,
+        metadata JSONB,
+        tags TEXT[],
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
     
-    // Knowledge collection indexes
-    await this.collections.knowledge.createIndex({ domain: 1 });
-    await this.collections.knowledge.createIndex({ key: 1 }, { unique: true });
+    // Create indexes
+    await this.pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_agent_memories_agent_id ON agent_memories(agent_id);
+      CREATE INDEX IF NOT EXISTS idx_agent_memories_type ON agent_memories(type);
+      CREATE INDEX IF NOT EXISTS idx_agent_memories_tags ON agent_memories USING GIN(tags);
+      CREATE INDEX IF NOT EXISTS idx_agent_memories_metadata ON agent_memories USING GIN(metadata);
+    `);
     
-    // Feedback collection indexes
-    await this.collections.feedback.createIndex({ agentId: 1 });
-    await this.collections.feedback.createIndex({ taskId: 1 });
-    
-    // Learning collection indexes
-    await this.collections.learning.createIndex({ agentId: 1 });
-    await this.collections.learning.createIndex({ domain: 1 });
-    await this.collections.learning.createIndex({ key: 1 });
+    logger.info('Agent memory tables verified');
   }
   
   /**
-   * Store an agent experience in memory.
+   * Store a memory in the database.
    * 
-   * @param {object} experience - Experience to store
-   * @param {string} experience.agentId - ID of the agent
-   * @param {string} experience.type - Type of experience
-   * @param {object} experience.content - Experience content
-   * @param {Array<string>} experience.tags - Tags for categorization
-   * @returns {Promise<string>} ID of the stored experience
+   * @param {object} memory - Memory to store
+   * @param {string} memory.type - Type of memory (e.g., 'experience', 'knowledge', 'feedback')
+   * @param {object} memory.content - Memory content
+   * @param {object} memory.metadata - Additional metadata
+   * @param {Array<string>} memory.tags - Tags for categorization
+   * @returns {Promise<string>} ID of the stored memory
    */
-  async storeExperience(experience) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot store experience.');
-      return null;
+  async storeMemory(memory) {
+    if (!this.connected) {
+      await this.connect();
     }
     
     try {
-      // Add timestamp
-      const experienceDoc = {
-        ...experience,
-        timestamp: new Date(),
-        version: '2.1'
-      };
+      const id = memory.id || uuidv4();
+      const agentId = memory.agentId || memory.metadata?.agentId || null;
+      const tags = memory.tags || [];
       
-      // Store in MongoDB
-      const result = await this.collections.experiences.insertOne(experienceDoc);
-      
-      // Also cache in Redis if enabled
-      if (this.redisEnabled) {
-        const key = `experience:${experience.agentId}:${result.insertedId}`;
-        await this.redisClient.set(
-          key,
-          JSON.stringify(experienceDoc),
-          'EX',
-          this.config.redis.ttl
-        );
+      // Use mock implementation if database is disabled
+      if (this.useMockDatabase) {
+        const now = new Date();
+        mockMemories.push({
+          id,
+          agent_id: agentId,
+          type: memory.type,
+          content: memory.content,
+          metadata: memory.metadata || {},
+          tags,
+          created_at: now,
+          updated_at: now
+        });
+        
+        logger.info(`[Mock DB] Stored memory of type ${memory.type} with ID ${id}`);
+        return id;
       }
       
-      logger.info(`Stored experience for agent ${experience.agentId}`);
-      return result.insertedId.toString();
+      // Insert the memory into real database
+      await this.pool.query(
+        `INSERT INTO agent_memories(
+          id, agent_id, type, content, metadata, tags, created_at, updated_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW())`,
+        [
+          id,
+          agentId,
+          memory.type,
+          JSON.stringify(memory.content),
+          JSON.stringify(memory.metadata || {}),
+          tags
+        ]
+      );
+      
+      logger.info(`Stored memory of type ${memory.type} with ID ${id}`);
+      return id;
     } catch (error) {
-      logger.error(`Failed to store experience: ${error.message}`);
+      logger.error(`Failed to store memory: ${error.message}`);
       return null;
     }
   }
   
   /**
-   * Retrieve experiences for an agent.
+   * Retrieve memories from the database.
    * 
    * @param {object} query - Query parameters
-   * @param {string} query.agentId - ID of the agent
-   * @param {string} query.type - Type of experience to retrieve
+   * @param {string} query.type - Type of memory to retrieve
+   * @param {object} query.metadata - Metadata filters
    * @param {Array<string>} query.tags - Tags to filter by
-   * @param {number} query.limit - Maximum number of experiences to retrieve
-   * @returns {Promise<Array<object>>} Retrieved experiences
+   * @param {object} query.sort - Sort options
+   * @param {number} query.limit - Maximum number of memories to retrieve
+   * @returns {Promise<Array<object>>} Retrieved memories
    */
-  async retrieveExperiences(query) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot retrieve experiences.');
-      return [];
+  async retrieveMemories(query = {}) {
+    if (!this.connected) {
+      await this.connect();
     }
     
     try {
-      // Build MongoDB query
-      const mongoQuery = {};
-      
-      if (query.agentId) {
-        mongoQuery.agentId = query.agentId;
+      // Use mock implementation if database is disabled
+      if (this.useMockDatabase) {
+        let filteredMemories = [...mockMemories];
+        
+        // Apply filters
+        if (query.type) {
+          filteredMemories = filteredMemories.filter(m => m.type === query.type);
+        }
+        
+        if (query.agentId) {
+          filteredMemories = filteredMemories.filter(m => m.agent_id === query.agentId);
+        }
+        
+        // Apply metadata filters
+        if (query.metadata && Object.keys(query.metadata).length > 0) {
+          filteredMemories = filteredMemories.filter(m => {
+            return Object.entries(query.metadata).every(([key, value]) => 
+              m.metadata[key] === value
+            );
+          });
+        }
+        
+        // Apply tags filter
+        if (query.tags && query.tags.length > 0) {
+          filteredMemories = filteredMemories.filter(m => {
+            return query.tags.every(tag => m.tags.includes(tag));
+          });
+        }
+        
+        // Apply sorting
+        if (query.sort) {
+          const sortEntries = Object.entries(query.sort);
+          filteredMemories.sort((a, b) => {
+            for (const [field, direction] of sortEntries) {
+              let valueA, valueB;
+              
+              // Map field names to match PostgreSQL equivalents
+              if (field === 'timestamp') {
+                valueA = a.created_at;
+                valueB = b.created_at;
+              } else if (field === 'updatedAt') {
+                valueA = a.updated_at;
+                valueB = b.updated_at;
+              } else if (field === 'score') {
+                valueA = a.metadata.score;
+                valueB = b.metadata.score;
+              } else {
+                valueA = a.metadata[field];
+                valueB = b.metadata[field];
+              }
+              
+              if (valueA !== valueB) {
+                return direction === -1 ? 
+                  (valueB > valueA ? 1 : -1) : 
+                  (valueA > valueB ? 1 : -1);
+              }
+            }
+            return 0;
+          });
+        } else {
+          // Default sort by created_at DESC
+          filteredMemories.sort((a, b) => b.created_at - a.created_at);
+        }
+        
+        // Apply limit
+        if (query.limit) {
+          filteredMemories = filteredMemories.slice(0, query.limit);
+        }
+        
+        // Format the memories to match database output format
+        const memories = filteredMemories.map(m => ({
+          id: m.id,
+          agentId: m.agent_id,
+          type: m.type,
+          content: m.content,
+          metadata: m.metadata,
+          tags: m.tags,
+          createdAt: m.created_at,
+          updatedAt: m.updated_at
+        }));
+        
+        logger.info(`[Mock DB] Retrieved ${memories.length} memories for query`);
+        return memories;
       }
+      
+      // Real database implementation
+      // Build query conditions
+      const conditions = [];
+      const params = [];
       
       if (query.type) {
-        mongoQuery.type = query.type;
+        conditions.push(`type = $${params.length + 1}`);
+        params.push(query.type);
       }
       
-      if (query.tags && query.tags.length > 0) {
-        mongoQuery.tags = { $in: query.tags };
+      if (query.agentId) {
+        conditions.push(`agent_id = $${params.length + 1}`);
+        params.push(query.agentId);
       }
+      
+      // Handle metadata filters
+      if (query.metadata && Object.keys(query.metadata).length > 0) {
+        for (const [key, value] of Object.entries(query.metadata)) {
+          conditions.push(`metadata->>'${key}' = $${params.length + 1}`);
+          params.push(value);
+        }
+      }
+      
+      // Handle tags filter
+      if (query.tags && query.tags.length > 0) {
+        conditions.push(`tags @> $${params.length + 1}`);
+        params.push(query.tags);
+      }
+      
+      // Build WHERE clause
+      const whereClause = conditions.length > 0 
+        ? `WHERE ${conditions.join(' AND ')}` 
+        : '';
+      
+      // Build ORDER BY clause
+      let orderByClause = 'ORDER BY created_at DESC';
+      if (query.sort) {
+        const sortFields = [];
+        for (const [field, direction] of Object.entries(query.sort)) {
+          // Map a common set of sort fields to their PostgreSQL equivalents
+          const mappedField = 
+            field === 'timestamp' ? 'created_at' :
+            field === 'updatedAt' ? 'updated_at' :
+            field === 'score' ? "metadata->>'score'" : 
+            `metadata->>'${field}'`;
+          
+          sortFields.push(`${mappedField} ${direction === -1 ? 'DESC' : 'ASC'}`);
+        }
+        
+        if (sortFields.length > 0) {
+          orderByClause = `ORDER BY ${sortFields.join(', ')}`;
+        }
+      }
+      
+      // Build LIMIT clause
+      const limitClause = query.limit ? `LIMIT ${query.limit}` : '';
       
       // Execute query
-      const cursor = this.collections.experiences
-        .find(mongoQuery)
-        .sort({ timestamp: -1 })
-        .limit(query.limit || 10);
+      const sql = `
+        SELECT id, agent_id as "agentId", type, content, metadata, tags, 
+               created_at as "createdAt", updated_at as "updatedAt"
+        FROM agent_memories
+        ${whereClause}
+        ${orderByClause}
+        ${limitClause}
+      `;
       
-      const experiences = await cursor.toArray();
-      logger.info(`Retrieved ${experiences.length} experiences for query`);
+      const result = await this.pool.query(sql, params);
+      const memories = result.rows.map(row => ({
+        id: row.id,
+        agentId: row.agentId,
+        type: row.type,
+        content: row.content,
+        metadata: row.metadata,
+        tags: row.tags,
+        createdAt: row.createdAt,
+        updatedAt: row.updatedAt
+      }));
       
-      return experiences;
+      logger.info(`Retrieved ${memories.length} memories for query`);
+      return memories;
     } catch (error) {
-      logger.error(`Failed to retrieve experiences: ${error.message}`);
+      logger.error(`Failed to retrieve memories: ${error.message}`);
       return [];
     }
   }
   
   /**
-   * Store knowledge in the knowledge base.
+   * Update a memory in the database.
+   * 
+   * @param {string} id - ID of the memory to update
+   * @param {object} updates - Properties to update
+   * @returns {Promise<boolean>} Whether the operation was successful
+   */
+  async updateMemory(id, updates) {
+    if (!this.connected) {
+      await this.connect();
+    }
+    
+    try {
+      // Use mock implementation if database is disabled
+      if (this.useMockDatabase) {
+        const memoryIndex = mockMemories.findIndex(m => m.id === id);
+        
+        if (memoryIndex === -1) {
+          logger.warn(`[Mock DB] Memory with ID ${id} not found for update`);
+          return false;
+        }
+        
+        // Update memory fields
+        if (updates.content) {
+          mockMemories[memoryIndex].content = updates.content;
+        }
+        
+        if (updates.metadata) {
+          mockMemories[memoryIndex].metadata = updates.metadata;
+        }
+        
+        if (updates.tags) {
+          mockMemories[memoryIndex].tags = updates.tags;
+        }
+        
+        // Always update updated_at
+        mockMemories[memoryIndex].updated_at = new Date();
+        
+        logger.info(`[Mock DB] Updated memory with ID ${id}`);
+        return true;
+      }
+      
+      // Real database implementation
+      const setFields = [];
+      const params = [id];
+      let paramCount = 1;
+      
+      // Build SET clause for updatable fields
+      if (updates.content) {
+        setFields.push(`content = $${++paramCount}`);
+        params.push(JSON.stringify(updates.content));
+      }
+      
+      if (updates.metadata) {
+        setFields.push(`metadata = $${++paramCount}`);
+        params.push(JSON.stringify(updates.metadata));
+      }
+      
+      if (updates.tags) {
+        setFields.push(`tags = $${++paramCount}`);
+        params.push(updates.tags);
+      }
+      
+      // Always update the updated_at timestamp
+      setFields.push(`updated_at = NOW()`);
+      
+      if (setFields.length === 0) {
+        logger.warn('No fields to update');
+        return false;
+      }
+      
+      // Execute update
+      const sql = `
+        UPDATE agent_memories
+        SET ${setFields.join(', ')}
+        WHERE id = $1
+      `;
+      
+      const result = await this.pool.query(sql, params);
+      
+      if (result.rowCount === 0) {
+        logger.warn(`Memory with ID ${id} not found for update`);
+        return false;
+      }
+      
+      logger.info(`Updated memory with ID ${id}`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to update memory: ${error.message}`);
+      return false;
+    }
+  }
+  
+  /**
+   * Delete a memory from the database.
+   * 
+   * @param {string} id - ID of the memory to delete
+   * @returns {Promise<boolean>} Whether the operation was successful
+   */
+  async deleteMemory(id) {
+    if (!this.connected) {
+      await this.connect();
+    }
+    
+    try {
+      // Use mock implementation if database is disabled
+      if (this.useMockDatabase) {
+        const initialLength = mockMemories.length;
+        mockMemories = mockMemories.filter(m => m.id !== id);
+        
+        if (mockMemories.length === initialLength) {
+          logger.warn(`[Mock DB] Memory with ID ${id} not found for deletion`);
+          return false;
+        }
+        
+        logger.info(`[Mock DB] Deleted memory with ID ${id}`);
+        return true;
+      }
+      
+      // Real database implementation
+      const result = await this.pool.query(
+        'DELETE FROM agent_memories WHERE id = $1',
+        [id]
+      );
+      
+      if (result.rowCount === 0) {
+        logger.warn(`Memory with ID ${id} not found for deletion`);
+        return false;
+      }
+      
+      logger.info(`Deleted memory with ID ${id}`);
+      return true;
+    } catch (error) {
+      logger.error(`Failed to delete memory: ${error.message}`);
+      return false;
+    }
+  }
+  
+  /**
+   * Helper method to store knowledge with standard format.
    * 
    * @param {object} knowledge - Knowledge to store
    * @param {string} knowledge.domain - Knowledge domain
    * @param {string} knowledge.key - Unique key for this knowledge
    * @param {object} knowledge.content - Knowledge content
    * @param {Array<string>} knowledge.tags - Tags for categorization
-   * @returns {Promise<boolean>} Whether the operation was successful
+   * @returns {Promise<string>} ID of the stored knowledge
    */
   async storeKnowledge(knowledge) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot store knowledge.');
-      return false;
-    }
-    
-    try {
-      // Add timestamp and version
-      const knowledgeDoc = {
-        ...knowledge,
-        timestamp: new Date(),
-        version: '2.1',
-        lastUpdated: new Date()
-      };
-      
-      // Upsert to MongoDB (update if exists, insert if not)
-      const result = await this.collections.knowledge.updateOne(
-        { domain: knowledge.domain, key: knowledge.key },
-        { $set: knowledgeDoc },
-        { upsert: true }
-      );
-      
-      // Also cache in Redis if enabled
-      if (this.redisEnabled) {
-        const key = `knowledge:${knowledge.domain}:${knowledge.key}`;
-        await this.redisClient.set(
-          key,
-          JSON.stringify(knowledgeDoc),
-          'EX',
-          this.config.redis.ttl
-        );
-      }
-      
-      logger.info(`Stored knowledge for domain ${knowledge.domain} with key ${knowledge.key}`);
-      return true;
-    } catch (error) {
-      logger.error(`Failed to store knowledge: ${error.message}`);
-      return false;
-    }
+    return this.storeMemory({
+      type: 'knowledge',
+      content: knowledge.content,
+      metadata: {
+        domain: knowledge.domain,
+        key: knowledge.key
+      },
+      tags: knowledge.tags || []
+    });
   }
   
   /**
-   * Retrieve knowledge from the knowledge base.
-   * 
-   * @param {object} query - Query parameters
-   * @param {string} query.domain - Knowledge domain
-   * @param {string} query.key - Specific knowledge key
-   * @param {Array<string>} query.tags - Tags to filter by
-   * @returns {Promise<object|Array<object>>} Retrieved knowledge
-   */
-  async retrieveKnowledge(query) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot retrieve knowledge.');
-      return null;
-    }
-    
-    try {
-      // Check Redis cache first if enabled and querying by key
-      if (this.redisEnabled && query.domain && query.key) {
-        const cacheKey = `knowledge:${query.domain}:${query.key}`;
-        const cachedValue = await this.redisClient.get(cacheKey);
-        
-        if (cachedValue) {
-          logger.info(`Retrieved knowledge from Redis cache: ${query.domain}/${query.key}`);
-          return JSON.parse(cachedValue);
-        }
-      }
-      
-      // Build MongoDB query
-      const mongoQuery = {};
-      
-      if (query.domain) {
-        mongoQuery.domain = query.domain;
-      }
-      
-      if (query.key) {
-        mongoQuery.key = query.key;
-      }
-      
-      if (query.tags && query.tags.length > 0) {
-        mongoQuery.tags = { $in: query.tags };
-      }
-      
-      // If querying by specific key, return single document
-      if (query.key) {
-        const knowledge = await this.collections.knowledge.findOne(mongoQuery);
-        
-        // Cache in Redis if found and Redis is enabled
-        if (knowledge && this.redisEnabled) {
-          const cacheKey = `knowledge:${query.domain}:${query.key}`;
-          await this.redisClient.set(
-            cacheKey,
-            JSON.stringify(knowledge),
-            'EX',
-            this.config.redis.ttl
-          );
-        }
-        
-        return knowledge;
-      }
-      
-      // Otherwise return array of matching documents
-      const cursor = this.collections.knowledge.find(mongoQuery);
-      const knowledgeItems = await cursor.toArray();
-      
-      logger.info(`Retrieved ${knowledgeItems.length} knowledge items for query`);
-      return knowledgeItems;
-    } catch (error) {
-      logger.error(`Failed to retrieve knowledge: ${error.message}`);
-      return null;
-    }
-  }
-  
-  /**
-   * Store feedback for an agent's actions.
+   * Helper method to store feedback in standard format.
    * 
    * @param {object} feedback - Feedback to store
    * @param {string} feedback.agentId - ID of the agent
    * @param {string} feedback.taskId - ID of the task
    * @param {number} feedback.rating - Numeric rating (1-5)
    * @param {string} feedback.comment - Feedback comment
-   * @param {object} feedback.metrics - Performance metrics
    * @returns {Promise<string>} ID of the stored feedback
    */
   async storeFeedback(feedback) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot store feedback.');
-      return null;
-    }
-    
-    try {
-      // Add timestamp
-      const feedbackDoc = {
-        ...feedback,
-        timestamp: new Date(),
-        version: '2.1'
-      };
-      
-      // Store in MongoDB
-      const result = await this.collections.feedback.insertOne(feedbackDoc);
-      
-      logger.info(`Stored feedback for agent ${feedback.agentId} on task ${feedback.taskId}`);
-      return result.insertedId.toString();
-    } catch (error) {
-      logger.error(`Failed to store feedback: ${error.message}`);
-      return null;
-    }
+    return this.storeMemory({
+      type: 'feedback',
+      agentId: feedback.agentId,
+      content: {
+        taskId: feedback.taskId,
+        rating: feedback.rating,
+        comment: feedback.comment,
+        metrics: feedback.metrics || {}
+      },
+      metadata: {
+        rating: feedback.rating,
+        taskId: feedback.taskId
+      },
+      tags: ['feedback']
+    });
   }
   
   /**
-   * Store learning outcome from agent's experiences.
+   * Close the database connection.
    * 
-   * @param {object} learning - Learning to store
-   * @param {string} learning.agentId - ID of the agent
-   * @param {string} learning.domain - Learning domain
-   * @param {string} learning.key - Learning key
-   * @param {object} learning.content - Learning content
-   * @param {Array<string>} learning.relatedExperiences - IDs of related experiences
-   * @returns {Promise<string>} ID of the stored learning
+   * @returns {Promise<void>}
    */
-  async storeLearning(learning) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot store learning.');
-      return null;
+  async disconnect() {
+    if (this.useMockDatabase) {
+      this.connected = false;
+      logger.info('[Mock DB] Disconnected from mock database');
+      return;
     }
     
-    try {
-      // Add timestamp and version
-      const learningDoc = {
-        ...learning,
-        timestamp: new Date(),
-        version: '2.1',
-        lastUpdated: new Date()
-      };
-      
-      // Upsert to MongoDB (update if exists, insert if not)
-      const result = await this.collections.learning.updateOne(
-        { agentId: learning.agentId, domain: learning.domain, key: learning.key },
-        { $set: learningDoc },
-        { upsert: true }
-      );
-      
-      // Also cache in Redis if enabled
-      if (this.redisEnabled) {
-        const key = `learning:${learning.agentId}:${learning.domain}:${learning.key}`;
-        await this.redisClient.set(
-          key,
-          JSON.stringify(learningDoc),
-          'EX',
-          this.config.redis.ttl
-        );
-      }
-      
-      logger.info(`Stored learning for agent ${learning.agentId} in domain ${learning.domain}`);
-      return true;
-    } catch (error) {
-      logger.error(`Failed to store learning: ${error.message}`);
-      return false;
-    }
-  }
-  
-  /**
-   * Retrieve learning outcomes for an agent.
-   * 
-   * @param {object} query - Query parameters
-   * @param {string} query.agentId - ID of the agent
-   * @param {string} query.domain - Learning domain
-   * @param {string} query.key - Specific learning key
-   * @returns {Promise<object|Array<object>>} Retrieved learning outcomes
-   */
-  async retrieveLearning(query) {
-    if (!this.mongoEnabled) {
-      logger.warn('MongoDB memory is disabled. Cannot retrieve learning.');
-      return null;
-    }
-    
-    try {
-      // Check Redis cache first if enabled and querying by key
-      if (this.redisEnabled && query.agentId && query.domain && query.key) {
-        const cacheKey = `learning:${query.agentId}:${query.domain}:${query.key}`;
-        const cachedValue = await this.redisClient.get(cacheKey);
-        
-        if (cachedValue) {
-          logger.info(`Retrieved learning from Redis cache: ${query.agentId}/${query.domain}/${query.key}`);
-          return JSON.parse(cachedValue);
-        }
-      }
-      
-      // Build MongoDB query
-      const mongoQuery = {};
-      
-      if (query.agentId) {
-        mongoQuery.agentId = query.agentId;
-      }
-      
-      if (query.domain) {
-        mongoQuery.domain = query.domain;
-      }
-      
-      if (query.key) {
-        mongoQuery.key = query.key;
-      }
-      
-      // If querying by specific key, return single document
-      if (query.key) {
-        const learning = await this.collections.learning.findOne(mongoQuery);
-        
-        // Cache in Redis if found and Redis is enabled
-        if (learning && this.redisEnabled) {
-          const cacheKey = `learning:${query.agentId}:${query.domain}:${query.key}`;
-          await this.redisClient.set(
-            cacheKey,
-            JSON.stringify(learning),
-            'EX',
-            this.config.redis.ttl
-          );
-        }
-        
-        return learning;
-      }
-      
-      // Otherwise return array of matching documents
-      const cursor = this.collections.learning.find(mongoQuery);
-      const learningItems = await cursor.toArray();
-      
-      logger.info(`Retrieved ${learningItems.length} learning items for query`);
-      return learningItems;
-    } catch (error) {
-      logger.error(`Failed to retrieve learning: ${error.message}`);
-      return null;
-    }
-  }
-  
-  /**
-   * Close connections to memory storage systems.
-   */
-  async close() {
-    if (this.mongoClient) {
-      await this.mongoClient.close();
-      logger.info('Closed MongoDB connection');
-    }
-    
-    if (this.redisClient) {
-      await this.redisClient.quit();
-      logger.info('Closed Redis connection');
+    if (this.pool) {
+      await this.pool.end();
+      this.pool = null;
+      this.connected = false;
+      logger.info('Disconnected from Neon PostgreSQL database');
     }
   }
 }

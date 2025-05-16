@@ -9,7 +9,9 @@ import {
   ListItem,
   CircularProgress,
   IconButton,
-  Chip
+  Chip,
+  Tab,
+  Tabs
 } from '@mui/material';
 import { 
   CalendarMonth as CalendarIcon, 
@@ -17,7 +19,11 @@ import {
   LocationOn as VenueIcon,
   TrendingUp as TrendingIcon,
   Add as AddIcon,
-  MoreVert as MoreVertIcon
+  MoreVert as MoreVertIcon,
+  Psychology as PsychologyIcon,
+  Recommend as RecommendIcon,
+  Timeline as PatternIcon,
+  Insights as InsightIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { ScheduleService } from '../services/api';
@@ -27,10 +33,57 @@ import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GradientText from '../components/common/GradientText';
 import DashboardGrid, { DashboardGridItem } from '../components/common/DashboardGrid';
 
+// Import visualization components 
+// Note: These components need to be properly wrapped with TypeScript interfaces
+// to work with TypeScript. This is a temporary solution for demo purposes.
+import RecommendationVisualizer from '../../backend/ui-components/components/analytics/RecommendationVisualizer';
+import PatternVisualizer from '../../backend/ui-components/components/analytics/PatternVisualizer';
+import LearningInsightsDashboard from '../../backend/ui-components/components/analytics/LearningInsightsDashboard';
+
+// TypeScript declaration for the visualization components
+declare module '../../backend/ui-components/components/analytics/RecommendationVisualizer' {
+  const RecommendationVisualizer: React.FC<{scheduleId?: string}>;
+  export default RecommendationVisualizer;
+}
+
+declare module '../../backend/ui-components/components/analytics/PatternVisualizer' {
+  const PatternVisualizer: React.FC<{scheduleId?: string}>;
+  export default PatternVisualizer;
+}
+
+declare module '../../backend/ui-components/components/analytics/LearningInsightsDashboard' {
+  const LearningInsightsDashboard: React.FC<{}>;
+  export default LearningInsightsDashboard;
+}
+
+/**
+ * Tab panel component to display content for each tab
+ */
+const TabPanel: React.FC<{
+  children: React.ReactNode;
+  value: number;
+  index: number;
+}> = ({ children, value, index, ...other }) => (
+  <div
+    role="tabpanel"
+    hidden={value !== index}
+    id={`flextime-tabpanel-${index}`}
+    aria-labelledby={`flextime-tab-${index}`}
+    {...other}
+  >
+    {value === index && (
+      <Box sx={{ p: 3 }}>
+        {children}
+      </Box>
+    )}
+  </div>
+);
+
 const Dashboard: React.FC = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<number>(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -65,6 +118,11 @@ const Dashboard: React.FC = () => {
       default:
         return '#0066cc'; // FlexTime Blue
     }
+  };
+
+  // Handle tab changes
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setActiveTab(newValue);
   };
 
   return (
@@ -370,6 +428,68 @@ const Dashboard: React.FC = () => {
           </GlassmorphicCard>
         </DashboardGridItem>
       </DashboardGrid>
+
+      {/* Advanced Analytics with FlexTime */}
+      <Box mt={6} mb={4}>
+        <GlassmorphicCard>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <Tabs 
+              value={activeTab} 
+              onChange={handleTabChange}
+              aria-label="FlexTime analytics tabs"
+              variant="scrollable"
+              scrollButtons="auto"
+            >
+              <Tab icon={<RecommendIcon />} iconPosition="start" label="Recommendations" />
+              <Tab icon={<PatternIcon />} iconPosition="start" label="Pattern Analysis" />
+              <Tab icon={<InsightIcon />} iconPosition="start" label="Learning Insights" />
+            </Tabs>
+          </Box>
+          
+          {/* Recommendations Tab */}
+          <TabPanel value={activeTab} index={0}>
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Smart Scheduling Recommendations
+              </Typography>
+              <Typography variant="body2" color="text.secondary" paragraph>
+                FlexTime's built-in intelligence analyzes your scheduling patterns and provides recommendations to optimize travel time, venue usage, and competitive balance.
+              </Typography>
+              {schedules.length > 0 && (
+                <RecommendationVisualizer scheduleId={schedules[0].schedule_id} />
+              )}
+            </Box>
+          </TabPanel>
+          
+          {/* Patterns Tab */}
+          <TabPanel value={activeTab} index={1}>
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Pattern Analysis
+              </Typography>
+              <Typography variant="body2" color="text.secondary" paragraph>
+                Identify recurring patterns in your scheduling practices and discover insights to improve future schedules.
+              </Typography>
+              {schedules.length > 0 && (
+                <PatternVisualizer scheduleId={schedules[0].schedule_id} />
+              )}
+            </Box>
+          </TabPanel>
+          
+          {/* Insights Tab */}
+          <TabPanel value={activeTab} index={2}>
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h5" gutterBottom>
+                Learning Insights
+              </Typography>
+              <Typography variant="body2" color="text.secondary" paragraph>
+                FlexTime continuously learns from your decisions to provide more tailored recommendations and insights over time.
+              </Typography>
+              <LearningInsightsDashboard />
+            </Box>
+          </TabPanel>
+        </GlassmorphicCard>
+      </Box>
     </Box>
   );
 };

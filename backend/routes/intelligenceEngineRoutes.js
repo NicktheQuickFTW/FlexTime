@@ -1,302 +1,109 @@
 /**
- * Intelligence Engine API Routes
+ * Intelligence Engine Routes - Stub Implementation
  * 
- * This module provides API endpoints for interacting with the HELiiX Intelligence Engine
- * from the FlexTime scheduling service.
+ * This is a stub implementation that replaces the original Intelligence Engine routes.
+ * It provides simple fallback responses for all endpoints previously connected
+ * to the external Intelligence Engine service.
  */
 
 const express = require('express');
 const router = express.Router();
-const IntelligenceEngineClient = require('../agents/intelligence_engine_client');
-const intelligenceEngineConfig = require('../config/intelligence_engine_config');
-const { FlexTimeAgentSystem } = require('../agents');
-const logger = require('../utils/logger');
 
-// Initialize Intelligence Engine client
-const intelligenceEngine = new IntelligenceEngineClient(intelligenceEngineConfig);
-
-/**
- * @route   GET /api/intelligence-engine/status
- * @desc    Get Intelligence Engine status
- * @access  Private
- */
-router.get('/status', async (req, res) => {
-  try {
-    const status = await intelligenceEngine.getStatus();
-    res.json(status);
-  } catch (error) {
-    logger.error(`Failed to get Intelligence Engine status: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get Intelligence Engine status',
-      message: error.message
-    });
-  }
+// Status endpoint
+router.get('/status', (req, res) => {
+  res.json({
+    success: true,
+    status: 'disabled',
+    message: 'Intelligence Engine functionality has been removed',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
+  });
 });
 
-/**
- * @route   GET /api/intelligence-engine/experiences
- * @desc    Get experiences from Intelligence Engine
- * @access  Private
- */
-router.get('/experiences', async (req, res) => {
-  try {
-    const { type, agentId, tags, limit = 10 } = req.query;
-    
-    const queryParams = {};
-    if (type) queryParams.type = type;
-    if (agentId) queryParams.agentId = agentId;
-    if (tags) queryParams.tags = tags.split(',');
-    
-    const experiences = await intelligenceEngine.retrieveExperiences({
-      ...queryParams,
-      limit: parseInt(limit)
-    });
-    
-    res.json({
-      success: true,
-      count: experiences.length,
-      experiences
-    });
-  } catch (error) {
-    logger.error(`Failed to retrieve experiences: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to retrieve experiences',
-      message: error.message
-    });
-  }
+// Recommendations endpoint
+router.post('/recommendations', (req, res) => {
+  const sportType = req.body.sportType || 'unknown';
+  
+  // Default recommendations
+  res.json({
+    success: true,
+    sportType,
+    algorithms: {
+      generator: 'RoundRobinGenerator',
+      optimizer: 'SimulatedAnnealingOptimizer'
+    },
+    constraints: [
+      {
+        type: 'HomeAwayBalance',
+        weight: 1.0,
+        parameters: {}
+      },
+      {
+        type: 'MinimumRestDays',
+        weight: 0.8,
+        parameters: { minDays: 1 }
+      }
+    ],
+    parameters: {
+      optimizationIterations: 1000,
+      coolingRate: 0.95,
+      initialTemperature: 100
+    },
+    source: 'local_stub'
+  });
 });
 
-/**
- * @route   POST /api/intelligence-engine/experiences
- * @desc    Store an experience in Intelligence Engine
- * @access  Private
- */
-router.post('/experiences', async (req, res) => {
-  try {
-    const { agentId, type, content, tags } = req.body;
-    
-    if (!agentId || !type || !content) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: agentId, type, and content are required'
-      });
-    }
-    
-    const result = await intelligenceEngine.storeExperience({
-      agentId,
-      type,
-      content,
-      tags: tags || []
-    });
-    
-    res.json({
-      success: true,
-      experienceId: result.experienceId
-    });
-  } catch (error) {
-    logger.error(`Failed to store experience: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to store experience',
-      message: error.message
-    });
-  }
+// Memory endpoints
+router.post('/experiences', (req, res) => {
+  res.status(501).json({
+    success: false,
+    error: 'Intelligence Engine functionality has been removed - experience storage not available'
+  });
 });
 
-/**
- * @route   POST /api/intelligence-engine/feedback
- * @desc    Submit feedback to Intelligence Engine
- * @access  Private
- */
-router.post('/feedback', async (req, res) => {
-  try {
-    const { scheduleId, sportType, rating, comment, metrics } = req.body;
-    
-    if (!scheduleId || !rating) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required fields: scheduleId and rating are required'
-      });
-    }
-    
-    // Get agent system instance
-    const agentSystem = new FlexTimeAgentSystem();
-    
-    // Submit feedback through agent system
-    const result = await agentSystem.feedbackSystem.submitFeedback({
-      agentId: 'scheduling_director',
-      scheduleId,
-      sportType,
-      rating,
-      comment,
-      metrics
-    });
-    
-    res.json(result);
-  } catch (error) {
-    logger.error(`Failed to submit feedback: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to submit feedback',
-      message: error.message
-    });
-  }
+router.get('/experiences', (req, res) => {
+  res.json({
+    success: true,
+    experiences: []
+  });
 });
 
-/**
- * @route   GET /api/intelligence-engine/recommendations
- * @desc    Get scheduling recommendations from Intelligence Engine
- * @access  Private
- */
-router.get('/recommendations', async (req, res) => {
-  try {
-    const { sportType, teamCount, conferenceId, phase } = req.query;
-    
-    if (!sportType) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required field: sportType is required'
-      });
-    }
-    
-    const recommendations = await intelligenceEngine.getSchedulingRecommendations({
-      sportType,
-      teamCount: teamCount ? parseInt(teamCount) : undefined,
-      conferenceId,
-      phase
-    });
-    
-    res.json(recommendations);
-  } catch (error) {
-    logger.error(`Failed to get recommendations: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get recommendations',
-      message: error.message
-    });
-  }
+router.post('/feedback', (req, res) => {
+  res.status(501).json({
+    success: false,
+    error: 'Intelligence Engine functionality has been removed - feedback storage not available'
+  });
 });
 
-/**
- * @route   GET /api/intelligence-engine/insights
- * @desc    Get insights from Intelligence Engine
- * @access  Private
- */
-router.get('/insights', async (req, res) => {
-  try {
-    const { sportType, conferenceId, type = 'scheduling' } = req.query;
-    
-    if (!sportType) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required field: sportType is required'
-      });
-    }
-    
-    const insights = await intelligenceEngine.getInsights({
-      sportType,
-      conferenceId,
-      type
-    });
-    
-    res.json({
-      success: true,
-      insights
-    });
-  } catch (error) {
-    logger.error(`Failed to get insights: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get insights',
-      message: error.message
-    });
-  }
+// Advanced endpoints
+router.post('/learning', (req, res) => {
+  res.status(501).json({
+    success: false,
+    error: 'Intelligence Engine functionality has been removed - advanced learning not available'
+  });
 });
 
-/**
- * @route   POST /api/intelligence-engine/learning/advanced
- * @desc    Get advanced learning recommendations
- * @access  Private
- */
-router.post('/learning/advanced', async (req, res) => {
-  try {
-    const { sportType, parameters } = req.body;
-    
-    if (!sportType) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing required field: sportType is required'
-      });
-    }
-    
-    const recommendations = await intelligenceEngine.getAdvancedLearningRecommendations({
-      sportType,
-      ...parameters
-    });
-    
-    res.json(recommendations);
-  } catch (error) {
-    logger.error(`Failed to get advanced learning recommendations: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get advanced learning recommendations',
-      message: error.message
-    });
-  }
+router.post('/multi-sport', (req, res) => {
+  res.status(501).json({
+    success: false,
+    error: 'Intelligence Engine functionality has been removed - multi-sport optimization not available'
+  });
 });
 
-/**
- * @route   GET /api/intelligence-engine/sports/:sportType/templates
- * @desc    Get sport-specific scheduling templates
- * @access  Private
- */
-router.get('/sports/:sportType/templates', async (req, res) => {
-  try {
-    const { sportType } = req.params;
-    const options = req.query;
-    
-    const templates = await intelligenceEngine.getSportTemplates(sportType, options);
-    
-    res.json(templates);
-  } catch (error) {
-    logger.error(`Failed to get sport templates: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get sport templates',
-      message: error.message
-    });
-  }
+// Agent tasks
+router.post('/agents/tasks', (req, res) => {
+  res.status(501).json({
+    success: false,
+    error: 'Intelligence Engine functionality has been removed - agent tasks not available'
+  });
 });
 
-/**
- * @route   POST /api/intelligence-engine/scheduling/multi-sport
- * @desc    Get multi-sport scheduling recommendations
- * @access  Private
- */
-router.post('/scheduling/multi-sport', async (req, res) => {
-  try {
-    const { sports } = req.body;
-    
-    if (!sports || !Array.isArray(sports) || sports.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: 'Missing or invalid sports parameter: must be a non-empty array'
-      });
-    }
-    
-    const recommendations = await intelligenceEngine.getMultiSportRecommendations(sports);
-    
-    res.json(recommendations);
-  } catch (error) {
-    logger.error(`Failed to get multi-sport recommendations: ${error.message}`);
-    res.status(500).json({ 
-      success: false, 
-      error: 'Failed to get multi-sport recommendations',
-      message: error.message
-    });
-  }
+// Catch all other routes
+router.all('*', (req, res) => {
+  res.status(404).json({
+    success: false,
+    error: 'Intelligence Engine functionality has been removed - endpoint not available'
+  });
 });
 
 module.exports = router;

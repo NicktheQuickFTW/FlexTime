@@ -6,8 +6,7 @@
  */
 
 const logger = require('../utils/logger');
-const IntelligenceEngineClient = require('../intelligence_engine_client');
-const intelligenceEngineConfig = require('../../config/intelligence_engine_config');
+const AdvancedSchedulingService = require('../../services/advanced_scheduling_service');
 
 /**
  * Core Agent System for FlexTime
@@ -27,14 +26,11 @@ class AgentSystem {
       ...config
     };
     
-    // Configure logger
-    logger.setLogLevel(this.config.logLevel);
+    // Logger level is configured elsewhere
+    // logger.setLogLevel(this.config.logLevel);
     
-    // Initialize Intelligence Engine integration
-    this.intelligenceEngine = new IntelligenceEngineClient({
-      ...intelligenceEngineConfig,
-      ...config
-    });
+    // Initialize Advanced Scheduling Service
+    this.schedulingService = new AdvancedSchedulingService(config.scheduling || {});
     
     // Track registered agents
     this.agents = new Map();
@@ -85,12 +81,12 @@ class AgentSystem {
       
       logger.info('Initializing Agent System');
       
-      // Initialize Intelligence Engine client
-      const intelligenceEngineInitialized = await this.intelligenceEngine.initialize();
-      if (intelligenceEngineInitialized) {
-        logger.info('Intelligence Engine client initialized successfully');
+      // Initialize Advanced Scheduling Service
+      const serviceInitialized = await this.schedulingService.initialize();
+      if (serviceInitialized) {
+        logger.info('Advanced Scheduling Service initialized successfully');
       } else {
-        logger.warn('Intelligence Engine client initialization failed, using local components only');
+        logger.warn('Advanced Scheduling Service initialization failed, using limited functionality');
       }
       
       // Initialize all registered agents
@@ -125,21 +121,19 @@ class AgentSystem {
    */
   async storeExperience(agentId, experience, metadata = {}) {
     try {
-      if (!this.intelligenceEngine || !this.intelligenceEngine.enabled) {
-        logger.debug(`Intelligence Engine not available, skipping experience storage for ${agentId}`);
-        return false;
-      }
-      
+      // Format experience data
       const experienceData = {
-        agentId,
-        timestamp: new Date().toISOString(),
         content: experience,
-        metadata
+        agentId,
+        type: metadata.type || 'general',
+        tags: metadata.tags || [],
+        scheduleId: metadata.scheduleId
       };
       
-      await this.intelligenceEngine.storeExperience(experienceData);
+      // Store experience using Advanced Scheduling Service
+      const result = await this.schedulingService.storeFeedback(experienceData);
       logger.debug(`Experience stored for agent ${agentId}`);
-      return true;
+      return !!result;
     } catch (error) {
       logger.error(`Failed to store experience for agent ${agentId}: ${error.message}`);
       return false;
@@ -170,10 +164,10 @@ class AgentSystem {
         }
       }
       
-      // Shutdown Intelligence Engine client
-      if (this.intelligenceEngine) {
-        await this.intelligenceEngine.shutdown();
-        logger.info('Intelligence Engine client shut down successfully');
+      // Shutdown Advanced Scheduling Service
+      if (this.schedulingService) {
+        await this.schedulingService.shutdown();
+        logger.info('Advanced Scheduling Service shut down successfully');
       }
       
       this.initialized = false;

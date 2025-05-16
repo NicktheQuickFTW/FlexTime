@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Big 12 Mileage Calculator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .multi-trip-results {
+            margin-top: 20px;
+        }
+        .trip-leg {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background-color: #f8f9fa;
+            margin-bottom: 4px;
+            border-radius: 4px;
+        }
+        .trip-total {
+            margin-top: 10px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            text-align: right;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .file-input-wrapper .btn {
+            display: inline-block;
+            padding: 8px 12px;
+            cursor: pointer;
+            border: 1px solid #ddd;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            width: 100%;
+            text-align: center;
+        }
+        .file-name {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #results {
+            margin-top: 30px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .distance {
+            font-weight: bold;
+        }
+        #singleResult {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 18px;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        .logo {
+            max-width: 150px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Big 12 Mileage Calculator</h1>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="single-trip">Single Trip</div>
+            <div class="tab" data-tab="multi-trip">Multi-Trip</div>
+            <div class="tab" data-tab="matrix-processing">Schedule Matrix</div>
+        </div>
+        
+        <div id="single-trip" class="tab-content active">
+            <div class="form-group">
+                <label for="origin">Select Origin School:</label>
+                <select id="origin">
+                    <option value="">-- Select Origin --</option>
+                    {% for school in schools %}
+                    <option value="{{ school }}">{{ school }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="destination">Select Destination School:</label>
+                <select id="destination">
+                    <option value="">-- Select Destination --</option>
+                </select>
+            </div>
+            
+            <button id="calculateSingle">Calculate Distance</button>
+            
+            <div id="singleResult"></div>
+            
+            <div id="results">
+                <h2>Distances from Origin:</h2>
+                <div class="loading">Loading distances...</div>
+                <div id="distanceList"></div>
+            </div>
+        </div>
+        
+        <div id="multi-trip" class="tab-content">
+            <div class="form-group">
+                <label>Upload CSV File with Schools:</label>
+                <p>Create a CSV file with one school per line. The calculator will compute the total distance in the order listed.</p>
+                <div class="file-input-wrapper">
+                    <div class="btn">Choose CSV File</div>
+                    <input type="file" id="csvFile" accept=".csv">
+                </div>
+                <div class="file-name" id="fileName">No file selected</div>
+            </div>
+            
+            <div class="form-group">
+                <label>Options:</label>
+                <div style="display: flex; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px; margin-right: 10px;">
+                        <label>
+                            <input type="checkbox" id="includeReturn"> Include return to starting point
+                        </label>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <label>
+                            <input type="checkbox" id="optimizeRoute"> Optimize route (find best order)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="costPerMile">Cost per mile ($):</label>
+                <input type="number" id="costPerMile" value="0.70" step="0.01" min="0" style="width: 100px;">
+                <p style="font-size: 14px; color: #666; margin-top: 5px;">
+                    Current standard mileage rate: $0.70/mile (2025). For team travel: charter bus (~$4.50/mile), team flights (varies by distance).
+                </p>
+            </div>
+            
+            <button id="calculateMulti">Calculate Multi-Trip Distance</button>
+            
+            <div class="multi-trip-results" id="multiTripResults">
+                <h2>Athletic Travel Plan:</h2>
+                <div id="tripLegs"></div>
+                <div id="tripTotal"></div>
+                <div id="costEstimate" class="trip-total" style="margin-top: 5px; background-color: #f1f5f9;"></div>
+                <div id="travelPairs" style="margin-top: 20px; display: none;">
+                    <h3>Recommended Travel Pairs:</h3>
+                    <p>Schools less than 400 miles apart that could be visited on a single road trip:</p>
+                    <div id="travelPairsList"></div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <h3>Sample CSV Format:</h3>
+                <pre>Iowa State     <- Home/starting point
+Kansas
+Kansas State   <- Schools to visit
+West Virginia</pre>
+                <p>Include one school name per line. First school is considered the home base if using route optimization.</p>
+                <p><strong>Athletic Department Use:</strong> Calculate travel costs, optimize road trips, and identify efficient travel pairs.</p>
+            </div>
+        </div>
+        
+        <div id="matrix-processing" class="tab-content">
+            <div class="form-group">
+                <label>Upload Schedule Matrix CSV:</label>
+                <p>Upload a CSV file with a complete schedule matrix. First row and column should contain school codes.</p>
+                <div class="file-input-wrapper">
+                    <div class="btn">Choose Matrix CSV File</div>
+                    <input type="file" id="matrixFile" accept=".csv">
+                </div>
+                <div class="file-name" id="matrixFileName">No file selected</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="matrixCostPerMile">Cost per mile ($):</label>
+                <input type="number" id="matrixCostPerMile" value="0.70" step="0.01" min="0" style="width: 100px;">
+                <p style="font-size: 14px; color: #666; margin-top: 5px;">
+                    Current standard mileage rate: $0.70/mile (2025). For team travel: charter bus (~$4.50/mile), team flights (varies by distance).
+                </p>
+            </div>
+            
+            <button id="processMatrix">Process Schedule Matrix</button>
+            
+            <div class="matrix-results" id="matrixResults" style="display: none;">
+                <h2>Schedule Matrix Results:</h2>
+                <div id="matrixSummary" class="trip-total" style="background-color: #e6f2ff; margin-bottom: 15px;"></div>
+                
+                <div class="matrix-section">
+                    <h3>School Travel Totals:</h3>
+                    <div id="schoolTotals"></div>
+                </div>
+                
+                <div class="matrix-section" style="margin-top: 20px;">
+                    <h3>Individual Matchup Distances:</h3>
+                    <div id="matchupsList"></div>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 30px;">
+                <h3>Sample Matrix CSV Format:</h3>
+                <pre>AE,CBU,UNC,NDSU,SDSU,UVU    <- Headers (school codes)
+CBU,UNC,MU,AF,AF,NDSU       <- Row 1: CBU's schedule
+UNC,WYO,WYO,CBU,CBU,SDSU    <- Row 2: UNC's schedule
+UVU,UNI,SDSU,UNC,NDSU,WYO    <- Row 3: UVU's schedule</pre>
+                <p>First row: Headers with school codes<br>
+First column: Home schools<br>
+Each cell: Away school for that matchup</p>
+                <p><strong>Note:</strong> Only works with schools in our database. You can use abbreviations like UNC, SDSU, etc.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            const originSelect = document.getElementById('origin');
+            const destinationSelect = document.getElementById('destination');
+            const calculateBtn = document.getElementById('calculateSingle');
+            const singleResult = document.getElementById('singleResult');
+            const distanceList = document.getElementById('distanceList');
+            const loading = document.querySelector('.loading');
+            
+            // Initial schools list
+            const schools = [
+                {% for school in schools %}
+                "{{ school }}",
+                {% endfor %}
+            ];
+            
+            // Handle origin selection change
+            originSelect.addEventListener('change', function() {
+                const origin = this.value;
+                
+                // Clear destination dropdown and repopulate
+                destinationSelect.innerHTML = '<option value="">-- Select Destination --</option>';
+                
+                if (origin) {
+                    // Add all schools except the origin
+                    schools.forEach(school => {
+                        if (school !== origin) {
+                            const option = document.createElement('option');
+                            option.value = school;
+                            option.textContent = school;
+                            destinationSelect.appendChild(option);
+                        }
+                    });
+                    
+                    // Get all distances from the origin
+                    fetchAllDistances(origin);
+                } else {
+                    // Clear the distance list if no origin selected
+                    distanceList.innerHTML = '';
+                }
+            });
+            
+            // Handle calculate button click
+            calculateBtn.addEventListener('click', function() {
+                const origin = originSelect.value;
+                const destination = destinationSelect.value;
+                
+                if (!origin || !destination) {
+                    alert('Please select both origin and destination schools.');
+                    return;
+                }
+                
+                // Calculate distance between the selected schools
+                fetchSingleDistance(origin, destination);
+            });
+            
+            // File input handling for multi-trip
+            const csvFileInput = document.getElementById('csvFile');
+            const fileNameDisplay = document.getElementById('fileName');
+            
+            csvFileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    fileNameDisplay.textContent = this.files[0].name;
+                } else {
+                    fileNameDisplay.textContent = 'No file selected';
+                }
+            });
+            
+            // File input handling for matrix processing
+            const matrixFileInput = document.getElementById('matrixFile');
+            const matrixFileNameDisplay = document.getElementById('matrixFileName');
+            
+            matrixFileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    matrixFileNameDisplay.textContent = this.files[0].name;
+                } else {
+                    matrixFileNameDisplay.textContent = 'No file selected';
+                }
+            });
+            
+            // Multi-trip calculation
+            const calculateMultiBtn = document.getElementById('calculateMulti');
+            const tripLegsDiv = document.getElementById('tripLegs');
+            const tripTotalDiv = document.getElementById('tripTotal');
+            
+            calculateMultiBtn.addEventListener('click', function() {
+                const fileInput = document.getElementById('csvFile');
+                const includeReturn = document.getElementById('includeReturn').checked;
+                const costPerMile = parseFloat(document.getElementById('costPerMile').value) || 4.50;
+                const optimizeRoute = document.getElementById('optimizeRoute').checked;
+                
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Please select a CSV file.');
+                    return;
+                }
+                
+                const formData = new FormData();
+                formData.append('csv_file', fileInput.files[0]);
+                formData.append('include_return', includeReturn);
+                formData.append('cost_per_mile', costPerMile);
+                formData.append('optimize_route', optimizeRoute);
+                
+                // Clear previous results
+                tripLegsDiv.innerHTML = '';
+                tripTotalDiv.innerHTML = '';
+                document.getElementById('costEstimate').innerHTML = '';
+                document.getElementById('travelPairs').style.display = 'none';
+                document.getElementById('travelPairsList').innerHTML = '';
+                
+                fetch('/multi-trip', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(`Error: ${data.error}`);
+                        return;
+                    }
+                    
+                    // Display trip legs
+                    data.legs.forEach(leg => {
+                        const legDiv = document.createElement('div');
+                        legDiv.className = 'trip-leg';
+                        legDiv.innerHTML = `
+                            <span>${leg.origin} to ${leg.destination}</span>
+                            <span>${leg.distance} miles</span>
+                        `;
+                        tripLegsDiv.appendChild(legDiv);
+                    });
+                    
+                    // Display total distance
+                    const totalDiv = document.createElement('div');
+                    totalDiv.className = 'trip-total';
+                    const roundTripText = data.round_trip ? ' (Round Trip)' : '';
+                    totalDiv.innerHTML = `Total Distance: ${data.total_distance} miles${roundTripText}`;
+                    tripTotalDiv.appendChild(totalDiv);
+                    
+                    // Display cost estimate
+                    const costDiv = document.getElementById('costEstimate');
+                    costDiv.innerHTML = `Estimated Travel Cost: $${data.estimated_cost.toLocaleString()}`;
+                    
+                    // Display travel pairs if available
+                    if (data.travel_pairs && data.travel_pairs.length > 0) {
+                        document.getElementById('travelPairs').style.display = 'block';
+                        const pairsListDiv = document.getElementById('travelPairsList');
+                        
+                        data.travel_pairs.forEach(pair => {
+                            const pairDiv = document.createElement('div');
+                            pairDiv.className = 'trip-leg';
+                            pairDiv.innerHTML = `
+                                <span>${pair.schools[0]} + ${pair.schools[1]}</span>
+                                <span>${pair.distance} miles between them</span>
+                            `;
+                            pairsListDiv.appendChild(pairDiv);
+                        });
+                    }
+                })
+                .catch(error => {
+                    alert(`Error: ${error.message}`);
+                });
+            });
+            
+            // Fetch all distances from a given origin
+            function fetchAllDistances(origin) {
+                loading.style.display = 'block';
+                distanceList.innerHTML = '';
+                
+                fetch('/calculate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ origin: origin }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    
+                    if (data.error) {
+                        distanceList.innerHTML = `<p>Error: ${data.error}</p>`;
+                        return;
+                    }
+                    
+                    // Display all distances
+                    data.distances.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'result-item';
+                        div.innerHTML = `
+                            <span class="school">${item.school}</span>
+                            <span class="distance">${item.distance} miles</span>
+                        `;
+                        distanceList.appendChild(div);
+                    });
+                })
+                .catch(error => {
+                    loading.style.display = 'none';
+                    distanceList.innerHTML = `<p>Error: ${error.message}</p>`;
+                });
+            }
+            
+            // Fetch single distance
+            function fetchSingleDistance(origin, destination) {
+                fetch('/distance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ origin, destination }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        singleResult.textContent = `Error: ${data.error}`;
+                    } else {
+                        singleResult.textContent = `The distance from ${origin} to ${destination} is approximately ${data.distance} miles.`;
+                    }
+                    singleResult.style.display = 'block';
+                })
+                .catch(error => {
+                    singleResult.textContent = `Error: ${error.message}`;
+                    singleResult.style.display = 'block';
+                });
+            }
+            
+            // Matrix processing
+            const processMatrixBtn = document.getElementById('processMatrix');
+            const matrixResults = document.getElementById('matrixResults');
+            const matrixSummary = document.getElementById('matrixSummary');
+            const schoolTotals = document.getElementById('schoolTotals');
+            const matchupsList = document.getElementById('matchupsList');
+            
+            processMatrixBtn.addEventListener('click', function() {
+                const fileInput = document.getElementById('matrixFile');
+                const costPerMile = parseFloat(document.getElementById('matrixCostPerMile').value) || 0.70;
+                
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    alert('Please select a CSV file with your schedule matrix.');
+                    return;
+                }
+                
+                const formData = new FormData();
+                formData.append('matrix_file', fileInput.files[0]);
+                formData.append('cost_per_mile', costPerMile);
+                
+                // Clear previous results
+                matrixSummary.innerHTML = '';
+                schoolTotals.innerHTML = '';
+                matchupsList.innerHTML = '';
+                matrixResults.style.display = 'none';
+                
+                fetch('/process-matrix', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(`Error: ${data.error}`);
+                        return;
+                    }
+                    
+                    // Display results
+                    matrixResults.style.display = 'block';
+                    
+                    // Summary
+                    matrixSummary.innerHTML = `
+                        <div>Total Matchups: ${data.num_matchups}</div>
+                        <div>Total Miles: ${data.total_miles.toLocaleString()} miles</div>
+                        <div>Estimated Cost: $${data.estimated_cost.toLocaleString()}</div>
+                    `;
+                    
+                    // School totals
+                    data.school_totals.forEach(school => {
+                        const schoolDiv = document.createElement('div');
+                        schoolDiv.className = 'trip-leg';
+                        schoolDiv.innerHTML = `
+                            <span>${school.school}</span>
+                            <span>${school.miles.toLocaleString()} miles</span>
+                        `;
+                        schoolTotals.appendChild(schoolDiv);
+                    });
+                    
+                    // Individual matchups
+                    data.trips.forEach(trip => {
+                        const tripDiv = document.createElement('div');
+                        tripDiv.className = 'trip-leg';
+                        tripDiv.innerHTML = `
+                            <span>${trip.home} vs ${trip.away}</span>
+                            <span>${trip.distance.toLocaleString()} miles</span>
+                        `;
+                        matchupsList.appendChild(tripDiv);
+                    });
+                })
+                .catch(error => {
+                    alert(`Error: ${error.message}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

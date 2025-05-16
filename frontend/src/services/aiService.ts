@@ -1,43 +1,11 @@
-import axios from 'axios';
+import { ScheduleConflict, ResolutionOption, OptimizationResult, ScheduleOptimizationService } from './scheduleOptimizationService';
 import { Schedule } from '../types';
 
-// Types for AI-related data
-export interface ScheduleConflict {
-  id: string;
-  type: 'venue' | 'team' | 'official' | 'time' | 'resource';
-  description: string;
-  severity: 'high' | 'medium' | 'low';
-  affectedItems: string[];
-}
-
-export interface ResolutionOption {
-  id: string;
-  description: string;
-  confidence: number; // 0-100
-  changes: {
-    itemId: string;
-    field: string;
-    oldValue: string;
-    newValue: string;
-  }[];
-}
-
-export interface OptimizationResult {
-  optimizedSchedule: Schedule;
-  improvements: {
-    category: string;
-    metric: string;
-    oldValue: number;
-    newValue: number;
-    percentChange: number;
-  }[];
-}
-
-// Base URL for the intelligence engine API
-const AI_API_BASE_URL = process.env.REACT_APP_INTELLIGENCE_ENGINE_URL || 'http://localhost:5000/api';
-
 /**
- * Service for interacting with the HELiiX Intelligence Engine's AI capabilities
+ * AI Service - provides AI capabilities for schedule management
+ * 
+ * NOTE: This service is now a wrapper around the ScheduleOptimizationService
+ * to maintain backward compatibility while removing external dependencies.
  */
 export const AIService = {
   /**
@@ -46,13 +14,7 @@ export const AIService = {
    * @returns Promise with an array of schedule conflicts
    */
   detectConflicts: async (scheduleId: number): Promise<ScheduleConflict[]> => {
-    try {
-      const response = await axios.get(`${AI_API_BASE_URL}/schedules/${scheduleId}/conflicts`);
-      return response.data;
-    } catch (error) {
-      console.error('Error detecting conflicts:', error);
-      throw error;
-    }
+    return ScheduleOptimizationService.detectConflicts(scheduleId);
   },
 
   /**
@@ -62,13 +24,7 @@ export const AIService = {
    * @returns Promise with an array of resolution options
    */
   getResolutionOptions: async (scheduleId: number, conflictId: string): Promise<ResolutionOption[]> => {
-    try {
-      const response = await axios.get(`${AI_API_BASE_URL}/schedules/${scheduleId}/conflicts/${conflictId}/resolutions`);
-      return response.data;
-    } catch (error) {
-      console.error('Error getting resolution options:', error);
-      throw error;
-    }
+    return ScheduleOptimizationService.getResolutionOptions(scheduleId, conflictId);
   },
 
   /**
@@ -79,15 +35,7 @@ export const AIService = {
    * @returns Promise with the updated schedule
    */
   applyResolution: async (scheduleId: number, conflictId: string, resolutionId: string): Promise<Schedule> => {
-    try {
-      const response = await axios.post(`${AI_API_BASE_URL}/schedules/${scheduleId}/conflicts/${conflictId}/apply`, {
-        resolutionId
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error applying resolution:', error);
-      throw error;
-    }
+    return ScheduleOptimizationService.applyResolution(scheduleId, conflictId, resolutionId);
   },
 
   /**
@@ -103,13 +51,7 @@ export const AIService = {
       constraints: { [key: string]: any }
     }
   ): Promise<OptimizationResult> => {
-    try {
-      const response = await axios.post(`${AI_API_BASE_URL}/schedules/${scheduleId}/optimize`, optimizationParams);
-      return response.data;
-    } catch (error) {
-      console.error('Error optimizing schedule:', error);
-      throw error;
-    }
+    return ScheduleOptimizationService.optimizeSchedule(scheduleId, optimizationParams);
   },
 
   /**
@@ -118,14 +60,11 @@ export const AIService = {
    * @returns Promise with insights data
    */
   getScheduleInsights: async (scheduleId: number): Promise<any> => {
-    try {
-      const response = await axios.get(`${AI_API_BASE_URL}/schedules/${scheduleId}/insights`);
-      return response.data;
-    } catch (error) {
-      console.error('Error getting schedule insights:', error);
-      throw error;
-    }
+    return ScheduleOptimizationService.getScheduleInsights(scheduleId);
   }
 };
+
+// Re-export the types for backward compatibility
+export type { ScheduleConflict, ResolutionOption, OptimizationResult };
 
 export default AIService;
