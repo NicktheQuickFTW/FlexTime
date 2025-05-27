@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const connected = await neonDB.testConnection();
   
   if (connected) {
-    console.log('🚀 Neon Database ready for FlexTime Schedule Builder');
+    console.log('🚀 Neon Database ready for FlexTime FT Builder');
     
     // Initialize tables if needed
     try {

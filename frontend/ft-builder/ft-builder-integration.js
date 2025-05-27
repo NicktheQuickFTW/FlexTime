@@ -1,5 +1,5 @@
 /**
- * FlexTime Schedule Builder - Main Application Integration
+ * FlexTime FT Builder - Main Application Integration
  * Complete integration with FlexTime's existing architecture
  */
 
@@ -314,7 +314,7 @@ const ScheduleBuilderAPI = {
   }
 };
 
-// Main Schedule Builder Page Component
+// Main FT Builder Page Component
 function ScheduleBuilderPage() {
   // Initialize with demo data for immediate functionality
   const [schedule, setSchedule] = React.useState({
@@ -413,7 +413,7 @@ function addScheduleBuilderToNavigation() {
   }
 }
 
-// Show Schedule Builder Page
+// Show FT Builder Page
 function showScheduleBuilder() {
   // Replace main content with schedule builder
   const appContainer = document.getElementById('app');
@@ -435,7 +435,7 @@ function showScheduleBuilder() {
   }
 }
 
-// Initialize Schedule Builder Integration
+// Initialize FT Builder Integration
 function initializeScheduleBuilder() {
   // Add navigation integration
   addScheduleBuilderToNavigation();

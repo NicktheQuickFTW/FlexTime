@@ -1,5 +1,5 @@
 /**
- * FlexTime Ultimate Schedule Builder
+ * FlexTime Ultimate FT Builder
  * The most advanced collegiate athletics scheduling interface ever created
  * 
  * Architecture combines:
@@ -204,7 +204,15 @@ function ScheduleBuilderApp() {
     return React.createElement('div', { className: 'schedule-builder-loading' }, [
       React.createElement('div', { className: 'loading-content', key: 'loading' }, [
         React.createElement('div', { className: 'loading-spinner', key: 'spinner' }),
-        React.createElement('h3', { key: 'title' }, 'Loading FlexTime Schedule Builder...'),
+        React.createElement('h3', { key: 'title', style: { display: 'flex', alignItems: 'center', gap: '12px', justifyContent: 'center' } }, [
+          React.createElement('img', { 
+            key: 'logo',
+            src: '/assets/logos/flextime/flextime-white32x32.svg',
+            alt: 'FlexTime',
+            style: { width: '32px', height: '32px' }
+          }),
+          React.createElement('span', { key: 'text' }, 'Loading FlexTime FT Builder...')
+        ]),
         React.createElement('p', { key: 'desc' }, 'Connecting to Neon Database and loading schedule data...')
       ])
     ]);

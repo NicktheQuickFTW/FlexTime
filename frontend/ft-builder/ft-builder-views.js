@@ -1,5 +1,5 @@
 /**
- * FlexTime Schedule Builder - Additional View Components
+ * FlexTime FT Builder - Additional View Components
  * Placeholder components for calendar, gantt, matrix views and analytics panel
  */
 
