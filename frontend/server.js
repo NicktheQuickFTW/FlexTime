@@ -10,9 +10,12 @@ const PORT = process.env.PORT || 3000;
 // JWT Secret (in production, use environment variable)
 const JWT_SECRET = process.env.JWT_SECRET || 'flextime-jwt-secret-key-change-in-production';
 
-// Neon DB connection using the HELiiX database
+// Load environment variables
+require('dotenv').config({ path: '../.env' });
+
+// Neon DB connection using environment variables
 const pool = new Pool({
-  connectionString: 'postgres://xii-os_owner:npg_4qYJFR0lneIg@ep-wandering-sea-aa01qr2o-pooler.westus3.azure.neon.tech:5432/HELiiX',
+  connectionString: process.env.NEON_DB_CONNECTION_STRING,
   ssl: {
     require: true,
     rejectUnauthorized: false
