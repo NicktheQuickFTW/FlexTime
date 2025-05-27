@@ -9,10 +9,10 @@
  */
 
 const logger = require('../utils/logger');
-const MCPConnector = require('../mcp_connector');
+const FlexTimeConnector = require('../flextime_connector');
 const EnhancedMemoryAgent = require('./enhanced_memory_agent');
-// MCP config removed, using default config instead
-const mcpConfig = {}; // Empty object as fallback
+// FlexTime config removed, using default config instead
+const flexTimeConfig = {}; // Empty object as fallback
 
 // Import specialized modules
 const {
@@ -42,9 +42,9 @@ class ConflictResolutionAgent {
    * @param {object} config - Configuration options
    */
   constructor(config = {}) {
-    this.config = { ...mcpConfig, ...config };
+    this.config = { ...flexTimeConfig, ...config };
     this.enabled = this.config.enabled;
-    this.mcpConnector = new MCPConnector(this.config);
+    this.flexTimeConnector = new FlexTimeConnector(this.config);
     this.memoryAgent = new EnhancedMemoryAgent(this.config);
     
     // Define known conflict types
@@ -467,7 +467,7 @@ class ConflictResolutionAgent {
         }
       });
       
-      // Generate prompt for Context7
+      // Generate prompt for FlexTime AI
       const prompt = `
         Generate a concise executive summary of scheduling conflicts:
         
@@ -485,8 +485,8 @@ class ConflictResolutionAgent {
         Generate a brief 3-5 sentence summary that highlights the most critical issues, potential impacts, and high-level recommendations. Format the response as plain text.
       `;
       
-      // Call Context7 for the summary
-      const response = await this.mcpConnector.sendRequest({
+      // Call FlexTime AI for the summary
+      const response = await this.flexTimeConnector.sendRequest({
         agentId: 'conflict_resolution',
         taskType: 'conflict_summary',
         prompt,

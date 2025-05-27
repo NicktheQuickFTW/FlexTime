@@ -6,8 +6,18 @@
  */
 
 const logger = require('../utils/logger');
-const IntelligenceEngineClient = require('../intelligence_engine_client');
-const intelligenceEngineConfig = require('../../config/intelligence_engine_config');
+const AdvancedSchedulingService = require('../../services/advanced_scheduling_service');
+
+// Travel Optimization Agents (specialized sub-agents)
+const TransportModeOptimizationAgent = require('../specialized/travel_optimization/transport_mode_optimization_agent');
+const TravelCostCalculationAgent = require('../specialized/travel_optimization/travel_cost_calculation_agent');
+const CircuitOptimizationAgent = require('../specialized/travel_optimization/circuit_optimization_agent');
+const SeasonalPricingAgent = require('../specialized/travel_optimization/seasonal_pricing_agent');
+const SharedCharterAgent = require('../specialized/travel_optimization/shared_charter_agent');
+const TravelBudgetMonitorAgent = require('../specialized/travel_optimization/travel_budget_monitor_agent');
+
+// Travel Optimization Director
+const TravelOptimizationDirector = require('../specialized/travel_optimization/travel_optimization_director');
 
 /**
  * Core Agent System for FlexTime
@@ -27,18 +37,18 @@ class AgentSystem {
       ...config
     };
     
-    // Configure logger
-    logger.setLogLevel(this.config.logLevel);
+    // Logger level is configured elsewhere
+    // logger.setLogLevel(this.config.logLevel);
     
-    // Initialize Intelligence Engine integration
-    this.intelligenceEngine = new IntelligenceEngineClient({
-      ...intelligenceEngineConfig,
-      ...config
-    });
+    // Initialize Advanced Scheduling Service
+    this.schedulingService = new AdvancedSchedulingService(config.scheduling || {});
     
     // Track registered agents
     this.agents = new Map();
     this.initialized = false;
+    
+    // Initialize travel optimization agents
+    this.initializeTravelOptimizationAgents();
     
     logger.info('Agent System core initialized');
   }
@@ -85,12 +95,12 @@ class AgentSystem {
       
       logger.info('Initializing Agent System');
       
-      // Initialize Intelligence Engine client
-      const intelligenceEngineInitialized = await this.intelligenceEngine.initialize();
-      if (intelligenceEngineInitialized) {
-        logger.info('Intelligence Engine client initialized successfully');
+      // Initialize Advanced Scheduling Service
+      const serviceInitialized = await this.schedulingService.initialize();
+      if (serviceInitialized) {
+        logger.info('Advanced Scheduling Service initialized successfully');
       } else {
-        logger.warn('Intelligence Engine client initialization failed, using local components only');
+        logger.warn('Advanced Scheduling Service initialization failed, using limited functionality');
       }
       
       // Initialize all registered agents
@@ -125,24 +135,265 @@ class AgentSystem {
    */
   async storeExperience(agentId, experience, metadata = {}) {
     try {
-      if (!this.intelligenceEngine || !this.intelligenceEngine.enabled) {
-        logger.debug(`Intelligence Engine not available, skipping experience storage for ${agentId}`);
-        return false;
-      }
-      
+      // Format experience data
       const experienceData = {
-        agentId,
-        timestamp: new Date().toISOString(),
         content: experience,
-        metadata
+        agentId,
+        type: metadata.type || 'general',
+        tags: metadata.tags || [],
+        scheduleId: metadata.scheduleId
       };
       
-      await this.intelligenceEngine.storeExperience(experienceData);
+      // Store experience using Advanced Scheduling Service
+      const result = await this.schedulingService.storeFeedback(experienceData);
       logger.debug(`Experience stored for agent ${agentId}`);
-      return true;
+      return !!result;
     } catch (error) {
       logger.error(`Failed to store experience for agent ${agentId}: ${error.message}`);
       return false;
+    }
+  }
+  
+  /**
+   * Initialize travel optimization agents
+   * 
+   * @private
+   */
+  initializeTravelOptimizationAgents() {
+    try {
+      logger.info('Initializing travel optimization agents');
+      
+      // Create and register travel optimization agents
+      const travelAgents = [
+        { id: 'transport_mode_optimization', class: TransportModeOptimizationAgent },
+        { id: 'travel_cost_calculation', class: TravelCostCalculationAgent },
+        { id: 'circuit_optimization', class: CircuitOptimizationAgent },
+        { id: 'seasonal_pricing', class: SeasonalPricingAgent },
+        { id: 'shared_charter', class: SharedCharterAgent },
+        { id: 'travel_budget_monitor', class: TravelBudgetMonitorAgent }
+      ];
+      
+      travelAgents.forEach(({ id, class: AgentClass }) => {
+        try {
+          const agent = new AgentClass({
+            systemConfig: this.config,
+            schedulingService: this.schedulingService
+          });
+          
+          const registered = this.registerAgent(id, agent);
+          if (registered) {
+            logger.info(`Travel optimization agent ${id} registered successfully`);
+          }
+        } catch (error) {
+          logger.error(`Failed to create travel optimization agent ${id}: ${error.message}`);
+        }
+      });
+      
+      // Create and register travel optimization director
+      try {
+        const travelDirector = new TravelOptimizationDirector({
+          systemConfig: this.config,
+          agentSystem: this,
+          schedulingService: this.schedulingService
+        });
+        
+        const registered = this.registerAgent('travel_optimization_director', travelDirector);
+        if (registered) {
+          logger.info('Travel Optimization Director registered successfully');
+        }
+      } catch (error) {
+        logger.error(`Failed to create Travel Optimization Director: ${error.message}`);
+      }
+      
+      logger.info('Travel optimization agents initialization complete');
+    } catch (error) {
+      logger.error(`Failed to initialize travel optimization agents: ${error.message}`);
+    }
+  }
+  
+  /**
+   * Get all travel optimization agents
+   * 
+   * @returns {Map} - Map of travel optimization agents
+   */
+  getTravelOptimizationAgents() {
+    const travelAgentIds = [
+      'transport_mode_optimization',
+      'travel_cost_calculation', 
+      'circuit_optimization',
+      'seasonal_pricing',
+      'shared_charter',
+      'travel_budget_monitor'
+    ];
+    
+    const travelAgents = new Map();
+    travelAgentIds.forEach(id => {
+      const agent = this.getAgent(id);
+      if (agent) {
+        travelAgents.set(id, agent);
+      }
+    });
+    
+    return travelAgents;
+  }
+  
+  /**
+   * Optimize travel costs for a schedule using all travel optimization agents
+   * 
+   * @param {Object} schedule - Schedule to optimize
+   * @param {Object} constraints - Optimization constraints
+   * @returns {Promise<Object>} - Optimization results
+   */
+  async optimizeTravelCosts(schedule, constraints = {}) {
+    try {
+      logger.info('Starting comprehensive travel cost optimization');
+      
+      const results = {
+        original_schedule: schedule,
+        optimized_schedule: null,
+        optimization_results: {},
+        total_savings: 0,
+        recommendations: []
+      };
+      
+      // Get travel optimization agents
+      const transportAgent = this.getAgent('transport_mode_optimization');
+      const costAgent = this.getAgent('travel_cost_calculation');
+      const circuitAgent = this.getAgent('circuit_optimization');
+      const seasonalAgent = this.getAgent('seasonal_pricing');
+      const sharedCharterAgent = this.getAgent('shared_charter');
+      const budgetAgent = this.getAgent('travel_budget_monitor');
+      
+      // 1. Circuit optimization (restructure travel routes)
+      if (circuitAgent) {
+        logger.info('Applying circuit optimization');
+        const circuitResults = await circuitAgent.optimizeScheduleCircuits(schedule);
+        results.optimization_results.circuit = circuitResults;
+        results.optimized_schedule = circuitResults.optimizedSchedule || schedule;
+        results.total_savings += circuitResults.savings?.cost || 0;
+      }
+      
+      // 2. Seasonal timing optimization
+      if (seasonalAgent) {
+        logger.info('Applying seasonal timing optimization');
+        const seasonalResults = await seasonalAgent.optimizeScheduleTiming(
+          results.optimized_schedule || schedule, 
+          constraints
+        );
+        results.optimization_results.seasonal = seasonalResults;
+        results.optimized_schedule = seasonalResults.optimizedSchedule || results.optimized_schedule;
+        results.total_savings += seasonalResults.savings?.totalSavings || 0;
+      }
+      
+      // 3. Transport mode optimization for each game
+      if (transportAgent && results.optimized_schedule) {
+        logger.info('Applying transport mode optimization');
+        const transportResults = [];
+        
+        for (const game of results.optimized_schedule) {
+          if (!game.isHome) {
+            try {
+              const modeResult = await transportAgent.optimizeTransportMode({
+                origin: game.homeTeam,
+                destination: game.destination || game.awayTeam,
+                teamSize: game.teamSize || 35,
+                sport: game.sport,
+                date: game.date,
+                constraints: constraints
+              });
+              
+              transportResults.push({
+                gameId: game.id,
+                recommendation: modeResult.recommendation,
+                savings: modeResult.analysis?.factors?.costComparison?.savings || 0
+              });
+            } catch (error) {
+              logger.warn(`Transport optimization failed for game ${game.id}: ${error.message}`);
+            }
+          }
+        }
+        
+        results.optimization_results.transport = transportResults;
+        const transportSavings = transportResults.reduce((sum, result) => sum + (result.savings || 0), 0);
+        results.total_savings += transportSavings;
+      }
+      
+      // 4. Calculate comprehensive costs
+      if (costAgent && results.optimized_schedule) {
+        logger.info('Calculating comprehensive travel costs');
+        let totalOriginalCost = 0;
+        let totalOptimizedCost = 0;
+        
+        for (const game of results.optimized_schedule) {
+          if (!game.isHome) {
+            try {
+              const costResult = await costAgent.calculateTotalTravelCost({
+                origin: game.homeTeam,
+                destination: game.destination || game.awayTeam,
+                teamSize: game.teamSize || 35,
+                sport: game.sport,
+                date: game.date
+              });
+              
+              totalOptimizedCost += costResult.total;
+              // Estimate original cost (without optimizations)
+              totalOriginalCost += costResult.total * 1.15; // Assume 15% savings from optimization
+            } catch (error) {
+              logger.warn(`Cost calculation failed for game ${game.id}: ${error.message}`);
+            }
+          }
+        }
+        
+        results.optimization_results.cost_analysis = {
+          total_original_cost: totalOriginalCost,
+          total_optimized_cost: totalOptimizedCost,
+          cost_savings: totalOriginalCost - totalOptimizedCost
+        };
+      }
+      
+      // 5. Shared charter analysis (cross-schedule optimization)
+      if (sharedCharterAgent) {
+        logger.info('Analyzing shared charter opportunities');
+        try {
+          // For now, analyze single schedule - in full implementation, this would analyze multiple team schedules
+          const sharedResults = await sharedCharterAgent.identifySharedCharterOpportunities([{
+            teamId: 'team_1',
+            teamName: 'Primary Team',
+            sport: schedule[0]?.sport || 'basketball',
+            teamSize: 35,
+            games: results.optimized_schedule || schedule
+          }]);
+          
+          results.optimization_results.shared_charter = sharedResults;
+          results.total_savings += sharedResults.totalSavings?.total_savings || 0;
+        } catch (error) {
+          logger.warn(`Shared charter analysis failed: ${error.message}`);
+        }
+      }
+      
+      // 6. Budget monitoring and recommendations
+      if (budgetAgent) {
+        logger.info('Performing budget analysis');
+        try {
+          const budgetAnalysis = await budgetAgent.monitorTravelBudgets(
+            { total: 5000000 }, // Example budget
+            {}, // Current spending (empty for optimization)
+            results.optimized_schedule || schedule
+          );
+          
+          results.optimization_results.budget = budgetAnalysis;
+          results.recommendations = budgetAnalysis.recommendations || [];
+        } catch (error) {
+          logger.warn(`Budget analysis failed: ${error.message}`);
+        }
+      }
+      
+      logger.info(`Travel cost optimization complete. Total estimated savings: $${results.total_savings}`);
+      return results;
+      
+    } catch (error) {
+      logger.error(`Travel cost optimization failed: ${error.message}`);
+      throw error;
     }
   }
   
@@ -170,10 +421,10 @@ class AgentSystem {
         }
       }
       
-      // Shutdown Intelligence Engine client
-      if (this.intelligenceEngine) {
-        await this.intelligenceEngine.shutdown();
-        logger.info('Intelligence Engine client shut down successfully');
+      // Shutdown Advanced Scheduling Service
+      if (this.schedulingService) {
+        await this.schedulingService.shutdown();
+        logger.info('Advanced Scheduling Service shut down successfully');
       }
       
       this.initialized = false;

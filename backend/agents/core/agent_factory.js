@@ -19,7 +19,7 @@ const EnhancedMemoryManager = require('../memory/enhanced_memory_manager');
 const logger = require('../../utils/logger');
 const KnowledgeGraphAgent = require('../enhanced/knowledge_graph/knowledge_graph_agent');
 const ConflictExplanation = require('../enhanced/conflict_explanation');
-const { HELiiXIntelligenceConnectorAgent } = require('../heliix_connector');
+// HELiiX Intelligence Connector removed
 // C7 components removed
 // const C7RecommendationEngine = require('../enhanced/c7_recommendation_engine');
 // const C7NaturalLanguageInterface = require('../enhanced/c7_natural_language_interface');
@@ -39,10 +39,7 @@ class AgentFactory {
       enableLearning: process.env.ENABLE_LEARNING !== 'false',
       enableMemory: process.env.ENABLE_AGENT_MEMORY !== 'false',
       enableKnowledgeGraph: process.env.ENABLE_KNOWLEDGE_GRAPH !== 'false',
-      enableIntelligenceEngine: process.env.ENABLE_INTELLIGENCE_ENGINE !== 'false',
-      // C7 features removed
-      // enableC7Recommendations: process.env.ENABLE_C7_RECOMMENDATIONS !== 'false',
-      // enableNaturalLanguage: process.env.ENABLE_NL_INTERFACE !== 'false',
+      // Intelligence Engine and C7 features removed
       ...config
     };
     
@@ -56,7 +53,7 @@ class AgentFactory {
     this.memoryManager = null;
     this.knowledgeGraphAgent = null;
     this.conflictExplanation = null;
-    this.intelligenceConnector = null;
+    // Intelligence connector removed
     this.recommendationEngine = null;
     this.naturalLanguageInterface = null;
     
@@ -123,20 +120,7 @@ class AgentFactory {
         logger.info('Knowledge Graph and Conflict Explanation initialized successfully');
       }
 
-      // Initialize Intelligence Engine Connector if enabled
-      if (this.config.enableIntelligenceEngine) {
-        logger.info('Initializing HELiiX Intelligence Connector Agent');
-        this.intelligenceConnector = new HELiiXIntelligenceConnectorAgent({
-          enabled: true,
-          intelligence: {
-            serviceUrl: this.config.intelligenceEngineUrl || process.env.INTELLIGENCE_ENGINE_URL,
-            apiKey: this.config.intelligenceEngineApiKey || process.env.INTELLIGENCE_ENGINE_API_KEY,
-            enabled: true
-          }
-        });
-        await this.intelligenceConnector.initialize();
-        logger.info('HELiiX Intelligence Connector Agent initialized successfully');
-      }
+      // Intelligence Engine Connector removed
 
       // Context7 recommendation engine removed
       this.recommendationEngine = null;

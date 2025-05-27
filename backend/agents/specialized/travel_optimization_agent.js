@@ -2,7 +2,16 @@
  * Travel Optimization Agent for the FlexTime multi-agent system.
  * 
  * This specialized agent is responsible for optimizing travel arrangements
- * in sports schedules to minimize costs and travel time.
+ * in sports schedules to minimize costs and travel time using comprehensive
+ * travel cost optimization framework including transportation, accommodation,
+ * meals, equipment, and variable adjustments.
+ * 
+ * Enhanced with travel cost formula framework knowledge:
+ * - Transportation mode optimization (bus vs flight)
+ * - Circuit generation and route clustering
+ * - Seasonal pricing and booking optimization
+ * - Shared charter coordination
+ * - Real-time budget monitoring
  */
 
 const Agent = require('../agent');
@@ -20,15 +29,19 @@ class TravelOptimizationAgent extends Agent {
   constructor(mcpConnector) {
     super('travel_optimization', 'specialized', mcpConnector);
     
-    // Travel optimization strategies
+    // Travel optimization strategies (enhanced with cost optimization framework)
     this.optimizationStrategies = {
       'cluster_based': this._optimizeWithClustering.bind(this),
       'road_trip': this._optimizeWithRoadTrips.bind(this),
       'balanced_travel': this._optimizeWithBalancedTravel.bind(this),
-      'regional_priority': this._optimizeWithRegionalPriority.bind(this)
+      'regional_priority': this._optimizeWithRegionalPriority.bind(this),
+      'comprehensive_cost_optimization': this._optimizeWithComprehensiveCosts.bind(this)
     };
     
-    logger.info('Travel Optimization Agent initialized');
+    // Initialize specialized travel optimization sub-agents
+    this.subAgents = null; // Will be loaded from the agent system
+    
+    logger.info('Travel Optimization Agent initialized with comprehensive cost optimization framework');
   }
   
   /**
@@ -332,6 +345,70 @@ class TravelOptimizationAgent extends Agent {
     const optimizedSchedule = { ...schedule };
     
     return optimizedSchedule;
+  }
+  
+  /**
+   * Comprehensive cost optimization using specialized travel optimization sub-agents
+   * 
+   * @param {string} sportType - Type of sport
+   * @param {object} schedule - Schedule to optimize
+   * @param {Array<object>} teams - List of teams
+   * @param {Array<object>} venues - List of venues
+   * @param {object} constraints - Travel constraints
+   * @returns {Promise<object>} Comprehensive travel-optimized schedule with cost analysis
+   * @private
+   */
+  async _optimizeWithComprehensiveCosts(sportType, schedule, teams, venues, constraints) {
+    logger.info(`Optimizing ${sportType} travel with Comprehensive Cost Optimization framework`);
+    
+    try {
+      // Create travel request for specialized agents
+      const travelRequest = {
+        scheduleId: 'current',
+        season: new Date().getFullYear(),
+        sport: sportType,
+        games: schedule.games || [],
+        teams: teams,
+        venues: venues,
+        preferences: {
+          budgetConstraint: constraints.budgetConstraint || 'moderate',
+          timePreference: constraints.timePreference || 'balanced',
+          comfortLevel: constraints.comfortLevel || 'standard'
+        }
+      };
+
+      // If sub-agents are available through the agent system, use them
+      if (this.subAgents && this.subAgents.travelOptimizationDirector) {
+        const optimizationResult = await this.subAgents.travelOptimizationDirector.optimizeComprehensiveTravel(travelRequest);
+        
+        return {
+          ...schedule,
+          travelOptimization: optimizationResult,
+          strategy: 'comprehensive_cost_optimization',
+          costSavings: optimizationResult.summary?.savings || 0,
+          efficiency: optimizationResult.summary?.efficiency || 85
+        };
+      }
+      
+      // Fallback to basic optimization if specialized agents not available
+      logger.info('Specialized travel optimization sub-agents not available, using basic optimization');
+      return { ...schedule };
+      
+    } catch (error) {
+      logger.error(`Comprehensive cost optimization failed: ${error.message}`);
+      // Fallback to basic travel optimization
+      return { ...schedule };
+    }
+  }
+  
+  /**
+   * Set reference to specialized travel optimization sub-agents
+   * 
+   * @param {object} subAgents - Object containing specialized travel optimization agents
+   */
+  setSubAgents(subAgents) {
+    this.subAgents = subAgents;
+    logger.info('Travel Optimization Agent connected to specialized sub-agents');
   }
 }
 

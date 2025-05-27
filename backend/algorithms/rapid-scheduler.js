@@ -7,7 +7,7 @@
 
 const { v4: uuidv4 } = require('uuid');
 const logger = require('../utils/logger');
-const IntelligenceEngineClient = require('../clients/intelligence-engine-client');
+const SchedulingServiceClient = require('../clients/scheduling-service-client');
 
 /**
  * Rapid Scheduler for fast schedule generation
@@ -39,9 +39,8 @@ class RapidScheduler {
       multiVariable: require('./multi-variable-optimizer')
     };
     
-    // Initialize Intelligence Engine client if provided
-    this.intelligenceEngine = config.intelligenceEngine ? 
-      new IntelligenceEngineClient(config.intelligenceEngine) : null;
+    // Initialize Scheduling Service client
+    this.schedulingService = new SchedulingServiceClient(config.schedulingService || {});
     
     logger.info('Rapid Scheduler created', { 
       parallelGenerators: this.config.parallelGenerators,
@@ -55,11 +54,9 @@ class RapidScheduler {
    */
   async initialize() {
     try {
-      // Initialize Intelligence Engine client if available
-      if (this.intelligenceEngine) {
-        await this.intelligenceEngine.initialize();
-        logger.info('Intelligence Engine client initialized for Rapid Scheduler');
-      }
+      // Initialize Scheduling Service client
+      await this.schedulingService.initialize();
+      logger.info('Scheduling Service client initialized for Rapid Scheduler');
       
       return true;
     } catch (error) {
@@ -87,16 +84,16 @@ class RapidScheduler {
     try {
       // Step 1: Get historical recommendations if enabled
       let historicalRecommendations = null;
-      if (this.config.useHistoricalData && this.intelligenceEngine) {
+      if (this.config.useHistoricalData) {
         try {
-          historicalRecommendations = await this.intelligenceEngine.getHistoricalRecommendations(parameters);
+          historicalRecommendations = await this.schedulingService.getHistoricalRecommendations(parameters);
           
           if (historicalRecommendations.success) {
             logger.info('Using historical recommendations for rapid scheduling');
             
             // Apply recommended constraints if available
-            if (historicalRecommendations.recommendedConstraints) {
-              constraints = this._mergeConstraints(constraints, historicalRecommendations.recommendedConstraints);
+            if (historicalRecommendations.constraints) {
+              constraints = this._mergeConstraints(constraints, historicalRecommendations.constraints);
               logger.info('Applied recommended constraints from historical data');
             }
           }
@@ -174,18 +171,16 @@ class RapidScheduler {
       
       logger.info(`Completed rapid schedule generation in ${elapsedTime.toFixed(2)}s`);
       
-      // Store in historical data if Intelligence Engine is available
-      if (this.intelligenceEngine) {
-        try {
-          await this.intelligenceEngine.storeHistoricalSchedule(finalSchedule, {
-            outcome: 'generated',
-            generationTime: elapsedTime
-          });
-          logger.info('Stored generated schedule in historical data');
-        } catch (error) {
-          logger.warn(`Failed to store schedule in historical data: ${error.message}`);
-          // Continue without storing
-        }
+      // Store in historical data
+      try {
+        await this.schedulingService.storeHistoricalSchedule(finalSchedule, {
+          outcome: 'generated',
+          generationTime: elapsedTime
+        });
+        logger.info('Stored generated schedule in historical data');
+      } catch (error) {
+        logger.warn(`Failed to store schedule in historical data: ${error.message}`);
+        // Continue without storing
       }
       
       return finalSchedule;

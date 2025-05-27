@@ -9,13 +9,13 @@
  */
 
 const logger = require('../../utils/logger');
-const MCPConnector = require('../mcp_connector');
-// MCP config removed, using default config instead
-const mcpConfig = {}; // Empty object as fallback
+const FlexTimeConnector = require('../flextime_connector');
+// FlexTime config removed, using default config instead
+const flexTimeConfig = {}; // Empty object as fallback
 const KnowledgeGraphAgent = require('./knowledge_graph/knowledge_graph_agent');
 
-// Initialize Context7 connector for AI-assisted explanations
-const mcpConnector = new MCPConnector(mcpConfig);
+// Initialize FlexTime connector for AI-assisted explanations
+const flexTimeConnector = new FlexTimeConnector(flexTimeConfig);
 
 // Initialize Knowledge Graph Agent for enhanced relationship analysis
 let knowledgeGraphAgent = null;
@@ -75,7 +75,7 @@ async function explainVenueConflict(conflict, context = {}) {
       return `${event.date} at ${event.startTime} - ${teamsList}`;
     });
     
-    // Use MCP for more detailed explanation
+    // Use FlexTime for more detailed explanation
     const prompt = `
       Explain in clear, concise language why there is a venue conflict at ${venue}:
       
@@ -96,8 +96,8 @@ async function explainVenueConflict(conflict, context = {}) {
       }
     `;
     
-    // Call the MCP server for explanation
-    const response = await mcpConnector.sendRequest({
+    // Call the FlexTime server for explanation
+    const response = await flexTimeConnector.sendRequest({
       agentId: 'conflict_explanation',
       taskType: 'venue_conflict_explanation',
       prompt,
@@ -120,7 +120,7 @@ async function explainVenueConflict(conflict, context = {}) {
       }
     }
     
-    // Default explanation if MCP fails
+    // Default explanation if FlexTime fails
     if (!explanationData) {
       explanationData = {
         explanation: `Venue conflict at ${venue}: Multiple events are scheduled at the same venue with overlapping times. This creates a logistical impossibility as the venue cannot host both events simultaneously.`,
@@ -196,7 +196,7 @@ async function explainTeamConflict(conflict, context = {}) {
       return `${event.date} at ${event.startTime} - ${team} vs ${opponentTeam} at ${event.venue}`;
     });
     
-    // Use MCP for more detailed explanation
+    // Use FlexTime for more detailed explanation
     const prompt = `
       Explain in clear, concise language why there is a ${subType} conflict for team ${team}:
       
@@ -224,8 +224,8 @@ async function explainTeamConflict(conflict, context = {}) {
       }
     `;
     
-    // Call the MCP server for explanation
-    const response = await mcpConnector.sendRequest({
+    // Call the FlexTime server for explanation
+    const response = await flexTimeConnector.sendRequest({
       agentId: 'conflict_explanation',
       taskType: 'team_conflict_explanation',
       prompt,
@@ -248,7 +248,7 @@ async function explainTeamConflict(conflict, context = {}) {
       }
     }
     
-    // Default explanation if MCP fails
+    // Default explanation if FlexTime fails
     if (!explanationData) {
       if (subType === 'rest') {
         explanationData = {
@@ -356,7 +356,7 @@ async function explainTravelConflict(conflict, context = {}) {
     const availableHours = conflict.availableHours || 'unknown';
     const requiredHours = conflict.requiredHours || 'unknown';
     
-    // Use MCP for more detailed explanation
+    // Use FlexTime for more detailed explanation
     const prompt = `
       Explain in clear, concise language why there is a travel conflict for team ${team}:
       
@@ -382,8 +382,8 @@ async function explainTravelConflict(conflict, context = {}) {
       }
     `;
     
-    // Call the MCP server for explanation
-    const response = await mcpConnector.sendRequest({
+    // Call the FlexTime server for explanation
+    const response = await flexTimeConnector.sendRequest({
       agentId: 'conflict_explanation',
       taskType: 'travel_conflict_explanation',
       prompt,
@@ -406,7 +406,7 @@ async function explainTravelConflict(conflict, context = {}) {
       }
     }
     
-    // Default explanation if MCP fails
+    // Default explanation if FlexTime fails
     if (!explanationData) {
       explanationData = {
         explanation: `Travel conflict for team ${team}: Insufficient time to travel between venues. The team needs ${requiredHours} hours (including travel and rest time) but only has ${availableHours} hours available.`,

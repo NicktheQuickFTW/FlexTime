@@ -1,6 +1,8 @@
 agents
 api
+conflict_resolution
 core
+db
 knowledge_graph
 ml
 optimization

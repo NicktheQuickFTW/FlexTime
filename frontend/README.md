@@ -1,201 +1,212 @@
-# FlexTime UI
+# FlexTime Frontend ✨
 
-The modern, responsive frontend user interface for the FlexTime scheduling platform, part of the HELiiX ecosystem.
+> **Beautiful, AI-Powered Scheduling Interface for Big 12 Conference**
 
-## Overview
+A sleek, monochrome web application that brings the power of FlexTime's intelligent scheduling system to life with a stunning, modern interface inspired by cutting-edge design principles.
 
-This repository contains the frontend React application for FlexTime, an advanced sports scheduling system. The FlexTime UI provides an intuitive interface for users to create, manage, and visualize schedules created and optimized by the FlexTime backend services.
+## 🎨 Design Philosophy
 
-> **Note:** This README covers only the frontend UI components. For complete FlexTime documentation including backend services, see:
->
-> - [FlexTime Complete Guide](https://github.com/your-org/heliix-core-platform/blob/main/src/FlexTime/README.md)
-> - [FlexTime Backend Documentation](https://github.com/your-org/heliix-intelligence-engine/blob/main/src/flextime/README.md)
+This modern FlexTime interface is built with a **monochrome aesthetic** featuring:
 
-## Frontend Features
+- **Clean, geometric design** with crystalline visual elements
+- **Glassmorphic cards** with subtle transparency and blur effects  
+- **Golden accent colors** that highlight important interactions
+- **Spacious, breathable layouts** that prioritize content clarity
+- **Professional typography** using Inter font family
+- **Responsive design** that works beautifully on all devices
 
-- **Interactive Schedule Matrix**: Drag-and-drop interface for manual schedule adjustments
-- **Dashboard**: Overview of active schedules, teams, venues, and optimization metrics
-- **Schedule Management**: Create, edit, view, and delete schedules
-- **Team Management**: Add, edit, and remove teams from schedules
-- **Venue Management**: Manage venue availability and assignments
-- **Constraint Configuration**: Set and prioritize scheduling constraints
-- **Schedule Visualization**: Multiple views (matrix, calendar, list) of generated schedules
-- **Feedback System**: Collect and process user feedback on generated schedules
-- **Model Context Protocol Integration**: Connection to the Model Context Protocol for AI-enhanced scheduling
+## ✨ Features
 
-## Frontend Technical Stack
+### 🏠 **Dashboard Overview**
+- Hero section with compelling value proposition
+- Feature cards showcasing AI capabilities
+- Real-time statistics and metrics
+- Interactive schedule matrix preview
 
-- **Framework**: React 18 with TypeScript
-- **UI Library**: Material UI (MUI v5)
-- **State Management**: React Context API
-- **Routing**: React Router v6
-- **API Communication**: Axios
-- **Data Visualization**: Recharts
-- **Form Validation**: React Hook Form
-- **Notifications**: Notistack
+### 📅 **Schedule Builder**
+- Drag-and-drop interface for schedule creation
+- Real-time conflict detection and resolution
+- Sport-specific constraint management
+- AI-powered optimization suggestions
 
-## Frontend Architecture
+### 📊 **Advanced Analytics**
+- Travel optimization heat maps
+- Competitive balance analysis
+- Championship alignment metrics
+- Cost savings calculations
 
-The FlexTime UI is structured as follows:
+### 👥 **Team Management**
+- Big 12 conference team overview
+- Individual team schedule views
+- Performance metrics and statistics
 
-```typescript
-FlexTime-ui/
-├── public/                # Static assets
-├── src/
-│   ├── assets/            # Images, icons, and CSS
-│   ├── components/        # Reusable UI components
-│   │   ├── feedback/      # Feedback collection components
-│   │   ├── mcp/           # Model Context Protocol integration components
-│   │   ├── schedule/      # Schedule-related components
-│   │   └── shared/        # Shared UI elements
-│   ├── contexts/          # React context providers
-│   ├── hooks/             # Custom React hooks
-│   ├── layouts/           # Page layout components
-│   ├── pages/             # Main application pages
-│   ├── services/          # API services and utilities
-│   ├── types/             # TypeScript type definitions
-│   ├── utils/             # Helper functions
-│   ├── App.tsx            # Main application component
-│   └── index.tsx          # Application entry point
-└── package.json           # Dependencies and scripts
-```
-
-## Model Context Protocol (MCP) Architecture
-
-The UI connects to the following MCP services as defined in the HELiiX platform architecture:
-
-1. **Primary MCP**: Claude (for scheduling intelligence)
-2. **Secondary MCP**: MongoDB (for persistent storage)
-3. **Knowledge Base**: Context7 (used by Windsurf and Intelligence Engine)
-
-This aligned architecture ensures that FlexTime leverages the most appropriate AI capabilities for each task, with Claude's advanced reasoning for scheduling intelligence and MongoDB providing reliable persistent storage.
-
-## Frontend Integration Points
-
-The UI connects to the following backend services:
-
-1. **FlexTime API**: RESTful endpoints for schedule data (teams, venues, games)
-2. **Intelligence Engine**: Centralized service for AI capabilities and memory management
-3. **Feedback Service**: For submitting and retrieving user feedback
-4. **Model Context Protocol Services**: AI capabilities through defined protocols
-
-## Docker Integration
-
-The FlexTime UI is built and served within the FlexTime Docker container. Key aspects of this integration:
-
-1. **Build Process**: The UI is built during Docker image creation
-2. **Serving**: The compiled UI is served from `/app/src/FlexTime/dist` directory
-3. **Configuration**: Environment variables are injected through Docker
-4. **Access**: The UI is accessible at [http://localhost:3004/](http://localhost:3004/) when running in Docker
-
-## Frontend Implementation Plan
-
-### Phase 1: Core UI Development (Completed)
-
-- Basic application structure and routing
-- Dashboard implementation
-- Schedule listing and detail views
-- Team and venue management interfaces
-
-### Phase 2: Interactive Features (Completed)
-
-- Interactive matrix visualization
-- Schedule editing capabilities
-- Constraint configuration interface
-- Basic feedback collection
-
-### Phase 3: Intelligence Integration (Current)
-
-- Model Context Protocol integration
-- Optimization request handling
-- Schedule metrics visualization
-- Advanced feedback analysis
-
-### Phase 4: Enhanced Visualization (Upcoming)
-
-- Calendar view improvements
-- Travel distance visualization
-- Constraint satisfaction reports
-- Comparative schedule analysis
-
-### Phase 5: Mobile Optimization (Planned)
-
-- Responsive design for mobile devices
-- Touch-optimized interactions
-- Offline capabilities
-- Progressive Web App (PWA) implementation
-
-## Getting Started
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 🚀 Quick Start
 
 ### Prerequisites
-
-- Node.js (v14+)
-- npm or yarn
-- FlexTime backend services running (see backend documentation)
+- Node.js 16+ installed
+- Modern web browser (Chrome, Firefox, Safari, Edge)
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/your-org/heliix-core-platform.git
+1. **Navigate to the frontend directory**
+   ```bash
+   cd /Users/nickw/Documents/XII-Ops/FlexTime/frontend
+   ```
 
-# Navigate to the FlexTime UI directory
-cd heliix-core-platform/frontend/FlexTime-ui
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Install dependencies
-npm install
+3. **Start the server**
+   ```bash
+   npm start
+   ```
 
-# Start the development server
-npm start
+4. **Open your browser**
+   Navigate to `http://localhost:3006`
+
+## 🎯 User Experience
+
+### **Navigation**
+- Clean, persistent navigation bar with active state indicators
+- Smooth transitions between different views
+- Logo and branding prominently displayed
+
+### **Interactions**
+- Hover effects with subtle animations
+- Loading states with elegant spinners
+- Responsive feedback for all user actions
+- Accessibility-first design principles
+
+### **Visual Hierarchy**
+- Clear information architecture
+- Consistent spacing and typography
+- Strategic use of color to guide attention
+- Progressive disclosure of complex features
+
+## 🔧 Technical Implementation
+
+### **Frontend Architecture**
+- **React 18** with modern hooks and functional components
+- **Vanilla CSS** with CSS custom properties for theming
+- **Responsive grid layouts** using CSS Grid and Flexbox
+- **Modern JavaScript** (ES6+) with clean, readable code
+
+### **Design System**
+```css
+/* Color Palette */
+--color-black: #000000
+--color-white: #ffffff  
+--color-gold-primary: #ffa500
+--color-glass-bg: rgba(255, 255, 255, 0.05)
+
+/* Typography */
+--font-family: 'Inter', sans-serif
+--font-weight-light: 300
+--font-weight-bold: 700
+
+/* Spacing System */
+--spacing-sm: 0.5rem
+--spacing-md: 1rem
+--spacing-lg: 1.5rem
+--spacing-xl: 2rem
 ```
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
-
-### Environment Variables
-
-Create a `.env` file in the project root with the following variables:
-
-```bash
-REACT_APP_API_URL=http://localhost:3004/api
-REACT_APP_CLAUDE_MCP_URL=http://localhost:9002/api
-REACT_APP_MONGODB_MCP_URL=http://localhost:9001/api
-REACT_APP_NEON_MCP_URL=http://localhost:9004/api
-REACT_APP_CONTEXT7_KNOWLEDGE_BASE_URL=http://localhost:9000/api
+### **Component Structure**
+```
+FlexTimeApp/
+├── Navigation
+├── GeometricBackground
+├── DashboardView/
+│   ├── HeroSection
+│   ├── FeatureCards
+│   ├── ScheduleMatrix
+│   └── StatsDashboard
+├── ScheduleBuilderView
+├── AnalyticsView
+└── TeamsView
 ```
 
-### Docker Development
+## 🌟 Key Design Elements
 
-When working with the Docker configuration:
+### **Glassmorphism Effects**
+- Subtle background blur (`backdrop-filter: blur(20px)`)
+- Semi-transparent backgrounds
+- Elegant border treatments
+- Layered visual depth
 
-```bash
-# Build and start all services
-docker-compose up -d
+### **Interactive States**
+- Smooth hover transitions
+- Golden accent highlighting
+- Elevation changes with shadows
+- Responsive feedback animations
 
-# Access the UI
-# Open http://localhost:3004 in your browser
+### **Typography Scale**
+- Hero titles: 3.5rem bold
+- Section headers: 1.75rem semibold  
+- Body text: 1rem regular
+- Captions: 0.875rem light
+
+### **Geometric Background**
+- Floating geometric shapes
+- Subtle animation loops
+- Low opacity overlays
+- Strategic positioning
+
+## 📱 Responsive Design
+
+The interface adapts beautifully across all screen sizes:
+
+- **Desktop (1200px+)**: Full multi-column layouts
+- **Tablet (768px-1199px)**: Adjusted grid systems
+- **Mobile (<768px)**: Single-column stacked layouts
+
+## 🔌 API Integration Points
+
+Ready for integration with the existing FlexTime backend:
+
+```javascript
+// Sample API endpoints
+GET /api/status        // System health
+GET /api/teams         // Team data
+GET /api/schedules     // Schedule information
+POST /api/optimize     // AI optimization
 ```
 
-## Available Scripts
+## 🎨 Brand Alignment
 
-In the project directory, you can run:
+### **Big 12 Conference**
+- Professional, authoritative aesthetic
+- Clean, modern presentation
+- Scalable for multi-sport usage
+- Championship-focused messaging
 
-- `npm start`: Runs the app in development mode
-- `npm test`: Launches the test runner
-- `npm run build`: Builds the app for production
-- `npm run eject`: Ejects from Create React App
+### **Color Strategy**
+- **Monochrome base**: Ensures broad accessibility
+- **Golden accents**: Highlight premium AI features
+- **Glass effects**: Modern, high-tech appearance
+- **High contrast**: Optimal readability
 
-## Contributing
+## 🚀 Performance Features
 
-Please follow the HELiiX platform contribution guidelines when making changes to this project.
+- **Lightweight footprint**: Minimal dependencies
+- **Fast loading**: Optimized CSS and JavaScript
+- **Smooth animations**: Hardware-accelerated transitions
+- **Scalable architecture**: Ready for production deployment
 
-## License
+## 🔮 Future Enhancements
 
-This project is licensed under the proprietary license - see the LICENSE file for details.
+- **Real-time collaboration**: WebSocket integration
+- **Advanced visualizations**: D3.js charts and graphs  
+- **Mobile app**: React Native implementation
+- **Offline capabilities**: Progressive Web App features
+- **Voice interface**: Natural language scheduling
 
-## Related Documentation
+## 📄 License
 
-- [HELiiX Platform Documentation](https://github.com/your-org/heliix-docs/blob/main/README.md)
-- [FlexTime API Documentation](https://github.com/your-org/heliix-intelligence-engine/blob/main/src/flextime/README.md)
-- [HELiiX Integration Guide](https://github.com/your-org/heliix-integration-layer/blob/main/README.md)
+MIT License - Built for Big 12 Conference
+
+---
+
+**✨ Experience the future of athletic scheduling with FlexTime's beautiful, intelligent interface.**

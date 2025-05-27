@@ -7,8 +7,8 @@
  */
 
 const logger = require('../../../utils/logger');
-// Context7 client was removed
-// const { createContext7Client } = require('../../../utils/context7_client');
+// FlexTime AI client
+// const { createFlexTimeClient } = require('../../../utils/flextime_ai_client');
 
 /**
  * Entity Extension Manager for Knowledge Graph
@@ -22,8 +22,8 @@ class EntityExtensionManager {
    */
   constructor(knowledgeGraphAgent, config = {}) {
     this.knowledgeGraphAgent = knowledgeGraphAgent;
-    // Context7 client was removed
-    this.context7Client = null;
+    // FlexTime AI client
+    this.flexTimeClient = null;
     
     this.config = {
       allowDynamicExtension: process.env.ALLOW_DYNAMIC_KG_EXTENSION === 'true',
@@ -170,10 +170,10 @@ class EntityExtensionManager {
         throw new Error('Invalid schema definition');
       }
       
-      // Enrich schema with Context7 if available and enabled
+      // Enrich schema with FlexTime AI if available and enabled
       let enrichedSchema = schema;
-      if (this.context7Client && options.enrichWithContext7 !== false) {
-        enrichedSchema = await this._enrichSchemaWithContext7(entityType, schema);
+      if (this.flexTimeClient && options.enrichWithFlexTimeAI !== false) {
+        enrichedSchema = await this._enrichSchemaWithFlexTimeAI(entityType, schema);
       }
       
       // Register with Knowledge Graph Agent if available
@@ -236,10 +236,10 @@ class EntityExtensionManager {
         }
       }
       
-      // Enrich schema with Context7 if available and enabled
+      // Enrich schema with FlexTime AI if available and enabled
       let enrichedSchema = schema;
-      if (this.context7Client && options.enrichWithContext7 !== false) {
-        enrichedSchema = await this._enrichSchemaWithContext7(relationshipType, schema, true);
+      if (this.flexTimeClient && options.enrichWithFlexTimeAI !== false) {
+        enrichedSchema = await this._enrichSchemaWithFlexTimeAI(relationshipType, schema, true);
       }
       
       // Register with Knowledge Graph Agent if available
@@ -548,7 +548,7 @@ class EntityExtensionManager {
   }
   
   /**
-   * Enrich schema with Context7 insights
+   * Enrich schema with FlexTime AI insights
    * 
    * @private
    * @param {string} typeName - Entity or relationship type name
@@ -556,17 +556,17 @@ class EntityExtensionManager {
    * @param {boolean} isRelationship - Whether this is a relationship schema
    * @returns {Promise<Object>} Enriched schema
    */
-  async _enrichSchemaWithContext7(typeName, schema, isRelationship = false) {
+  async _enrichSchemaWithFlexTimeAI(typeName, schema, isRelationship = false) {
     try {
-      if (!this.context7Client || !this.context7Client.enabled) {
+      if (!this.flexTimeClient || !this.flexTimeClient.enabled) {
         return schema;
       }
       
       // Create a deep copy of the schema
       const enrichedSchema = JSON.parse(JSON.stringify(schema));
       
-      // Process the schema with Context7
-      const result = await this.context7Client.processTask({
+      // Process the schema with FlexTime AI
+      const result = await this.flexTimeClient.processTask({
         task: 'enrich_schema',
         parameters: {
           typeName,
@@ -576,14 +576,14 @@ class EntityExtensionManager {
       });
       
       if (!result.success || !result.enrichedSchema) {
-        logger.warn(`Context7 schema enrichment failed for ${typeName}`);
+        logger.warn(`FlexTime AI schema enrichment failed for ${typeName}`);
         return schema;
       }
       
-      logger.info(`Enriched schema for ${typeName} with Context7`);
+      logger.info(`Enriched schema for ${typeName} with FlexTime AI`);
       return result.enrichedSchema;
     } catch (error) {
-      logger.error(`Failed to enrich schema with Context7: ${error.message}`);
+      logger.error(`Failed to enrich schema with FlexTime AI: ${error.message}`);
       return schema;
     }
   }
@@ -602,9 +602,9 @@ class EntityExtensionManager {
         throw new Error('Examples must be a non-empty array');
       }
       
-      // If Context7 is available, use it for generation
-      if (this.context7Client && this.context7Client.enabled) {
-        const result = await this.context7Client.processTask({
+      // If FlexTime AI is available, use it for generation
+      if (this.flexTimeClient && this.flexTimeClient.enabled) {
+        const result = await this.flexTimeClient.processTask({
           task: 'generate_schema_from_examples',
           parameters: {
             typeName: entityTypeName,
@@ -618,7 +618,7 @@ class EntityExtensionManager {
           // Register the new entity type
           if (options.autoRegister !== false) {
             await this.registerEntityType(entityTypeName, result.schema, {
-              enrichWithContext7: false, // Already enriched by Context7
+              enrichWithFlexTimeAI: false, // Already enriched by FlexTime AI
               persist: options.persist
             });
           }

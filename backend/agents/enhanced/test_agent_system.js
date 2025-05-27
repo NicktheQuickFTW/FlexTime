@@ -2,7 +2,7 @@
  * Test Script for FlexTime Enhanced Agent System
  * 
  * This script tests the functionality of the enhanced agent system,
- * verifying that all components work correctly with Context7.
+ * verifying that all components work correctly with the FlexTime platform.
  */
 
 require('dotenv').config();

@@ -16,7 +16,7 @@ const dbConfig = {
     port: process.env.NEON_PORT || 5432,
     user: process.env.NEON_USER || 'postgres',
     password: process.env.NEON_PASSWORD || '',
-    database: process.env.NEON_DATABASE || 'flextime',
+    database: process.env.NEON_DATABASE || 'HELiiX',
     ssl: { rejectUnauthorized: false }
   },
   claude: {

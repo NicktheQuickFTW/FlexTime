@@ -2,9 +2,7 @@
  * Centralized Memory Manager for FlexTime
  * 
  * This module provides a centralized memory management system that uses
- * MongoDB MCP as the primary storage mechanism, following the HELiiX
- * architecture where all agent memory management is unified in the
- * Intelligence Engine.
+ * Neon PostgreSQL as the primary storage mechanism.
  */
 
 const { v4: uuidv4 } = require('uuid');
@@ -31,7 +29,7 @@ class CentralizedMemoryManager {
    */
   constructor(config = {}, services = {}) {
     this.config = config;
-    this.intelligenceEngine = services.intelligenceEngine;
+    // Intelligence Engine removed - using direct database access
     this.mcpRouter = services.mcpRouter;
     this.enabled = config.enabled !== false;
     
@@ -70,42 +68,29 @@ class CentralizedMemoryManager {
       
       logger.info(`Storing ${memoryDoc.type} memory for agent ${memoryDoc.agentId}`);
       
-      // Try to store in Intelligence Engine first
-      if (this.intelligenceEngine && this.intelligenceEngine.enabled) {
-        try {
-          const response = await this.intelligenceEngine.storeExperience({
-            ...memoryDoc,
-            source: 'centralized_memory_manager'
-          });
-          
-          if (response.success) {
-            // Update cache
-            this.memoryCache.set(memoryDoc.id, memoryDoc);
-            return { success: true, memory: memoryDoc };
+      // Intelligence Engine removed - store directly to database
+      
+      // Store memory in the database using the MCP router
+      try {
+        const response = await this.mcpRouter.routeRequest({
+          taskType: 'memory_storage',
+          request: {
+            operation: 'insert',
+            collection: 'agent_memories',
+            document: memoryDoc
           }
-        } catch (error) {
-          logger.warn(`Intelligence Engine memory storage failed: ${error.message}`);
-          // Fall through to direct MCP
+        });
+        
+        if (response.success) {
+          // Update cache
+          this.memoryCache.set(memoryDoc.id, memoryDoc);
+          return { success: true, memory: memoryDoc };
+        } else {
+          throw new Error(response.error || 'Unknown error storing memory');
         }
-      }
-      
-      // Use MCP router to store in MongoDB
-      const response = await this.mcpRouter.routeRequest({
-        taskType: 'memory_storage',
-        request: {
-          operation: 'insert',
-          collection: 'agent_memories',
-          document: memoryDoc
-        },
-        useIntelligenceEngine: false // Already tried Intelligence Engine
-      });
-      
-      if (response.success) {
-        // Update cache
-        this.memoryCache.set(memoryDoc.id, memoryDoc);
-        return { success: true, memory: memoryDoc };
-      } else {
-        throw new Error(response.error || 'Unknown error storing memory');
+      } catch (error) {
+        logger.error(`Failed to store memory in database: ${error.message}`);
+        throw error;
       }
     } catch (error) {
       logger.error(`Failed to store memory: ${error.message}`);
@@ -132,61 +117,43 @@ class CentralizedMemoryManager {
     try {
       logger.info(`Retrieving memories with query: ${JSON.stringify(query)}`);
       
-      // Try to retrieve from Intelligence Engine first
-      if (this.intelligenceEngine && this.intelligenceEngine.enabled) {
-        try {
-          const response = await this.intelligenceEngine.retrieveExperiences(query);
-          
-          if (response.success && response.experiences) {
-            return { 
-              success: true, 
-              memories: response.experiences,
-              source: 'intelligence_engine'
-            };
-          }
-        } catch (error) {
-          logger.warn(`Intelligence Engine memory retrieval failed: ${error.message}`);
-          // Fall through to direct MCP
-        }
-      }
+      // Intelligence Engine removed - retrieve directly from database
       
-      // Use MCP router to query MongoDB
-      const mongoQuery = {
+      // Prepare the database query
+      const dbQuery = {
         ...query.filter
       };
       
       if (query.agentId) {
-        mongoQuery.agentId = query.agentId;
+        dbQuery.agentId = query.agentId;
       }
       
       if (query.type) {
-        mongoQuery.type = query.type;
+        dbQuery.type = query.type;
       }
       
+      // Query the database using the MCP router
       const response = await this.mcpRouter.routeRequest({
         taskType: 'memory_storage',
         request: {
           operation: 'find',
           collection: 'agent_memories',
-          query: mongoQuery,
-          options: {
-            limit: query.limit || 100,
-            sort: { timestamp: -1 }
-          }
-        },
-        useIntelligenceEngine: false // Already tried Intelligence Engine
+          query: dbQuery,
+          limit: query.limit || 100,
+          sort: { timestamp: -1 }
+        }
       });
       
-      if (response.success) {
-        // Update cache with retrieved memories
-        for (const memory of response.documents) {
+      if (response.success && Array.isArray(response.data)) {
+        // Add to cache
+        response.data.forEach(memory => {
           this.memoryCache.set(memory.id, memory);
-        }
+        });
         
         return { 
           success: true, 
-          memories: response.documents,
-          source: 'mongodb_mcp'
+          memories: response.data,
+          source: 'database'
         };
       } else {
         throw new Error(response.error || 'Unknown error retrieving memories');
@@ -230,25 +197,7 @@ class CentralizedMemoryManager {
       logger.info(`Consolidating memories for agent ${agentId}`);
       
       // Try to consolidate through Intelligence Engine first
-      if (this.intelligenceEngine && this.intelligenceEngine.enabled) {
-        try {
-          const response = await this.intelligenceEngine.submitAgentTask({
-            type: 'consolidate_memories',
-            agentId,
-            parameters: {
-              similarityThreshold: this.config.similarityThreshold || 0.85,
-              maxMemoriesToConsolidate: this.config.maxMemoriesToConsolidate || 100
-            }
-          });
-          
-          if (response.success) {
-            return response;
-          }
-        } catch (error) {
-          logger.warn(`Intelligence Engine memory consolidation failed: ${error.message}`);
-          // Fall through to direct implementation
-        }
-      }
+      // Intelligence Engine removed - using direct task submission
       
       // Simplified local implementation
       logger.info('Using local memory consolidation as fallback');

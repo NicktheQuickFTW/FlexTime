@@ -1,8 +1,8 @@
 /**
- * FlexTime Application with Context7 Integration
+ * FlexTime Application
  * 
  * This is the main application component that integrates all FlexTime features,
- * including the Context7-enhanced capabilities for intelligent scheduling.
+ * including advanced capabilities for intelligent scheduling and pattern analysis.
  */
 
 import React, { useState, useEffect } from 'react';
@@ -35,9 +35,11 @@ import TeamManager from './pages/TeamManager';
 import VenueManager from './pages/VenueManager';
 import Settings from './pages/Settings';
 
-// Import Context7 enhanced components
-import C7Dashboard from './pages/C7Dashboard';
-import C7Navigation from './components/c7/C7Navigation';
+// Import advanced analytics components
+import RecommendationVisualizer from './components/analytics/RecommendationVisualizer';
+import PatternVisualizer from './components/analytics/PatternVisualizer';
+import LearningInsightsDashboard from './components/analytics/LearningInsightsDashboard';
+import UserPreferenceManager from './components/settings/UserPreferenceManager';
 
 // Import authentication services
 import { getCurrentUser, logout } from '../services/auth_service';
@@ -63,8 +65,8 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [userMenuAnchor, setUserMenuAnchor] = useState(null);
   const [activeSchedule, setActiveSchedule] = useState(null);
-  const [c7Enabled, setC7Enabled] = useState(
-    localStorage.getItem('c7Enabled') !== 'false' // Default to true
+  const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(
+    localStorage.getItem('advancedFeaturesEnabled') !== 'false' // Default to true
   );
   
   // Check authentication status on mount
@@ -115,11 +117,11 @@ const App = () => {
     setActiveSchedule(schedule);
   };
   
-  // Toggle Context7 features
-  const toggleC7Features = () => {
-    const newValue = !c7Enabled;
-    setC7Enabled(newValue);
-    localStorage.setItem('c7Enabled', newValue);
+  // Toggle advanced features
+  const toggleAdvancedFeatures = () => {
+    const newValue = !advancedFeaturesEnabled;
+    setAdvancedFeaturesEnabled(newValue);
+    localStorage.setItem('advancedFeaturesEnabled', newValue);
   };
   
   // If still loading, show loading indicator
@@ -145,12 +147,12 @@ const App = () => {
     { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
   ];
   
-  // Conditionally add Context7 navigation item
-  if (c7Enabled) {
+  // Conditionally add Advanced Analytics navigation item
+  if (advancedFeaturesEnabled) {
     navItems.push({
-      text: 'Context7 Dashboard',
+      text: 'Advanced Analytics',
       icon: <PsychologyIcon />,
-      path: `/c7/dashboard${activeSchedule ? `/${activeSchedule.id}` : ''}`
+      path: `/analytics${activeSchedule ? `/${activeSchedule.id}` : ''}`
     });
   }
   
@@ -181,13 +183,11 @@ const App = () => {
                 )}
               </Typography>
               
-              {/* Context7 Navigation - only if enabled */}
-              {c7Enabled && (
-                <C7Navigation 
-                  scheduleId={activeSchedule?.id}
-                  sportType={activeSchedule?.sportType}
-                  variant="icon"
-                />
+              {/* Advanced Analytics indicator - only if enabled */}
+              {advancedFeaturesEnabled && (
+                <IconButton color="inherit" onClick={() => navigate('/analytics')}>
+                  <PsychologyIcon />
+                </IconButton>
               )}
               
               {/* Notifications */}
@@ -228,8 +228,8 @@ const App = () => {
                 <MenuItem onClick={handleUserMenuClose}>Profile</MenuItem>
                 <MenuItem onClick={handleUserMenuClose}>My account</MenuItem>
                 <Divider />
-                <MenuItem onClick={toggleC7Features}>
-                  {c7Enabled ? 'Disable Context7 Features' : 'Enable Context7 Features'}
+                <MenuItem onClick={toggleAdvancedFeatures}>
+                  {advancedFeaturesEnabled ? 'Disable Advanced Features' : 'Enable Advanced Features'}
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
@@ -268,9 +268,9 @@ const App = () => {
               </List>
               <Box sx={{ flexGrow: 1 }} />
               <Box sx={{ p: 2 }}>
-                {c7Enabled && (
+                {advancedFeaturesEnabled && (
                   <Typography variant="caption" color="textSecondary">
-                    Enhanced with Context7 AI
+                    Enhanced with FlexTime AI
                   </Typography>
                 )}
               </Box>
@@ -289,19 +289,10 @@ const App = () => {
               <Route path="/venues" element={<VenueManager />} />
               <Route path="/settings" element={<Settings />} />
               
-              {/* Context7 Enhanced Routes - only accessible if enabled */}
-              {c7Enabled && (
-                <>
-                  <Route path="/c7/dashboard" element={<C7Dashboard />} />
-                  <Route path="/c7/dashboard/:scheduleId" element={<C7Dashboard />} />
-                  <Route path="/c7/recommendations" element={<C7Dashboard activeTab="recommendations" />} />
-                  <Route path="/c7/recommendations/:scheduleId" element={<C7Dashboard activeTab="recommendations" />} />
-                  <Route path="/c7/patterns" element={<C7Dashboard activeTab="patterns" />} />
-                  <Route path="/c7/patterns/:scheduleId" element={<C7Dashboard activeTab="patterns" />} />
-                  <Route path="/c7/insights" element={<C7Dashboard activeTab="insights" />} />
-                  <Route path="/c7/preferences" element={<C7Dashboard activeTab="preferences" />} />
-                </>
-              )}
+              {/* Advanced analytics routes */}
+              <Route path="/analytics" element={<Dashboard />} />
+              <Route path="/analytics/:scheduleId" element={<Dashboard />} />
+              <Route path="/preferences" element={<Settings />} />
               
               {/* Fallback redirect */}
               <Route path="*" element={<Navigate to="/" />} />

@@ -2,7 +2,7 @@
  * Semantic Enricher for Knowledge Graph
  * 
  * This module provides semantic enrichment capabilities for knowledge graph entities,
- * using Context7 to add contextual information and relationships.
+ * using FlexTime AI to add contextual information and relationships.
  */
 
 const logger = require('../../utils/logger');
@@ -24,7 +24,7 @@ class SemanticEnricher {
       ...config
     };
     
-    this.context7Client = null;
+    this.flexTimeClient = null;
     this.entityEmbeddings = new Map();
     
     logger.info(`Semantic Enricher initialized (enabled: ${this.config.enabled})`);
@@ -33,10 +33,10 @@ class SemanticEnricher {
   /**
    * Initialize the semantic enricher
    * 
-   * @param {Object} context7Client - Context7 client instance
+   * @param {Object} flexTimeClient - FlexTime AI client instance
    * @returns {Promise<boolean>} Whether initialization was successful
    */
-  async initialize(context7Client) {
+  async initialize(flexTimeClient) {
     try {
       if (!this.config.enabled) {
         logger.info('Semantic Enricher is disabled, skipping initialization');
@@ -45,12 +45,12 @@ class SemanticEnricher {
       
       logger.info('Initializing Semantic Enricher');
       
-      // Store Context7 client
-      this.context7Client = context7Client;
+      // Store FlexTime AI client
+      this.flexTimeClient = flexTimeClient;
       
-      // Check if Context7 client is available
-      if (!this.context7Client || !this.context7Client.enabled) {
-        logger.warn('Context7 client is not available, semantic enrichment will be limited');
+      // Check if FlexTime AI client is available
+      if (!this.flexTimeClient || !this.flexTimeClient.enabled) {
+        logger.warn('FlexTime AI client is not available, semantic enrichment will be limited');
         this.config.enabled = false;
         return false;
       }
@@ -72,7 +72,7 @@ class SemanticEnricher {
    */
   async enrichEntity(entityType, entityData) {
     try {
-      if (!this.config.enabled || !this.context7Client || !this.context7Client.enabled) {
+      if (!this.config.enabled || !this.flexTimeClient || !this.flexTimeClient.enabled) {
         return entityData;
       }
       
@@ -136,8 +136,8 @@ class SemanticEnricher {
         return;
       }
       
-      // Use Context7 to get additional team information
-      const teamInfo = await this.context7Client.processTask({
+      // Use FlexTime AI to get additional team information
+      const teamInfo = await this.flexTimeClient.processTask({
         task: 'enrich_team_data',
         parameters: {
           teamName: teamData.name,
@@ -174,7 +174,7 @@ class SemanticEnricher {
         // Add metadata about enrichment
         teamData.enriched = true;
         teamData.enrichedAt = new Date().toISOString();
-        teamData.enrichmentSource = 'context7';
+        teamData.enrichmentSource = 'flextime_ai';
       }
     } catch (error) {
       logger.error(`Failed to enrich team: ${error.message}`);
@@ -195,8 +195,8 @@ class SemanticEnricher {
         return;
       }
       
-      // Use Context7 to get additional venue information
-      const venueInfo = await this.context7Client.processTask({
+      // Use FlexTime AI to get additional venue information
+      const venueInfo = await this.flexTimeClient.processTask({
         task: 'enrich_venue_data',
         parameters: {
           venueName: venueData.name,
@@ -225,7 +225,7 @@ class SemanticEnricher {
         // Add metadata about enrichment
         venueData.enriched = true;
         venueData.enrichedAt = new Date().toISOString();
-        venueData.enrichmentSource = 'context7';
+        venueData.enrichmentSource = 'flextime_ai';
       }
     } catch (error) {
       logger.error(`Failed to enrich venue: ${error.message}`);
@@ -246,8 +246,8 @@ class SemanticEnricher {
         return;
       }
       
-      // Use Context7 to enhance constraint information
-      const constraintInfo = await this.context7Client.processTask({
+      // Use FlexTime AI to enhance constraint information
+      const constraintInfo = await this.flexTimeClient.processTask({
         task: 'analyze_constraint',
         parameters: {
           constraintType: constraintData.type,
@@ -274,7 +274,7 @@ class SemanticEnricher {
         // Add metadata about enrichment
         constraintData.enriched = true;
         constraintData.enrichedAt = new Date().toISOString();
-        constraintData.enrichmentSource = 'context7';
+        constraintData.enrichmentSource = 'flextime_ai';
       }
     } catch (error) {
       logger.error(`Failed to enrich constraint: ${error.message}`);
@@ -295,8 +295,8 @@ class SemanticEnricher {
         return;
       }
       
-      // Use Context7 to get sport-specific schedule guidelines
-      const scheduleInfo = await this.context7Client.processTask({
+      // Use FlexTime AI to get sport-specific schedule guidelines
+      const scheduleInfo = await this.flexTimeClient.processTask({
         task: 'get_sport_schedule_guidelines',
         parameters: {
           sportType: scheduleData.sportType,
@@ -321,7 +321,7 @@ class SemanticEnricher {
         // Add metadata about enrichment
         scheduleData.enriched = true;
         scheduleData.enrichedAt = new Date().toISOString();
-        scheduleData.enrichmentSource = 'context7';
+        scheduleData.enrichmentSource = 'flextime_ai';
       }
     } catch (error) {
       logger.error(`Failed to enrich schedule: ${error.message}`);
@@ -338,7 +338,7 @@ class SemanticEnricher {
    */
   async _generateEmbedding(entityType, entityData) {
     try {
-      if (!this.context7Client || !this.context7Client.enabled) {
+      if (!this.flexTimeClient || !this.flexTimeClient.enabled) {
         return null;
       }
       
@@ -385,7 +385,7 @@ class SemanticEnricher {
       }
       
       // Generate embedding
-      const embeddingResult = await this.context7Client.generateEmbedding({
+      const embeddingResult = await this.flexTimeClient.generateEmbedding({
         text,
         model: this.config.embeddingModel
       });

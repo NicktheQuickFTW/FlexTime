@@ -12,13 +12,33 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=${DATABASE_URL}
-      - REDIS_URL=${REDIS_URL}
+      # Use Neon DB connection from backend/.env
+      - NEON_DB_CONNECTION_STRING=${NEON_DB_CONNECTION_STRING}
+      - NEON_DB_HOST=${NEON_DB_HOST}
+      - NEON_DB_PORT=${NEON_DB_PORT}
+      - NEON_DB_NAME=${NEON_DB_NAME}
+      - NEON_DB_USER=${NEON_DB_USER}
+      - NEON_DB_PASSWORD=${NEON_DB_PASSWORD}
+      - NEON_DB_SSL=${NEON_DB_SSL}
+      - ENABLE_NEON_MEMORY=${ENABLE_NEON_MEMORY}
+      - USE_NEON_DB=${USE_NEON_DB}
+      # API Keys
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # Feature flags
+      - ENABLE_CHAMPIONSHIP_CONSTRAINTS=${ENABLE_CHAMPIONSHIP_CONSTRAINTS}
+      - ENABLE_INTELLIGENCE_ENGINE=${ENABLE_INTELLIGENCE_ENGINE}
+      - DISABLE_EXTERNAL_SERVICES=${DISABLE_EXTERNAL_SERVICES}
+      - ENABLE_MCP_COORDINATION=${ENABLE_MCP_COORDINATION}
+      # Scheduling parameters
+      - MAX_SCHEDULE_ITERATIONS=${MAX_SCHEDULE_ITERATIONS}
+      - OPTIMIZATION_THRESHOLD=${OPTIMIZATION_THRESHOLD}
+      # Redis config for container communication
+      - REDIS_URL=redis://redis:6379
     volumes:
       - ./backend:/app
       - /app/node_modules
     depends_on:
-      - postgres
       - redis
     networks:
       - flextime-network
@@ -43,23 +63,6 @@ services:
       - flextime-network
     restart: unless-stopped
 
-  # PostgreSQL database
-  postgres:
-    image: postgres:14
-    container_name: flextime-postgres
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-flextime}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./backend/learning-system/migrations:/docker-entrypoint-initdb.d
-    networks:
-      - flextime-network
-    restart: unless-stopped
-
   # Redis for caching
   redis:
     image: redis:7-alpine
@@ -77,5 +80,4 @@ networks:
     driver: bridge
 
 volumes:
-  postgres-data:
   redis-data:

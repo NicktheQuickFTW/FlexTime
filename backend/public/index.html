@@ -1,70 +1,534 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>FlexTime Dashboard</title>
-  <style>
-    body { font-family: Arial; margin: 0; padding: 0; background: #f0f4f8; }
-    .header { background: #0a2463; color: white; padding: 20px; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    .card { background: white; border-radius: 5px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .status { color: green; font-weight: bold; }
-    .flex-row { display: flex; flex-wrap: wrap; gap: 20px; }
-    .flex-col { flex: 1; min-width: 300px; }
-    footer { text-align: center; margin-top: 40px; padding: 20px; color: #666; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlexTime Scheduling Platform</title>
+    <style>
+        :root {
+            --primary: #0033a0; /* Big 12 Blue */
+            --secondary: #c8102e; /* Big 12 Red */
+            --light: #f5f5f5;
+            --dark: #333;
+            --gray: #e1e1e1;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        nav li {
+            margin-left: 1.5rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #0055cc 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #a30d24;
+        }
+        
+        .features {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            background-color: var(--primary);
+            color: white;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .feature-content {
+            padding: 1.5rem;
+        }
+        
+        .feature-content h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .api-section {
+            background-color: var(--gray);
+            padding: 4rem 0;
+        }
+        
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .api-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .api-card h3 {
+            margin-top: 0;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .api-card h3 span {
+            background-color: var(--secondary);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-left: 0.8rem;
+        }
+        
+        .api-url {
+            background-color: #f0f0f0;
+            padding: 0.8rem;
+            border-radius: 4px;
+            font-family: monospace;
+            margin-bottom: 1rem;
+        }
+        
+        .api-response {
+            background-color: #f8f8f8;
+            border-left: 4px solid var(--primary);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        .dashboard {
+            padding: 2rem;
+            background-color: white;
+            border-radius: 8px;
+            margin-top: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dashboard h2 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+        
+        .metric-label {
+            color: var(--dark);
+            font-weight: 500;
+        }
+        
+        .teams-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .team-card {
+            display: flex;
+            align-items: center;
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 1rem;
+            transition: transform 0.3s;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .team-abbr {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-  <div class="header">
-    <div class="container">
-      <h1>FlexTime Scheduling System</h1>
-    </div>
-  </div>
-  
-  <div class="container">
-    <div class="card">
-      <h2>System Status</h2>
-      <p class="status">✓ All Services Running</p>
-      <p>Version: 1.0.0</p>
-    </div>
-    
-    <div class="flex-row">
-      <div class="flex-col">
-        <div class="card">
-          <h2>Big 12 Scheduling</h2>
-          <p>Advanced scheduling algorithms for Big 12 Championship sports</p>
-          <ul>
-            <li>Multi-Variable Optimization</li>
-            <li>League-Specific Adaptability</li>
-            <li>Travel Partner System for Tennis</li>
-          </ul>
+    <header>
+        <div class="container header-content">
+            <div class="logo">Flex<span>Time</span></div>
+            <nav>
+                <ul>
+                    <li><a href="#dashboard">Dashboard</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#api">API</a></li>
+                </ul>
+            </nav>
         </div>
-      </div>
-      
-      <div class="flex-col">
-        <div class="card">
-          <h2>Intelligence Engine</h2>
-          <p>AI-powered recommendations based on historical data</p>
-          <ul>
-            <li>Pattern Recognition</li>
-            <li>Historical Data Analysis</li>
-            <li>Continuous Learning System</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    </header>
     
-    <div class="card">
-      <h2>API Endpoints</h2>
-      <ul>
-        <li><code>/api/status</code> - API Status</li>
-        <li><code>/api/schedule</code> - Scheduling API</li>
-        <li><code>/api/intelligence-engine</code> - Intelligence Engine API</li>
-      </ul>
-    </div>
-  </div>
-  
-  <footer>
-    <p>FlexTime Scheduling System v2.1.0 | HELiiX Platform</p>
-  </footer>
+    <section class="hero">
+        <div class="container">
+            <h1>Big 12 Conference Scheduling Platform</h1>
+            <p>Advanced sports scheduling with constraint optimization, travel management, and championship integration for the Big 12 Conference.</p>
+            <a href="#dashboard" class="btn">View Dashboard</a>
+        </div>
+    </section>
+    
+    <section id="dashboard" class="container">
+        <div class="dashboard">
+            <h2>Scheduling Dashboard</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">API Requests</div>
+                    <div class="metric-value" id="apiRequests">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Schedules Created</div>
+                    <div class="metric-value" id="schedulesCreated">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Optimization Runs</div>
+                    <div class="metric-value" id="optimizationRuns">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Avg. Optimization Time</div>
+                    <div class="metric-value" id="optimizationTime">--</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Constraint Satisfaction</div>
+                    <div class="metric-value" id="constraintSatisfaction">--</div>
+                </div>
+            </div>
+            
+            <h2>Big 12 Teams</h2>
+            <div class="teams-list" id="teamsList">
+                <!-- Teams will be loaded here via JavaScript -->
+                <div class="team-card">
+                    <div class="team-abbr">...</div>
+                    <div class="team-name">Loading teams...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Core Features</h2>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🏆</div>
+                    <div class="feature-content">
+                        <h3>Championship Constraints</h3>
+                        <p>Automatically integrates conference championships and NCAA tournament dates into scheduling decisions.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">✈️</div>
+                    <div class="feature-content">
+                        <h3>Travel Optimization</h3>
+                        <p>Minimizes travel distance for teams while maintaining competitive balance and schedule quality.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🏟️</div>
+                    <div class="feature-content">
+                        <h3>Venue Management</h3>
+                        <p>Handles venue availability, capacity, and conflicts across multiple sports and events.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚖️</div>
+                    <div class="feature-content">
+                        <h3>Competitive Balance</h3>
+                        <p>Ensures fair distribution of home/away games and competitive matchups throughout the season.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-content">
+                        <h3>Quality Metrics</h3>
+                        <p>Comprehensive scheduling metrics to evaluate and compare different schedule options.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-content">
+                        <h3>Data Visualization</h3>
+                        <p>Interactive visualizations for schedule analysis, travel patterns, and constraint satisfaction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="api" class="api-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>API Documentation</h2>
+            </div>
+            
+            <div class="api-grid">
+                <div class="api-card">
+                    <h3>Get Status <span>GET</span></h3>
+                    <div class="api-url">/api/status</div>
+                    <p>Returns the current system status and version information.</p>
+                    <div class="api-response" id="statusResponse">Loading...</div>
+                </div>
+                
+                <div class="api-card">
+                    <h3>List Teams <span>GET</span></h3>
+                    <div class="api-url">/api/teams</div>
+                    <p>Returns a list of all Big 12 Conference teams.</p>
+                    <div class="api-response" id="teamsResponse">Loading...</div>
+                </div>
+                
+                <div class="api-card">
+                    <h3>List Schedules <span>GET</span></h3>
+                    <div class="api-url">/api/schedules</div>
+                    <p>Returns available schedules in the system.</p>
+                    <div class="api-response" id="schedulesResponse">Loading...</div>
+                </div>
+                
+                <div class="api-card">
+                    <h3>Get Metrics <span>GET</span></h3>
+                    <div class="api-url">/api/metrics</div>
+                    <p>Returns system performance metrics.</p>
+                    <div class="api-response" id="metricsResponse">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 XII-Ops. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fetch API data when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch status
+            fetch('/api/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('statusResponse').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('statusResponse').textContent = 'Error fetching status data.';
+                });
+            
+            // Fetch teams
+            fetch('/api/teams')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('teamsResponse').textContent = JSON.stringify(data, null, 2);
+                    
+                    // Populate teams list
+                    const teamsList = document.getElementById('teamsList');
+                    teamsList.innerHTML = '';
+                    
+                    data.teams.forEach(team => {
+                        const teamCard = document.createElement('div');
+                        teamCard.className = 'team-card';
+                        
+                        const teamAbbr = document.createElement('div');
+                        teamAbbr.className = 'team-abbr';
+                        teamAbbr.textContent = team.abbreviation.substring(0, 2);
+                        
+                        const teamName = document.createElement('div');
+                        teamName.className = 'team-name';
+                        teamName.textContent = team.name;
+                        
+                        teamCard.appendChild(teamAbbr);
+                        teamCard.appendChild(teamName);
+                        teamsList.appendChild(teamCard);
+                    });
+                })
+                .catch(error => {
+                    document.getElementById('teamsResponse').textContent = 'Error fetching teams data.';
+                });
+            
+            // Fetch schedules
+            fetch('/api/schedules')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('schedulesResponse').textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    document.getElementById('schedulesResponse').textContent = 'Error fetching schedules data.';
+                });
+            
+            // Fetch metrics
+            fetch('/api/metrics')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('metricsResponse').textContent = JSON.stringify(data, null, 2);
+                    
+                    // Update metrics display
+                    document.getElementById('apiRequests').textContent = data.metrics.apiRequests;
+                    document.getElementById('schedulesCreated').textContent = data.metrics.scheduleCreated;
+                    document.getElementById('optimizationRuns').textContent = data.metrics.optimizationRuns;
+                    document.getElementById('optimizationTime').textContent = data.metrics.averageOptimizationTime;
+                    document.getElementById('constraintSatisfaction').textContent = data.metrics.constraintSatisfaction;
+                })
+                .catch(error => {
+                    document.getElementById('metricsResponse').textContent = 'Error fetching metrics data.';
+                });
+        });
+    </script>
 </body>
 </html>

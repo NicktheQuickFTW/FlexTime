@@ -21,7 +21,7 @@ async function connectToDockerPostgres() {
   // Get database configuration from environment variables
   const dbHost = process.env.POSTGRES_HOST || 'localhost';
   const dbPort = process.env.POSTGRES_PORT || 5432;
-  const dbName = process.env.POSTGRES_DB || 'flextime';
+  const dbName = process.env.POSTGRES_DB || 'HELiiX';
   const dbUser = process.env.POSTGRES_USER || 'postgres';
   const dbPassword = process.env.POSTGRES_PASSWORD || 'postgres';
 

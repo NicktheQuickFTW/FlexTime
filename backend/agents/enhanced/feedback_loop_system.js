@@ -103,34 +103,39 @@ class FeedbackLoopSystem {
         }
       }
       
-      // Use MCP router to store in MongoDB
-      const response = await this.mcpRouter.routeRequest({
-        taskType: 'feedback_storage',
-        request: {
-          operation: 'insert',
-          collection: 'schedule_feedback',
-          document: feedbackDoc
+      // Store feedback in the database using the MCP router
+      try {
+        const response = await this.mcpRouter.routeRequest({
+          taskType: 'feedback_storage',
+          request: {
+            operation: 'insert',
+            collection: 'schedule_feedback',
+            document: feedbackDoc
+          }
+        });
+        
+        if (response.success) {
+          logger.info(`Feedback stored successfully: ${feedbackDoc.id}`);
+          
+          // Store as memory for relevant agents
+          await this.storeAsFeedbackMemory(feedbackDoc);
+          
+          return { 
+            success: true, 
+            feedbackId: feedbackDoc.id,
+            learningRequested: false,
+            note: 'Feedback stored successfully, but learning update not requested'
+          };
+        } else {
+          throw new Error(response.error || 'Unknown error storing feedback');
         }
-      });
-      
-      if (response.success) {
-        logger.info(`Feedback stored via MCP: ${feedbackDoc.id}`);
-        
-        // Store as memory for relevant agents
-        await this.storeAsFeedbackMemory(feedbackDoc);
-        
-        return { 
-          success: true, 
-          feedbackId: feedbackDoc.id,
-          learningRequested: false,
-          note: 'Stored via MCP, but learning update not requested'
-        };
-      } else {
-        throw new Error(response.error || 'Unknown error storing feedback');
+      } catch (error) {
+        logger.error(`Failed to process feedback: ${error.message}`);
+        return { success: false, error: error.message };
       }
     } catch (error) {
-      logger.error(`Failed to process feedback: ${error.message}`);
-      return { success: false, error: error.message };
+      logger.error(`Unexpected error in submitFeedback: ${error.message}`);
+      return { success: false, error: 'An unexpected error occurred while processing feedback' };
     }
   }
   

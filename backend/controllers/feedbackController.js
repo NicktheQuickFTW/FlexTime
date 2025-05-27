@@ -7,7 +7,7 @@
 
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose'); // MongoDB removed - using Neon DB
 const logger = require('../agents/utils/logger');
 const MCPIntegration = require('../agents/mcp_integration');
 const { FlexTimeAgentSystem } = require('../agents');

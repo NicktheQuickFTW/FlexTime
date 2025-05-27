@@ -155,27 +155,29 @@ module.exports = {
 
     // Director agents
     directors: {
-      MasterDirectorAgent: require('./master_director_agent'),
-      ...require('./director')
+      MasterDirectorAgent: require('./master_director_agent')
+      // Commented out to avoid loading potentially missing modules
+      // ...require('./director')
     },
 
     // Specialized agents
-    specialized: require('./specialized'),
+    // specialized: require('./specialized'),
+    specialized: {},
 
     // Sport-specific agents
     sportSpecific: {
-      BasketballScheduleOptimizer: require('./sport_specific/basketball_schedule_optimizer'),
-      rag: require('./sport_specific/rag')
+      // BasketballScheduleOptimizer: require('./sport_specific/basketball_schedule_optimizer'),
+      // rag: require('./sport_specific/rag')
     },
 
     // Memory management
-    memory: require('./memory'),
+    memory: require('./memory/index'),
 
-    // RAG agents
-    rag: {
-      SchoolDataAgent: require('./rag/school_data_agent')
-    },
+    // RAG agents - DISABLED
+    rag: { },
 
+    // DISABLED AGENTS for development
+    /*
     // Big12 agents
     big12: require('./big12'),
 
@@ -196,5 +198,6 @@ module.exports = {
 
     // HELiiX Connector agents
     heliixConnector: require('./heliix_connector')
+    */
   }
 };
