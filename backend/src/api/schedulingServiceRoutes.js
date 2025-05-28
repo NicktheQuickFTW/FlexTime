@@ -7,8 +7,8 @@
 
 const express = require('express');
 const router = express.Router();
-const AdvancedSchedulingService = require('../services/advanced_scheduling_service');
-const logger = require('../utils/logger');
+const AdvancedSchedulingService = require('../../services/advanced_scheduling_service');
+const logger = require('../../tools/logger');
 
 // Create service instance
 const schedulingService = new AdvancedSchedulingService();

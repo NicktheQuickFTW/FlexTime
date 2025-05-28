@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const AdvancedMetricsSystem = require('../utils/advanced_metrics_system');
+const AdvancedMetricsSystem = require('../../tools/advanced_metrics_system');
 
 // Create advanced metrics system
 const advancedMetricsSystem = new AdvancedMetricsSystem();

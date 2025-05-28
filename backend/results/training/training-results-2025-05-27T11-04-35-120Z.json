@@ -1,0 +1,14 @@
+{
+  "timestamp": "2025-05-27T11:04:35.135Z",
+  "models": {
+    "game": {
+      "success": false,
+      "error": "(0 , util_1.isNullOrUndefined) is not a function"
+    },
+    "team": {
+      "success": false,
+      "error": "(0 , util_1.isNullOrUndefined) is not a function"
+    }
+  },
+  "trainingTime": 0.026
+}

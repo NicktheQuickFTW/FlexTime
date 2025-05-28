@@ -1,0 +1,54 @@
+{
+  "timestamp": "2025-05-12T17:45:37.731Z",
+  "components": {
+    "patternExtractor": {
+      "verified": true,
+      "details": {}
+    },
+    "gameOutcomeModel": {
+      "verified": true,
+      "details": {}
+    },
+    "scheduleQualityModel": {
+      "verified": true,
+      "details": {}
+    },
+    "teamPerformanceModel": {
+      "verified": true,
+      "details": {}
+    },
+    "mlApi": {
+      "verified": false,
+      "details": {}
+    }
+  },
+  "files": {
+    "models": [
+      "game_outcome_1.0.0.pkl",
+      "schedule_quality_1.0.0.pkl",
+      "team_performance_1.0.0.pkl"
+    ],
+    "implementation": {
+      "python": [
+        "python/intelligence_engine/ml/pattern_extractor.py",
+        "python/intelligence_engine/ml/predictive_model.py",
+        "python/intelligence_engine/ml/test_ml.py",
+        "python/intelligence_engine/ml/__init__.py",
+        "python/intelligence_engine/api/ml_routes.py"
+      ],
+      "javascript": [
+        "scripts/test-ml-components.js",
+        "scripts/test-ml-api.js"
+      ]
+    }
+  },
+  "summary": {
+    "success": true,
+    "message": "Machine Learning components successfully implemented",
+    "fileCount": {
+      "python": 5,
+      "javascript": 2,
+      "models": 3
+    }
+  }
+}

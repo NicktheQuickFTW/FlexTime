@@ -21,9 +21,13 @@ function ScheduleBuilderHeader({
       React.createElement('div', { className: 'brand-section', key: 'brand' }, [
         React.createElement('img', { 
           className: 'flextime-logo', 
-          src: 'flextime-white.svg', 
+          src: 'assets/logos/flextime/flextime-white64x64.svg', 
           alt: 'FlexTime Logo',
-          key: 'logo' 
+          key: 'logo',
+          onError: (e) => {
+            console.log('FT Builder logo failed to load:', e.target.src);
+            e.target.src = 'assets/logos/flextime/flextime-white.svg';
+          }
         }),
         React.createElement('div', { className: 'brand-text', key: 'brand-text' }, [
           React.createElement('h1', { className: 'app-title', key: 'title' }, [

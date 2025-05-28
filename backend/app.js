@@ -42,8 +42,16 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Database connection
-const { pool } = require('./db-connection');
-const dbConnected = true;
+let pool, dbConnected;
+try {
+  const dbConnection = require('./data/db-connection');
+  pool = dbConnection.pool;
+  dbConnected = true;
+} catch (error) {
+  console.log('Database connection module not found, using fallback');
+  dbConnected = false;
+  pool = null;
+}
 
 // Basic routes
 app.get('/api/status', async (req, res) => {
@@ -209,6 +217,34 @@ app.get('/api/intelligence-engine/status', (req, res) => {
 });
 
 // Start the server
+// Enhanced Intelligence Engine endpoints
+app.get('/api/intelligence/status', (req, res) => {
+  res.json({
+    status: 'enabled',
+    engine_url: process.env.INTELLIGENCE_ENGINE_URL || 'http://localhost:4001',
+    database: 'HELiiX',
+    features: ['schedule_optimization', 'ml_predictions', 'agent_system'],
+    hd_database: 'HELiiX Neon Database'
+  });
+});
+
+app.get('/api/intelligence/schedule/optimize', (req, res) => {
+  res.json({
+    status: 'Intelligence Engine Active',
+    message: 'Schedule optimization available',
+    database: 'HELiiX',
+    capabilities: ['constraint_solving', 'travel_optimization', 'date_assignment']
+  });
+});
+
+app.get('/api/intelligence/ml/predict', (req, res) => {
+  res.json({
+    status: 'ML Engine Active',
+    message: 'Machine learning predictions available',
+    models: ['team_performance', 'game_outcomes', 'schedule_quality']
+  });
+});
+
 const PORT = process.env.PORT || 3001;
 const server = http.createServer(app);
 

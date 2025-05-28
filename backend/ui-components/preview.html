@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlexTime Dashboard Preview</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #1976d2;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        .header-icon {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+        .tabs {
+            display: flex;
+            background-color: white;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .tab {
+            padding: 16px 24px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+        .tab.active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border-bottom: 2px solid #1976d2;
+        }
+        .tab-icon {
+            margin-right: 8px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card-title {
+            margin-top: 0;
+            margin-bottom: 16px;
+            color: #333;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+        }
+        .card-title-icon {
+            margin-right: 8px;
+            color: #1976d2;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .status-chip {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+        .status-chip.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-chip.error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .status-chip.warning {
+            background-color: #fff8e1;
+            color: #f57f17;
+        }
+        .metric-box {
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            padding: 16px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin: 8px 0;
+            color: #1976d2;
+        }
+        .metric-label {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background-color: #1976d2;
+            border-radius: 4px;
+        }
+        .chart {
+            height: 200px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table th, .table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .table th {
+            background-color: #f5f5f5;
+            font-weight: 500;
+            color: #333;
+        }
+        .feedback-form {
+            display: grid;
+            gap: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-label {
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        .form-input, .form-textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: 'Roboto', sans-serif;
+        }
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .rating {
+            display: flex;
+            gap: 8px;
+        }
+        .rating-star {
+            font-size: 24px;
+            color: #ffc107;
+            cursor: pointer;
+        }
+        .button {
+            padding: 12px 24px;
+            background-color: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #1565c0;
+        }
+        .button.secondary {
+            background-color: #e0e0e0;
+            color: #333;
+        }
+        .button.secondary:hover {
+            background-color: #d5d5d5;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="header">
+            <h1>
+                <span class="header-icon">⏱️</span>
+                FlexTime Scheduling System
+            </h1>
+            <div>
+                <span class="status-chip success">Intelligence Engine Connected</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active">
+                <span class="tab-icon">📊</span>
+                Dashboard
+            </div>
+            <div class="tab">
+                <span class="tab-icon">💡</span>
+                Insights
+            </div>
+            <div class="tab">
+                <span class="tab-icon">📝</span>
+                Feedback
+            </div>
+            <div class="tab">
+                <span class="tab-icon">🔍</span>
+                Experiences
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-title-icon">🧠</span>
+                Intelligence Engine Status
+            </h2>
+            <div class="grid">
+                <div class="metric-box">
+                    <div class="metric-label">Status</div>
+                    <div class="metric-value">Connected</div>
+                    <div class="status-chip success">Online</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Uptime</div>
+                    <div class="metric-value">3d 12h 45m</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">API Requests Today</div>
+                    <div class="metric-value">1,245</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-label">Memory Usage</div>
+                    <div class="metric-value">64%</div>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 64%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">📈</span>
+                    Schedule Generation
+                </h2>
+                <p><strong>Recommended Algorithm:</strong> Round Robin</p>
+                <p><strong>Average Quality:</strong> 87.5%</p>
+                <p><strong>Common Issues:</strong></p>
+                <ul>
+                    <li>Insufficient rest periods between games</li>
+                    <li>Excessive travel distances for certain teams</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title">
+                    <span class="card-title-icon">🔄</span>
+                    Optimization
+                </h2>
+                <p><strong>Most Effective Strategy:</strong> Simulated Annealing</p>
+                <p><strong>Average Improvements:</strong></p>
+                <div class="chart">
+                    [Bar Chart: Travel Distance 15.3%, Home/Away Balance 8.2%, Constraint Satisfaction 12.5%]
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-title-icon">📋</span>
+                Recent Schedules
+            </h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Sport</th>
+                        <th>Conference</th>
+                        <th>Teams</th>
+                        <th>Algorithm</th>
+                        <th>Quality</th>
+                        <th>Created</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Basketball</td>
+                        <td>Big 12</td>
+                        <td>10</td>
+                        <td>Round Robin</td>
+                        <td>92%</td>
+                        <td>Today, 10:45 AM</td>
+                    </tr>
+                    <tr>
+                        <td>Football</td>
+                        <td>Big 12</td>
+                        <td>12</td>
+                        <td>Partial Round Robin</td>
+                        <td>88%</td>
+                        <td>Yesterday, 3:20 PM</td>
+                    </tr>
+                    <tr>
+                        <td>Tennis</td>
+                        <td>Big 12</td>
+                        <td>8</td>
+                        <td>Double Round Robin</td>
+                        <td>95%</td>
+                        <td>Apr 25, 2025</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card">
+            <h2 class="card-title">
+                <span class="card-title-icon">📝</span>
+                Schedule Feedback
+            </h2>
+            <div class="feedback-form">
+                <div class="form-group">
+                    <label class="form-label">Overall Rating</label>
+                    <div class="rating">
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">★</span>
+                        <span class="rating-star">☆</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Travel Distance: <strong>Good</strong></label>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 70%"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Home/Away Balance: <strong>Very Good</strong></label>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Rest Periods: <strong>Fair</strong></label>
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: 40%"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Comments</label>
+                    <textarea class="form-textarea" placeholder="Please provide any additional feedback..."></textarea>
+                </div>
+                
+                <button class="button">Submit Feedback</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

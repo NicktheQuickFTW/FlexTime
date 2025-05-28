@@ -1,0 +1,167 @@
+# Dependencies
+node_modules/
+*/node_modules/
+*/*/node_modules/
+
+# Build outputs
+dist/
+build/
+*/dist/
+*/build/
+.next/
+out/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.env
+
+# IDE and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+.coverage
+*.cover
+.hypothesis/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.coveragerc
+
+# Version control
+.git/
+.gitignore
+.gitattributes
+.svn/
+.hg/
+
+# Docker files (don't include in context)
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# Documentation
+README.md
+CHANGELOG.md
+docs/
+*.md
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+.cache/
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Backup files
+*.bak
+*.backup
+*~
+*.orig
+
+# Large data files
+*.csv
+*.xlsx
+*.xls
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+
+# Exclude large directories but keep structure
+backend/data/exports/*
+backend/data/results/*
+backend/data/compass/models/*
+backend/data/compass/training_history/*
+backend/logs/*
+!backend/data/exports/.gitkeep
+!backend/data/results/.gitkeep
+!backend/data/compass/models/.gitkeep
+!backend/data/compass/training_history/.gitkeep
+!backend/logs/.gitkeep

@@ -316,6 +316,7 @@ function SettingsPage({ user }) {
     // Apply theme change immediately
     if (key === 'theme') {
       document.documentElement.setAttribute('data-theme', value);
+      setCurrentTheme(value);
     }
   };
 
@@ -424,7 +425,7 @@ function SettingsPage({ user }) {
 
   return React.createElement('div', { className: 'content-section settings-section' }, [
     React.createElement('div', { className: 'section-header', key: 'header' }, [
-      React.createElement('h1', { className: 'section-title', key: 'title' }, 'Settings'),
+      React.createElement('h1', { className: 'section-title', key: 'title' }, 'SETTINGS'),
       React.createElement('p', { className: 'section-description', key: 'desc' }, 'Configure FlexTime preferences and system settings')
     ]),
 
@@ -486,7 +487,7 @@ function SettingsPage({ user }) {
         
         // General Settings
         activeTab === 'general' && React.createElement('div', { className: 'settings-panel', key: 'general' }, [
-          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'General Settings'),
+          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'GENERAL SETTINGS'),
           
           React.createElement(SettingGroup, {
             key: 'appearance',
@@ -533,7 +534,7 @@ function SettingsPage({ user }) {
 
         // Database Settings
         activeTab === 'database' && React.createElement('div', { className: 'settings-panel', key: 'database' }, [
-          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'Database Settings'),
+          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'DATABASE SETTINGS'),
           
           React.createElement(SettingGroup, {
             key: 'connection',
@@ -579,7 +580,7 @@ function SettingsPage({ user }) {
 
         // Scheduling Settings
         activeTab === 'scheduling' && React.createElement('div', { className: 'settings-panel', key: 'scheduling' }, [
-          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'Scheduling Settings'),
+          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'SCHEDULING SETTINGS'),
           
           React.createElement(SettingGroup, {
             key: 'defaults',
@@ -643,7 +644,7 @@ function SettingsPage({ user }) {
 
         // AI Settings
         activeTab === 'ai' && React.createElement('div', { className: 'settings-panel', key: 'ai' }, [
-          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'AI & Automation Settings'),
+          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'AI & AUTOMATION SETTINGS'),
           
           React.createElement(SettingGroup, {
             key: 'assistance',
@@ -686,7 +687,7 @@ function SettingsPage({ user }) {
 
         // Export Settings
         activeTab === 'export' && React.createElement('div', { className: 'settings-panel', key: 'export' }, [
-          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'Export Settings'),
+          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'EXPORT SETTINGS'),
           
           React.createElement(SettingGroup, {
             key: 'format',
@@ -732,7 +733,7 @@ function SettingsPage({ user }) {
 
         // Advanced Settings
         activeTab === 'advanced' && React.createElement('div', { className: 'settings-panel', key: 'advanced' }, [
-          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'Advanced Settings'),
+          React.createElement('h2', { className: 'panel-title', key: 'title' }, 'ADVANCED SETTINGS'),
           
           React.createElement(SettingGroup, {
             key: 'development',
@@ -1434,7 +1435,7 @@ function TeamsManagement() {
 
         React.createElement('div', { className: 'team-detail-content', key: 'content' }, [
           React.createElement('div', { className: 'detail-section', key: 'basic' }, [
-            React.createElement('h3', { key: 'title' }, 'Basic Information'),
+            React.createElement('h3', { key: 'title' }, 'BASIC INFORMATION'),
             React.createElement('div', { className: 'detail-grid', key: 'grid' }, [
               React.createElement('div', { className: 'detail-item', key: 'founded' }, [
                 React.createElement('label', { key: 'label' }, 'Founded'),
@@ -1456,7 +1457,7 @@ function TeamsManagement() {
           ]),
 
           React.createElement('div', { className: 'detail-section', key: 'achievements' }, [
-            React.createElement('h3', { key: 'title' }, 'Achievements'),
+            React.createElement('h3', { key: 'title' }, 'ACHIEVEMENTS'),
             React.createElement('div', { className: 'achievements-grid', key: 'grid' }, [
               React.createElement('div', { className: 'achievement-card', key: 'national' }, [
                 React.createElement('div', { className: 'achievement-value', key: 'value' }, selectedTeam.achievements.nationalTitles),
@@ -1474,7 +1475,7 @@ function TeamsManagement() {
           ]),
 
           React.createElement('div', { className: 'detail-section', key: 'rankings' }, [
-            React.createElement('h3', { key: 'title' }, 'Current Rankings'),
+            React.createElement('h3', { key: 'title' }, 'CURRENT RANKINGS'),
             React.createElement('div', { className: 'rankings-grid', key: 'grid' }, [
               React.createElement('div', { className: 'ranking-item', key: 'football' }, [
                 React.createElement('label', { key: 'label' }, 'Football'),
@@ -1496,7 +1497,7 @@ function TeamsManagement() {
           ]),
 
           React.createElement('div', { className: 'detail-section', key: 'sports' }, [
-            React.createElement('h3', { key: 'title' }, 'Sports Programs'),
+            React.createElement('h3', { key: 'title' }, 'SPORTS PROGRAMS'),
             React.createElement('div', { className: 'sports-list-detail', key: 'list' },
               selectedTeam.sports.map(sport =>
                 React.createElement('span', { className: 'sport-badge', key: sport }, sport)
@@ -1975,7 +1976,7 @@ function LoginForm({ onLogin, onSwitchToRegister, onClose }) {
   };
 
   return React.createElement('form', { onSubmit: handleSubmit, className: 'auth-form' }, [
-    React.createElement('h2', { key: 'title' }, 'Welcome Back'),
+    React.createElement('h2', { key: 'title' }, 'WELCOME BACK'),
     React.createElement('p', { key: 'subtitle' }, 'Sign in to your FlexTime account'),
     
     error && React.createElement('div', { className: 'error-message', key: 'error' }, error),
@@ -2083,7 +2084,7 @@ function RegisterForm({ onLogin, onSwitchToLogin, onClose }) {
   };
 
   return React.createElement('form', { onSubmit: handleSubmit, className: 'auth-form' }, [
-    React.createElement('h2', { key: 'title' }, 'Join FlexTime'),
+    React.createElement('h2', { key: 'title' }, 'JOIN FLEXTIME'),
     React.createElement('p', { key: 'subtitle' }, 'Create your account to get started'),
     
     error && React.createElement('div', { className: 'error-message', key: 'error' }, error),
@@ -2203,7 +2204,9 @@ function FlexTimeApp() {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showMenuDropdown, setShowMenuDropdown] = useState(false);
   const [authMode, setAuthMode] = useState('login'); // 'login' or 'register'
+  const [currentTheme, setCurrentTheme] = useState('dark');
   
   // Initialize currentSection from URL hash or localStorage, default to 'dashboard'
   const getInitialSection = () => {
@@ -2233,16 +2236,19 @@ function FlexTimeApp() {
   // Theme management
   useEffect(() => {
     const savedTheme = localStorage.getItem('flextime-settings');
+    let theme = 'dark';
     if (savedTheme) {
       try {
         const settings = JSON.parse(savedTheme);
-        document.documentElement.setAttribute('data-theme', settings.theme || 'dark');
+        theme = settings.theme || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
       } catch (error) {
         document.documentElement.setAttribute('data-theme', 'dark');
       }
     } else {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
+    setCurrentTheme(theme);
   }, []);
 
   // Check authentication status on app load
@@ -2285,6 +2291,18 @@ function FlexTimeApp() {
 
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showMenuDropdown && !event.target.closest('.menu-dropdown-container')) {
+        setShowMenuDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showMenuDropdown]);
 
   const checkAuthStatus = async () => {
     try {
@@ -2348,14 +2366,19 @@ function FlexTimeApp() {
           style: { cursor: 'pointer' }
         }, [
           React.createElement('img', {
-            src: 'flextime-white.svg',
+            src: currentTheme === 'dark' 
+              ? 'assets/logos/flextime/flextime-white64x64.svg'
+              : 'assets/logos/flextime/flextime-black64x64.svg',
             alt: 'FlexTime',
             className: 'flextime-logo-small',
             key: 'img'
           }),
           React.createElement('h1', { className: 'title-metallic', key: 'title' }, 'FLEXTIME')
         ]),
-        React.createElement('nav', { className: 'nav-links-modern', key: 'nav' }, [
+        
+        // Right section with navigation and menu
+        React.createElement('div', { className: 'header-right-section', key: 'right-section' }, [
+          React.createElement('nav', { className: 'nav-links-modern', key: 'nav' }, [
           React.createElement('a', { 
             href: '#schedule', 
             className: `nav-link-modern ${currentSection === 'schedule' ? 'active' : ''}`, 
@@ -2378,9 +2401,16 @@ function FlexTimeApp() {
             React.createElement('span', { key: 'text', style: { display: 'flex', alignItems: 'center', gap: '8px' } }, [
               React.createElement('img', { 
                 key: 'logo',
-                src: '/assets/logos/flextime/flextime-white32x32.svg',
+                src: currentTheme === 'dark' 
+                  ? 'assets/logos/flextime/flextime-white64x64.svg'
+                  : 'assets/logos/flextime/flextime-black64x64.svg',
                 alt: 'FlexTime',
-                style: { width: '24px', height: '24px' }
+                style: { width: '24px', height: '24px' },
+                onError: (e) => {
+                  e.target.src = currentTheme === 'dark' 
+                    ? 'assets/logos/flextime/flextime-white.svg'
+                    : 'assets/logos/flextime/flextime-black32x32.svg';
+                }
               }),
               React.createElement('span', { key: 'text-part' }, 'FT BUILDER')
             ])
@@ -2488,91 +2518,101 @@ function FlexTimeApp() {
           ])
         ]),
         
-        // User Authentication Section
-        React.createElement('div', { className: 'auth-section', key: 'auth' }, [
-          user ? [
-            // User is logged in
-            React.createElement('div', { className: 'user-info', key: 'user-info' }, [
-              React.createElement('div', { className: 'user-avatar', key: 'avatar' }, 
-                user.firstName ? user.firstName.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()
-              ),
-              React.createElement('div', { className: 'user-details', key: 'details' }, [
-                React.createElement('span', { className: 'user-name', key: 'name' }, 
-                  user.firstName && user.lastName 
-                    ? `${user.firstName} ${user.lastName}`
-                    : user.email
-                ),
-                React.createElement('span', { className: 'user-email', key: 'email' }, user.email)
-              ])
-            ]),
-            React.createElement('button', {
-              className: 'auth-button logout',
-              onClick: handleLogout,
-              key: 'logout',
-              title: 'Sign out'
+          // Hamburger Menu Dropdown
+          React.createElement('div', { className: 'menu-dropdown-container', key: 'menu-dropdown' }, [
+          React.createElement('button', {
+            className: `menu-toggle ${showMenuDropdown ? 'active' : ''}`,
+            onClick: () => setShowMenuDropdown(!showMenuDropdown),
+            key: 'menu-toggle',
+            'aria-label': 'Menu'
+          }, [
+            React.createElement('div', { className: 'hamburger-icon', key: 'hamburger' }, [
+              React.createElement('span', { key: 'bar1' }),
+              React.createElement('span', { key: 'bar2' }),
+              React.createElement('span', { key: 'bar3' })
+            ])
+          ]),
+          showMenuDropdown && React.createElement('div', { className: 'menu-dropdown', key: 'dropdown' }, [
+            React.createElement('a', {
+              href: '#settings',
+              className: 'menu-dropdown-item',
+              onClick: (e) => { 
+                e.preventDefault(); 
+                setCurrentSection('settings'); 
+                setShowMenuDropdown(false);
+              },
+              key: 'settings-item'
             }, [
               React.createElement('svg', {
+                className: 'menu-item-icon',
                 width: '16',
                 height: '16',
                 viewBox: '0 0 24 24',
                 fill: 'currentColor',
-                key: 'icon'
+                key: 'settings-icon'
               }, [
                 React.createElement('path', {
-                  d: 'M16 17v-3H9v-4h7V7l5 5-5 5M14 2a2 2 0 012 2v2h-2V4H5v16h9v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h9z',
-                  key: 'path'
+                  key: 'path',
+                  d: 'M12 15.5A3.5 3.5 0 0 1 8.5 12A3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5a3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97c0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1c0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66Z'
                 })
               ]),
-              React.createElement('span', { key: 'text' }, 'Sign Out')
-            ])
-          ] : [
-            // User is not logged in
-            React.createElement('button', {
-              className: 'auth-button login',
-              onClick: () => {
+              React.createElement('span', { key: 'text' }, 'SETTINGS')
+            ]),
+            React.createElement('a', {
+              href: '#signin',
+              className: 'menu-dropdown-item',
+              onClick: (e) => { 
+                e.preventDefault(); 
                 setAuthMode('login');
                 setShowAuthModal(true);
+                setShowMenuDropdown(false);
               },
-              key: 'login'
+              key: 'signin-item'
             }, [
               React.createElement('svg', {
+                className: 'menu-item-icon',
                 width: '16',
                 height: '16',
                 viewBox: '0 0 24 24',
                 fill: 'currentColor',
-                key: 'icon'
+                key: 'signin-icon'
               }, [
                 React.createElement('path', {
-                  d: 'M10 17v-3H3v-4h7V7l5 5-5 5M12 2a2 2 0 012 2v2h-2V4H5v16h7v-2h2v2a2 2 0 01-2 2H5a2 2 0 01-2-2V4a2 2 0 012-2h7z',
-                  key: 'path'
+                  key: 'path',
+                  d: 'M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z'
                 })
               ]),
-              React.createElement('span', { key: 'text' }, 'Sign In')
+              React.createElement('span', { key: 'text' }, 'SIGN IN')
             ]),
-            React.createElement('button', {
-              className: 'auth-button register',
-              onClick: () => {
+            React.createElement('a', {
+              href: '#signup',
+              className: 'menu-dropdown-item',
+              onClick: (e) => { 
+                e.preventDefault(); 
                 setAuthMode('register');
                 setShowAuthModal(true);
+                setShowMenuDropdown(false);
               },
-              key: 'register'
+              key: 'signup-item'
             }, [
               React.createElement('svg', {
+                className: 'menu-item-icon',
                 width: '16',
                 height: '16',
                 viewBox: '0 0 24 24',
                 fill: 'currentColor',
-                key: 'icon'
+                key: 'signup-icon'
               }, [
                 React.createElement('path', {
-                  d: 'M15 14c-2.67 0-8 1.33-8 4v2h16v-2c0-2.67-5.33-4-8-4zM15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z',
-                  key: 'path'
+                  key: 'path',
+                  d: 'M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'
                 })
               ]),
-              React.createElement('span', { key: 'text' }, 'Sign Up')
+              React.createElement('span', { key: 'text' }, 'SIGN UP')
             ])
-          ]
+          ])
         ])
+        ]),
       ])
     ]),
 

@@ -4,8 +4,8 @@
   "description": "FlexTime Scheduling Service - Backend API and Engine",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "jest",
     "migrate-to-neon": "node scripts/migrate-to-neon.js",
     "create-neon-tables": "node scripts/create-neon-tables.js",

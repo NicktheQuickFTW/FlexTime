@@ -16,7 +16,7 @@
  */
 
 const logger = require('./logger');
-const ScheduleMetrics = require('../algorithms/schedule-metrics');
+const ScheduleMetrics = require('../src/intelligence/schedule-metrics');
 
 class AdvancedMetricsSystem {
   /**
