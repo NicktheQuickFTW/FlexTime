@@ -1,0 +1,61 @@
+# ConfigMaps for FlexTime services
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flextime-config
+  namespace: flextime-production
+data:
+  NODE_ENV: "production"
+  PORT: "3001"
+  FRONTEND_PORT: "3000"
+  REDIS_URL: "redis://redis-service:6379"
+  CORS_ORIGIN: "https://flextime.big12.org"
+  ENABLE_INTELLIGENCE_ENGINE: "true"
+  INTELLIGENCE_ENGINE_URL: "http://intelligence-engine-service:4001"
+  DISABLE_EXTERNAL_SERVICES: "false"
+  USE_NEON_DB: "true"
+  ENABLE_NEON_MEMORY: "true"
+  NEON_DB_SSL: "true"
+  
+  # Logging configuration
+  LOG_LEVEL: "info"
+  LOG_FORMAT: "json"
+  
+  # Health check endpoints
+  HEALTH_CHECK_PATH: "/api/status"
+  READINESS_CHECK_PATH: "/api/ready"
+  
+  # Rate limiting
+  RATE_LIMIT_WINDOW_MS: "900000"  # 15 minutes
+  RATE_LIMIT_MAX_REQUESTS: "1000"
+  
+  # Session configuration
+  SESSION_TIMEOUT: "3600000"  # 1 hour
+  JWT_EXPIRY: "24h"
+  
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flextime-config
+  namespace: flextime-staging
+data:
+  NODE_ENV: "staging"
+  PORT: "3001"
+  FRONTEND_PORT: "3000"
+  REDIS_URL: "redis://redis-service:6379"
+  CORS_ORIGIN: "https://staging.flextime.big12.org"
+  ENABLE_INTELLIGENCE_ENGINE: "true"
+  INTELLIGENCE_ENGINE_URL: "http://intelligence-engine-service:4001"
+  DISABLE_EXTERNAL_SERVICES: "false"
+  USE_NEON_DB: "true"
+  ENABLE_NEON_MEMORY: "true"
+  NEON_DB_SSL: "true"
+  LOG_LEVEL: "debug"
+  LOG_FORMAT: "json"
+  HEALTH_CHECK_PATH: "/api/status"
+  READINESS_CHECK_PATH: "/api/ready"
+  RATE_LIMIT_WINDOW_MS: "900000"
+  RATE_LIMIT_MAX_REQUESTS: "2000"
+  SESSION_TIMEOUT: "7200000"  # 2 hours for testing
+  JWT_EXPIRY: "48h"

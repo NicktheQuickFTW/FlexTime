@@ -5,6 +5,7 @@
 
 function FlexTimeSidebar({ 
   selectedSport, 
+  setSelectedSport,
   teams, 
   onTeamDragStart, 
   constraints, 
@@ -41,11 +42,16 @@ function FlexTimeSidebar({
         .replace(/\s+/g, '_')
         .replace(/[^a-z0-9_]/g, '');
       
-      // Always use light logos for the scheduling sidebar
-      const logoTheme = 'light';
-      const logoSuffix = '-light';
+      // Always use dark logos for the scheduling sidebar
+      const logoTheme = 'dark';
+      const logoSuffix = '-dark';
       
       return `/assets/logos/teams/${logoTheme}/${logoName}${logoSuffix}.svg`;
+    };
+    
+    // Combine team name and mascot
+    const getFullTeamName = (team) => {
+      return team.mascot ? `${team.name} ${team.mascot}` : team.name;
     };
 
     return React.createElement('div', {
@@ -53,7 +59,7 @@ function FlexTimeSidebar({
       className: 'sidebar-team-item',
       draggable: true,
       onDragStart: (e) => onTeamDragStart(e, team),
-      title: team.name
+      title: getFullTeamName(team)
     }, [
       React.createElement('img', {
         key: 'logo',
@@ -65,13 +71,9 @@ function FlexTimeSidebar({
         }
       }),
       React.createElement('span', {
-        key: 'abbr',
-        className: 'team-abbreviation'
-      }, team.abbr),
-      React.createElement('span', {
         key: 'name',
         className: 'team-full-name'
-      }, team.name)
+      }, getFullTeamName(team))
     ]);
   }
 
@@ -100,16 +102,33 @@ function FlexTimeSidebar({
 
   return React.createElement('div', { className: 'flextime-sidebar' }, [
     
-    // Sidebar Header
+    // Sidebar Header with Sport Selector
     React.createElement('div', { className: 'sidebar-header', key: 'header' }, [
-      React.createElement('span', {
-        key: 'icon',
-        className: 'sidebar-header-icon'
-      }, '⚙'),
-      React.createElement('h3', {
-        key: 'title',
-        className: 'sidebar-header-title'
-      }, 'Schedule Tools')
+      React.createElement('select', {
+        key: 'sport-selector',
+        className: 'sport-selector glass-dropdown sidebar-sport-selector',
+        value: selectedSport,
+        onChange: (e) => setSelectedSport(e.target.value)
+      }, [
+        // Men's Sports
+        React.createElement('optgroup', { label: 'Men\'s Sports', key: 'mens-sports' }, [
+          React.createElement('option', { value: 'football', key: 'football' }, 'Football (16 teams)'),
+          React.createElement('option', { value: 'basketball', key: 'basketball' }, 'Men\'s Basketball (16 teams)'),
+          React.createElement('option', { value: 'baseball', key: 'baseball' }, 'Baseball (14 teams)'),
+          React.createElement('option', { value: 'wrestling', key: 'wrestling' }, 'Wrestling (14 teams)'),
+          React.createElement('option', { value: 'tennis-men', key: 'tennis-men' }, 'Men\'s Tennis (9 teams)')
+        ]),
+        // Women's Sports
+        React.createElement('optgroup', { label: 'Women\'s Sports', key: 'womens-sports' }, [
+          React.createElement('option', { value: 'basketball-women', key: 'basketball-women' }, 'Women\'s Basketball (16 teams)'),
+          React.createElement('option', { value: 'soccer', key: 'soccer' }, 'Soccer (16 teams)'),
+          React.createElement('option', { value: 'volleyball', key: 'volleyball' }, 'Volleyball (15 teams)'),
+          React.createElement('option', { value: 'softball', key: 'softball' }, 'Softball (11 teams)'),
+          React.createElement('option', { value: 'gymnastics', key: 'gymnastics' }, 'Gymnastics (7 teams)'),
+          React.createElement('option', { value: 'lacrosse', key: 'lacrosse' }, 'Lacrosse (6 teams)'),
+          React.createElement('option', { value: 'tennis-women', key: 'tennis-women' }, 'Women\'s Tennis (16 teams)')
+        ])
+      ])
     ]),
 
     // Sidebar Content
@@ -118,10 +137,6 @@ function FlexTimeSidebar({
       // Teams Section
       React.createElement('div', { className: 'sidebar-section', key: 'teams' }, [
         React.createElement('div', { className: 'sidebar-section-header', key: 'teams-header' }, [
-          React.createElement('span', {
-            key: 'icon',
-            className: 'sidebar-section-icon'
-          }, getSportIcon(selectedSport)),
           React.createElement('h4', {
             key: 'title',
             className: 'sidebar-section-title'
@@ -130,71 +145,29 @@ function FlexTimeSidebar({
         React.createElement('div', { className: 'sidebar-teams-grid', key: 'teams-grid' }, 
           teams.map(team => renderTeamItem(team))
         )
-      ]),
-
-      // Constraints Section
-      React.createElement('div', { className: 'sidebar-section', key: 'constraints' }, [
-        React.createElement('div', { className: 'sidebar-section-header', key: 'constraints-header' }, [
-          React.createElement('span', {
-            key: 'icon',
-            className: 'sidebar-section-icon'
-          }, '⚖'),
-          React.createElement('h4', {
-            key: 'title',
-            className: 'sidebar-section-title'
-          }, 'CONSTRAINTS')
-        ]),
-        React.createElement('div', { className: 'sidebar-constraints', key: 'constraints-grid' }, [
-          renderConstraintToggle('homeAwayBalance', 'Home/Away Balance', constraints.homeAwayBalance),
-          renderConstraintToggle('rivalryProtection', 'Rivalry Protection', constraints.rivalryProtection),
-          renderConstraintToggle('travelOptimization', 'Travel Optimization', constraints.travelOptimization),
-          renderConstraintToggle('tvWindows', 'TV Window Compliance', constraints.tvWindows),
-          renderConstraintToggle('weatherConsiderations', 'Weather Considerations', constraints.weatherConsiderations)
-        ])
-      ]),
-
-      // AI Analytics Section
-      React.createElement('div', { className: 'sidebar-section', key: 'analytics' }, [
-        React.createElement('div', { className: 'sidebar-section-header', key: 'analytics-header' }, [
-          React.createElement('span', {
-            key: 'icon',
-            className: 'sidebar-section-icon'
-          }, '◆'),
-          React.createElement('h4', {
-            key: 'title',
-            className: 'sidebar-section-title'
-          }, 'AI INSIGHTS')
-        ]),
-        React.createElement('div', { className: 'sidebar-constraints', key: 'insights' }, [
-          React.createElement('div', { className: 'constraint-control', key: 'compass' }, [
-            React.createElement('span', { className: 'constraint-label', key: 'label' }, 'COMPASS Score'),
-            React.createElement('span', { 
-              className: 'constraint-label', 
-              key: 'value',
-              style: { color: 'var(--color-silver-primary)', fontWeight: 'bold' }
-            }, '87.5')
-          ]),
-          React.createElement('div', { className: 'constraint-control', key: 'conflicts' }, [
-            React.createElement('span', { className: 'constraint-label', key: 'label' }, 'Conflicts'),
-            React.createElement('span', { 
-              className: 'constraint-label', 
-              key: 'value',
-              style: { color: '#ff4444', fontWeight: 'bold' }
-            }, '3')
-          ]),
-          React.createElement('div', { className: 'constraint-control', key: 'optimization' }, [
-            React.createElement('span', { className: 'constraint-label', key: 'label' }, 'Optimization'),
-            React.createElement('span', { 
-              className: 'constraint-label', 
-              key: 'value',
-              style: { color: '#00ff7f', fontWeight: 'bold' }
-            }, '92%')
-          ])
-        ])
       ])
     ]),
 
-    // Sidebar Actions
+    // Parameters Section (Moved up)
+    React.createElement('div', { className: 'sidebar-section', key: 'constraints' }, [
+      React.createElement('div', { className: 'sidebar-section-header', key: 'constraints-header' }, [
+        React.createElement('h4', {
+          key: 'title',
+          className: 'sidebar-section-title'
+        }, 'PARAMETERS')
+      ]),
+      React.createElement('div', { className: 'sidebar-constraints', key: 'constraints-grid' }, [
+        renderConstraintToggle('homeAwayBalance', 'Home/Away Balance', constraints.homeAwayBalance),
+        renderConstraintToggle('rivalryProtection', 'Rivalry Protection', constraints.rivalryProtection),
+        renderConstraintToggle('travelOptimization', 'Travel Optimization', constraints.travelOptimization),
+        renderConstraintToggle('tvWindows', 'TV Window Compliance', constraints.tvWindows),
+        renderConstraintToggle('weatherConsiderations', 'Weather Considerations', constraints.weatherConsiderations)
+      ])
+    ]),
+
+    // AI Analytics Section - Moved to ScheduleAnalyticsPanel
+
+    // Sidebar Actions (Now at the bottom after all sections)
     React.createElement('div', { className: 'sidebar-actions', key: 'actions' }, [
       React.createElement('button', {
         key: 'generate',

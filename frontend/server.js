@@ -7,15 +7,18 @@ const cookieParser = require('cookie-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Determine if we're in production
+const isProduction = process.env.NODE_ENV === 'production';
+
 // JWT Secret (in production, use environment variable)
 const JWT_SECRET = process.env.JWT_SECRET || 'flextime-jwt-secret-key-change-in-production';
 
 // Load environment variables
 require('dotenv').config({ path: '../.env' });
 
-// Neon DB connection using environment variables
+// Neon DB connection
 const pool = new Pool({
-  connectionString: process.env.NEON_DB_CONNECTION_STRING,
+  connectionString: 'postgres://xii-os_owner:npg_4qYJFR0lneIg@ep-wandering-sea-aa01qr2o-pooler.westus3.azure.neon.tech:5432/HELiiX?sslmode=require',
   ssl: {
     require: true,
     rejectUnauthorized: false
@@ -129,40 +132,39 @@ function optionalAuth(req, res, next) {
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight
   if (req.method === 'OPTIONS') {
-    res.sendStatus(200);
-  } else {
-    next();
+    return res.sendStatus(200);
   }
+  
+  next();
 });
 
 // Parse JSON bodies
 app.use(express.json());
-
-// Parse cookies
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Serve static files
 app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Initialize Agent System
-const AgentSystem = require('../backend/agents/core/agent_system');
-const agentSystem = new AgentSystem();
+// Initialize Agent System (temporarily disabled)
+let agentSystem = {
+  initialize: () => Promise.resolve(),
+  // Add mock methods as needed
+};
 
 // Store agent system in app locals for route access
 app.locals.agentSystem = agentSystem;
 
-// Initialize agent system
-agentSystem.initialize().then(() => {
-  console.log('✅ Agent System initialized successfully');
-}).catch(error => {
-  console.error('❌ Agent System initialization failed:', error);
-});
+console.log('⚠️  Agent System initialization skipped - running in development mode');
 
-// Travel Optimization Routes
-const travelOptimizationRoutes = require('../backend/routes/travelOptimizationRoutes');
-app.use('/api/travel-optimization', travelOptimizationRoutes);
+// Travel Optimization Routes (temporarily disabled)
+// const travelOptimizationRoutes = require('../backend/routes/travelOptimizationRoutes');
+// app.use('/api/travel-optimization', travelOptimizationRoutes);
 
 // Serve the main page
 app.get('/', (req, res) => {
@@ -441,35 +443,70 @@ app.post('/api/user/settings', authenticateToken, async (req, res) => {
 // Teams API - get teams for a specific conference
 app.get('/api/teams', async (req, res) => {
   try {
-    const { conference = 'big12' } = req.query;
+    const { conference = 'BIG12', sport } = req.query;
     
-    const query = `
+    let query = `
       SELECT 
-        i.institution_id as id,
-        i.name,
-        i.abbreviation,
-        i.mascot,
-        i.city,
-        i.state,
-        i.latitude,
-        i.longitude,
-        i.primary_color,
-        i.secondary_color
-      FROM institutions i
-      WHERE LOWER(i.name) LIKE '%big%' OR LOWER(i.abbreviation) IN (
-        'arizona', 'asu', 'bay', 'byu', 'cin', 'col', 'hou', 'isu', 
-        'ku', 'ksu', 'okst', 'tcu', 'ttu', 'ucf', 'utah', 'wvu'
-      )
-      ORDER BY i.name
+        s.school_id as id,
+        s.school as name,
+        s.short_display as short_name,
+        s.school_abbreviation as abbreviation,
+        s.mascot,
+        COALESCE(s.location, '') as location,
+        s.primary_color,
+        s.secondary_color,
+        'BIG12' as conference,
+        s.website
+      FROM schools s
     `;
     
-    const result = await pool.query(query);
-    console.log(`📊 Found ${result.rows.length} teams for ${conference}`);
+    // Add sport filter if provided
+    if (sport) {
+      query += `
+        JOIN teams t ON s.school_id = t.school_id
+        JOIN sports sp ON t.sport_id = sp.sport_id
+        WHERE LOWER(sp.code) = LOWER($1)
+      `;
+    } else {
+      query += `
+        WHERE $1 = 'all' OR EXISTS (
+          SELECT 1 FROM teams t 
+          WHERE t.school_id = s.school_id
+        )
+      `;
+    }
     
-    res.json(result.rows);
+    query += `
+      ORDER BY s.school;
+    `;
+    
+    console.log('Executing query:', query, [sport || 'all']);
+    const result = await pool.query(query, [sport || 'all']);
+    
+    console.log(`📊 Found ${result.rows.length} teams for ${sport || 'all sports'}`);
+    
+    // Transform the data to match the expected frontend format
+    const teams = result.rows.map(row => ({
+      id: row.id,
+      name: row.name,
+      short_name: row.short_name || row.name,
+      abbreviation: row.abbreviation,
+      mascot: row.mascot || '',
+      location: row.location || '',
+      primary_color: row.primary_color || '#000000',
+      secondary_color: row.secondary_color || '#FFFFFF',
+      conference: row.conference || 'BIG12',
+      website: row.website || ''
+    }));
+    
+    res.json(teams);
   } catch (error) {
     console.error('❌ Error fetching teams:', error);
-    res.status(500).json({ error: 'Failed to fetch teams' });
+    res.status(500).json({ 
+      error: 'Failed to fetch teams',
+      details: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 });
 
@@ -703,8 +740,20 @@ app.get('/api/schedules', (req, res) => {
   res.json({ success: true, data: schedules });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 FlexTime Modern UI Server running on http://localhost:${PORT}`);
+// Handle React routing, return all requests to React app (must be last)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Start the server
+const server = app.listen(PORT, () => {
+  console.log(`Server is running in ${isProduction ? 'production' : 'development'} mode on http://localhost:${PORT}`);
   console.log(`📊 Dashboard: http://localhost:${PORT}`);
   console.log(`🔧 API Status: http://localhost:${PORT}/api/status`);
+});
+
+// Handle unhandled promise rejections
+process.on('unhandledRejection', (err) => {
+  console.error('Unhandled Rejection:', err);
+  server.close(() => process.exit(1));
 });

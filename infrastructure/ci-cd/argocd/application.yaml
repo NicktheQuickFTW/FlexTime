@@ -1,0 +1,294 @@
+# ArgoCD Application for GitOps deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flextime-production
+  namespace: argocd
+  labels:
+    app: flextime
+    environment: production
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/big12/flextime.git
+    targetRevision: main
+    path: infrastructure/kubernetes
+    
+    # Kustomize configuration for environment-specific settings
+    kustomize:
+      namePrefix: ""
+      nameSuffix: ""
+      images:
+        - name: flextime/api-svc
+          newTag: latest
+        - name: flextime/scheduler-svc
+          newTag: latest
+        - name: flextime/frontend
+          newTag: latest
+      
+      # Environment-specific patches
+      patchesStrategicMerge:
+        - |-
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: api-svc
+            namespace: flextime-production
+          spec:
+            replicas: 3
+            template:
+              spec:
+                containers:
+                - name: api-svc
+                  resources:
+                    requests:
+                      cpu: 200m
+                      memory: 512Mi
+                    limits:
+                      cpu: 1000m
+                      memory: 1Gi
+        - |-
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: scheduler-svc
+            namespace: flextime-production
+          spec:
+            replicas: 2
+            template:
+              spec:
+                containers:
+                - name: scheduler-svc
+                  resources:
+                    requests:
+                      cpu: 500m
+                      memory: 1Gi
+                    limits:
+                      cpu: 2000m
+                      memory: 4Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flextime-production
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+  # Health check configuration
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: ""
+      kind: Service
+      jsonPointers:
+        - /spec/clusterIP
+
+  # Revision history limit
+  revisionHistoryLimit: 10
+
+---
+# ArgoCD Application for Staging Environment
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flextime-staging
+  namespace: argocd
+  labels:
+    app: flextime
+    environment: staging
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  
+  source:
+    repoURL: https://github.com/big12/flextime.git
+    targetRevision: develop
+    path: infrastructure/kubernetes
+    
+    kustomize:
+      namePrefix: ""
+      nameSuffix: ""
+      images:
+        - name: flextime/api-svc
+          newTag: develop
+        - name: flextime/scheduler-svc
+          newTag: develop
+        - name: flextime/frontend
+          newTag: develop
+      
+      # Staging-specific resource limits
+      patchesStrategicMerge:
+        - |-
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: api-svc
+            namespace: flextime-staging
+          spec:
+            replicas: 2
+            template:
+              spec:
+                containers:
+                - name: api-svc
+                  resources:
+                    requests:
+                      cpu: 100m
+                      memory: 256Mi
+                    limits:
+                      cpu: 500m
+                      memory: 512Mi
+        - |-
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: scheduler-svc
+            namespace: flextime-staging
+          spec:
+            replicas: 1
+            template:
+              spec:
+                containers:
+                - name: scheduler-svc
+                  resources:
+                    requests:
+                      cpu: 250m
+                      memory: 512Mi
+                    limits:
+                      cpu: 1000m
+                      memory: 2Gi
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flextime-staging
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+    retry:
+      limit: 3
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 2m
+
+  ignoreDifferences:
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/replicas
+    - group: ""
+      kind: Service
+      jsonPointers:
+        - /spec/clusterIP
+
+  revisionHistoryLimit: 5
+
+---
+# ArgoCD AppProject for FlexTime
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: flextime
+  namespace: argocd
+spec:
+  description: FlexTime Scheduling Platform Project
+  
+  sourceRepos:
+    - 'https://github.com/big12/flextime.git'
+    - 'https://helm.prometheus-community.github.io/helm-charts'
+    - 'https://charts.elastic.co'
+    - 'https://jaegertracing.github.io/helm-charts'
+  
+  destinations:
+    - namespace: 'flextime-*'
+      server: https://kubernetes.default.svc
+    - namespace: monitoring
+      server: https://kubernetes.default.svc
+    - namespace: logging
+      server: https://kubernetes.default.svc
+    - namespace: tracing
+      server: https://kubernetes.default.svc
+  
+  clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRole
+    - group: 'rbac.authorization.k8s.io'
+      kind: ClusterRoleBinding
+    - group: 'apiextensions.k8s.io'
+      kind: CustomResourceDefinition
+    - group: 'networking.k8s.io'
+      kind: NetworkPolicy
+  
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  
+  roles:
+    - name: admin
+      description: Full access to FlexTime applications
+      policies:
+        - p, proj:flextime:admin, applications, *, flextime/*, allow
+        - p, proj:flextime:admin, repositories, *, *, allow
+        - p, proj:flextime:admin, logs, get, flextime/*, allow
+        - p, proj:flextime:admin, exec, create, flextime/*, allow
+      groups:
+        - big12:flextime-admins
+    
+    - name: developer
+      description: Developer access to FlexTime applications
+      policies:
+        - p, proj:flextime:developer, applications, get, flextime/*, allow
+        - p, proj:flextime:developer, applications, sync, flextime/*, allow
+        - p, proj:flextime:developer, logs, get, flextime/*, allow
+        - p, proj:flextime:developer, repositories, get, *, allow
+      groups:
+        - big12:flextime-developers
+    
+    - name: readonly
+      description: Read-only access to FlexTime applications
+      policies:
+        - p, proj:flextime:readonly, applications, get, flextime/*, allow
+        - p, proj:flextime:readonly, logs, get, flextime/*, allow
+      groups:
+        - big12:flextime-viewers
+
+  syncWindows:
+    - kind: allow
+      schedule: '0 9 * * MON-FRI'
+      duration: 8h
+      applications:
+        - flextime-production
+      manualSync: true
+    - kind: deny
+      schedule: '0 0 * * SAT,SUN'
+      duration: 48h
+      applications:
+        - flextime-production
+      manualSync: false

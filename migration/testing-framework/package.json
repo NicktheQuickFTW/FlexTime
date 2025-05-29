@@ -1,0 +1,60 @@
+{
+  "name": "@flextime/migration-testing-framework",
+  "version": "1.0.0",
+  "description": "Comprehensive testing framework for FlexTime microservices migration validation",
+  "main": "index.js",
+  "scripts": {
+    "setup:test-env": "node utilities/setup-test-environment.js",
+    "test": "npm run test:all",
+    "test:all": "npm run test:functional-equivalence && npm run test:integration && npm run test:performance && npm run test:e2e",
+    "test:functional-equivalence": "jest --config=functional-equivalence/jest.config.js",
+    "test:integration": "jest --config=integration-tests/jest.config.js",
+    "test:performance": "node performance-tests/run-performance-suite.js",
+    "test:e2e": "jest --config=e2e-tests/jest.config.js",
+    "test:migration-full": "node automation/run-migration-validation.js",
+    "test:generate-data": "node test-data/generate-test-scenarios.js",
+    "test:compare-results": "node utilities/result-comparison-engine.js",
+    "test:load": "node performance-tests/load-testing-suite.js",
+    "test:contract": "node integration-tests/contract-testing-suite.js",
+    "report:generate": "node utilities/report-generator.js",
+    "monitor:start": "node monitoring/test-monitor.js",
+    "lint": "eslint . --ext .js",
+    "clean": "rimraf reports/* test-data/generated/*"
+  },
+  "dependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "axios": "^1.9.0",
+    "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "uuid": "^9.0.1",
+    "chalk": "^4.1.2",
+    "cli-table3": "^0.6.3",
+    "commander": "^11.1.0",
+    "dotenv": "^16.5.0",
+    "fast-deep-equal": "^3.1.3",
+    "node-fetch": "^3.3.2",
+    "ws": "^8.18.0",
+    "ioredis": "^5.6.1"
+  },
+  "devDependencies": {
+    "@jest/types": "^29.6.3",
+    "eslint": "^8.57.0",
+    "rimraf": "^5.0.5",
+    "ts-node": "^10.9.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "keywords": [
+    "testing",
+    "migration",
+    "microservices",
+    "flextime",
+    "validation",
+    "performance",
+    "integration"
+  ],
+  "author": "FlexTime Migration Team",
+  "license": "MIT"
+}

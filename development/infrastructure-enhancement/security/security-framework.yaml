@@ -1,0 +1,853 @@
+# Comprehensive Security Framework for FlexTime
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: security-system
+  labels:
+    name: security-system
+    security-scanning: enabled
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+---
+# RBAC Configuration
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flextime-security-scanner
+rules:
+# Pod and container inspection
+- apiGroups: [""]
+  resources: ["pods", "pods/log", "nodes", "services", "endpoints", "namespaces"]
+  verbs: ["get", "list", "watch"]
+# Security policy inspection
+- apiGroups: ["policy"]
+  resources: ["podsecuritypolicies", "poddisruptionbudgets"]
+  verbs: ["get", "list"]
+# Network policy inspection
+- apiGroups: ["networking.k8s.io"]
+  resources: ["networkpolicies", "ingresses"]
+  verbs: ["get", "list"]
+# RBAC inspection
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["roles", "rolebindings", "clusterroles", "clusterrolebindings"]
+  verbs: ["get", "list"]
+# Security scanning
+- apiGroups: ["security.istio.io"]
+  resources: ["*"]
+  verbs: ["get", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "daemonsets", "statefulsets", "replicasets"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flextime-security-scanner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: flextime-security-scanner
+subjects:
+- kind: ServiceAccount
+  name: security-scanner
+  namespace: security-system
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: security-scanner
+  namespace: security-system
+automountServiceAccountToken: true
+---
+# Falco Security Runtime Monitoring
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: falco-config
+  namespace: security-system
+  labels:
+    app: falco
+data:
+  falco.yaml: |
+    rules_file:
+      - /etc/falco/falco_rules.yaml
+      - /etc/falco/falco_rules.local.yaml
+      - /etc/falco/k8s_audit_rules.yaml
+      - /etc/falco/rules.d
+    
+    time_format_iso_8601: true
+    json_output: true
+    json_include_output_property: true
+    json_include_tags_property: true
+    
+    log_stderr: true
+    log_syslog: true
+    log_level: info
+    
+    priority: debug
+    
+    buffered_outputs: false
+    
+    syscall_event_drops:
+      actions:
+        - log
+        - alert
+      rate: 0.1
+      max_burst: 1000
+    
+    outputs:
+      rate: 1
+      max_burst: 1000
+    
+    syslog_output:
+      enabled: true
+    
+    file_output:
+      enabled: true
+      keep_alive: false
+      filename: /var/log/falco/events.log
+    
+    stdout_output:
+      enabled: true
+    
+    webserver:
+      enabled: true
+      listen_port: 8765
+      k8s_healthz_endpoint: /healthz
+      ssl_enabled: false
+      ssl_certificate: /etc/ssl/falco/falco.pem
+    
+    grpc:
+      enabled: true
+      bind_address: "0.0.0.0:5060"
+      threadiness: 8
+    
+    grpc_output:
+      enabled: true
+    
+  falco_rules.local.yaml: |
+    # FlexTime Specific Security Rules
+    
+    # Detect unauthorized access to sensitive directories
+    - rule: Unauthorized Access to FlexTime Config
+      desc: Detect access to FlexTime configuration directories
+      condition: >
+        open_read and container and
+        (fd.name startswith /app/secrets or
+         fd.name startswith /app/config or
+         fd.name contains .env) and
+        not proc.name in (node, npm, api-svc, scheduler-svc)
+      output: >
+        Unauthorized access to FlexTime configuration 
+        (user=%user.name command=%proc.cmdline file=%fd.name 
+         container_id=%container.id image=%container.image.repository)
+      priority: WARNING
+      tags: [flextime, filesystem, configuration]
+    
+    # Detect suspicious network connections
+    - rule: FlexTime Outbound Connection to Suspicious Host
+      desc: Detect outbound connections to non-whitelisted hosts
+      condition: >
+        outbound and container and
+        not fd.sip in (postgresql_ips, redis_ips, aws_ips, prometheus_ips) and
+        not fd.sport in (80, 443, 5432, 6379, 9090, 3000) and
+        container.image.repository contains flextime
+      output: >
+        Suspicious outbound connection from FlexTime container
+        (user=%user.name command=%proc.cmdline connection=%fd.name 
+         container_id=%container.id image=%container.image.repository)
+      priority: WARNING
+      tags: [flextime, network, suspicious]
+    
+    # Detect privilege escalation attempts
+    - rule: FlexTime Privilege Escalation Attempt
+      desc: Detect attempts to escalate privileges in FlexTime containers
+      condition: >
+        container and
+        (proc.name in (sudo, su, chmod, chown) or
+         proc.cmdline contains "chmod +s" or
+         proc.cmdline contains "setuid") and
+        container.image.repository contains flextime
+      output: >
+        Privilege escalation attempt in FlexTime container
+        (user=%user.name command=%proc.cmdline 
+         container_id=%container.id image=%container.image.repository)
+      priority: CRITICAL
+      tags: [flextime, privilege_escalation]
+    
+    # Detect shell spawning in production containers
+    - rule: Shell Spawned in FlexTime Production Container
+      desc: Detect interactive shells in production FlexTime containers
+      condition: >
+        spawned_process and container and
+        shell_procs and
+        container.image.repository contains flextime and
+        k8s.ns.name in (flextime-production)
+      output: >
+        Shell spawned in FlexTime production container
+        (user=%user.name shell=%proc.name parent=%proc.pname 
+         cmdline=%proc.cmdline container_id=%container.id)
+      priority: CRITICAL
+      tags: [flextime, shell, production]
+    
+    # Detect unauthorized file modifications
+    - rule: Unauthorized File Modification in FlexTime
+      desc: Detect modifications to critical FlexTime files
+      condition: >
+        modify and container and
+        (fd.name startswith /app/node_modules or
+         fd.name startswith /usr/local/bin or
+         fd.name startswith /bin or
+         fd.name startswith /sbin) and
+        container.image.repository contains flextime and
+        not proc.name in (npm, node, apt, apt-get, dpkg)
+      output: >
+        Unauthorized file modification in FlexTime container
+        (user=%user.name command=%proc.cmdline file=%fd.name 
+         container_id=%container.id image=%container.image.repository)
+      priority: WARNING
+      tags: [flextime, filesystem, modification]
+
+---
+# Falco DaemonSet
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: falco
+  namespace: security-system
+  labels:
+    app: falco
+spec:
+  selector:
+    matchLabels:
+      app: falco
+  template:
+    metadata:
+      labels:
+        app: falco
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8765"
+    spec:
+      serviceAccountName: security-scanner
+      tolerations:
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/master
+        operator: Exists
+      - effect: NoSchedule
+        key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      hostNetwork: true
+      hostPID: true
+      hostIPC: true
+      securityContext:
+        runAsUser: 0
+      containers:
+      - name: falco
+        image: falcosecurity/falco-no-driver:0.36.2
+        args:
+        - /usr/bin/falco
+        - --cri=/run/containerd/containerd.sock
+        - --cri=/run/crio/crio.sock
+        - -K=/var/run/secrets/kubernetes.io/serviceaccount/token
+        - -k=https://kubernetes.default
+        - -pk
+        securityContext:
+          privileged: true
+        env:
+        - name: FALCO_K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: FALCO_K8S_NAMESPACE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        ports:
+        - containerPort: 8765
+          name: http
+        - containerPort: 5060
+          name: grpc
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+        volumeMounts:
+        - mountPath: /etc/falco
+          name: config-volume
+        - mountPath: /host/var/run/docker.sock
+          name: docker-socket
+          readOnly: true
+        - mountPath: /host/run/containerd/containerd.sock
+          name: containerd-socket
+          readOnly: true
+        - mountPath: /host/dev
+          name: dev-fs
+          readOnly: true
+        - mountPath: /host/proc
+          name: proc-fs
+          readOnly: true
+        - mountPath: /host/boot
+          name: boot-fs
+          readOnly: true
+        - mountPath: /host/lib/modules
+          name: lib-modules
+          readOnly: true
+        - mountPath: /host/usr
+          name: usr-fs
+          readOnly: true
+        - mountPath: /host/etc
+          name: etc-fs
+          readOnly: true
+        - mountPath: /var/log/falco
+          name: log-volume
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8765
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 8765
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: config-volume
+        configMap:
+          name: falco-config
+      - name: docker-socket
+        hostPath:
+          path: /var/run/docker.sock
+      - name: containerd-socket
+        hostPath:
+          path: /run/containerd/containerd.sock
+      - name: dev-fs
+        hostPath:
+          path: /dev
+      - name: proc-fs
+        hostPath:
+          path: /proc
+      - name: boot-fs
+        hostPath:
+          path: /boot
+      - name: lib-modules
+        hostPath:
+          path: /lib/modules
+      - name: usr-fs
+        hostPath:
+          path: /usr
+      - name: etc-fs
+        hostPath:
+          path: /etc
+      - name: log-volume
+        hostPath:
+          path: /var/log/falco
+
+---
+# Open Policy Agent (OPA) Gatekeeper
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gatekeeper-policies
+  namespace: security-system
+data:
+  container-security-template.yaml: |
+    apiVersion: templates.gatekeeper.sh/v1beta1
+    kind: ConstraintTemplate
+    metadata:
+      name: flextime-container-security
+    spec:
+      crd:
+        spec:
+          names:
+            kind: FlexTimeContainerSecurity
+          validation:
+            properties:
+              allowedImages:
+                type: array
+                items:
+                  type: string
+              requiredSecurityContext:
+                type: object
+              bannedCapabilities:
+                type: array
+                items:
+                  type: string
+      targets:
+        - target: admission.k8s.gatekeeper.sh
+          rego: |
+            package flextime.container.security
+            
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.containers[_]
+              not allowed_image(container.image)
+              msg := sprintf("Container image '%v' is not allowed", [container.image])
+            }
+            
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.containers[_]
+              container.securityContext.runAsRoot == true
+              msg := "Containers must not run as root"
+            }
+            
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.containers[_]
+              container.securityContext.privileged == true
+              msg := "Privileged containers are not allowed"
+            }
+            
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.containers[_]
+              capability := container.securityContext.capabilities.add[_]
+              capability in data.bannedCapabilities
+              msg := sprintf("Capability '%v' is not allowed", [capability])
+            }
+            
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.containers[_]
+              not container.resources.limits.memory
+              msg := "Memory limits must be specified"
+            }
+            
+            violation[{"msg": msg}] {
+              container := input.review.object.spec.containers[_]
+              not container.resources.limits.cpu
+              msg := "CPU limits must be specified"
+            }
+            
+            allowed_image(image) {
+              startswith(image, data.allowedImages[_])
+            }
+
+  network-policy-template.yaml: |
+    apiVersion: templates.gatekeeper.sh/v1beta1
+    kind: ConstraintTemplate
+    metadata:
+      name: flextime-network-policy
+    spec:
+      crd:
+        spec:
+          names:
+            kind: FlexTimeNetworkPolicy
+          validation:
+            properties:
+              exemptNamespaces:
+                type: array
+                items:
+                  type: string
+      targets:
+        - target: admission.k8s.gatekeeper.sh
+          rego: |
+            package flextime.network.policy
+            
+            violation[{"msg": msg}] {
+              input.review.kind.kind == "Namespace"
+              namespace := input.review.object.metadata.name
+              not namespace in data.exemptNamespaces
+              not has_network_policy(namespace)
+              msg := sprintf("Namespace '%v' must have a NetworkPolicy", [namespace])
+            }
+            
+            has_network_policy(namespace) {
+              # This would need to be enhanced with actual NetworkPolicy checking logic
+              true
+            }
+
+  resource-limits-constraint.yaml: |
+    apiVersion: config.gatekeeper.sh/v1alpha1
+    kind: FlexTimeContainerSecurity
+    metadata:
+      name: flextime-container-security-policy
+    spec:
+      match:
+        kinds:
+          - apiGroups: ["apps"]
+            kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+        namespaces: ["flextime-production", "flextime-staging"]
+      parameters:
+        allowedImages:
+          - "flextime/"
+          - "postgres:"
+          - "redis:"
+          - "nginx:"
+          - "prom/"
+          - "grafana/"
+          - "jaegertracing/"
+          - "falcosecurity/"
+        bannedCapabilities:
+          - "SYS_ADMIN"
+          - "NET_ADMIN"
+          - "SYS_TIME"
+          - "SYS_MODULE"
+
+---
+# Trivy Security Scanner
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: trivy-security-scan
+  namespace: security-system
+  labels:
+    app: trivy-scanner
+spec:
+  schedule: "0 4 * * *"  # Daily at 4 AM
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: trivy-scanner
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: security-scanner
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            fsGroup: 1001
+          containers:
+          - name: trivy-scanner
+            image: aquasec/trivy:0.47.0
+            command:
+            - /bin/bash
+            - -c
+            - |
+              # Scan cluster for vulnerabilities
+              echo "Starting FlexTime security scan..."
+              
+              # Create scan reports directory
+              mkdir -p /tmp/reports
+              
+              # Scan all FlexTime images
+              for image in $(kubectl get pods -A -o jsonpath='{.items[*].spec.containers[*].image}' | tr ' ' '\n' | grep flextime | sort -u); do
+                echo "Scanning image: $image"
+                trivy image --format json --output /tmp/reports/$(echo $image | tr '/' '_' | tr ':' '_').json $image
+              done
+              
+              # Scan Kubernetes cluster configuration
+              trivy k8s --format json --output /tmp/reports/k8s-cluster-scan.json cluster
+              
+              # Scan specific namespaces
+              for ns in flextime-production flextime-staging; do
+                echo "Scanning namespace: $ns"
+                trivy k8s --format json --output /tmp/reports/k8s-$ns-scan.json namespace $ns
+              done
+              
+              # Generate summary report
+              echo "Generating security summary..."
+              cat > /tmp/reports/security-summary.json << EOF
+              {
+                "scan_date": "$(date -Iseconds)",
+                "cluster": "flextime-production",
+                "scanned_images": $(ls /tmp/reports/*image*.json 2>/dev/null | wc -l),
+                "scanned_namespaces": $(ls /tmp/reports/k8s-*-scan.json 2>/dev/null | wc -l),
+                "critical_vulnerabilities": $(grep -h '"Severity":"CRITICAL"' /tmp/reports/*.json 2>/dev/null | wc -l),
+                "high_vulnerabilities": $(grep -h '"Severity":"HIGH"' /tmp/reports/*.json 2>/dev/null | wc -l),
+                "medium_vulnerabilities": $(grep -h '"Severity":"MEDIUM"' /tmp/reports/*.json 2>/dev/null | wc -l)
+              }
+              EOF
+              
+              # Upload reports to S3
+              aws s3 sync /tmp/reports s3://${S3_SECURITY_BUCKET}/trivy-reports/$(date +%Y/%m/%d)/
+              
+              # Send alerts for critical vulnerabilities
+              CRITICAL_COUNT=$(grep -h '"Severity":"CRITICAL"' /tmp/reports/*.json 2>/dev/null | wc -l)
+              if [ "$CRITICAL_COUNT" -gt 0 ]; then
+                curl -X POST "${SLACK_WEBHOOK_URL}" \
+                  -H 'Content-type: application/json' \
+                  -d "{\"text\":\"🚨 FlexTime Security Alert: $CRITICAL_COUNT critical vulnerabilities found in daily scan\"}"
+              fi
+              
+              # Update Prometheus metrics
+              curl -X POST http://prometheus-pushgateway.monitoring.svc.cluster.local:9091/metrics/job/trivy-scanner \
+                -d "security_vulnerabilities_critical{cluster=\"flextime\"} $CRITICAL_COUNT"
+              
+              HIGH_COUNT=$(grep -h '"Severity":"HIGH"' /tmp/reports/*.json 2>/dev/null | wc -l)
+              curl -X POST http://prometheus-pushgateway.monitoring.svc.cluster.local:9091/metrics/job/trivy-scanner \
+                -d "security_vulnerabilities_high{cluster=\"flextime\"} $HIGH_COUNT"
+              
+              echo "Security scan completed successfully"
+            env:
+            - name: AWS_REGION
+              value: "us-west-2"
+            - name: S3_SECURITY_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: security-config
+                  key: s3_security_bucket
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key: slack_webhook_url
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 2000m
+                memory: 4Gi
+            volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+            securityContext:
+              allowPrivilegeEscalation: false
+              runAsNonRoot: true
+              runAsUser: 1001
+              readOnlyRootFilesystem: false
+              capabilities:
+                drop:
+                - ALL
+          volumes:
+          - name: tmp-volume
+            emptyDir:
+              sizeLimit: 2Gi
+
+---
+# Compliance Checker CronJob
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: compliance-checker
+  namespace: security-system
+  labels:
+    app: compliance-checker
+spec:
+  schedule: "0 6 * * *"  # Daily at 6 AM
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: compliance-checker
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: security-scanner
+          containers:
+          - name: compliance-checker
+            image: aquasec/kube-bench:v0.6.15
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Starting FlexTime compliance check..."
+              
+              # Create reports directory
+              mkdir -p /tmp/compliance-reports
+              
+              # Run CIS Kubernetes Benchmark
+              echo "Running CIS Kubernetes Benchmark..."
+              kube-bench run --targets master,node,etcd,policies \
+                --json --outputfile /tmp/compliance-reports/cis-benchmark.json
+              
+              # Check Pod Security Standards compliance
+              echo "Checking Pod Security Standards..."
+              kubectl get pods -A -o json | jq -r '
+                .items[] | 
+                select(.spec.securityContext.runAsRoot == true or 
+                       .spec.containers[].securityContext.runAsRoot == true or
+                       .spec.containers[].securityContext.privileged == true) | 
+                {
+                  namespace: .metadata.namespace,
+                  name: .metadata.name,
+                  violations: [
+                    if .spec.securityContext.runAsRoot == true then "runAsRoot" else empty end,
+                    if (.spec.containers[].securityContext.runAsRoot // false) == true then "container_runAsRoot" else empty end,
+                    if (.spec.containers[].securityContext.privileged // false) == true then "privileged" else empty end
+                  ]
+                }' > /tmp/compliance-reports/pod-security-violations.json
+              
+              # Check Network Policy coverage
+              echo "Checking Network Policy coverage..."
+              kubectl get namespaces -o json | jq -r '
+                .items[] | 
+                select(.metadata.name | test("^(flextime|monitoring|security)")) |
+                .metadata.name' | while read ns; do
+                  np_count=$(kubectl get networkpolicies -n "$ns" --no-headers 2>/dev/null | wc -l)
+                  if [ "$np_count" -eq 0 ]; then
+                    echo "{\"namespace\":\"$ns\",\"violation\":\"missing_network_policy\"}" >> /tmp/compliance-reports/network-policy-violations.json
+                  fi
+              done
+              
+              # Check RBAC compliance
+              echo "Checking RBAC compliance..."
+              kubectl get clusterrolebindings -o json | jq -r '
+                .items[] | 
+                select(.subjects[]?.name == "system:anonymous" or 
+                       .subjects[]?.name == "system:unauthenticated" or
+                       .roleRef.name == "cluster-admin") |
+                {
+                  name: .metadata.name,
+                  roleRef: .roleRef.name,
+                  subjects: .subjects
+                }' > /tmp/compliance-reports/rbac-violations.json
+              
+              # Check resource limits compliance
+              echo "Checking resource limits compliance..."
+              kubectl get pods -A -o json | jq -r '
+                .items[] | 
+                select(
+                  (.spec.containers[].resources.limits.memory // "") == "" or
+                  (.spec.containers[].resources.limits.cpu // "") == ""
+                ) |
+                {
+                  namespace: .metadata.namespace,
+                  name: .metadata.name,
+                  missing_limits: [
+                    if (.spec.containers[].resources.limits.memory // "") == "" then "memory" else empty end,
+                    if (.spec.containers[].resources.limits.cpu // "") == "" then "cpu" else empty end
+                  ]
+                }' > /tmp/compliance-reports/resource-limits-violations.json
+              
+              # Generate compliance summary
+              echo "Generating compliance summary..."
+              cat > /tmp/compliance-reports/compliance-summary.json << EOF
+              {
+                "scan_date": "$(date -Iseconds)",
+                "cluster": "flextime-production",
+                "cis_benchmark_tests": $(jq '.Totals.total_pass + .Totals.total_fail + .Totals.total_warn + .Totals.total_info' /tmp/compliance-reports/cis-benchmark.json 2>/dev/null || echo 0),
+                "cis_benchmark_failures": $(jq '.Totals.total_fail' /tmp/compliance-reports/cis-benchmark.json 2>/dev/null || echo 0),
+                "pod_security_violations": $(wc -l < /tmp/compliance-reports/pod-security-violations.json 2>/dev/null || echo 0),
+                "network_policy_violations": $(wc -l < /tmp/compliance-reports/network-policy-violations.json 2>/dev/null || echo 0),
+                "rbac_violations": $(wc -l < /tmp/compliance-reports/rbac-violations.json 2>/dev/null || echo 0),
+                "resource_limit_violations": $(wc -l < /tmp/compliance-reports/resource-limits-violations.json 2>/dev/null || echo 0)
+              }
+              EOF
+              
+              # Upload reports to S3
+              aws s3 sync /tmp/compliance-reports s3://${S3_SECURITY_BUCKET}/compliance-reports/$(date +%Y/%m/%d)/
+              
+              # Send compliance alerts
+              TOTAL_VIOLATIONS=$((
+                $(wc -l < /tmp/compliance-reports/pod-security-violations.json 2>/dev/null || echo 0) +
+                $(wc -l < /tmp/compliance-reports/network-policy-violations.json 2>/dev/null || echo 0) +
+                $(wc -l < /tmp/compliance-reports/rbac-violations.json 2>/dev/null || echo 0) +
+                $(wc -l < /tmp/compliance-reports/resource-limits-violations.json 2>/dev/null || echo 0)
+              ))
+              
+              if [ "$TOTAL_VIOLATIONS" -gt 0 ]; then
+                curl -X POST "${SLACK_WEBHOOK_URL}" \
+                  -H 'Content-type: application/json' \
+                  -d "{\"text\":\"⚠️ FlexTime Compliance Alert: $TOTAL_VIOLATIONS policy violations found\"}"
+              fi
+              
+              # Update Prometheus metrics
+              curl -X POST http://prometheus-pushgateway.monitoring.svc.cluster.local:9091/metrics/job/compliance-checker \
+                -d "compliance_violations_total{cluster=\"flextime\"} $TOTAL_VIOLATIONS"
+              
+              echo "Compliance check completed successfully"
+            env:
+            - name: AWS_REGION
+              value: "us-west-2"
+            - name: S3_SECURITY_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: security-config
+                  key: s3_security_bucket
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key: slack_webhook_url
+            resources:
+              requests:
+                cpu: 200m
+                memory: 512Mi
+              limits:
+                cpu: 1000m
+                memory: 2Gi
+            volumeMounts:
+            - name: tmp-volume
+              mountPath: /tmp
+          volumes:
+          - name: tmp-volume
+            emptyDir:
+              sizeLimit: 1Gi
+
+---
+# Security Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-config
+  namespace: security-system
+data:
+  s3_security_bucket: "flextime-security-reports"
+  compliance_frameworks: "CIS,NIST,SOC2"
+  security_scan_frequency: "daily"
+  vulnerability_threshold_critical: "0"
+  vulnerability_threshold_high: "5"
+  
+---
+# Security Monitoring Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: falco
+  namespace: security-system
+  labels:
+    app: falco
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8765"
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8765
+    targetPort: 8765
+    name: http
+    protocol: TCP
+  - port: 5060
+    targetPort: 5060
+    name: grpc
+    protocol: TCP
+  selector:
+    app: falco
+
+---
+# Secret Scanning ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: secret-scanner-config
+  namespace: security-system
+data:
+  patterns.yaml: |
+    patterns:
+      - name: AWS Access Key
+        pattern: 'AKIA[0-9A-Z]{16}'
+        severity: CRITICAL
+      - name: AWS Secret Key
+        pattern: '[0-9a-zA-Z/+=]{40}'
+        severity: CRITICAL
+      - name: Google API Key
+        pattern: 'AIza[0-9A-Za-z\\-_]{35}'
+        severity: HIGH
+      - name: Slack Token
+        pattern: 'xox[baprs]-[0-9]{12}-[0-9]{12}-[0-9a-zA-Z]{24}'
+        severity: HIGH
+      - name: JWT Token
+        pattern: 'eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*'
+        severity: MEDIUM
+      - name: Database Connection String
+        pattern: '(mongodb|mysql|postgresql)://[^\s]+'
+        severity: HIGH
+      - name: Private SSH Key
+        pattern: '-----BEGIN [A-Z]+ PRIVATE KEY-----'
+        severity: CRITICAL
+      - name: Generic Password
+        pattern: '(?i)(password|passwd|pwd|secret)[\s]*[:=][\s]*["\']?[^\s"\']{8,}["\']?'
+        severity: MEDIUM

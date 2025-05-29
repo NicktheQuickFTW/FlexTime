@@ -1,0 +1,23 @@
+{
+  "executionSummary": {
+    "timestamp": "2025-05-29T06:24:59.341Z",
+    "teams": 16,
+    "totalJobs": 48,
+    "duration": 68.887,
+    "jobsPerSecond": "0.70"
+  },
+  "researchCoverage": {
+    "teams": 16,
+    "historicalData": 16,
+    "projections": 16
+  },
+  "trendsAnalysis": {
+    "compassRatings": 0,
+    "visualizations": 0
+  },
+  "qualityMetrics": {
+    "averageContentLength": 7489,
+    "citationCount": 156,
+    "completionRate": "100.0"
+  }
+}

@@ -7,8 +7,8 @@
 
 const express = require('express');
 const router = express.Router();
-const VirtualAssistantService = require('../services/virtualAssistantService');
-const logger = require('../utils/logger');
+const VirtualAssistantService = require('../../services/virtualAssistantService');
+const logger = require("../../utils/logger")
 
 // Create service instance
 const virtualAssistantService = new VirtualAssistantService();

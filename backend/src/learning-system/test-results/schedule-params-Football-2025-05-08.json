@@ -1,0 +1,22 @@
+{
+  "sportId": 8,
+  "season": "2025-2026",
+  "championshipConstraints": {
+    "hasChampionship": true,
+    "formula": "First Saturday of December",
+    "calculationMethod": "fixed_date",
+    "championshipStartDate": "2025-12-06",
+    "championshipEndDate": "2025-12-06",
+    "regularSeasonEndDate": "2025-11-29"
+  },
+  "schedulingParameters": {
+    "seasonStartDate": "2025-09-01",
+    "seasonEndDate": "2025-11-29",
+    "requiredHomeGames": 6,
+    "requiredAwayGames": 6,
+    "minDaysBetweenGames": 5,
+    "preferredGameDays": [
+      "Saturday"
+    ]
+  }
+}

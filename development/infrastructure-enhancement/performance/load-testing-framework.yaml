@@ -1,0 +1,753 @@
+# Performance Testing and Scaling Automation Framework
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: performance-testing
+  labels:
+    name: performance-testing
+---
+# K6 Load Testing Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k6-test-scripts
+  namespace: performance-testing
+data:
+  api-load-test.js: |
+    import http from 'k6/http';
+    import { check, sleep } from 'k6';
+    import { Rate, Trend } from 'k6/metrics';
+    
+    // Custom metrics
+    export let errorRate = new Rate('errors');
+    export let responseTime = new Trend('response_time');
+    
+    // Test configuration
+    export let options = {
+      stages: [
+        { duration: '2m', target: 10 },   // Ramp up to 10 users over 2 minutes
+        { duration: '5m', target: 50 },   // Stay at 50 users for 5 minutes
+        { duration: '3m', target: 100 },  // Ramp up to 100 users over 3 minutes
+        { duration: '10m', target: 100 }, // Stay at 100 users for 10 minutes
+        { duration: '3m', target: 200 },  // Ramp up to 200 users over 3 minutes
+        { duration: '5m', target: 200 },  // Stay at 200 users for 5 minutes
+        { duration: '2m', target: 0 },    // Ramp down to 0 users
+      ],
+      thresholds: {
+        'http_req_duration': ['p(95)<500', 'p(99)<1000'], // 95% of requests must complete below 500ms
+        'http_req_failed': ['rate<0.05'],                  // Error rate must be below 5%
+        'errors': ['rate<0.1'],                           // Error rate below 10%
+      },
+    };
+    
+    // Base URL from environment
+    const BASE_URL = __ENV.API_URL || 'https://api.flextime.app';
+    
+    // Authentication token
+    let authToken = '';
+    
+    export function setup() {
+      // Authenticate and get token
+      let loginRes = http.post(`${BASE_URL}/auth/login`, {
+        email: __ENV.TEST_USER_EMAIL || 'loadtest@flextime.app',
+        password: __ENV.TEST_USER_PASSWORD || 'LoadTest123!',
+      });
+      
+      if (loginRes.status === 200) {
+        authToken = JSON.parse(loginRes.body).token;
+      }
+      
+      return { authToken };
+    }
+    
+    export default function(data) {
+      const headers = {
+        'Authorization': `Bearer ${data.authToken}`,
+        'Content-Type': 'application/json',
+      };
+      
+      // Test scenarios weighted by frequency
+      let scenario = Math.random();
+      
+      if (scenario < 0.3) {
+        // 30% - Get teams list
+        testGetTeams(headers);
+      } else if (scenario < 0.5) {
+        // 20% - Get schedules
+        testGetSchedules(headers);
+      } else if (scenario < 0.7) {
+        // 20% - Generate schedule
+        testGenerateSchedule(headers);
+      } else if (scenario < 0.85) {
+        // 15% - Get analytics
+        testGetAnalytics(headers);
+      } else if (scenario < 0.95) {
+        // 10% - Update team
+        testUpdateTeam(headers);
+      } else {
+        // 5% - Complex scheduling operation
+        testComplexScheduling(headers);
+      }
+      
+      sleep(Math.random() * 2 + 1); // Sleep between 1-3 seconds
+    }
+    
+    function testGetTeams(headers) {
+      let response = http.get(`${BASE_URL}/api/teams`, { headers });
+      
+      check(response, {
+        'teams list status is 200': (r) => r.status === 200,
+        'teams list response time < 200ms': (r) => r.timings.duration < 200,
+        'teams list has data': (r) => JSON.parse(r.body).teams.length > 0,
+      });
+      
+      errorRate.add(response.status !== 200);
+      responseTime.add(response.timings.duration);
+    }
+    
+    function testGetSchedules(headers) {
+      let response = http.get(`${BASE_URL}/api/schedules`, { headers });
+      
+      check(response, {
+        'schedules status is 200': (r) => r.status === 200,
+        'schedules response time < 300ms': (r) => r.timings.duration < 300,
+      });
+      
+      errorRate.add(response.status !== 200);
+      responseTime.add(response.timings.duration);
+    }
+    
+    function testGenerateSchedule(headers) {
+      let payload = {
+        season: '2024-25',
+        sport: 'Basketball',
+        conference: 'Big 12',
+        constraints: {
+          noBackToBack: true,
+          minRestDays: 1,
+          maxTravelDistance: 1000
+        }
+      };
+      
+      let response = http.post(`${BASE_URL}/api/schedules/generate`, 
+        JSON.stringify(payload), { headers });
+      
+      check(response, {
+        'schedule generation accepted': (r) => r.status === 202,
+        'schedule generation response time < 1000ms': (r) => r.timings.duration < 1000,
+      });
+      
+      errorRate.add(response.status !== 202);
+      responseTime.add(response.timings.duration);
+    }
+    
+    function testGetAnalytics(headers) {
+      let response = http.get(`${BASE_URL}/api/analytics/dashboard`, { headers });
+      
+      check(response, {
+        'analytics status is 200': (r) => r.status === 200,
+        'analytics response time < 500ms': (r) => r.timings.duration < 500,
+      });
+      
+      errorRate.add(response.status !== 200);
+      responseTime.add(response.timings.duration);
+    }
+    
+    function testUpdateTeam(headers) {
+      let teamId = Math.floor(Math.random() * 16) + 1; // Random team ID 1-16
+      let payload = {
+        name: `Updated Team ${teamId}`,
+        venue: `Updated Venue ${teamId}`,
+      };
+      
+      let response = http.patch(`${BASE_URL}/api/teams/${teamId}`, 
+        JSON.stringify(payload), { headers });
+      
+      check(response, {
+        'team update status is 200': (r) => r.status === 200,
+        'team update response time < 400ms': (r) => r.timings.duration < 400,
+      });
+      
+      errorRate.add(response.status !== 200);
+      responseTime.add(response.timings.duration);
+    }
+    
+    function testComplexScheduling(headers) {
+      let payload = {
+        season: '2024-25',
+        sports: ['Basketball', 'Football'],
+        options: {
+          optimizeTravel: true,
+          balanceHomeAway: true,
+          avoidConflicts: true,
+          considerBroadcast: true
+        }
+      };
+      
+      let response = http.post(`${BASE_URL}/api/schedules/optimize`, 
+        JSON.stringify(payload), { headers });
+      
+      check(response, {
+        'complex scheduling accepted': (r) => r.status === 202,
+        'complex scheduling response time < 2000ms': (r) => r.timings.duration < 2000,
+      });
+      
+      errorRate.add(response.status !== 202);
+      responseTime.add(response.timings.duration);
+    }
+    
+    export function teardown(data) {
+      // Logout
+      if (data.authToken) {
+        http.post(`${BASE_URL}/auth/logout`, {}, {
+          headers: { 'Authorization': `Bearer ${data.authToken}` }
+        });
+      }
+    }
+
+  stress-test.js: |
+    import http from 'k6/http';
+    import { check, sleep } from 'k6';
+    import { Rate } from 'k6/metrics';
+    
+    export let errorRate = new Rate('errors');
+    
+    export let options = {
+      stages: [
+        { duration: '1m', target: 50 },    // Ramp up
+        { duration: '2m', target: 200 },   // Moderate load
+        { duration: '2m', target: 500 },   // High load
+        { duration: '3m', target: 1000 },  // Stress load
+        { duration: '2m', target: 1500 },  // Breaking point
+        { duration: '3m', target: 2000 },  // Beyond capacity
+        { duration: '2m', target: 0 },     // Ramp down
+      ],
+      thresholds: {
+        'http_req_duration': ['p(99)<2000'], // 99% of requests must complete below 2s
+        'http_req_failed': ['rate<0.3'],     // Allow higher error rate for stress test
+      },
+    };
+    
+    const BASE_URL = __ENV.API_URL || 'https://api.flextime.app';
+    
+    export default function() {
+      let response = http.get(`${BASE_URL}/api/health`);
+      
+      check(response, {
+        'health check status is 200': (r) => r.status === 200,
+        'response time under 2000ms': (r) => r.timings.duration < 2000,
+      });
+      
+      errorRate.add(response.status !== 200);
+      sleep(0.1); // Minimal sleep for stress testing
+    }
+
+  spike-test.js: |
+    import http from 'k6/http';
+    import { check, sleep } from 'k6';
+    
+    export let options = {
+      stages: [
+        { duration: '30s', target: 10 },   // Normal load
+        { duration: '10s', target: 1000 }, // Spike!
+        { duration: '30s', target: 1000 }, // Stay at spike
+        { duration: '10s', target: 10 },   // Return to normal
+        { duration: '30s', target: 10 },   // Normal load
+      ],
+      thresholds: {
+        'http_req_duration': ['p(95)<1000'],
+        'http_req_failed': ['rate<0.1'],
+      },
+    };
+    
+    const BASE_URL = __ENV.API_URL || 'https://api.flextime.app';
+    
+    export default function() {
+      let response = http.get(`${BASE_URL}/api/teams`);
+      
+      check(response, {
+        'teams endpoint available during spike': (r) => r.status === 200,
+      });
+      
+      sleep(0.5);
+    }
+
+  endurance-test.js: |
+    import http from 'k6/http';
+    import { check, sleep } from 'k6';
+    
+    export let options = {
+      stages: [
+        { duration: '5m', target: 100 },  // Ramp up
+        { duration: '60m', target: 100 }, // Stay at load for 1 hour
+        { duration: '5m', target: 0 },    // Ramp down
+      ],
+      thresholds: {
+        'http_req_duration': ['p(95)<500'],
+        'http_req_failed': ['rate<0.05'],
+      },
+    };
+    
+    const BASE_URL = __ENV.API_URL || 'https://api.flextime.app';
+    
+    export default function() {
+      // Simulate realistic user behavior
+      let responses = http.batch([
+        ['GET', `${BASE_URL}/api/teams`],
+        ['GET', `${BASE_URL}/api/schedules`],
+        ['GET', `${BASE_URL}/api/analytics/dashboard`],
+      ]);
+      
+      for (let response of responses) {
+        check(response, {
+          'endurance test status is 200': (r) => r.status === 200,
+        });
+      }
+      
+      sleep(Math.random() * 5 + 2); // Random sleep 2-7 seconds
+    }
+
+---
+# K6 Load Testing Job
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: k6-load-test
+  namespace: performance-testing
+  labels:
+    app: k6-load-test
+spec:
+  template:
+    metadata:
+      labels:
+        app: k6-load-test
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: k6
+        image: grafana/k6:0.47.0
+        command:
+        - k6
+        - run
+        - --out
+        - influxdb=http://influxdb.monitoring.svc.cluster.local:8086/k6
+        - /scripts/api-load-test.js
+        env:
+        - name: API_URL
+          value: "https://api.flextime.app"
+        - name: TEST_USER_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: load-test-secrets
+              key: test_user_email
+        - name: TEST_USER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: load-test-secrets
+              key: test_user_password
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+        volumeMounts:
+        - name: test-scripts
+          mountPath: /scripts
+      volumes:
+      - name: test-scripts
+        configMap:
+          name: k6-test-scripts
+
+---
+# Performance Testing CronJobs
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: scheduled-load-test
+  namespace: performance-testing
+  labels:
+    app: scheduled-load-test
+spec:
+  schedule: "0 2 * * 1"  # Weekly on Monday at 2 AM
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 4
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: scheduled-load-test
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: k6-scheduler
+            image: grafana/k6:0.47.0
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Starting scheduled performance tests..."
+              
+              # Run load test
+              echo "Running load test..."
+              k6 run --out influxdb=http://influxdb.monitoring.svc.cluster.local:8086/k6 \
+                --out json=/tmp/load-test-results.json \
+                /scripts/api-load-test.js
+              
+              # Wait for system to recover
+              sleep 300
+              
+              # Run stress test
+              echo "Running stress test..."
+              k6 run --out influxdb=http://influxdb.monitoring.svc.cluster.local:8086/k6 \
+                --out json=/tmp/stress-test-results.json \
+                /scripts/stress-test.js
+              
+              # Wait for system to recover
+              sleep 300
+              
+              # Run spike test
+              echo "Running spike test..."
+              k6 run --out influxdb=http://influxdb.monitoring.svc.cluster.local:8086/k6 \
+                --out json=/tmp/spike-test-results.json \
+                /scripts/spike-test.js
+              
+              # Process results and send report
+              echo "Processing test results..."
+              
+              # Upload results to S3
+              aws s3 cp /tmp/ s3://${S3_PERFORMANCE_BUCKET}/test-results/$(date +%Y/%m/%d)/ \
+                --recursive --exclude "*" --include "*.json"
+              
+              # Send performance report
+              LOAD_TEST_P95=$(jq -r '.metrics.http_req_duration.values.p\(95\)' /tmp/load-test-results.json 2>/dev/null || echo "N/A")
+              STRESS_TEST_ERRORS=$(jq -r '.metrics.http_req_failed.values.rate' /tmp/stress-test-results.json 2>/dev/null || echo "N/A")
+              
+              curl -X POST "${SLACK_WEBHOOK_URL}" \
+                -H 'Content-type: application/json' \
+                -d "{\"text\":\"📊 FlexTime Performance Test Report:\\n- Load Test P95: ${LOAD_TEST_P95}ms\\n- Stress Test Error Rate: ${STRESS_TEST_ERRORS}\\n- Spike Test: Completed\\n\"}"
+              
+              echo "Performance tests completed successfully"
+            env:
+            - name: API_URL
+              value: "https://api.flextime.app"
+            - name: TEST_USER_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: load-test-secrets
+                  key: test_user_email
+            - name: TEST_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: load-test-secrets
+                  key: test_user_password
+            - name: S3_PERFORMANCE_BUCKET
+              valueFrom:
+                configMapKeyRef:
+                  name: performance-config
+                  key: s3_performance_bucket
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key: slack_webhook_url
+            resources:
+              requests:
+                cpu: 1000m
+                memory: 2Gi
+              limits:
+                cpu: 4000m
+                memory: 8Gi
+            volumeMounts:
+            - name: test-scripts
+              mountPath: /scripts
+            - name: tmp-volume
+              mountPath: /tmp
+          volumes:
+          - name: test-scripts
+            configMap:
+              name: k6-test-scripts
+          - name: tmp-volume
+            emptyDir:
+              sizeLimit: 2Gi
+
+---
+# Chaos Engineering with Chaos Monkey
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaos-monkey
+  namespace: performance-testing
+  labels:
+    app: chaos-monkey
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chaos-monkey
+  template:
+    metadata:
+      labels:
+        app: chaos-monkey
+    spec:
+      serviceAccountName: chaos-monkey
+      containers:
+      - name: chaos-monkey
+        image: quay.io/linki/chaoskube:v0.21.0
+        args:
+        - --interval=30m
+        - --timezone=UTC
+        - --metrics-addr=0.0.0.0:8080
+        - --log-level=info
+        - --dry-run=false
+        - --annotation-selector=chaos.alpha.kubernetes.io/enabled=true
+        - --exclude-weekdays=Sat,Sun
+        - --exclude-times-of-day=22:00-08:00
+        - --exclude-days-of-year=Jan1,Dec25
+        resources:
+          requests:
+            cpu: 50m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+        ports:
+        - containerPort: 8080
+          name: http
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+---
+# Chaos Monkey Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chaos-monkey
+  namespace: performance-testing
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: chaos-monkey
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "delete"]
+- apiGroups: [""]
+  resources: ["events"]
+  verbs: ["create"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: chaos-monkey
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: chaos-monkey
+subjects:
+- kind: ServiceAccount
+  name: chaos-monkey
+  namespace: performance-testing
+
+---
+# Auto-scaling Stress Test
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: autoscaling-test
+  namespace: performance-testing
+  labels:
+    app: autoscaling-test
+spec:
+  schedule: "0 3 * * 2"  # Weekly on Tuesday at 3 AM
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: autoscaling-tester
+            image: grafana/k6:0.47.0
+            command:
+            - /bin/bash
+            - -c
+            - |
+              echo "Starting auto-scaling validation test..."
+              
+              # Get initial pod count
+              INITIAL_PODS=$(kubectl get pods -n flextime-production -l component=api-svc --no-headers | wc -l)
+              echo "Initial API pods: $INITIAL_PODS"
+              
+              # Start load test that should trigger auto-scaling
+              k6 run --vus 500 --duration 10m \
+                --out influxdb=http://influxdb.monitoring.svc.cluster.local:8086/k6 \
+                /scripts/stress-test.js &
+              
+              LOAD_TEST_PID=$!
+              
+              # Monitor pod scaling
+              for i in {1..20}; do
+                sleep 30
+                CURRENT_PODS=$(kubectl get pods -n flextime-production -l component=api-svc --no-headers | wc -l)
+                echo "Current API pods: $CURRENT_PODS (check $i/20)"
+                
+                if [ "$CURRENT_PODS" -gt "$INITIAL_PODS" ]; then
+                  echo "✅ Auto-scaling triggered: $INITIAL_PODS -> $CURRENT_PODS pods"
+                  SCALING_SUCCESS=true
+                  break
+                fi
+              done
+              
+              # Wait for load test to complete
+              wait $LOAD_TEST_PID
+              
+              # Wait for scale-down
+              echo "Waiting for scale-down..."
+              sleep 900  # 15 minutes
+              
+              FINAL_PODS=$(kubectl get pods -n flextime-production -l component=api-svc --no-headers | wc -l)
+              echo "Final API pods: $FINAL_PODS"
+              
+              # Report results
+              if [ "$SCALING_SUCCESS" = true ]; then
+                MESSAGE="✅ Auto-scaling test PASSED: Scaled from $INITIAL_PODS to $CURRENT_PODS pods under load, final: $FINAL_PODS"
+              else
+                MESSAGE="❌ Auto-scaling test FAILED: No scaling detected (stayed at $INITIAL_PODS pods)"
+              fi
+              
+              curl -X POST "${SLACK_WEBHOOK_URL}" \
+                -H 'Content-type: application/json' \
+                -d "{\"text\":\"$MESSAGE\"}"
+              
+              echo "Auto-scaling test completed"
+            env:
+            - name: API_URL
+              value: "https://api.flextime.app"
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: notification-secrets
+                  key: slack_webhook_url
+            resources:
+              requests:
+                cpu: 500m
+                memory: 1Gi
+              limits:
+                cpu: 2000m
+                memory: 4Gi
+            volumeMounts:
+            - name: test-scripts
+              mountPath: /scripts
+          volumes:
+          - name: test-scripts
+            configMap:
+              name: k6-test-scripts
+
+---
+# Performance Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: performance-config
+  namespace: performance-testing
+data:
+  s3_performance_bucket: "flextime-performance-results"
+  load_test_schedule: "0 2 * * 1"  # Weekly Monday 2 AM
+  stress_test_schedule: "0 3 * * 2"  # Weekly Tuesday 3 AM
+  chaos_test_schedule: "0 4 * * 3"   # Weekly Wednesday 4 AM
+  max_test_duration: "30m"
+  performance_thresholds: |
+    api_response_p95: 500ms
+    api_response_p99: 1000ms
+    error_rate_max: 5%
+    availability_min: 99.9%
+
+---
+# InfluxDB for Performance Metrics Storage
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: influxdb
+  namespace: monitoring
+spec:
+  serviceName: influxdb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+      - name: influxdb
+        image: influxdb:2.7-alpine
+        env:
+        - name: DOCKER_INFLUXDB_INIT_MODE
+          value: setup
+        - name: DOCKER_INFLUXDB_INIT_USERNAME
+          value: admin
+        - name: DOCKER_INFLUXDB_INIT_PASSWORD
+          value: password123
+        - name: DOCKER_INFLUXDB_INIT_ORG
+          value: flextime
+        - name: DOCKER_INFLUXDB_INIT_BUCKET
+          value: k6
+        - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+          value: flextime-token-123
+        ports:
+        - containerPort: 8086
+          name: http
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+        volumeMounts:
+        - name: influxdb-storage
+          mountPath: /var/lib/influxdb2
+  volumeClaimTemplates:
+  - metadata:
+      name: influxdb-storage
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: gp3
+      resources:
+        requests:
+          storage: 50Gi
+
+---
+# InfluxDB Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb
+  namespace: monitoring
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8086
+    targetPort: 8086
+    name: http
+  selector:
+    app: influxdb

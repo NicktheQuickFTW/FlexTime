@@ -140,7 +140,7 @@ When referencing member institutions, always use their official names, colors, a
 #### Oklahoma State University
 - Name: Oklahoma State University
 - Abbreviation: OSU
-- Primary color: #FFC400 (Orange)
+- Primary color: #FFC107 (Orange)
 - Secondary color: #2B2B2B (Black)
 - Location: Stillwater, OK
 - Website: [https://www.okstate.edu](https://www.okstate.edu)
@@ -148,7 +148,7 @@ When referencing member institutions, always use their official names, colors, a
 #### TCU
 - Name: TCU
 - Abbreviation: TCU
-- Primary color: #2B2B2B (Purple)
+- Primary color: #4C005A (Purple)
 - Secondary color:
 - Location: Fort Worth, TX
 - Website: [https://www.tcu.edu](https://www.tcu.edu)
@@ -156,7 +156,7 @@ When referencing member institutions, always use their official names, colors, a
 #### Texas Tech University
 - Name: Texas Tech University
 - Abbreviation: TTU
-- Primary color: #FFC400 (Scarlet Red)
+- Primary color: #C92D2D (Scarlet Red)
 - Secondary color: #000000 (Black)
 - Location: Lubbock, TX
 - Website: [https://www.ttu.edu](https://www.ttu.edu)
@@ -164,7 +164,7 @@ When referencing member institutions, always use their official names, colors, a
 #### University of Utah
 - Name: University of Utah
 - Abbreviation: Utah
-- Primary color: #FFC400 (Crimson Red)
+- Primary color: #C92D2D (Crimson Red)
 - Secondary color: 
 - Location: Salt Lake City, UT
 - Website: [https://www.utah.edu](https://www.utah.edu)

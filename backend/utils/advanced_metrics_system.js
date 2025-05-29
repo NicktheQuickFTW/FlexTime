@@ -15,8 +15,8 @@
  * - Long-term program development
  */
 
-const logger = require('./logger');
-const ScheduleMetrics = require('../algorithms/schedule-metrics');
+const logger = console; // Use console for logging
+const ScheduleMetrics = require('../src/ai/schedule-metrics');
 
 class AdvancedMetricsSystem {
   /**

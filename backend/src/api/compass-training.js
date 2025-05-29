@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const logger = require('../utils/logger');
+const logger = require("../../utils/logger")
 const OvernightTrainingJob = require('../compass/jobs/overnight_training_job');
 const PredictiveModelTrainer = require('../compass/models/predictive_model_trainer');
 const fs = require('fs');

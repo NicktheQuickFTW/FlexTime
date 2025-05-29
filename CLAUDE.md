@@ -1,112 +1,198 @@
-# CLAUDE.md
+# CLAUDE.md - FlexTime Development Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance for developers and AI assistants working with the FlexTime codebase.
 
-## FlexTime: Intelligent Sports Scheduling Platform
-
-FlexTime is a collegiate athletic conference scheduling platform that combines machine learning, constraint-based optimization, and championship date management to generate optimal sports schedules.
-
-## Development Environment Setup
+## 🚀 Quick Start for Development
 
 ### Prerequisites
-- Node.js >= 16.0.0
-- npm or yarn
-- Neon DB account
+- Node.js 16+ (LTS recommended)
+- PostgreSQL 13+
+- Redis 6+
+- Python 3.9+ (for ML components)
+- Git
 
-### Installation & Setup
+### Environment Setup
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-org/flextime.git
+   cd flextime
+   ```
+
+2. **Set up backend**
+   ```bash
+   cd backend
+   cp .env.example .env
+   # Edit .env with your database credentials
+   npm install
+   ```
+
+3. **Set up frontend**
+   ```bash
+   cd ../frontend
+   cp .env.example .env
+   npm install
+   ```
+
+### Running the Application
+
+#### Option 1: Start everything (recommended)
 ```bash
-# Install dependencies
-npm install
+# From project root
+./frontend/start.sh
+```
 
-# Configure environment
-cp backend/.env.example backend/.env
-# Update .env with your Neon DB credentials
-
-# Start development environment
+#### Option 2: Start services individually
+```bash
+# Terminal 1: Backend
+cd backend
 npm run dev
 
-# Start just backend
-npm run start:backend
-
-# Start just frontend
-npm run start:frontend
-
-# Build for production
-npm run build
+# Terminal 2: Frontend
+cd frontend
+npm start
 ```
 
-## Testing Commands
+### Development URLs
+- Frontend: http://localhost:3005
+- API: http://localhost:3005/api
+- API Status: http://localhost:3005/api/status
+- Teams API: http://localhost:3005/api/teams
 
+## 🧪 Testing
+
+### Frontend Tests
 ```bash
-# Run all tests
+cd frontend
 npm test
-
-# Test championship date constraints
-cd backend && node learning-system/verify-championship-constraints.js
-
-# Test ML workflow
-cd backend && node learning-system/test-workflow.js
-
-# Train COMPASS models
-cd backend && ./train-compass-models.sh
 ```
 
-## Database Configuration
-
-FlexTime uses Neon DB (PostgreSQL-compatible) for all storage. Important environment variables:
-
-```
-# Neon DB Connection
-NEON_DB_CONNECTION_STRING=postgresql://user:password@hostname/database
-
-# Required configuration flags
-USE_NEON_DB=true
-ENABLE_NEON_MEMORY=true
+### Backend Tests
+```bash
+cd backend
+npm test
 ```
 
-## System Architecture
+### Linting
+```bash
+# Frontend
+cd frontend
+npm run lint
 
-### Core Components
+# Backend
+cd ../backend
+npm run lint
+```
 
-1. **Backend**
-   - **Multi-Agent System**: Hierarchical architecture with director and specialized agents
-     - `FlexTimeAgentSystem`: Main entry point with backward compatibility
-     - `AgentSystem`: Core component for lifecycle management
-     - `SchedulingAgentSystem`: Specialized for scheduling operations
+## 🛠 Common Development Tasks
 
-   - **Learning System**: ML workflow for continuous improvement
-     - `MLWorkflowManager`: Manages data collection, pattern extraction, knowledge building
-     - `EnhancedMemoryManager`: Manages agent memories with Neon DB
-     - `COMPASS Models`: Team Rating, Game Prediction, Strength of Schedule, Player Impact
+### Database Migrations
+```bash
+cd backend
+npx sequelize-cli db:migrate
+```
 
-   - **Database Layer**: Neon DB integration for all persistence
-     - `NeonDBAdapter`: Primary adapter for all database operations
-     - `EnhancedMemoryManager`: Agent memory persistence with Neon DB
+### Reset Database
+```bash
+cd backend
+npx sequelize-cli db:drop
+npx sequelize-cli db:create
+npx sequelize-cli db:migrate
+npx sequelize-cli db:seed:all
+```
 
-2. **Frontend**
-   - React 18 with TypeScript
-   - Material UI (MUI v5)
-   - Interactive matrix visualization
+## 🤖 AI/ML Development
 
-### Important Project Directories
+### Training Models
+```bash
+cd backend/src/intelligence/intelligence_engine/ml
+python train_models.py
+```
 
-- `/backend/agents`: Multi-agent system implementation
-- `/backend/learning-system`: Machine learning workflow components
-- `/backend/compass`: COMPASS predictive model components
-- `/backend/scripts`: Training and maintenance scripts
+### Running Predictions
+```bash
+cd backend/src/intelligence/intelligence_engine/ml
+python predict.py --input data/upcoming_games.csv
+```
 
-## Key Workflows
+## 🚀 Deployment
 
-1. **Schedule Generation Pipeline**:
-   - Constraint definition → Algorithm selection → Initial generation → Optimization → Quality evaluation
+### Production Build
+```bash
+# Build frontend
+cd frontend
+npm run build
 
-2. **Machine Learning Workflow**:
-   - Data Collection → Pattern Extraction → Knowledge Building → Validation
+# Start production server
+NODE_ENV=production node server.js
+```
 
-3. **Model Training Process**:
-   - Sequential training of Team Rating → Game Prediction → Strength of Schedule → Player Impact models
-   - Models are stored in both file system and Neon DB
+### Docker Deployment
+```bash
+docker-compose up --build -d
+```
 
-## Migration Note
+## 🔍 Code Organization
 
-The system has been migrated from MongoDB to Neon DB. Any references to MongoDB should be updated to use the Neon DB integration.
+### Frontend Structure
+```
+frontend/
+├── public/           # Static files
+├── src/
+│   ├── components/   # Reusable UI components
+│   ├── pages/         # Page components
+│   ├── store/         # Redux store
+│   ├── styles/        # Global styles and themes
+│   ├── utils/         # Utility functions
+│   └── App.tsx        # Main app component
+└── package.json
+```
+
+### Backend Structure
+```
+backend/
+├── src/
+│   ├── config/       # Configuration files
+│   ├── controllers/   # Route controllers
+│   ├── models/        # Database models
+│   ├── routes/        # API routes
+│   ├── services/      # Business logic
+│   └── utils/         # Utility functions
+└── package.json
+```
+
+## 📝 Coding Standards
+
+- **TypeScript**: Strict mode enabled
+- **React**: Functional components with hooks
+- **Styling**: Tailwind CSS with custom components
+- **State Management**: Redux for global state, React Query for server state
+- **API**: RESTful conventions with JSON:API specification
+
+## 🔄 Version Control
+
+### Branch Naming
+- `feature/`: New features
+- `bugfix/`: Bug fixes
+- `hotfix/`: Critical production fixes
+- `chore/`: Maintenance tasks
+
+### Commit Message Format
+```
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+Example:
+```
+feat(scheduling): add constraint validation for championship dates
+
+- Add validation for minimum rest days
+- Prevent back-to-back away games
+- Add tests for new validation rules
+
+Fixes #123
+```

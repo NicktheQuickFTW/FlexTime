@@ -1,0 +1,319 @@
+{
+  "executiveSummary": {
+    "timestamp": "2025-05-29T06:38:55.702Z",
+    "totalInstitutions": 34,
+    "dataCompleteness": {
+      "contacts": 34,
+      "softball": 11,
+      "basketball": 16
+    }
+  },
+  "keyFindings": {
+    "contactCoverage": {
+      "Wrestling": {
+        "totalContacts": 44,
+        "institutions": 15
+      },
+      "Men's Golf": {
+        "totalContacts": 36,
+        "institutions": 17
+      },
+      "Gymnastics": {
+        "totalContacts": 17,
+        "institutions": 8
+      },
+      "Women's Basketball": {
+        "totalContacts": 37,
+        "institutions": 17
+      },
+      "Cross Country": {
+        "totalContacts": 37,
+        "institutions": 17
+      },
+      "Men's Basketball": {
+        "totalContacts": 42,
+        "institutions": 17
+      },
+      "Soccer": {
+        "totalContacts": 69,
+        "institutions": 17
+      },
+      "Softball": {
+        "totalContacts": 28,
+        "institutions": 12
+      },
+      "Track & Field": {
+        "totalContacts": 35,
+        "institutions": 17
+      },
+      "Football": {
+        "totalContacts": 40,
+        "institutions": 17
+      },
+      "Baseball": {
+        "totalContacts": 36,
+        "institutions": 15
+      },
+      "Beach Volleyball": {
+        "totalContacts": 10,
+        "institutions": 5
+      },
+      "Swimming & Diving": {
+        "totalContacts": 35,
+        "institutions": 11
+      },
+      "Volleyball": {
+        "totalContacts": 105,
+        "institutions": 16
+      },
+      "Women's Tennis": {
+        "totalContacts": 37,
+        "institutions": 17
+      },
+      "Women's Golf": {
+        "totalContacts": 33,
+        "institutions": 15
+      },
+      "Men's Tennis": {
+        "totalContacts": 25,
+        "institutions": 10
+      },
+      "Lacrosse": {
+        "totalContacts": 17,
+        "institutions": 7
+      },
+      "Equestrian": {
+        "totalContacts": 13,
+        "institutions": 5
+      },
+      "Rowing": {
+        "totalContacts": 16,
+        "institutions": 7
+      }
+    },
+    "researchDepth": {
+      "softball": {
+        "teams": 11,
+        "avgHistoricalLength": 7009,
+        "avgProjectionsLength": 8090,
+        "totalCitations": 106
+      },
+      "basketball": {
+        "teams": 16,
+        "avgHistoricalLength": 7281,
+        "avgProjectionsLength": 7697,
+        "totalCitations": 156
+      }
+    },
+    "institutionalReadiness": {
+      "Air Force": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "Arizona": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Arizona State": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Baylor": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Big 12 Conference": {
+        "dataReadiness": 0,
+        "contactReadiness": 100,
+        "overallReadiness": 50
+      },
+      "BYU": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Cal Baptist": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "Cincinnati": {
+        "dataReadiness": 50,
+        "contactReadiness": 100,
+        "overallReadiness": 75
+      },
+      "Colorado": {
+        "dataReadiness": 50,
+        "contactReadiness": 100,
+        "overallReadiness": 75
+      },
+      "Denver": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "Florida": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "Fresno": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "Houston": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Iowa State": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "K-State": {
+        "dataReadiness": 0,
+        "contactReadiness": 100,
+        "overallReadiness": 50
+      },
+      "Kansas": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Missouri": {
+        "dataReadiness": 0,
+        "contactReadiness": 30,
+        "overallReadiness": 15
+      },
+      "North Dakota State": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "Northern Colorado": {
+        "dataReadiness": 0,
+        "contactReadiness": 30,
+        "overallReadiness": 15
+      },
+      "Northern Iowa": {
+        "dataReadiness": 0,
+        "contactReadiness": 30,
+        "overallReadiness": 15
+      },
+      "Oklahoma": {
+        "dataReadiness": 0,
+        "contactReadiness": 30,
+        "overallReadiness": 15
+      },
+      "Oklahoma State": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Old Dominion": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "San Diego State": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "South Dakota State": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "TCU": {
+        "dataReadiness": 50,
+        "contactReadiness": 100,
+        "overallReadiness": 75
+      },
+      "Texas Tech": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Tulsa": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "UC Davis": {
+        "dataReadiness": 0,
+        "contactReadiness": 20,
+        "overallReadiness": 10
+      },
+      "UCF": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Utah": {
+        "dataReadiness": 100,
+        "contactReadiness": 100,
+        "overallReadiness": 100
+      },
+      "Utah Valley": {
+        "dataReadiness": 0,
+        "contactReadiness": 30,
+        "overallReadiness": 15
+      },
+      "West Virginia": {
+        "dataReadiness": 50,
+        "contactReadiness": 100,
+        "overallReadiness": 75
+      },
+      "Wyoming": {
+        "dataReadiness": 0,
+        "contactReadiness": 30,
+        "overallReadiness": 15
+      }
+    }
+  },
+  "recommendations": {
+    "dataGaps": [
+      "Air Force: Missing basketball analysis",
+      "Big 12 Conference: Missing basketball analysis",
+      "Big 12 Conference: Missing softball analysis",
+      "Cal Baptist: Missing basketball analysis",
+      "Denver: Missing basketball analysis",
+      "Florida: Missing basketball analysis",
+      "Fresno: Missing basketball analysis",
+      "K-State: Missing basketball analysis",
+      "Missouri: Missing basketball analysis",
+      "North Dakota State: Missing basketball analysis",
+      "Northern Colorado: Missing basketball analysis",
+      "Northern Iowa: Missing basketball analysis",
+      "Oklahoma: Missing basketball analysis",
+      "Old Dominion: Missing basketball analysis",
+      "San Diego State: Missing basketball analysis",
+      "South Dakota State: Missing basketball analysis",
+      "Tulsa: Missing basketball analysis",
+      "UC Davis: Missing basketball analysis",
+      "Utah Valley: Missing basketball analysis",
+      "Wyoming: Missing basketball analysis"
+    ],
+    "contactImprovements": [
+      "Air Force: Limited contact information (2 contacts)",
+      "Cal Baptist: Limited contact information (2 contacts)",
+      "Denver: Limited contact information (2 contacts)",
+      "Florida: Limited contact information (2 contacts)",
+      "Fresno: Limited contact information (2 contacts)",
+      "North Dakota State: Limited contact information (2 contacts)",
+      "Old Dominion: Limited contact information (2 contacts)",
+      "San Diego State: Limited contact information (2 contacts)",
+      "South Dakota State: Limited contact information (2 contacts)",
+      "Tulsa: Limited contact information (2 contacts)",
+      "UC Davis: Limited contact information (2 contacts)"
+    ],
+    "researchPriorities": []
+  }
+}

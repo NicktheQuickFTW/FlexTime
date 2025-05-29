@@ -1,0 +1,219 @@
+# Enhanced Namespace Configuration with Resource Quotas and Limits
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flextime-production
+  labels:
+    name: flextime-production
+    environment: production
+    tier: production
+    managed-by: infrastructure-team
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Namespace","metadata":{"name":"flextime-production"}}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flextime-staging
+  labels:
+    name: flextime-staging
+    environment: staging
+    tier: staging
+    managed-by: infrastructure-team
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flextime-development
+  labels:
+    name: flextime-development
+    environment: development
+    tier: development
+    managed-by: infrastructure-team
+---
+# Production Resource Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: production-quota
+  namespace: flextime-production
+spec:
+  hard:
+    requests.cpu: "20"
+    requests.memory: "40Gi"
+    limits.cpu: "50"
+    limits.memory: "100Gi"
+    persistentvolumeclaims: "20"
+    services: "20"
+    secrets: "50"
+    configmaps: "50"
+    pods: "100"
+    replicationcontrollers: "20"
+    resourcequotas: "1"
+    services.loadbalancers: "5"
+    services.nodeports: "0"
+    count/deployments.apps: "20"
+    count/jobs.batch: "10"
+    count/cronjobs.batch: "5"
+---
+# Staging Resource Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: staging-quota
+  namespace: flextime-staging
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: "20Gi"
+    limits.cpu: "20"
+    limits.memory: "40Gi"
+    persistentvolumeclaims: "10"
+    services: "10"
+    secrets: "25"
+    configmaps: "25"
+    pods: "50"
+    count/deployments.apps: "10"
+---
+# Development Resource Quota
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: development-quota
+  namespace: flextime-development
+spec:
+  hard:
+    requests.cpu: "5"
+    requests.memory: "10Gi"
+    limits.cpu: "10"
+    limits.memory: "20Gi"
+    persistentvolumeclaims: "5"
+    services: "5"
+    pods: "25"
+    count/deployments.apps: "5"
+---
+# Production Limit Range
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: production-limits
+  namespace: flextime-production
+spec:
+  limits:
+  - default:
+      cpu: "1000m"
+      memory: "2Gi"
+    defaultRequest:
+      cpu: "100m"
+      memory: "256Mi"
+    max:
+      cpu: "4000m"
+      memory: "8Gi"
+    min:
+      cpu: "50m"
+      memory: "128Mi"
+    type: Container
+  - default:
+      storage: "10Gi"
+    max:
+      storage: "100Gi"
+    min:
+      storage: "1Gi"
+    type: PersistentVolumeClaim
+---
+# Staging Limit Range
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: staging-limits
+  namespace: flextime-staging
+spec:
+  limits:
+  - default:
+      cpu: "500m"
+      memory: "1Gi"
+    defaultRequest:
+      cpu: "50m"
+      memory: "128Mi"
+    max:
+      cpu: "2000m"
+      memory: "4Gi"
+    min:
+      cpu: "25m"
+      memory: "64Mi"
+    type: Container
+---
+# Network Policies for Production
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: flextime-production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-to-db
+  namespace: flextime-production
+spec:
+  podSelector:
+    matchLabels:
+      component: database
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          component: api-svc
+    - podSelector:
+        matchLabels:
+          component: scheduler-svc
+    ports:
+    - protocol: TCP
+      port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-api
+  namespace: flextime-production
+spec:
+  podSelector:
+    matchLabels:
+      component: api-svc
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    - podSelector:
+        matchLabels:
+          component: frontend
+  - from: []
+    ports:
+    - protocol: TCP
+      port: 3001
+---
+# Pod Security Standards
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pod-security-standards
+  namespace: flextime-production
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted
+data:
+  enforce: "restricted"
+  audit: "restricted"
+  warn: "restricted"

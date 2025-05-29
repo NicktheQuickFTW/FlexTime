@@ -1,7 +1,0 @@
-agents
-api
-core
-knowledge_graph
-ml
-optimization
-scheduling

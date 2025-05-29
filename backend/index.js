@@ -4,7 +4,7 @@ console.log('FlexTime Scheduling System Starting');
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const { middleware: { requestMiddleware } } = require('./tools/metrics');
+const { middleware: { requestMiddleware } } = require('./utils/metrics');
 const metricsRoutes = require('./src/api/metricsRoutes');
 const scheduleRoutes = require('./src/api/scheduleRoutes');
 const schedulingServiceRoutes = require('./src/api/schedulingServiceRoutes');

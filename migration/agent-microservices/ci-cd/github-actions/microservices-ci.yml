@@ -1,0 +1,345 @@
+name: FlexTime Agent Microservices CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'migration/agent-microservices/**'
+      - '.github/workflows/microservices-ci.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'migration/agent-microservices/**'
+      - '.github/workflows/microservices-ci.yml'
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME_PREFIX: flextime
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      communication-hub: ${{ steps.changes.outputs.communication-hub }}
+      scheduler: ${{ steps.changes.outputs.scheduler }}
+      conflict-resolution: ${{ steps.changes.outputs.conflict-resolution }}
+      travel-optimization: ${{ steps.changes.outputs.travel-optimization }}
+      constraint-management: ${{ steps.changes.outputs.constraint-management }}
+      intelligence-engine: ${{ steps.changes.outputs.intelligence-engine }}
+      state-management: ${{ steps.changes.outputs.state-management }}
+      docker: ${{ steps.changes.outputs.docker }}
+      kubernetes: ${{ steps.changes.outputs.kubernetes }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Detect changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          communication-hub:
+            - 'migration/agent-microservices/communication-hub-svc/**'
+          scheduler:
+            - 'migration/agent-microservices/scheduler-svc/**'
+          conflict-resolution:
+            - 'migration/agent-microservices/conflict-resolution-svc/**'
+          travel-optimization:
+            - 'migration/agent-microservices/travel-optimization-svc/**'
+          constraint-management:
+            - 'migration/agent-microservices/constraint-management-svc/**'
+          intelligence-engine:
+            - 'migration/agent-microservices/intelligence-engine-svc/**'
+          state-management:
+            - 'migration/agent-microservices/state-management-svc/**'
+          docker:
+            - 'migration/agent-microservices/docker/**'
+          kubernetes:
+            - 'migration/agent-microservices/kubernetes/**'
+
+  lint-and-test:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    strategy:
+      matrix:
+        service:
+          - communication-hub-svc
+          - scheduler-svc
+          - conflict-resolution-svc
+          - travel-optimization-svc
+          - constraint-management-svc
+          - intelligence-engine-svc
+          - state-management-svc
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: migration/agent-microservices/${{ matrix.service }}/package-lock.json
+
+    - name: Install dependencies
+      run: |
+        cd migration/agent-microservices/${{ matrix.service }}
+        npm ci
+
+    - name: Run linting
+      run: |
+        cd migration/agent-microservices/${{ matrix.service }}
+        npm run lint
+
+    - name: Run tests
+      run: |
+        cd migration/agent-microservices/${{ matrix.service }}
+        npm run test:coverage
+
+    - name: Upload coverage reports
+      uses: codecov/codecov-action@v3
+      with:
+        file: migration/agent-microservices/${{ matrix.service }}/coverage/lcov.info
+        flags: ${{ matrix.service }}
+        name: ${{ matrix.service }}-coverage
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    strategy:
+      matrix:
+        service:
+          - communication-hub-svc
+          - scheduler-svc
+          - conflict-resolution-svc
+          - travel-optimization-svc
+          - constraint-management-svc
+          - intelligence-engine-svc
+          - state-management-svc
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --file=migration/agent-microservices/${{ matrix.service }}/package.json --severity-threshold=high
+
+    - name: Run npm audit
+      run: |
+        cd migration/agent-microservices/${{ matrix.service }}
+        npm audit --audit-level=high
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, lint-and-test, security-scan]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        include:
+          - service: communication-hub-svc
+            dockerfile: docker/Dockerfile.communication-hub
+            condition: ${{ needs.detect-changes.outputs.communication-hub == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+          - service: scheduler-svc
+            dockerfile: docker/Dockerfile.scheduler
+            condition: ${{ needs.detect-changes.outputs.scheduler == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+          - service: conflict-resolution-svc
+            dockerfile: docker/Dockerfile.conflict-resolution
+            condition: ${{ needs.detect-changes.outputs.conflict-resolution == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+          - service: travel-optimization-svc
+            dockerfile: docker/Dockerfile.travel-optimization
+            condition: ${{ needs.detect-changes.outputs.travel-optimization == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+          - service: constraint-management-svc
+            dockerfile: docker/Dockerfile.constraint-management
+            condition: ${{ needs.detect-changes.outputs.constraint-management == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+          - service: intelligence-engine-svc
+            dockerfile: docker/Dockerfile.intelligence-engine
+            condition: ${{ needs.detect-changes.outputs.intelligence-engine == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+          - service: state-management-svc
+            dockerfile: docker/Dockerfile.state-management
+            condition: ${{ needs.detect-changes.outputs.state-management == 'true' || needs.detect-changes.outputs.docker == 'true' }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      if: ${{ matrix.condition }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+      if: ${{ matrix.condition }}
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      if: ${{ matrix.condition }}
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      if: ${{ matrix.condition }}
+      with:
+        images: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_PREFIX }}-${{ matrix.service }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix={{branch}}-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      if: ${{ matrix.condition }}
+      with:
+        context: migration/agent-microservices
+        file: migration/agent-microservices/${{ matrix.dockerfile }}
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        platforms: linux/amd64,linux/arm64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      if: ${{ matrix.condition }}
+      with:
+        image-ref: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_NAME_PREFIX }}-${{ matrix.service }}:latest
+        format: 'sarif'
+        output: 'trivy-results-${{ matrix.service }}.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: ${{ matrix.condition }}
+      with:
+        sarif_file: 'trivy-results-${{ matrix.service }}.sarif'
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build-and-push]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    services:
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_DB: flextime_test
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Run integration tests
+      run: |
+        cd migration/agent-microservices
+        npm run test:integration
+      env:
+        REDIS_URL: redis://localhost:6379
+        DATABASE_URL: postgresql://test_user:test_password@localhost:5432/flextime_test
+        NODE_ENV: test
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [integration-tests]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: staging
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Configure kubectl
+      run: |
+        echo "${{ secrets.KUBECONFIG_STAGING }}" | base64 -d > kubeconfig
+        export KUBECONFIG=kubeconfig
+
+    - name: Deploy to staging
+      run: |
+        cd migration/agent-microservices/kubernetes
+        kubectl apply -k overlays/staging/
+        kubectl rollout status deployment/communication-hub -n flextime-agents-staging --timeout=600s
+        kubectl rollout status deployment/scheduler -n flextime-agents-staging --timeout=600s
+
+    - name: Run smoke tests
+      run: |
+        cd migration/agent-microservices
+        npm run test:smoke:staging
+      env:
+        STAGING_URL: ${{ secrets.STAGING_URL }}
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Configure kubectl
+      run: |
+        echo "${{ secrets.KUBECONFIG_PRODUCTION }}" | base64 -d > kubeconfig
+        export KUBECONFIG=kubeconfig
+
+    - name: Deploy to production
+      run: |
+        cd migration/agent-microservices/kubernetes
+        kubectl apply -k overlays/production/
+        kubectl rollout status deployment/communication-hub -n flextime-agents --timeout=600s
+        kubectl rollout status deployment/scheduler -n flextime-agents --timeout=600s
+
+    - name: Run production health checks
+      run: |
+        cd migration/agent-microservices
+        npm run test:health:production
+      env:
+        PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}
+
+  notify:
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: always()
+    steps:
+    - name: Notify team
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#flextime-deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow

@@ -1,3 +1,0 @@
-[console_scripts]
-intelligence-engine = intelligence_engine.__main__:main
-

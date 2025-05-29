@@ -442,4 +442,13 @@ function ScheduleBuilderApp() {
 }
 
 // Export the main component
-window.ScheduleBuilderApp = ScheduleBuilderApp;
+if (typeof module !== 'undefined' && module.exports) {
+  // Node.js/CommonJS
+  module.exports = { ScheduleBuilderApp };
+} else if (typeof define === 'function' && define.amd) {
+  // AMD
+  define([], function() { return { ScheduleBuilderApp }; });
+} else {
+  // Browser globals
+  window.ScheduleBuilderApp = ScheduleBuilderApp;
+}

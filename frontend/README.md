@@ -44,11 +44,73 @@ This modern FlexTime interface is built with a **monochrome aesthetic** featurin
 
 ### Prerequisites
 - Node.js 16+ installed
+- PostgreSQL database (for local development)
 - Modern web browser (Chrome, Firefox, Safari, Edge)
 
 ### Installation
 
-1. **Navigate to the frontend directory**
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-organization/flextime.git
+   cd flextime/frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env` file in the frontend directory with the following:
+   ```
+   REACT_APP_API_URL=http://localhost:3001
+   NODE_ENV=development
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+   This will start both the frontend development server and the API server.
+
+5. **Access the application**
+   Open your browser and navigate to:
+   ```
+   http://localhost:3000
+   ```
+
+## 📱 Supported Browsers
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## 🛠 Development
+
+### Available Scripts
+
+- `npm start` - Start the development server
+- `npm run build` - Build for production
+- `npm test` - Run tests
+- `npm run lint` - Run ESLint
+- `npm run format` - Format code with Prettier
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 📧 Contact
+
+For questions or support, please contact [your-email@example.com](mailto:your-email@example.com)
    ```bash
    cd /Users/nickw/Documents/XII-Ops/FlexTime/frontend
    ```

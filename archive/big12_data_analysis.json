@@ -1,0 +1,344 @@
+{
+  "big12_financial_analysis": {
+    "conference_overview": {
+      "member_schools": 16,
+      "current_distribution": 470000000,
+      "distribution_per_school": 29375000,
+      "conference_games": 18,
+      "non_conference_games": 13
+    },
+    "revenue_projections": {
+      "five_year_analysis": {
+        "2024_25": {
+          "18_game_schedule": {
+            "non_conference_revenue": 12800000,
+            "tournament_units": 8500000,
+            "total_per_school": 42200000
+          },
+          "20_game_schedule": {
+            "non_conference_revenue": 10200000,
+            "tournament_units": 7200000,
+            "total_per_school": 39600000
+          },
+          "difference": 2600000
+        },
+        "2025_26": {
+          "18_game_schedule": {
+            "total_per_school": 44100000
+          },
+          "20_game_schedule": {
+            "total_per_school": 41200000
+          },
+          "difference": 2900000
+        },
+        "2026_27": {
+          "18_game_schedule": {
+            "total_per_school": 46300000
+          },
+          "20_game_schedule": {
+            "total_per_school": 43100000
+          },
+          "difference": 3200000
+        },
+        "2027_28": {
+          "18_game_schedule": {
+            "total_per_school": 48600000
+          },
+          "20_game_schedule": {
+            "total_per_school": 45200000
+          },
+          "difference": 3400000
+        },
+        "2028_29": {
+          "18_game_schedule": {
+            "total_per_school": 51000000
+          },
+          "20_game_schedule": {
+            "total_per_school": 47400000
+          },
+          "difference": 3600000
+        }
+      },
+      "cumulative_five_year_benefit": 15700000
+    },
+    "non_conference_revenue_tiers": {
+      "elite_power5": {
+        "revenue_range": [1500000, 2000000],
+        "average_revenue": 1750000,
+        "win_probability": 0.35,
+        "net_impact": 8.5,
+        "recommended_games": [2, 3]
+      },
+      "top_power5": {
+        "revenue_range": [800000, 1200000],
+        "average_revenue": 1000000,
+        "win_probability": 0.55,
+        "net_impact": 5.2,
+        "recommended_games": [4, 5]
+      },
+      "mid_power5": {
+        "revenue_range": [400000, 700000],
+        "average_revenue": 550000,
+        "win_probability": 0.72,
+        "net_impact": 2.8,
+        "recommended_games": [3, 4]
+      },
+      "top_mid_major": {
+        "revenue_range": [200000, 400000],
+        "average_revenue": 300000,
+        "win_probability": 0.78,
+        "net_impact": 1.5,
+        "recommended_games": [2, 3]
+      },
+      "buy_games": {
+        "revenue_range": [75000, 150000],
+        "average_revenue": 112500,
+        "win_probability": 0.95,
+        "net_impact": -0.5,
+        "recommended_games": [1, 2]
+      }
+    },
+    "tournament_unit_analysis": {
+      "unit_value_6_years": 2100000,
+      "annual_unit_value": 350000,
+      "big12_historical_units": {
+        "2020_21": 6,
+        "2021_22": 8,
+        "2022_23": 8,
+        "2023_24": 8,
+        "2024_25": 9
+      },
+      "big12_average_units": 8.5,
+      "18_game_projected_units": 8.5,
+      "20_game_projected_units": 7.2,
+      "unit_difference": 1.3,
+      "revenue_impact": 2730000
+    }
+  },
+  "performance_metrics": {
+    "tournament_success_rates": {
+      "big12_bid_percentage": 73,
+      "acc_bid_percentage": 52,
+      "sec_bid_percentage": 68,
+      "big_ten_bid_percentage": 59
+    },
+    "quality_wins_analysis": {
+      "18_game_schedule": {
+        "q1_wins": 8.2,
+        "q2_wins": 6.4,
+        "home_wins": 12.1,
+        "neutral_wins": 4.3,
+        "road_wins": 3.8,
+        "conference_wins": 11.5
+      },
+      "20_game_schedule": {
+        "q1_wins": 6.8,
+        "q2_wins": 5.1,
+        "home_wins": 11.2,
+        "neutral_wins": 3.9,
+        "road_wins": 3.2,
+        "conference_wins": 13.8
+      }
+    },
+    "net_ranking_impact": {
+      "average_improvement": 15.3,
+      "tournament_bid_rate": 0.73,
+      "average_seed_improvement": 2.4,
+      "sos_optimization": {
+        "kansas": {
+          "18_game_sos": 8.2,
+          "20_game_sos": 9.1,
+          "net_rank_diff": 3.2,
+          "tournament_probability": 0.95
+        },
+        "baylor": {
+          "18_game_sos": 12.5,
+          "20_game_sos": 14.2,
+          "net_rank_diff": 5.1,
+          "tournament_probability": 0.88
+        },
+        "houston": {
+          "18_game_sos": 9.8,
+          "20_game_sos": 11.3,
+          "net_rank_diff": 4.3,
+          "tournament_probability": 0.92
+        },
+        "iowa_state": {
+          "18_game_sos": 15.7,
+          "20_game_sos": 18.2,
+          "net_rank_diff": 7.8,
+          "tournament_probability": 0.78
+        },
+        "texas_tech": {
+          "18_game_sos": 18.3,
+          "20_game_sos": 21.1,
+          "net_rank_diff": 9.2,
+          "tournament_probability": 0.72
+        },
+        "tcu": {
+          "18_game_sos": 22.1,
+          "20_game_sos": 25.8,
+          "net_rank_diff": 12.1,
+          "tournament_probability": 0.65
+        }
+      }
+    }
+  },
+  "conference_benchmarking": {
+    "scheduling_formats": {
+      "big12": {
+        "conference_games": 18,
+        "non_conference_games": 13,
+        "average_bids": 8.5,
+        "revenue_per_school": 29400000,
+        "balance_index": 92.3,
+        "success_rate": 0.73
+      },
+      "acc": {
+        "conference_games": 18,
+        "non_conference_games": 13,
+        "average_bids": 6.2,
+        "revenue_per_school": 24100000,
+        "balance_index": 78.6,
+        "success_rate": 0.52,
+        "note": "Returned to 18 games after disappointing 2024-25 season"
+      },
+      "sec": {
+        "conference_games": 18,
+        "non_conference_games": 13,
+        "average_bids": 7.8,
+        "revenue_per_school": 31200000,
+        "balance_index": 85.4,
+        "success_rate": 0.68
+      },
+      "big_ten": {
+        "conference_games": 20,
+        "non_conference_games": 11,
+        "average_bids": 7.1,
+        "revenue_per_school": 27800000,
+        "balance_index": 71.2,
+        "success_rate": 0.59
+      }
+    },
+    "competitive_balance_metrics": {
+      "big12_advantages": [
+        "Highest tournament bid success rate",
+        "Optimal balance between conference and non-conference play",
+        "Strong NET ranking improvements",
+        "Maximum revenue flexibility"
+      ],
+      "acc_lessons": [
+        "20-game format led to decreased tournament success",
+        "Reduced non-conference revenue opportunities",
+        "Lower overall competitive balance",
+        "Conference voted to return to 18 games"
+      ]
+    }
+  },
+  "strategic_planning_frameworks": {
+    "opponent_selection_matrix": {
+      "optimal_schedule_template": {
+        "elite_power5": 2,
+        "top_power5": 4,
+        "mid_power5": 3,
+        "top_mid_major": 3,
+        "buy_games": 1,
+        "total_games": 13,
+        "expected_revenue": 10100000,
+        "tournament_probability": 0.75,
+        "risk_score": 45
+      },
+      "conservative_template": {
+        "elite_power5": 1,
+        "top_power5": 3,
+        "mid_power5": 4,
+        "top_mid_major": 3,
+        "buy_games": 2,
+        "expected_revenue": 8200000,
+        "tournament_probability": 0.85,
+        "risk_score": 25
+      },
+      "aggressive_template": {
+        "elite_power5": 3,
+        "top_power5": 5,
+        "mid_power5": 2,
+        "top_mid_major": 2,
+        "buy_games": 1,
+        "expected_revenue": 12500000,
+        "tournament_probability": 0.65,
+        "risk_score": 75
+      }
+    },
+    "risk_reward_analysis": {
+      "high_reward_scenarios": [
+        "Multiple elite P5 opponents with high guarantee fees",
+        "Strong non-conference schedule boosting NET rankings",
+        "Increased tournament unit generation"
+      ],
+      "risk_mitigation_strategies": [
+        "Balance high-profile games with winnable contests",
+        "Geographic considerations for travel costs",
+        "Home/away/neutral site distribution"
+      ]
+    }
+  },
+  "roi_calculation_formulas": {
+    "basic_roi_formula": "(Net Revenue - Total Costs) / Total Costs * 100",
+    "revenue_components": [
+      "guarantee_fees",
+      "ticket_sales",
+      "concessions",
+      "parking",
+      "merchandise",
+      "tournament_units"
+    ],
+    "cost_components": [
+      "team_travel",
+      "accommodations",
+      "meals",
+      "guarantee_payments_out",
+      "facility_operations",
+      "marketing"
+    ],
+    "tournament_unit_calculation": {
+      "formula": "Total Units * $350,000 * 6 years / 16 schools",
+      "unit_per_win": 1,
+      "payout_years": 6,
+      "conference_distribution": "equal_among_16_schools"
+    }
+  },
+  "actionable_insights": {
+    "immediate_recommendations": [
+      "Maintain 18-game conference schedule format",
+      "Optimize non-conference scheduling for revenue and NET benefits",
+      "Focus on 4-5 quality Power 5 matchups annually",
+      "Limit buy games to 1-2 per season"
+    ],
+    "long_term_strategies": [
+      "Develop strategic partnerships with other conferences",
+      "Create annual exempt tournament participation plan",
+      "Establish multi-year scheduling agreements with premier programs",
+      "Monitor and adapt to changes in NCAA tournament unit values"
+    ],
+    "financial_targets": [
+      "Target $10M+ annual non-conference revenue per school",
+      "Maintain 8+ NCAA tournament units annually",
+      "Achieve 70%+ tournament bid rate for conference",
+      "Optimize for NET ranking improvements of 10+ positions"
+    ]
+  },
+  "data_sources": [
+    "Big 12 Conference financial reports (2023-24)",
+    "NCAA tournament unit distribution data",
+    "Athletic department revenue reports",
+    "NET ranking historical data",
+    "Conference scheduling format analysis",
+    "Tournament bid success rate tracking"
+  ],
+  "methodology_notes": {
+    "revenue_projections": "Based on 3% annual growth rate and historical performance",
+    "tournament_units": "Calculated using current NCAA payout structure",
+    "risk_assessments": "Weighted scoring based on win probability and ranking impact",
+    "comparative_analysis": "5-year rolling averages for conference performance metrics"
+  }
+}

@@ -1,22 +1,28 @@
 /**
- * FlexTime Schedule Builder - UI Components
+ * FlexTime Schedule Builder - UI Components 
+ * Modern responsive UI with glassmorphic design
+ */
+
+// Load additional style sheets
+function loadStylesheet(href) {
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = href;
+  document.head.appendChild(link);
+}
+
+// Ensure analytics styles are loaded
+loadStylesheet('ft-builder/ft-builder-analytics-styles.css');
+
+/**
+ * FlexTime Schedule Builder - UI Components 
  * Advanced React components with glassmorphic design and AI integration
  */
 
 // Header Component with AI Status and Collaboration
-function ScheduleBuilderHeader({ 
-  currentView, 
-  setCurrentView, 
-  selectedSport, 
-  setSelectedSport, 
-  agentStatus, 
-  activeUsers,
-  onGenerateSchedule,
-  onOptimizeSchedule 
-}) {
-  return React.createElement('header', { className: 'schedule-builder-header' }, [
-    
-    // Left Section - Brand and Sport Selection
+function ScheduleBuilderHeader({ selectedSport }) {
+  return React.createElement('div', { className: 'schedule-builder-header' }, [
+    // Standalone Branding Section
     React.createElement('div', { className: 'header-left', key: 'left' }, [
       React.createElement('div', { className: 'brand-section', key: 'brand' }, [
         React.createElement('img', { 
@@ -36,94 +42,61 @@ function ScheduleBuilderHeader({
           ]),
           React.createElement('div', { className: 'big12-badge', key: 'badge' }, 'BIG 12 CONFERENCE')
         ])
-      ]),
-      
-      React.createElement('div', { className: 'sport-selector-container', key: 'sport-selector' }, [
-        React.createElement('label', { className: 'sport-label', key: 'label' }, 'SPORT'),
-        React.createElement('select', {
-          className: 'sport-selector glass-dropdown',
-          value: selectedSport,
-          onChange: (e) => setSelectedSport(e.target.value),
-          key: 'select'
-        }, [
-          React.createElement('option', { value: 'football', key: 'football' }, 'Football'),
-          React.createElement('option', { value: 'basketball', key: 'basketball' }, 'Men\'s Basketball'),
-          React.createElement('option', { value: 'basketball-women', key: 'basketball-women' }, 'Women\'s Basketball'),
-          React.createElement('option', { value: 'baseball', key: 'baseball' }, 'Baseball'),
-          React.createElement('option', { value: 'softball', key: 'softball' }, 'Softball'),
-          React.createElement('option', { value: 'soccer', key: 'soccer' }, 'Soccer'),
-          React.createElement('option', { value: 'volleyball', key: 'volleyball' }, 'Volleyball')
-        ])
       ])
-    ]),
+    ])
+  ]);
+}
 
-    // Center Section - AI Status Indicators
-    React.createElement('div', { className: 'header-center', key: 'center' }, [
-      React.createElement('div', { className: 'ai-status-grid', key: 'status-grid' }, [
-        React.createElement(AIAgentIndicator, {
-          key: 'scheduler',
-          name: 'AI Scheduler',
-          status: agentStatus.scheduler,
-          icon: '⚙'
-        }),
-        React.createElement(AIAgentIndicator, {
-          key: 'optimizer',
-          name: 'Optimizer',
-          status: agentStatus.optimizer,
-          icon: '▲'
-        }),
-        React.createElement(AIAgentIndicator, {
-          key: 'analyzer',
-          name: 'COMPASS Analyzer',
-          status: agentStatus.analyzer,
-          icon: '↔'
-        }),
-        React.createElement(AIAgentIndicator, {
-          key: 'predictor',
-          name: 'ML Predictor',
-          status: agentStatus.ml_predictor,
-          icon: '⚙'
-        })
-      ])
-    ]),
+// AI Status Section - Now a separate component
+function AIStatusSection({ agentStatus }) {
+  return React.createElement('div', { className: 'ai-status-section' }, [
+    React.createElement('div', { className: 'ai-status-grid', key: 'status-grid' }, [
+      React.createElement(AIAgentIndicator, {
+        key: 'scheduler',
+        name: 'AI Scheduler',
+        status: agentStatus.scheduler,
+        icon: '⚙'
+      }),
+      React.createElement(AIAgentIndicator, {
+        key: 'optimizer',
+        name: 'Optimizer',
+        status: agentStatus.optimizer,
+        icon: '▲'
+      }),
+      React.createElement(AIAgentIndicator, {
+        key: 'analyzer',
+        name: 'COMPASS',
+        status: agentStatus.analyzer,
+        icon: '↔'
+      }),
+      React.createElement(AIAgentIndicator, {
+        key: 'predictor',
+        name: 'ML Predictor',
+        status: agentStatus.ml_predictor,
+        icon: '⚙'
+      })
+    ])
+  ]);
+}
 
-    // Right Section - Actions and Collaboration
-    React.createElement('div', { className: 'header-right', key: 'right' }, [
-      React.createElement('div', { className: 'collaboration-indicators', key: 'collaboration' }, [
-        React.createElement('div', { className: 'active-users', key: 'users' }, [
-          React.createElement('span', { className: 'users-label', key: 'label' }, `${activeUsers.length} Online`),
-          React.createElement('div', { className: 'user-avatars', key: 'avatars' },
-            activeUsers.slice(0, 3).map((user, index) =>
-              React.createElement('div', {
-                className: 'user-avatar',
-                key: user.id,
-                style: { backgroundColor: user.color },
-                title: user.name
-              }, user.initials)
-            )
-          )
-        ])
-      ]),
-      
-      React.createElement('div', { className: 'action-buttons', key: 'actions' }, [
-        React.createElement('button', {
-          className: 'btn-primary-ai',
-          onClick: onGenerateSchedule,
-          disabled: agentStatus.scheduler === 'generating',
-          key: 'generate'
-        }, [
-          React.createElement('span', { className: 'btn-icon', key: 'icon' }, '◆'),
-          React.createElement('span', { key: 'text' }, 'AI Generate')
-        ]),
-        React.createElement('button', {
-          className: 'btn-secondary-ai',
-          onClick: onOptimizeSchedule,
-          disabled: agentStatus.optimizer === 'optimizing',
-          key: 'optimize'
-        }, [
-          React.createElement('span', { className: 'btn-icon', key: 'icon' }, '●'),
-          React.createElement('span', { key: 'text' }, 'Optimize')
-        ])
+// Controls Section - Now a separate component
+function ControlsSection({ selectedSport, setSelectedSport }) {
+  return React.createElement('div', { className: 'controls-section' }, [
+    React.createElement('div', { className: 'sport-selector-container', key: 'sport-selector' }, [
+      React.createElement('label', { className: 'sport-label', key: 'label' }, 'SPORT'),
+      React.createElement('select', {
+        className: 'sport-selector glass-dropdown',
+        value: selectedSport,
+        onChange: (e) => setSelectedSport(e.target.value),
+        key: 'select'
+      }, [
+        React.createElement('option', { value: 'football', key: 'football' }, 'Football'),
+        React.createElement('option', { value: 'basketball', key: 'basketball' }, 'Men\'s Basketball'),
+        React.createElement('option', { value: 'basketball-women', key: 'basketball-women' }, 'Women\'s Basketball'),
+        React.createElement('option', { value: 'baseball', key: 'baseball' }, 'Baseball'),
+        React.createElement('option', { value: 'softball', key: 'softball' }, 'Softball'),
+        React.createElement('option', { value: 'soccer', key: 'soccer' }, 'Soccer'),
+        React.createElement('option', { value: 'volleyball', key: 'volleyball' }, 'Volleyball')
       ])
     ])
   ]);
@@ -183,22 +156,7 @@ function ScheduleViewToggle({ currentView, setCurrentView, optimizationMetrics }
           React.createElement('span', { className: 'view-name', key: 'name' }, view.name)
         ])
       )
-    ),
-    
-    React.createElement('div', { className: 'optimization-metrics-bar', key: 'metrics' }, [
-      React.createElement('div', { className: 'metric-item', key: 'travel' }, [
-        React.createElement('span', { className: 'metric-label', key: 'label' }, 'Travel'),
-        React.createElement('span', { className: 'metric-value', key: 'value' }, `${optimizationMetrics.travelEfficiency || 0}%`)
-      ]),
-      React.createElement('div', { className: 'metric-item', key: 'balance' }, [
-        React.createElement('span', { className: 'metric-label', key: 'label' }, 'Balance'),
-        React.createElement('span', { className: 'metric-value', key: 'value' }, `${optimizationMetrics.homeAwayBalance || 0}%`)
-      ]),
-      React.createElement('div', { className: 'metric-item', key: 'conflicts' }, [
-        React.createElement('span', { className: 'metric-label', key: 'label' }, 'Conflicts'),
-        React.createElement('span', { className: 'metric-value error', key: 'value' }, optimizationMetrics.conflicts || 0)
-      ])
-    ])
+    )
   ]);
 }
 
@@ -458,6 +416,8 @@ function getAISuggestionForDate(aiSuggestions, teamId, date) {
 
 // Export components
 window.ScheduleBuilderHeader = ScheduleBuilderHeader;
+window.AIStatusSection = AIStatusSection;
+window.ControlsSection = ControlsSection;
 window.ScheduleViewToggle = ScheduleViewToggle;
 window.TimelineScheduleView = TimelineScheduleView;
 window.AIAgentIndicator = AIAgentIndicator;

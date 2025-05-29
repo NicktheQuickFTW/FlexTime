@@ -1,41 +1,203 @@
 /**
  * FlexTime Schedule Builder - Advanced Glassmorphic Styles
  * Incorporating 2024's best UX patterns with FlexTime's monochrome design
+ * Inherits theme variables from main styles.css
  */
 
 /* Main Schedule Builder Layout - Matches FlexTime App */
 .schedule-builder-app {
-  min-height: calc(100vh - 120px);
-  background: transparent; /* Use inherited background */
+  min-height: 100%;
+  background: transparent;
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: 2rem;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  overflow: visible;
+  flex: 1;
+}
+
+/* Main content wrapper */
+.schedule-builder-content {
+  display: flex;
+  gap: 1.5rem;
+  height: 100%;
+  width: 100%;
+}
+
+/* Main panel */
+.schedule-builder-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0; /* Prevents flex items from overflowing */
+}
+
+/* Sidebar container */
+.schedule-builder-sidebar-container {
+  width: 320px;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Stats Overview Section */
+.analytics-stats-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 191, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card.blue { border-left: 3px solid var(--color-neon-blue); }
+.stat-card.red { border-left: 3px solid #ff4444; }
+.stat-card.green { border-left: 3px solid #00ff7f; }
+
+.stat-card .stat-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Main content area with padding */
+.schedule-builder-main {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+  gap: 1.5rem;
 }
 
 /* Remove animated background - use main app's background */
-}
 
-/* Header Styles - Match FlexTime Section Headers */
+/* Schedule Builder Branding Component - Standalone */
 .schedule-builder-header {
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--glass-border);
+  background: transparent;
+  border: 1px solid rgba(0, 191, 255, 0.2);
   border-radius: var(--radius-lg);
-  padding: 1.5rem 2rem;
-  display: grid;
-  grid-template-columns: 350px 1fr 400px;
-  gap: 2rem;
+  padding: 1rem 1.5rem;
+  display: flex;
   align-items: center;
   margin-bottom: 2rem;
   box-shadow: var(--shadow-silver);
+  width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  justify-content: center;
+  z-index: 1; /* Ensure it stays below the navigation bar */
 }
 
-.header-left {
+/* Main content - Branding */
+.schedule-builder-header .header-left {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  min-width: 0;
+  z-index: 1;
+  justify-content: center;
+}
+
+/* AI Status section - now separate component */
+.ai-status-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Controls section - now separate component */
+.controls-section {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+  z-index: 1;
+  margin-top: 1rem;
+}
+
+/* AI Status Grid */
+.ai-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  align-items: center;
   width: 100%;
+}
+
+/* AI Agent Indicator Cards */
+.ai-agent-indicator {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  width: 100%;
+}
+
+.ai-agent-indicator.pulsing {
+  animation: aiPulse 2s ease-in-out infinite;
+}
+
+@keyframes aiPulse {
+  0%, 100% { 
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
+    transform: scale(1.02);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .schedule-builder-header {
+    padding: 1rem;
+  }
+  
+  .ai-status-section {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .controls-section {
+    width: 100%;
+  }
+  
+  .ai-status-grid {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 .brand-section {
@@ -44,6 +206,7 @@
   justify-content: flex-start;
   gap: 1rem;
   height: 100%;
+  flex-shrink: 0;
 }
 
 .flextime-logo {
@@ -89,6 +252,10 @@
   color: var(--color-lighter-gray);
   letter-spacing: 0.48em;
   font-weight: var(--font-weight-medium);
+  display: block;
+  text-align: center;
+  padding-top: 0.25rem;
+  line-height: 1.2;
 }
 
 .big12-badge {
@@ -111,11 +278,11 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   backdrop-filter: var(--glass-backdrop);
-  width: 220px;
-  margin-left: auto;
+  max-width: 200px;
+  min-width: 140px;
+  flex-shrink: 1;
   align-self: center;
 }
-
 
 .sport-label {
   font-family: var(--font-family-secondary);
@@ -134,7 +301,7 @@
   padding: 0.5rem 1rem;
   font-family: var(--font-family-body);
   font-size: 0.9rem;
-  min-width: 150px;
+  width: 100%;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -148,53 +315,6 @@
   outline: none;
   border-color: var(--color-neon-blue);
   box-shadow: 0 0 20px rgba(0, 191, 255, 0.3);
-}
-
-/* AI Status Grid */
-.header-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-.ai-status-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  width: 100%;
-  max-width: 600px;
-  justify-self: center;
-  align-self: center;
-}
-
-.ai-agent-indicator {
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: var(--radius-lg);
-  padding: 0.75rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.ai-agent-indicator.pulsing {
-  animation: aiPulse 2s ease-in-out infinite;
-}
-
-@keyframes aiPulse {
-  0%, 100% { 
-    box-shadow: 0 0 10px rgba(0, 191, 255, 0.3);
-    transform: scale(1);
-  }
-  50% { 
-    box-shadow: 0 0 20px rgba(0, 191, 255, 0.5);
-    transform: scale(1.02);
-  }
 }
 
 .agent-icon {
@@ -215,10 +335,11 @@
 
 .agent-name {
   font-family: var(--font-family-secondary);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   color: var(--color-white);
   font-weight: var(--font-weight-medium);
   letter-spacing: 0.05em;
+  text-align: center;
 }
 
 .agent-status {
@@ -240,12 +361,10 @@
 
 /* Header Right Section */
 .header-right {
+  width: 400px;
   display: flex;
-  align-items: center;
   justify-content: flex-end;
-  gap: 1.5rem;
-  width: 100%;
-  padding-bottom: 2rem;
+  align-items: center;
 }
 
 .schedule-builder-right {
@@ -401,15 +520,18 @@
   height: calc(100vh - 200px);
   overflow: hidden;
   box-shadow: var(--shadow-silver);
+  justify-content: space-between; /* Ensure content is spaced between top and bottom */
 }
 
 .sidebar-header {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
   padding-bottom: var(--spacing-md);
   border-bottom: 1px solid var(--glass-border);
   margin-bottom: var(--spacing-md);
+  text-align: center;
 }
 
 .sidebar-header-icon {
@@ -442,16 +564,35 @@
   transition: all 0.3s ease;
 }
 
-.sidebar-section:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: var(--color-silver-medium);
+.sidebar-sport-selector {
+  width: 100%;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  color: var(--color-silver-primary);
+  letter-spacing: 0.05em;
+  font-weight: var(--font-weight-medium);
+  background-color: transparent;
+  border: 1px solid var(--glass-border);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-md);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c0c0c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.sidebar-section-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: var(--spacing-md);
+.sidebar-sport-selector:hover {
+  border-color: rgba(0, 191, 255, 0.5);
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.2);
+}
+
+.sidebar-sport-selector:focus {
+  outline: none;
+  border-color: var(--color-neon-blue);
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
 }
 
 .sidebar-section-icon {
@@ -482,13 +623,10 @@
   padding: 1rem 1.25rem;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 1rem;
-  width: 100%;
-  cursor: grab;
+  gap: 0.75rem;
+  cursor: pointer;
   transition: all 0.3s ease;
-  user-select: none;
-  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .sidebar-team-item:hover {
@@ -532,9 +670,13 @@
 
 .team-full-name {
   font-family: var(--font-family-body);
-  font-size: 0.875rem;
-  color: var(--color-lighter-gray);
+  font-size: 0.85rem;
+  color: var(--color-white);
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: calc(100% - 40px); /* Accommodate for the logo */
   font-weight: var(--font-weight-medium);
 }
 
@@ -590,6 +732,15 @@
   transform: translateX(16px);
 }
 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  padding: 0.5rem;
+  width: 100%;
+}
+
+/* Sidebar Actions Area */
 .sidebar-actions {
   display: flex;
   flex-direction: column;
@@ -640,16 +791,21 @@
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.25rem;
-  margin-bottom: var(--spacing-lg);
+  margin: 0 auto var(--spacing-lg);
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   box-shadow: var(--shadow-silver);
+  width: calc(100% - 4rem); /* Match header width */
+  max-width: 1800px;
 }
 
 .view-buttons {
   display: flex;
-  gap: 0.5rem;
+  width: 100%;
+  justify-content: space-between;
+  gap: 1.5rem; /* Add proper spacing between buttons */
+  padding: 0 1rem; /* Add some horizontal padding */
 }
 
 .view-btn {
@@ -664,9 +820,12 @@
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  flex: 1;
+  min-width: 0;
 }
 
 .view-btn:hover {
@@ -901,6 +1060,22 @@
 }
 
 /* Game Cards */
+.schedule-builder-sidebar {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 191, 255, 0.2);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  width: 100%;
+  min-height: 55px;
+}
+
 .game-card {
   background: rgba(0, 191, 255, 0.2);
   backdrop-filter: blur(5px);
@@ -1087,6 +1262,132 @@
   50% { opacity: 0.7; transform: scale(1.1); }
 }
 
+/* AI Floating Action Button */
+.ai-fab-container {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+  z-index: 1000;
+  margin-top: 1rem;
+}
+
+.ai-fab-main {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-neon-blue), #0077cc);
+  color: var(--color-white);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 191, 255, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-fab-main:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 191, 255, 0.6);
+}
+
+.ai-fab-main .fab-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.ai-fab-main .fab-label {
+  font-family: var(--font-family-secondary);
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-white);
+  margin-left: 0.25rem;
+  display: inline-block;
+}
+
+.ai-fab-main.expanded .fab-label {
+  display: inline-block;
+}
+
+/* Tooltip style for non-expanded state */
+.ai-fab-main:not(.expanded) .fab-label {
+  position: absolute;
+  white-space: nowrap;
+  right: 100%;
+  margin-right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.ai-fab-main:not(.expanded):hover .fab-label {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ai-fab-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 250px;
+  margin-top: 0.5rem;
+}
+
+.fab-action-btn {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 0.75rem 1rem;
+  color: var(--color-white);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.fab-action-btn:hover {
+  background: rgba(0, 191, 255, 0.1);
+  border-color: var(--color-neon-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0, 191, 255, 0.3);
+}
+
+.fab-action-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.fab-action-btn .action-icon {
+  font-size: 1.2rem;
+  color: var(--color-neon-blue);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-action-btn .action-label {
+  font-family: var(--font-family-secondary);
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-medium);
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
   .schedule-builder-main {
@@ -1094,7 +1395,12 @@
   }
   
   .ai-status-grid {
-    grid-template-columns: repeat(2, 1fr);
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  
+  .ai-agent-indicator {
+    flex: 1 1 45%;
   }
 }
 
@@ -1105,19 +1411,22 @@
   }
   
   .schedule-builder-header {
-    flex-direction: column;
-    gap: 1rem;
     padding: 1rem;
   }
   
-  .header-left, .header-center, .header-right {
+  .ai-status-section, .controls-section {
     width: 100%;
-    justify-content: center;
   }
   
   .ai-status-grid {
-    grid-template-columns: repeat(4, 1fr);
+    flex-wrap: wrap;
     gap: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .ai-agent-indicator {
+    flex: 1 1 45%;
+    min-width: 120px;
   }
   
   .timeline-row {
@@ -1126,5 +1435,31 @@
   
   .timeline-slots {
     grid-template-columns: repeat(4, 1fr);
+  }
+  
+  /* Responsive FAB */
+  .ai-fab-container {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .ai-fab-main {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .ai-fab-menu {
+    min-width: 200px;
+    position: absolute;
+    bottom: 60px;
+    right: 0;
+  }
+  
+  .fab-action-btn {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .fab-action-btn .action-label {
+    font-size: 0.8rem;
   }
 }

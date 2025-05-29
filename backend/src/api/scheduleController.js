@@ -6,9 +6,9 @@
 
 const { Op } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
-const { RoundRobinGenerator, PartialRoundRobinGenerator } = require('../intelligence/schedule-generator');
-const { SimulatedAnnealingOptimizer, TravelOptimizationPipeline } = require('../intelligence/schedule-optimizer');
-const DateAssigner = require('../intelligence/date-assigner');
+const { RoundRobinGenerator, PartialRoundRobinGenerator } = require('../ai/schedule-generator');
+const { SimulatedAnnealingOptimizer, TravelOptimizationPipeline } = require('../ai/schedule-optimizer');
+const DateAssigner = require('../ai/date-assigner');
 const Schedule = require('../models/schedule');
 const Team = require('../models/team');
 const Game = require('../models/game');

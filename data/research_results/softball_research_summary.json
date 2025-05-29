@@ -1,0 +1,24 @@
+{
+  "sport": "softball",
+  "executionSummary": {
+    "timestamp": "2025-05-29T06:37:37.592Z",
+    "teams": 11,
+    "totalJobs": 33,
+    "duration": 112.397,
+    "jobsPerSecond": "0.29"
+  },
+  "researchCoverage": {
+    "teams": 11,
+    "historicalData": 11,
+    "projections": 11
+  },
+  "trendsAnalysis": {
+    "compassRatings": 11,
+    "visualizations": 11
+  },
+  "qualityMetrics": {
+    "averageContentLength": 7550,
+    "citationCount": 106,
+    "completionRate": "100.0"
+  }
+}

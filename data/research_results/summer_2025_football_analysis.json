@@ -1,0 +1,135 @@
+{
+  "executionSummary": {
+    "title": "Big 12 Football Summer 2025 Transfer Portal & Recruiting Analysis",
+    "timestamp": "2025-05-29T15:45:45.958Z",
+    "focusPeriod": "Spring 2025 - Summer 2025",
+    "teams": 16,
+    "totalAnalyses": 48,
+    "duration": 83.798,
+    "analysisTypes": [
+      "Enhanced 2025-26 Projections",
+      "Transfer Portal Analysis",
+      "Recruiting Updates"
+    ]
+  },
+  "keyFindings": {
+    "transferPortalActivity": {
+      "teamsAnalyzed": 16,
+      "totalCitations": 80,
+      "averageContentLength": 6542
+    },
+    "recruitingMomentum": {
+      "teamsAnalyzed": 16,
+      "totalCitations": 80,
+      "averageContentLength": 6535
+    },
+    "seasonProjections": {
+      "teamsAnalyzed": 16,
+      "totalCitations": 80,
+      "averageContentLength": 8570
+    }
+  },
+  "teamSummaries": {
+    "Colorado": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Iowa State": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Oklahoma State": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Utah": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Arizona": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "BYU": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Cincinnati": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "TCU": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Baylor": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Kansas State": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Texas Tech": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "West Virginia": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Arizona State": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Houston": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "UCF": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    },
+    "Kansas": {
+      "hasProjections": true,
+      "hasPortalAnalysis": true,
+      "hasRecruitingData": true,
+      "completionStatus": "complete"
+    }
+  },
+  "competitiveAnalysis": {
+    "portalWinners": [],
+    "recruitingLeaders": [],
+    "seasonOutlook": {}
+  }
+}
