@@ -1,0 +1,283 @@
+/**
+ * Navigation Component Styles
+ * 
+ * This CSS file provides additional styling for navigation components
+ * that complements the Material-UI theme system.
+ * 
+ * Following the FlexTime design system principles:
+ * - Glassmorphic effects with backdrop filters
+ * - Smooth transitions and animations
+ * - Responsive design patterns
+ * - Dark/light theme support
+ */
+
+/* Top App Bar Enhancements */
+.ft-top-app-bar {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ft-app-bar-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 64px;
+  padding: 0 24px;
+}
+
+.ft-brand {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+.ft-logo {
+  height: 40px;
+  width: auto;
+  margin-right: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.ft-logo:hover {
+  transform: scale(1.05);
+}
+
+.ft-title {
+  margin: 0;
+  margin-left: 8px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ft-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Navigation Rail Enhancements */
+.ft-navigation-rail {
+  width: 280px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ft-navigation-rail.dark {
+  background: rgba(17, 25, 40, 0.75);
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Mobile Drawer Enhancements */
+.ft-mobile-drawer {
+  width: 320px;
+}
+
+.ft-mobile-drawer .ft-drawer-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+}
+
+.ft-mobile-drawer.dark .ft-drawer-content {
+  background: rgba(17, 25, 40, 0.95);
+}
+
+/* Bottom Navigation Enhancements */
+.ft-bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.ft-bottom-navigation.dark {
+  background: rgba(17, 25, 40, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.ft-bottom-navigation::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 102, 204, 0.5), transparent);
+}
+
+/* Navigation Item Enhancements */
+.ft-nav-item {
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ft-nav-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  transform: translateX(2px);
+}
+
+.ft-nav-item.dark:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.ft-nav-item.active {
+  background-color: rgba(0, 102, 204, 0.1);
+  color: #0066cc;
+}
+
+.ft-nav-item.active.dark {
+  background-color: rgba(0, 102, 204, 0.2);
+}
+
+.ft-nav-item.active:hover {
+  background-color: rgba(0, 102, 204, 0.2);
+}
+
+.ft-nav-item.active.dark:hover {
+  background-color: rgba(0, 102, 204, 0.3);
+}
+
+/* Breadcrumb Enhancements */
+.ft-breadcrumbs {
+  margin-top: 4px;
+}
+
+.ft-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.ft-breadcrumb-item.dark {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ft-breadcrumb-item:hover {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.ft-breadcrumb-item.active {
+  color: #0066cc;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ft-app-bar-content {
+    padding: 0 16px;
+    min-height: 56px;
+  }
+
+  .ft-logo {
+    height: 32px;
+    margin-right: 12px;
+  }
+
+  .ft-title {
+    font-size: 1.25rem;
+  }
+
+  .ft-navigation-rail {
+    display: none;
+  }
+
+  .ft-breadcrumbs {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-app-bar-content {
+    padding: 0 12px;
+  }
+
+  .ft-actions {
+    gap: 4px;
+  }
+}
+
+/* Animation Classes */
+.ft-nav-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.ft-nav-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ft-nav-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ft-nav-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus States for Accessibility */
+.ft-nav-item:focus-visible,
+.ft-logo:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Smooth Scrolling for Navigation */
+.ft-navigation-content {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar for Navigation Areas */
+.ft-navigation-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ft-navigation-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ft-navigation-content::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.ft-navigation-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.dark .ft-navigation-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark .ft-navigation-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

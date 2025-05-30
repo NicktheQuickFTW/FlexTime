@@ -3,7 +3,7 @@
  * 
  * This script:
  * 1. Renames the "institutions" table to "schools"
- * 2. Updates all references to "institution_id" to "school_id" in all tables
+ * 2. Updates all references to "school_id" to "school_id" in all tables
  * 3. Renames the "name" column in the teams table to "team"
  */
 
@@ -178,15 +178,15 @@ const renameInstitutionsToSchools = async (client) => {
   // Get all tables in the database
   const tables = await getAllTables(client);
   
-  // For each table, check if it has an institution_id column and rename it
+  // For each table, check if it has an school_id column and rename it
   for (const table of tables) {
     try {
       const columns = await getTableColumns(client, table);
       
       for (const column of columns) {
-        if (column.column_name === 'institution_id') {
-          await client.query(`ALTER TABLE ${table} RENAME COLUMN institution_id TO school_id`);
-          console.log(`Renamed institution_id to school_id in ${table}`);
+        if (column.column_name === 'school_id') {
+          await client.query(`ALTER TABLE ${table} RENAME COLUMN school_id TO school_id`);
+          console.log(`Renamed school_id to school_id in ${table}`);
         }
       }
     } catch (error) {

@@ -117,10 +117,10 @@ async function addMissingInstitutions() {
     for (const institution of missingInstitutions) {
       // Check if institution already exists
       const institutionResult = await client.query(`
-        SELECT institution_id FROM institutions WHERE name = $1 LIMIT 1;
+        SELECT school_id FROM institutions WHERE name = $1 LIMIT 1;
       `, [institution.name]);
       
-      let institutionId;
+      let schoolId;
       
       if (institutionResult.rows.length === 0) {
         // Create new institution
@@ -131,7 +131,7 @@ async function addMissingInstitutions() {
             created_at, updated_at
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
-          RETURNING institution_id;
+          RETURNING school_id;
         `, [
           institution.name,
           institution.abbreviation,
@@ -144,11 +144,11 @@ async function addMissingInstitutions() {
           institution.longitude
         ]);
         
-        institutionId = insertInstitutionResult.rows[0].institution_id;
-        logger.info(`Created institution: ${institution.name} (ID: ${institutionId})`);
+        schoolId = insertInstitutionResult.rows[0].school_id;
+        logger.info(`Created institution: ${institution.name} (ID: ${schoolId})`);
       } else {
-        institutionId = institutionResult.rows[0].institution_id;
-        logger.info(`Institution ${institution.name} already exists (ID: ${institutionId})`);
+        schoolId = institutionResult.rows[0].school_id;
+        logger.info(`Institution ${institution.name} already exists (ID: ${schoolId})`);
       }
       
       // Get sports for this institution
@@ -173,8 +173,8 @@ async function addMissingInstitutions() {
         // Check if team already exists
         const teamResult = await client.query(`
           SELECT team_id FROM teams 
-          WHERE institution_id = $1 AND sport_id = $2 LIMIT 1;
-        `, [institutionId, sportId]);
+          WHERE school_id = $1 AND sport_id = $2 LIMIT 1;
+        `, [schoolId, sportId]);
         
         if (teamResult.rows.length === 0) {
           // Create new team
@@ -193,7 +193,7 @@ async function addMissingInstitutions() {
           // Insert team
           const insertTeamResult = await client.query(`
             INSERT INTO teams (
-              name, institution_id, sport_id, season, time_zone,
+              name, school_id, sport_id, season, time_zone,
               travel_constraints, rival_teams, scheduling_priority, 
               blackout_dates, media_contracts, code, notes,
               created_at, updated_at
@@ -205,7 +205,7 @@ async function addMissingInstitutions() {
             RETURNING team_id;
           `, [
             teamData.name, 
-            institutionId, 
+            schoolId, 
             sportId,
             teamData.season,
             teamData.timeZone,

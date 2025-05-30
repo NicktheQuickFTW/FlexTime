@@ -1,0 +1,152 @@
+/* FlexTime Next-Generation Design System */
+/* Based on the "Crystalline Precision Meets Athletic Power" theme */
+
+:root {
+  /* FlexTime Signature Colors */
+  --ft-space-navy: #0a0e17;        /* Primary background */
+  --ft-cyber-cyan: #00bfff;         /* Brand accent */
+  --ft-electric-blue: #1e40af;      /* Interactive elements */
+  --ft-crystal-white: #ffffff;       /* Primary text */
+  --ft-silver-mist: #a0aec0;        /* Secondary text */
+  --ft-golden-hour: #ffa500;        /* Premium highlights */
+  
+  /* Glass Effects */
+  --ft-glass-primary: rgba(255, 255, 255, 0.08);
+  --ft-glass-secondary: rgba(255, 255, 255, 0.04);
+  --ft-glass-border: rgba(0, 191, 255, 0.15);
+  --ft-glass-glow: rgba(0, 191, 255, 0.25);
+  
+  /* Typography Scale */
+  --ft-font-hero: 'Inter', system-ui, sans-serif;
+  --ft-font-mono: 'JetBrains Mono', monospace;
+  --ft-scale-xs: 0.75rem;     /* 12px */
+  --ft-scale-sm: 0.875rem;    /* 14px */
+  --ft-scale-base: 1rem;      /* 16px */
+  --ft-scale-lg: 1.125rem;    /* 18px */
+  --ft-scale-xl: 1.25rem;     /* 20px */
+  --ft-scale-2xl: 1.5rem;     /* 24px */
+  --ft-scale-3xl: 1.875rem;   /* 30px */
+  --ft-scale-4xl: 2.25rem;    /* 36px */
+  --ft-scale-hero: 3.5rem;    /* 56px */
+  
+  /* Spacing Rhythm */
+  --ft-space-1: 0.25rem;   /* 4px */
+  --ft-space-2: 0.5rem;    /* 8px */
+  --ft-space-3: 0.75rem;   /* 12px */
+  --ft-space-4: 1rem;      /* 16px */
+  --ft-space-6: 1.5rem;    /* 24px */
+  --ft-space-8: 2rem;      /* 32px */
+  --ft-space-12: 3rem;     /* 48px */
+  --ft-space-16: 4rem;     /* 64px */
+  
+  /* Border Radius */
+  --ft-radius-sm: 4px;
+  --ft-radius-md: 8px;
+  --ft-radius-lg: 12px;
+  --ft-radius-xl: 16px;
+  --ft-radius-2xl: 24px;
+  --ft-radius-full: 9999px;
+  
+  /* Shadows & Depth */
+  --ft-shadow-glow: 0 0 20px rgba(0, 191, 255, 0.3);
+  --ft-shadow-card: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --ft-shadow-float: 0 16px 64px rgba(0, 0, 0, 0.16);
+  --ft-shadow-hero: 0 32px 128px rgba(0, 0, 0, 0.24);
+}
+
+/* Adaptive Grid System */
+.ft-grid-system {
+  display: grid;
+  grid-template-columns: 
+    [sidebar-start] 380px [sidebar-end main-start] 1fr [main-end panel-start] 420px [panel-end];
+  grid-template-rows: 
+    [header-start] 72px [header-end content-start] 1fr [content-end];
+  gap: var(--ft-space-6);
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--ft-space-navy) 0%, #060a10 100%);
+}
+
+/* Content Containment Rule */
+.ft-container {
+  width: calc(100% - var(--ft-space-8));
+  max-width: 1440px;
+  margin: 0 auto;
+  overflow: hidden; /* STRICT: No overflow allowed */
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .ft-grid-system {
+    grid-template-columns: [main-start] 1fr [main-end];
+    grid-template-rows: 
+      [header-start] 72px [header-end sidebar-start] auto [sidebar-end content-start] 1fr [content-end];
+  }
+}
+
+@media (max-width: 768px) {
+  .ft-grid-system {
+    grid-template-columns: [main-start] 1fr [main-end];
+    padding: var(--ft-space-4);
+    gap: var(--ft-space-4);
+  }
+  
+  .ft-container {
+    width: calc(100% - var(--ft-space-4));
+  }
+}
+
+/* Glassmorphic Cards */
+.ft-card {
+  background: var(--ft-glass-primary);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-xl);
+  box-shadow: var(--ft-shadow-card);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.ft-card:hover {
+  background: var(--ft-glass-secondary);
+  border-color: var(--ft-cyber-cyan);
+  box-shadow: 
+    var(--ft-shadow-float),
+    0 0 0 1px var(--ft-glass-glow);
+  transform: translateY(-2px);
+}
+
+.ft-card-elevated {
+  background: var(--ft-glass-secondary);
+  box-shadow: var(--ft-shadow-hero);
+  border: 1px solid var(--ft-glass-glow);
+}
+
+/* Base Typography */
+body {
+  font-family: var(--ft-font-hero);
+  color: var(--ft-crystal-white);
+  background: var(--ft-space-navy);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: var(--ft-space-4);
+}
+
+h1 { font-size: var(--ft-scale-hero); }
+h2 { font-size: var(--ft-scale-4xl); }
+h3 { font-size: var(--ft-scale-3xl); }
+h4 { font-size: var(--ft-scale-2xl); }
+h5 { font-size: var(--ft-scale-xl); }
+h6 { font-size: var(--ft-scale-lg); }
+
+/* Remove default margins */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

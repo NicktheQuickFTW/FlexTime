@@ -22,43 +22,179 @@ module.exports = (sequelize) => {
         key: 'season_id'
       }
     },
-    institution_id: {
+    school_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'institutions',
-        key: 'institution_id'
+        key: 'school_id'
       }
     },
     name: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-      validate: {
-        notEmpty: true
-      }
+      type: DataTypes.STRING,
+      allowNull: true // Updated to match Neon schema
     },
-    code: {
-      type: DataTypes.STRING(10),
+    abbreviation: {
+      type: DataTypes.STRING,
       allowNull: true
     },
-    division: {
-      type: DataTypes.STRING(50),
+    primary_color: {
+      type: DataTypes.STRING,
       allowNull: true
     },
-    seed: {
+    secondary_color: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    conference: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    founded_year: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    status: {
-      type: DataTypes.ENUM('registered', 'confirmed', 'withdrawn', 'disqualified'),
-      allowNull: false,
-      defaultValue: 'registered'
+    athletic_budget: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    enrollment: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    // COMPASS rating fields
+    compass_rating: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    compass_competitive: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    compass_operational: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    compass_market: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    compass_trajectory: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    compass_analytics: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    last_updated_summer_2025: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true
+    },
+    compass_overall_score: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    compass_competitive_performance: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    compass_recruiting_success: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    compass_coaching_stability: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    compass_resource_investment: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    season_record: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    conference_record: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    ncaa_tournament_result: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    national_ranking: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    head_coach: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    coach_tenure: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    facility_name: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    facility_capacity: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    scheduling_tier: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    scheduling_considerations: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    competitive_analysis: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    recruiting_notes: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    profile_last_updated: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    profile_data_source: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, {
     tableName: 'teams',
     timestamps: true,
     underscored: true
   });
+
+  // Helper functions for team_id calculation and parsing
+  Team.calculateTeamId = (schoolId, sportId) => {
+    return parseInt(`${schoolId}${sportId.toString().padStart(2, '0')}`);
+  };
+
+  Team.parseTeamId = (teamId) => {
+    const teamIdStr = teamId.toString();
+    if (teamIdStr.length < 3) return null;
+    
+    const sportId = parseInt(teamIdStr.slice(-2));
+    const schoolId = parseInt(teamIdStr.slice(0, -2));
+    
+    return { schoolId, sportId };
+  };
 
   Team.associate = (models) => {
     // A Team belongs to a Season
@@ -67,10 +203,10 @@ module.exports = (sequelize) => {
       as: 'season'
     });
 
-    // A Team belongs to an Institution
-    Team.belongsTo(models.Institution, {
-      foreignKey: 'institution_id',
-      as: 'institution'
+    // A Team belongs to a School
+    Team.belongsTo(models.School, {
+      foreignKey: 'school_id',
+      as: 'school'
     });
     
     // A Team can belong to many Schedules

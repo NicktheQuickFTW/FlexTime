@@ -125,3 +125,4 @@ const SportSelector: React.FC<SportSelectorProps> = ({
 };
 
 export default SportSelector;
+export { SportSelector };

@@ -166,7 +166,7 @@ class Big12ValidationAgent extends Agent {
       const result = await this.dbClient.query(`
         SELECT t.team_id, t.name, t.mascot, i.code
         FROM ${this.currentUser}.teams t
-        JOIN ${this.currentUser}.institutions i ON t.institution_id = i.institution_id
+        JOIN ${this.currentUser}.institutions i ON t.school_id = i.school_id
         WHERE t.team_id = $1;
       `, [teamId]);
       

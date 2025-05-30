@@ -1,0 +1,598 @@
+/**
+ * FlexTime Enhanced Theme System - CSS Variables
+ * 
+ * Comprehensive theming system with light/dark modes, sport-specific themes,
+ * and Big 12 Conference team branding integration.
+ * 
+ * Based on: Enhanced Theme System (development/frontend-enhancement/enhanced-theme-system.tsx)
+ * Big 12 Branding: development/frontend-enhancement/big12-branding-system.tsx
+ */
+
+/* ===========================================
+   BASE THEME VARIABLES (Dark Mode Default)
+   =========================================== */
+
+:root {
+  /* Core FlexTime Branding */
+  --ft-space-navy: #0A0E1A;
+  --ft-cyber-cyan: #00bfff;
+  --ft-crystal-white: #F1F5F9;
+  --ft-silver-mist: #CBD5E1;
+  --ft-glass-primary: rgba(255, 255, 255, 0.05);
+  --ft-glass-secondary: rgba(255, 255, 255, 0.08);
+  --ft-glass-border: rgba(0, 191, 255, 0.15);
+  --ft-glass-glow: rgba(0, 191, 255, 0.25);
+
+  /* Big 12 Conference Colors */
+  --big12-primary: #003366;
+  --big12-gold: #FFB81C;
+  --big12-navy: #003366;
+  --big12-light: #E8F4FD;
+  --big12-dark: #001A33;
+  --big12-white: #FFFFFF;
+
+  /* Core Color System */
+  --flextime-primary: var(--big12-primary);
+  --flextime-secondary: var(--big12-gold);
+  --flextime-accent: var(--ft-cyber-cyan);
+  --flextime-background: var(--ft-space-navy);
+  --flextime-surface: #1A1F2E;
+  --flextime-text-primary: var(--ft-crystal-white);
+  --flextime-text-secondary: var(--ft-silver-mist);
+
+  /* Gradient System */
+  --gradient-primary: linear-gradient(135deg, var(--big12-primary) 0%, rgba(0, 51, 102, 0.8) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--big12-gold) 0%, rgba(255, 184, 28, 0.8) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--ft-cyber-cyan) 0%, rgba(0, 191, 255, 0.8) 100%);
+  --gradient-success: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  --gradient-warning: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  --gradient-error: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+
+  /* Semantic Game Status Colors */
+  --game-home: #4CAF50;
+  --game-away: #2196F3;
+  --game-neutral: #FF9800;
+  --game-conflict: #F44336;
+  --game-optimal: #8BC34A;
+  --game-warning: #FF5722;
+
+  /* Glass Morphism Effects */
+  --glass-backdrop-filter: blur(20px);
+  --glass-background-primary: rgba(26, 31, 46, 0.8);
+  --glass-background-secondary: rgba(10, 14, 26, 0.9);
+  --glass-border-primary: rgba(0, 191, 255, 0.2);
+  --glass-shadow-primary: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --glass-shadow-elevated: 0 16px 64px rgba(0, 0, 0, 0.4);
+
+  /* Typography Scale */
+  --font-family-primary: "Inter", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  --font-size-5xl: 3rem;
+  --font-size-6xl: 3.5rem;
+
+  /* Spacing Scale */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Animation Timings */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+}
+
+/* ===========================================
+   LIGHT THEME OVERRIDES
+   =========================================== */
+
+[data-theme="light"] {
+  /* Core Colors - Light Mode */
+  --ft-space-navy: #FFFFFF;
+  --ft-cyber-cyan: #0066CC;
+  --ft-crystal-white: #1A1A1A;
+  --ft-silver-mist: #666666;
+  --ft-glass-primary: rgba(0, 0, 0, 0.05);
+  --ft-glass-secondary: rgba(0, 0, 0, 0.08);
+  --ft-glass-border: rgba(0, 102, 204, 0.15);
+  --ft-glass-glow: rgba(0, 102, 204, 0.25);
+
+  /* Background System - Light Mode */
+  --flextime-background: #F8FAFC;
+  --flextime-surface: #FFFFFF;
+  --flextime-text-primary: #1E293B;
+  --flextime-text-secondary: #475569;
+
+  /* Glass Morphism - Light Mode */
+  --glass-background-primary: rgba(255, 255, 255, 0.8);
+  --glass-background-secondary: rgba(248, 250, 252, 0.9);
+  --glass-border-primary: rgba(0, 102, 204, 0.2);
+  --glass-shadow-primary: 0 8px 32px rgba(0, 0, 0, 0.08);
+  --glass-shadow-elevated: 0 16px 64px rgba(0, 0, 0, 0.12);
+
+  /* Big 12 Colors - Light Mode Adjustments */
+  --big12-light: #1E293B;
+  --big12-dark: #E8F4FD;
+}
+
+/* ===========================================
+   SPORT-SPECIFIC THEME VARIANTS
+   =========================================== */
+
+/* Football Theme */
+[data-sport="football"] {
+  --sport-primary: #8B2635;
+  --sport-secondary: #FFD700;
+  --sport-accent: #2C5530;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(139, 38, 53, 0.1);
+  --sport-dark: rgba(139, 38, 53, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Men's Basketball Theme */
+[data-sport="mens_basketball"] {
+  --sport-primary: #FF6B35;
+  --sport-secondary: #004E89;
+  --sport-accent: #F7931E;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(255, 107, 53, 0.1);
+  --sport-dark: rgba(255, 107, 53, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Women's Basketball Theme */
+[data-sport="womens_basketball"] {
+  --sport-primary: #E91E63;
+  --sport-secondary: #673AB7;
+  --sport-accent: #FF4081;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(233, 30, 99, 0.1);
+  --sport-dark: rgba(233, 30, 99, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Baseball Theme */
+[data-sport="baseball"] {
+  --sport-primary: #2E7D32;
+  --sport-secondary: #8D6E63;
+  --sport-accent: #FFC107;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(46, 125, 50, 0.1);
+  --sport-dark: rgba(46, 125, 50, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Softball Theme */
+[data-sport="softball"] {
+  --sport-primary: #7B1FA2;
+  --sport-secondary: #FFB300;
+  --sport-accent: #E91E63;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(123, 31, 162, 0.1);
+  --sport-dark: rgba(123, 31, 162, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Volleyball Theme */
+[data-sport="volleyball"] {
+  --sport-primary: #FF5722;
+  --sport-secondary: #3F51B5;
+  --sport-accent: #FFC107;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(255, 87, 34, 0.1);
+  --sport-dark: rgba(255, 87, 34, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Soccer Theme */
+[data-sport="soccer"] {
+  --sport-primary: #388E3C;
+  --sport-secondary: #1976D2;
+  --sport-accent: #FFC107;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(56, 142, 60, 0.1);
+  --sport-dark: rgba(56, 142, 60, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Tennis Theme */
+[data-sport="tennis"] {
+  --sport-primary: #689F38;
+  --sport-secondary: #F57C00;
+  --sport-accent: #FFEB3B;
+  --sport-contrast: #000000;
+  --sport-light: rgba(104, 159, 56, 0.1);
+  --sport-dark: rgba(104, 159, 56, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Golf Theme */
+[data-sport="golf"] {
+  --sport-primary: #2E7D32;
+  --sport-secondary: #8D6E63;
+  --sport-accent: #FFD54F;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(46, 125, 50, 0.1);
+  --sport-dark: rgba(46, 125, 50, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Swimming Theme */
+[data-sport="swimming"] {
+  --sport-primary: #0288D1;
+  --sport-secondary: #00ACC1;
+  --sport-accent: #26C6DA;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(2, 136, 209, 0.1);
+  --sport-dark: rgba(2, 136, 209, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Track & Field Theme */
+[data-sport="track"] {
+  --sport-primary: #D32F2F;
+  --sport-secondary: #FBC02D;
+  --sport-accent: #FF7043;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(211, 47, 47, 0.1);
+  --sport-dark: rgba(211, 47, 47, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Cross Country Theme */
+[data-sport="cross_country"] {
+  --sport-primary: #795548;
+  --sport-secondary: #FF9800;
+  --sport-accent: #8BC34A;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(121, 85, 72, 0.1);
+  --sport-dark: rgba(121, 85, 72, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Wrestling Theme */
+[data-sport="wrestling"] {
+  --sport-primary: #5D4037;
+  --sport-secondary: #FF5722;
+  --sport-accent: #FFB74D;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(93, 64, 55, 0.1);
+  --sport-dark: rgba(93, 64, 55, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* Gymnastics Theme */
+[data-sport="gymnastics"] {
+  --sport-primary: #C2185B;
+  --sport-secondary: #9C27B0;
+  --sport-accent: #E1BEE7;
+  --sport-contrast: #FFFFFF;
+  --sport-light: rgba(194, 24, 91, 0.1);
+  --sport-dark: rgba(194, 24, 91, 0.9);
+  --gradient-sport: linear-gradient(135deg, var(--sport-primary) 0%, var(--sport-secondary) 100%);
+}
+
+/* ===========================================
+   BIG 12 TEAM-SPECIFIC THEME VARIANTS
+   =========================================== */
+
+/* Arizona Wildcats */
+[data-team="arizona"] {
+  --team-primary: #003366;
+  --team-secondary: #CC0033;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Arizona State Sun Devils */
+[data-team="arizona_state"] {
+  --team-primary: #8C1D40;
+  --team-secondary: #FFC627;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Baylor Bears */
+[data-team="baylor"] {
+  --team-primary: #003015;
+  --team-secondary: #FFB81C;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* BYU Cougars */
+[data-team="byu"] {
+  --team-primary: #002E5D;
+  --team-secondary: #FFFFFF;
+  --team-accent: #0062B8;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-accent) 100%);
+}
+
+/* Cincinnati Bearcats */
+[data-team="cincinnati"] {
+  --team-primary: #E00122;
+  --team-secondary: #000000;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Colorado Buffaloes */
+[data-team="colorado"] {
+  --team-primary: #CFB87C;
+  --team-secondary: #000000;
+  --team-accent: #FFFFFF;
+  --team-text: #000000;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Houston Cougars */
+[data-team="houston"] {
+  --team-primary: #C8102E;
+  --team-secondary: #FFFFFF;
+  --team-accent: #000000;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-accent) 100%);
+}
+
+/* Iowa State Cyclones */
+[data-team="iowa_state"] {
+  --team-primary: #C8102E;
+  --team-secondary: #F1BE48;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Kansas Jayhawks */
+[data-team="kansas"] {
+  --team-primary: #0051BA;
+  --team-secondary: #E8000D;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Kansas State Wildcats */
+[data-team="kansas_state"] {
+  --team-primary: #512888;
+  --team-secondary: #FFFFFF;
+  --team-accent: #D6D3D6;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-accent) 100%);
+}
+
+/* Oklahoma State Cowboys */
+[data-team="oklahoma_state"] {
+  --team-primary: #FF6600;
+  --team-secondary: #000000;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* TCU Horned Frogs */
+[data-team="tcu"] {
+  --team-primary: #4D1979;
+  --team-secondary: #A3A3A3;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Texas Tech Red Raiders */
+[data-team="texas_tech"] {
+  --team-primary: #CC0000;
+  --team-secondary: #000000;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* UCF Knights */
+[data-team="ucf"] {
+  --team-primary: #000000;
+  --team-secondary: #FFC904;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* Utah Utes */
+[data-team="utah"] {
+  --team-primary: #CC0000;
+  --team-secondary: #000000;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* West Virginia Mountaineers */
+[data-team="west_virginia"] {
+  --team-primary: #002855;
+  --team-secondary: #EAAA00;
+  --team-accent: #FFFFFF;
+  --team-text: #FFFFFF;
+  --gradient-team: linear-gradient(135deg, var(--team-primary) 0%, var(--team-secondary) 100%);
+}
+
+/* ===========================================
+   UTILITY CLASSES
+   =========================================== */
+
+/* Theme Transition Classes */
+.theme-transition {
+  transition: background-color var(--transition-normal),
+              color var(--transition-normal),
+              border-color var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+
+/* Glass Morphism Utilities */
+.glass-primary {
+  background: var(--glass-background-primary);
+  backdrop-filter: var(--glass-backdrop-filter);
+  border: 1px solid var(--glass-border-primary);
+}
+
+.glass-secondary {
+  background: var(--glass-background-secondary);
+  backdrop-filter: var(--glass-backdrop-filter);
+  border: 1px solid var(--ft-glass-border);
+}
+
+/* Sport Theme Utilities */
+.sport-gradient {
+  background: var(--gradient-sport);
+}
+
+.sport-text {
+  color: var(--sport-primary);
+}
+
+.sport-border {
+  border-color: var(--sport-primary);
+}
+
+/* Team Theme Utilities */
+.team-gradient {
+  background: var(--gradient-team);
+}
+
+.team-text {
+  color: var(--team-primary);
+}
+
+.team-border {
+  border-color: var(--team-primary);
+}
+
+/* Game Status Utilities */
+.game-home { color: var(--game-home); }
+.game-away { color: var(--game-away); }
+.game-neutral { color: var(--game-neutral); }
+.game-conflict { color: var(--game-conflict); }
+.game-optimal { color: var(--game-optimal); }
+.game-warning { color: var(--game-warning); }
+
+/* ===========================================
+   RESPONSIVE BREAKPOINTS
+   =========================================== */
+
+/* Mobile First Approach */
+@media (min-width: 640px) {
+  :root {
+    --font-size-sm: 0.9375rem;
+    --font-size-base: 1.0625rem;
+    --spacing-md: 1.25rem;
+    --spacing-lg: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  :root {
+    --font-size-lg: 1.1875rem;
+    --font-size-xl: 1.375rem;
+    --spacing-lg: 2.5rem;
+    --spacing-xl: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --font-size-2xl: 1.625rem;
+    --font-size-3xl: 2rem;
+    --spacing-xl: 4rem;
+    --spacing-2xl: 5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  :root {
+    --font-size-4xl: 2.5rem;
+    --font-size-5xl: 3.25rem;
+    --spacing-2xl: 6rem;
+    --spacing-3xl: 8rem;
+  }
+}
+
+/* ===========================================
+   ACCESSIBILITY ENHANCEMENTS
+   =========================================== */
+
+/* High Contrast Mode */
+[data-accessibility="high-contrast"] {
+  --flextime-text-primary: #FFFFFF;
+  --flextime-text-secondary: #E0E0E0;
+  --glass-border-primary: rgba(255, 255, 255, 0.5);
+  --sport-primary: #FFFFFF;
+  --team-primary: #FFFFFF;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-transition {
+    transition: none;
+  }
+  
+  [data-theme] * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus Indicators */
+[data-theme] *:focus-visible {
+  outline: 2px solid var(--flextime-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Print Styles */
+@media print {
+  [data-theme] {
+    --flextime-background: #FFFFFF;
+    --flextime-text-primary: #000000;
+    --flextime-text-secondary: #333333;
+  }
+  
+  .glass-primary,
+  .glass-secondary {
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    border: 1px solid #CCCCCC !important;
+  }
+}

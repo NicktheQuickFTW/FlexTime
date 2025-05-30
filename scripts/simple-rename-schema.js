@@ -3,7 +3,7 @@
  * 
  * This script:
  * 1. Renames the "institutions" table to "schools"
- * 2. Updates all references to "institution_id" to "school_id" in teams and venues tables
+ * 2. Updates all references to "school_id" to "school_id" in teams and venues tables
  * 3. Renames the "name" column in the teams table to "team"
  */
 
@@ -63,15 +63,15 @@ const main = async () => {
     // 1. Drop foreign key constraints
     console.log('Dropping foreign key constraints...');
     try {
-      await client.query('ALTER TABLE teams DROP CONSTRAINT IF EXISTS teams_institution_id_fkey');
-      console.log('Dropped teams_institution_id_fkey constraint');
+      await client.query('ALTER TABLE teams DROP CONSTRAINT IF EXISTS teams_school_id_fkey');
+      console.log('Dropped teams_school_id_fkey constraint');
     } catch (error) {
       console.log(`Warning: ${error.message}`);
     }
     
     try {
-      await client.query('ALTER TABLE venues DROP CONSTRAINT IF EXISTS venues_institution_id_fkey');
-      console.log('Dropped venues_institution_id_fkey constraint');
+      await client.query('ALTER TABLE venues DROP CONSTRAINT IF EXISTS venues_school_id_fkey');
+      console.log('Dropped venues_school_id_fkey constraint');
     } catch (error) {
       console.log(`Warning: ${error.message}`);
     }
@@ -85,18 +85,18 @@ const main = async () => {
       console.log(`Warning: ${error.message}`);
     }
     
-    // 3. Rename institution_id columns to school_id
-    console.log('Renaming institution_id columns to school_id...');
+    // 3. Rename school_id columns to school_id
+    console.log('Renaming school_id columns to school_id...');
     try {
-      await client.query('ALTER TABLE teams RENAME COLUMN institution_id TO school_id');
-      console.log('Renamed institution_id to school_id in teams table');
+      await client.query('ALTER TABLE teams RENAME COLUMN school_id TO school_id');
+      console.log('Renamed school_id to school_id in teams table');
     } catch (error) {
       console.log(`Warning: ${error.message}`);
     }
     
     try {
-      await client.query('ALTER TABLE venues RENAME COLUMN institution_id TO school_id');
-      console.log('Renamed institution_id to school_id in venues table');
+      await client.query('ALTER TABLE venues RENAME COLUMN school_id TO school_id');
+      console.log('Renamed school_id to school_id in venues table');
     } catch (error) {
       console.log(`Warning: ${error.message}`);
     }

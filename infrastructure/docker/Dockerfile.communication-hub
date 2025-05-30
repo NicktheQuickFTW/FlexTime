@@ -1,0 +1,80 @@
+# Communication Hub Service Dockerfile
+# Multi-stage build for optimal security and size
+
+# Stage 1: Build stage
+FROM node:18-alpine AS builder
+
+# Set working directory
+WORKDIR /app
+
+# Install build dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git
+
+# Copy package files
+COPY communication-hub-svc/package*.json ./
+
+# Install dependencies (including dev dependencies for building)
+RUN npm ci --only=production && npm cache clean --force
+
+# Stage 2: Runtime stage
+FROM node:18-alpine AS runtime
+
+# Install security updates and required packages
+RUN apk update && apk upgrade && \
+    apk add --no-cache \
+    dumb-init \
+    curl \
+    tzdata && \
+    rm -rf /var/cache/apk/*
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S flextime -u 1001 -G nodejs
+
+# Set working directory
+WORKDIR /app
+
+# Copy dependencies from builder stage
+COPY --from=builder --chown=flextime:nodejs /app/node_modules ./node_modules
+
+# Copy application code
+COPY --chown=flextime:nodejs communication-hub-svc/src ./src
+COPY --chown=flextime:nodejs communication-hub-svc/package*.json ./
+
+# Create logs directory
+RUN mkdir -p /app/logs && chown flextime:nodejs /app/logs
+
+# Set environment variables
+ENV NODE_ENV=production \
+    PORT=3001 \
+    LOG_LEVEL=info \
+    TZ=UTC
+
+# Security: Run as non-root user
+USER flextime
+
+# Expose port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:3001/health || exit 1
+
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Start the application
+CMD ["node", "src/index.js"]
+
+# Labels for metadata
+LABEL maintainer="FlexTime Development Team" \
+      version="1.0.0" \
+      description="Communication Hub Service for FlexTime Agent Microservices" \
+      org.opencontainers.image.title="FlexTime Communication Hub" \
+      org.opencontainers.image.description="Central communication hub for distributed agent communication" \
+      org.opencontainers.image.vendor="FlexTime" \
+      org.opencontainers.image.version="1.0.0"

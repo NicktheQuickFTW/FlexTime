@@ -1,0 +1,295 @@
+/* COMPASS Meter Component Styles */
+
+.ft-compass-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem;
+  background: var(--ft-glass-primary);
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-border-radius-lg);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--ft-shadow-lg);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.ft-compass-meter--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Size variants */
+.ft-compass-meter--sm {
+  padding: 0.75rem;
+  gap: 1rem;
+}
+
+.ft-compass-meter--md {
+  padding: 1rem;
+  gap: 1.5rem;
+}
+
+.ft-compass-meter--lg {
+  padding: 1.5rem;
+  gap: 2rem;
+}
+
+/* Container for the circular meter */
+.ft-compass-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* SVG circle styles */
+.ft-compass-svg {
+  transform: rotate(0deg);
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.3));
+}
+
+.ft-compass-bg-circle {
+  opacity: 0.3;
+}
+
+.ft-compass-progress-circle {
+  transition: stroke-dashoffset 1.5s ease-out, stroke 0.3s ease;
+  filter: drop-shadow(0 0 8px currentColor);
+}
+
+.ft-compass-glow-circle {
+  transition: stroke-dashoffset 1.5s ease-out, stroke 0.3s ease;
+  filter: blur(3px);
+}
+
+/* Content inside the circle */
+.ft-compass-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+}
+
+.ft-compass-score {
+  font-family: var(--ft-font-heading);
+  font-weight: 700;
+  color: var(--ft-text-primary);
+  line-height: 1;
+  text-shadow: 0 0 10px currentColor;
+  margin-bottom: 0.5rem;
+}
+
+.ft-compass-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.ft-compass-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ft-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.8;
+}
+
+.ft-compass-grade {
+  font-size: 0.625rem;
+  font-weight: 500;
+  color: var(--ft-cyber-cyan);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Breakdown section */
+.ft-compass-breakdown {
+  width: 100%;
+  max-width: 400px;
+  background: var(--ft-glass-secondary);
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-border-radius-md);
+  padding: 1rem;
+  backdrop-filter: blur(8px);
+}
+
+.ft-breakdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--ft-glass-border);
+}
+
+.ft-breakdown-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ft-text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ft-breakdown-total {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ft-cyber-cyan);
+  font-family: var(--ft-font-mono);
+}
+
+.ft-breakdown-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ft-breakdown-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ft-breakdown-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ft-breakdown-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--ft-text-secondary);
+  text-transform: capitalize;
+}
+
+.ft-breakdown-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ft-text-primary);
+  font-family: var(--ft-font-mono);
+}
+
+/* Progress bars for breakdown */
+.ft-breakdown-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--ft-glass-primary);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ft-breakdown-bar-fill {
+  height: 100%;
+  background: var(--ft-cyber-cyan);
+  border-radius: 2px;
+  position: relative;
+  transition: width 1.5s ease-out;
+}
+
+.ft-breakdown-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
+  animation: shimmer 2s infinite;
+}
+
+/* Hover effects */
+.ft-compass-meter:hover .ft-compass-svg {
+  filter: drop-shadow(0 0 15px rgba(0, 255, 255, 0.5));
+}
+
+.ft-breakdown-item:hover .ft-breakdown-label {
+  color: var(--ft-text-primary);
+}
+
+.ft-breakdown-item:hover .ft-breakdown-bar-fill {
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ft-compass-meter--lg {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+  
+  .ft-compass-breakdown {
+    max-width: 100%;
+  }
+  
+  .ft-breakdown-grid {
+    gap: 0.5rem;
+  }
+}
+
+/* Dark theme enhancements */
+@media (prefers-color-scheme: dark) {
+  .ft-compass-meter {
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .ft-compass-breakdown {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .ft-compass-meter {
+    border-width: 2px;
+  }
+  
+  .ft-compass-score {
+    text-shadow: none;
+    font-weight: 800;
+  }
+  
+  .ft-breakdown-bar {
+    height: 6px;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ft-compass-meter {
+    transition: opacity 0.3s ease;
+  }
+  
+  .ft-compass-progress-circle,
+  .ft-compass-glow-circle {
+    transition: none;
+  }
+  
+  .ft-breakdown-bar-fill {
+    transition: none;
+  }
+  
+  .ft-breakdown-bar-fill::after {
+    animation: none;
+  }
+}

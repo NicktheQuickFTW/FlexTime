@@ -1,0 +1,44 @@
+---
+# Environment Configuration
+environment: production
+app_user: flextime
+app_group: flextime
+app_home: /opt/flextime
+
+# Application Configuration
+app_port: 3000
+app_workers: 4
+app_log_level: info
+
+# Database Configuration
+db_host: flextime-db-01
+db_port: 5432
+db_name: flextime_production
+db_user: flextime_app
+db_backup_schedule: "0 2 * * *"
+db_backup_retention_days: 30
+
+# Redis Configuration
+redis_host: flextime-redis-01
+redis_port: 6379
+redis_maxmemory: 2gb
+redis_maxmemory_policy: allkeys-lru
+
+# Domain Configuration
+domain_name: flextime.app
+ssl_email: devops@flextime.app
+
+# Monitoring
+prometheus_port: 9090
+grafana_port: 3000
+alertmanager_port: 9093
+
+# Resource Limits
+max_upload_size: 100M
+request_timeout: 30s
+keepalive_timeout: 65
+
+# Feature Flags
+enable_debug: false
+enable_profiling: false
+enable_metrics: true

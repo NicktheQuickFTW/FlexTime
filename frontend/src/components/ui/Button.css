@@ -1,0 +1,262 @@
+/* FTButton Component Styles
+ * Complements the styled-components with additional CSS features
+ * Following FlexTime glassmorphic design system
+ */
+
+/* Keyframe animations for AI variant gradient */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Pulse animation for loading states */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.5), 0 0 10px rgba(0, 198, 255, 0.3);
+  }
+}
+
+/* Shimmer effect for interactive states */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Enhanced focus styles for accessibility */
+.ft-button:focus-visible {
+  outline: 2px solid #00c2ff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 194, 255, 0.2);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .ft-button {
+    border-width: 2px !important;
+  }
+  
+  .ft-button[data-variant="primary"] {
+    background: #0066cc !important;
+    border-color: #003d7a !important;
+  }
+  
+  .ft-button[data-variant="secondary"] {
+    background: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ft-button,
+  .ft-button::before,
+  .ft-button * {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .ft-button:hover:not(:disabled) {
+    transform: none !important;
+  }
+}
+
+/* Glass effect enhancements for different backdrop support */
+@supports (backdrop-filter: blur(10px)) {
+  .ft-button {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@supports not (backdrop-filter: blur(10px)) {
+  .ft-button[data-variant="secondary"] {
+    background-color: rgba(248, 250, 252, 0.95) !important;
+  }
+  
+  .ft-button[data-variant="ghost"] {
+    background-color: rgba(0, 102, 204, 0.05) !important;
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .ft-button {
+    min-height: 44px; /* iOS accessibility guidelines */
+  }
+  
+  .ft-button:hover {
+    transform: none !important;
+  }
+  
+  .ft-button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Print styles */
+@media print {
+  .ft-button {
+    background: transparent !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Dark theme specific enhancements */
+@media (prefers-color-scheme: dark) {
+  .ft-button[data-variant="secondary"] {
+    border-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(30, 30, 30, 0.8);
+  }
+  
+  .ft-button[data-variant="ghost"] {
+    border-color: rgba(0, 194, 255, 0.4);
+    color: #33cfff;
+  }
+  
+  .ft-button[data-variant="ghost"]:hover:not(:disabled) {
+    background-color: rgba(0, 194, 255, 0.1);
+  }
+}
+
+/* Component state classes for programmatic styling */
+.ft-button--loading {
+  pointer-events: none;
+  cursor: wait;
+}
+
+.ft-button--loading .ft-button-content {
+  opacity: 0.7;
+}
+
+.ft-button--small {
+  font-size: 14px;
+  padding: 8px 18px;
+  border-radius: 20px;
+  min-height: 32px;
+}
+
+.ft-button--medium {
+  font-size: 16px;
+  padding: 12px 24px;
+  border-radius: 25px;
+  min-height: 40px;
+}
+
+.ft-button--large {
+  font-size: 18px;
+  padding: 16px 32px;
+  border-radius: 30px;
+  min-height: 48px;
+}
+
+/* Icon button specific styles */
+.ft-button--icon-only {
+  aspect-ratio: 1;
+  padding: 0;
+  border-radius: 50%;
+  min-width: auto;
+}
+
+.ft-button--icon-only.ft-button--small {
+  width: 32px;
+  height: 32px;
+}
+
+.ft-button--icon-only.ft-button--medium {
+  width: 40px;
+  height: 40px;
+}
+
+.ft-button--icon-only.ft-button--large {
+  width: 48px;
+  height: 48px;
+}
+
+/* Gradient animation variants */
+.ft-button[data-variant="ai"] {
+  background: linear-gradient(135deg, #8C1D40, #B33D5E, #00c2ff);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.ft-button[data-variant="ai"]:hover:not(:disabled) {
+  animation-duration: 1.5s;
+}
+
+/* Success state for form submissions */
+.ft-button--success {
+  background: linear-gradient(135deg, #28A745, #34CE57) !important;
+  border-color: rgba(40, 167, 69, 0.3) !important;
+  color: #ffffff !important;
+}
+
+.ft-button--success::after {
+  content: '✓';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.8;
+}
+
+/* Error state for form validations */
+.ft-button--error {
+  background: linear-gradient(135deg, #F44336, #FF6B6B) !important;
+  border-color: rgba(244, 67, 54, 0.3) !important;
+  color: #ffffff !important;
+  animation: pulse-glow 2s ease infinite;
+}
+
+/* Utility classes for special use cases */
+.ft-button--full-width {
+  width: 100%;
+  justify-content: center;
+}
+
+.ft-button--no-elevation {
+  box-shadow: none !important;
+}
+
+.ft-button--no-elevation:hover:not(:disabled) {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Spinner container for loading states */
+.ft-button-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+.ft-button-spinner:only-child {
+  margin-right: 0;
+}
+
+/* Text content wrapper */
+.ft-button-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.3s ease;
+}

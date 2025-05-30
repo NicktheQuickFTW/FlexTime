@@ -2,7 +2,7 @@
  * Rename Primary Key Script
  * 
  * This script:
- * 1. Renames the "institution_id" column to "school_id" in the schools table
+ * 1. Renames the "school_id" column to "school_id" in the schools table
  * 2. Recreates the foreign key constraints in the teams and venues tables
  */
 
@@ -73,10 +73,10 @@ const main = async () => {
       console.log(`Dropped primary key constraint ${pkConstraintName}`);
     }
     
-    // Rename the institution_id column to school_id
-    console.log('Renaming institution_id column to school_id in schools table...');
-    await client.query('ALTER TABLE schools RENAME COLUMN institution_id TO school_id');
-    console.log('Renamed institution_id to school_id in schools table');
+    // Rename the school_id column to school_id
+    console.log('Renaming school_id column to school_id in schools table...');
+    await client.query('ALTER TABLE schools RENAME COLUMN school_id TO school_id');
+    console.log('Renamed school_id to school_id in schools table');
     
     // Add the primary key constraint back
     console.log('Adding primary key constraint...');

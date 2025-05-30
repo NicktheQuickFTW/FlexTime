@@ -1,0 +1,150 @@
+# Staging environment values for Flextime
+
+replicaCount:
+  backend: 2
+  frontend: 2
+  worker: 1
+
+image:
+  backend:
+    repository: ghcr.io/big12/flextime
+    pullPolicy: Always
+    tag: "staging-backend"
+  frontend:
+    repository: ghcr.io/big12/flextime
+    pullPolicy: Always
+    tag: "staging-frontend"
+  worker:
+    repository: ghcr.io/big12/flextime
+    pullPolicy: Always
+    tag: "staging-worker"
+
+resources:
+  backend:
+    limits:
+      cpu: 300m
+      memory: 384Mi
+    requests:
+      cpu: 150m
+      memory: 192Mi
+  frontend:
+    limits:
+      cpu: 150m
+      memory: 192Mi
+    requests:
+      cpu: 75m
+      memory: 96Mi
+  worker:
+    limits:
+      cpu: 750m
+      memory: 768Mi
+    requests:
+      cpu: 375m
+      memory: 384Mi
+
+autoscaling:
+  enabled: true
+  backend:
+    minReplicas: 2
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 70
+    targetMemoryUtilizationPercentage: 80
+  worker:
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 75
+    targetMemoryUtilizationPercentage: 85
+
+ingress:
+  enabled: true
+  className: "alb"
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-2017-01
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '15'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:ACCOUNT:certificate/STAGING-CERT-ID
+  hosts:
+    - host: staging.flextime.big12sports.com
+      paths:
+        - path: /api
+          pathType: Prefix
+          service: backend
+        - path: /
+          pathType: Prefix
+          service: frontend
+  tls:
+    - secretName: flextime-staging-tls
+      hosts:
+        - staging.flextime.big12sports.com
+
+env:
+  NODE_ENV: staging
+  LOG_LEVEL: info
+  CACHE_TTL: 300
+
+# External dependencies
+postgresql:
+  enabled: false  # Use external RDS instance
+
+redis:
+  enabled: false  # Use external ElastiCache
+
+# External service configurations
+externalServices:
+  database:
+    host: flextime-staging.cluster-xyz.us-east-1.rds.amazonaws.com
+    port: 5432
+    database: flextime_staging
+    username: flextime
+  redis:
+    host: flextime-staging.abc123.cache.amazonaws.com
+    port: 6379
+
+monitoring:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    namespace: monitoring
+    interval: 30s
+    scrapeTimeout: 10s
+
+networkPolicy:
+  enabled: true
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: ingress-nginx
+  egress:
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379
+
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
+# Security context
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  runAsUser: 1001
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1001
+  fsGroup: 2001

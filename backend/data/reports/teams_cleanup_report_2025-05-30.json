@@ -1,0 +1,1032 @@
+{
+  "timestamp": "2025-05-30T17:55:02.576Z",
+  "summary": {
+    "totalRemoved": 114,
+    "errorsCount": 0
+  },
+  "removedTeams": [
+    {
+      "team_id": 901,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Baseball"
+    },
+    {
+      "team_id": 701,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Baseball"
+    },
+    {
+      "team_id": 304,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 404,
+      "school": "Brigham Young University",
+      "simplified_name": "BYU",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 904,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 1104,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 1204,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 1404,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 504,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 604,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 704,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 804,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 1004,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 1504,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 1604,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Beach Volleyball"
+    },
+    {
+      "team_id": 207,
+      "school": "Arizona State University",
+      "simplified_name": "Arizona State",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 407,
+      "school": "Brigham Young University",
+      "simplified_name": "BYU",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 907,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 1107,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 1407,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 107,
+      "school": "University of Arizona",
+      "simplified_name": "Arizona",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 507,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 607,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 707,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 807,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 1007,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 1507,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 1607,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Equestrian"
+    },
+    {
+      "team_id": 311,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 1111,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 1211,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 1311,
+      "school": "Texas Christian University",
+      "simplified_name": "TCU",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 1411,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 511,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 611,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 711,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 811,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 1011,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Gymnastics"
+    },
+    {
+      "team_id": 312,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 412,
+      "school": "Brigham Young University",
+      "simplified_name": "BYU",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 912,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1112,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1212,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1312,
+      "school": "Texas Christian University",
+      "simplified_name": "TCU",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1412,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 112,
+      "school": "University of Arizona",
+      "simplified_name": "Arizona",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 512,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 812,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1012,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1512,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 1612,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Lacrosse"
+    },
+    {
+      "team_id": 505,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Men's Cross Country"
+    },
+    {
+      "team_id": 1505,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Men's Cross Country"
+    },
+    {
+      "team_id": 1605,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Men's Cross Country"
+    },
+    {
+      "team_id": 520,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Men's Indoor Track & Field"
+    },
+    {
+      "team_id": 1520,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Men's Indoor Track & Field"
+    },
+    {
+      "team_id": 1620,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Men's Indoor Track & Field"
+    },
+    {
+      "team_id": 522,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Men's Outdoor Track & Field"
+    },
+    {
+      "team_id": 1522,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Men's Outdoor Track & Field"
+    },
+    {
+      "team_id": 1622,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Men's Outdoor Track & Field"
+    },
+    {
+      "team_id": 316,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 916,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 1116,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 1216,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 1416,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 516,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 716,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 816,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 1016,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Men's Swimming & Diving"
+    },
+    {
+      "team_id": 918,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 1118,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 618,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 718,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 818,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 1018,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 1618,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Men's Tennis"
+    },
+    {
+      "team_id": 213,
+      "school": "Arizona State University",
+      "simplified_name": "Arizona State",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 313,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 413,
+      "school": "Brigham Young University",
+      "simplified_name": "BYU",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 913,
+      "school": "Iowa State University",
+      "simplified_name": "Iowa State",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 1213,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 1313,
+      "school": "Texas Christian University",
+      "simplified_name": "TCU",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 1413,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 113,
+      "school": "University of Arizona",
+      "simplified_name": "Arizona",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 613,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 713,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 813,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 1513,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Rowing"
+    },
+    {
+      "team_id": 1115,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Softball"
+    },
+    {
+      "team_id": 1315,
+      "school": "Texas Christian University",
+      "simplified_name": "TCU",
+      "sport": "Softball"
+    },
+    {
+      "team_id": 615,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Softball"
+    },
+    {
+      "team_id": 715,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Softball"
+    },
+    {
+      "team_id": 1615,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Softball"
+    },
+    {
+      "team_id": 1224,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Volleyball"
+    },
+    {
+      "team_id": 1510,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Women's Golf"
+    },
+    {
+      "team_id": 1610,
+      "school": "West Virginia University",
+      "simplified_name": "West Virginia",
+      "sport": "Women's Golf"
+    },
+    {
+      "team_id": 317,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Women's Swimming & Diving"
+    },
+    {
+      "team_id": 1117,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Women's Swimming & Diving"
+    },
+    {
+      "team_id": 1217,
+      "school": "Oklahoma State University",
+      "simplified_name": "Oklahoma State",
+      "sport": "Women's Swimming & Diving"
+    },
+    {
+      "team_id": 1417,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Women's Swimming & Diving"
+    },
+    {
+      "team_id": 517,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Women's Swimming & Diving"
+    },
+    {
+      "team_id": 717,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Women's Swimming & Diving"
+    },
+    {
+      "team_id": 325,
+      "school": "Baylor University",
+      "simplified_name": "Baylor",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 425,
+      "school": "Brigham Young University",
+      "simplified_name": "BYU",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 1125,
+      "school": "Kansas State University",
+      "simplified_name": "Kansas State",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 1325,
+      "school": "Texas Christian University",
+      "simplified_name": "TCU",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 1425,
+      "school": "Texas Tech University",
+      "simplified_name": "Texas Tech",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 125,
+      "school": "University of Arizona",
+      "simplified_name": "Arizona",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 525,
+      "school": "University of Central Florida",
+      "simplified_name": "UCF",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 625,
+      "school": "University of Cincinnati",
+      "simplified_name": "Cincinnati",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 725,
+      "school": "University of Colorado",
+      "simplified_name": "Colorado",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 825,
+      "school": "University of Houston",
+      "simplified_name": "Houston",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 1025,
+      "school": "University of Kansas",
+      "simplified_name": "Kansas",
+      "sport": "Wrestling"
+    },
+    {
+      "team_id": 1525,
+      "school": "University of Utah",
+      "simplified_name": "Utah",
+      "sport": "Wrestling"
+    }
+  ],
+  "errors": [],
+  "sportSponsorships": {
+    "Baseball": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Houston",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Beach Volleyball": [
+      "Arizona",
+      "Arizona State",
+      "TCU"
+    ],
+    "Equestrian": [
+      "Baylor",
+      "Oklahoma State",
+      "TCU"
+    ],
+    "Football": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Gymnastics": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Iowa State",
+      "Utah",
+      "West Virginia"
+    ],
+    "Lacrosse": [
+      "Arizona State",
+      "Cincinnati",
+      "Colorado"
+    ],
+    "Men's Basketball": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Men's Cross Country": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech"
+    ],
+    "Men's Golf": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Men's Indoor Track & Field": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech"
+    ],
+    "Men's Outdoor Track & Field": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech"
+    ],
+    "Men's Swimming & Diving": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Cincinnati",
+      "TCU",
+      "Utah",
+      "West Virginia"
+    ],
+    "Men's Tennis": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah"
+    ],
+    "Rowing": [
+      "Kansas",
+      "Kansas State",
+      "UCF",
+      "West Virginia"
+    ],
+    "Soccer": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Softball": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Oklahoma State",
+      "Texas Tech",
+      "UCF",
+      "Utah"
+    ],
+    "Volleyball": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Women's Basketball": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Women's Cross Country": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Women's Golf": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF"
+    ],
+    "Women's Indoor Track & Field": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Women's Outdoor Track & Field": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Women's Swimming & Diving": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Cincinnati",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "TCU",
+      "Utah",
+      "West Virginia"
+    ],
+    "Women's Tennis": [
+      "Arizona",
+      "Arizona State",
+      "BYU",
+      "Baylor",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ],
+    "Wrestling": [
+      "Arizona State",
+      "Iowa State",
+      "Oklahoma State",
+      "West Virginia"
+    ]
+  }
+}

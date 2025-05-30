@@ -91,7 +91,7 @@ const reorderInstitutions = async (client) => {
   
   // Get all institutions
   const { rows: allInstitutions } = await client.query(
-    'SELECT institution_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY name'
+    'SELECT school_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY name'
   );
   
   console.log(`Found ${allInstitutions.length} institutions to reorder`);
@@ -119,12 +119,12 @@ const reorderInstitutions = async (client) => {
   
   // Assign IDs 1-16 to Big 12 institutions
   for (let i = 0; i < big12.length; i++) {
-    idMapping.set(big12[i].institution_id, i + 1);
+    idMapping.set(big12[i].school_id, i + 1);
   }
   
   // Assign IDs 17+ to affiliate institutions
   for (let i = 0; i < affiliates.length; i++) {
-    idMapping.set(affiliates[i].institution_id, i + 17);
+    idMapping.set(affiliates[i].school_id, i + 17);
   }
   
   // Log the ID mappings
@@ -134,10 +134,10 @@ const reorderInstitutions = async (client) => {
   }
   
   // Get all team references to institutions
-  const { rows: teams } = await client.query('SELECT team_id, institution_id FROM teams');
+  const { rows: teams } = await client.query('SELECT team_id, school_id FROM teams');
   
   // Get all venue references to institutions
-  const { rows: venues } = await client.query('SELECT venue_id, institution_id FROM venues');
+  const { rows: venues } = await client.query('SELECT venue_id, school_id FROM venues');
   
   // Temporarily disable foreign key constraints
   await client.query('SET session_replication_role = replica');
@@ -149,7 +149,7 @@ const reorderInstitutions = async (client) => {
   // Create a new institutions table with the new IDs
   await client.query(`
     CREATE TABLE institutions_new (
-      institution_id SERIAL PRIMARY KEY,
+      school_id SERIAL PRIMARY KEY,
       name VARCHAR(100) UNIQUE,
       abbreviation VARCHAR(10),
       mascot VARCHAR(50),
@@ -169,15 +169,15 @@ const reorderInstitutions = async (client) => {
     
     await client.query(`
       INSERT INTO institutions_new (
-        institution_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
+        school_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       ) 
       SELECT 
         $1, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       FROM 
         institutions
       WHERE 
-        institution_id = $2
-    `, [newId, inst.institution_id]);
+        school_id = $2
+    `, [newId, inst.school_id]);
     
     console.log(`Inserted ${inst.name} with new ID ${newId}`);
   }
@@ -189,26 +189,26 @@ const reorderInstitutions = async (client) => {
     
     await client.query(`
       INSERT INTO institutions_new (
-        institution_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
+        school_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       ) 
       SELECT 
         $1, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       FROM 
         institutions
       WHERE 
-        institution_id = $2
-    `, [newId, inst.institution_id]);
+        school_id = $2
+    `, [newId, inst.school_id]);
     
     console.log(`Inserted ${inst.name} with new ID ${newId}`);
   }
   
   // Update teams to reference the new institution IDs
   for (const team of teams) {
-    const oldId = team.institution_id;
+    const oldId = team.school_id;
     const newId = idMapping.get(oldId);
     
     if (newId) {
-      await client.query('UPDATE teams SET institution_id = $1 WHERE team_id = $2', [newId, team.team_id]);
+      await client.query('UPDATE teams SET school_id = $1 WHERE team_id = $2', [newId, team.team_id]);
       console.log(`Updated team ID ${team.team_id} to reference institution ID ${newId}`);
     } else {
       console.log(`Warning: No mapping found for institution ID ${oldId} referenced by team ID ${team.team_id}`);
@@ -217,11 +217,11 @@ const reorderInstitutions = async (client) => {
   
   // Update venues to reference the new institution IDs
   for (const venue of venues) {
-    const oldId = venue.institution_id;
+    const oldId = venue.school_id;
     const newId = idMapping.get(oldId);
     
     if (newId) {
-      await client.query('UPDATE venues SET institution_id = $1 WHERE venue_id = $2', [newId, venue.venue_id]);
+      await client.query('UPDATE venues SET school_id = $1 WHERE venue_id = $2', [newId, venue.venue_id]);
       console.log(`Updated venue ID ${venue.venue_id} to reference institution ID ${newId}`);
     } else {
       console.log(`Warning: No mapping found for institution ID ${oldId} referenced by venue ID ${venue.venue_id}`);
@@ -256,18 +256,18 @@ const main = async () => {
     
     // Show the final list of institutions
     const { rows: finalInstitutions } = await client.query(
-      'SELECT institution_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY institution_id'
+      'SELECT school_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY school_id'
     );
     
     console.log('\nFinal list of institutions:');
     console.log('\nBig 12 Institutions (IDs 1-16):');
-    finalInstitutions.filter(inst => inst.institution_id <= 16).forEach(inst => {
-      console.log(`ID: ${inst.institution_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
+    finalInstitutions.filter(inst => inst.school_id <= 16).forEach(inst => {
+      console.log(`ID: ${inst.school_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
     });
     
     console.log('\nAffiliate Institutions (IDs 17+):');
-    finalInstitutions.filter(inst => inst.institution_id > 16).forEach(inst => {
-      console.log(`ID: ${inst.institution_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
+    finalInstitutions.filter(inst => inst.school_id > 16).forEach(inst => {
+      console.log(`ID: ${inst.school_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
     });
     
   } catch (error) {

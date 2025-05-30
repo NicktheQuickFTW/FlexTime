@@ -286,7 +286,7 @@ async function updateTeamsComprehensive() {
     
     // Get all institutions
     const institutionsResult = await client.query(`
-      SELECT institution_id, name FROM institutions;
+      SELECT school_id, name FROM institutions;
     `);
     
     const institutions = institutionsResult.rows;
@@ -295,7 +295,7 @@ async function updateTeamsComprehensive() {
     // Create a map of institution names to IDs
     const institutionMap = {};
     institutions.forEach(inst => {
-      institutionMap[inst.name] = inst.institution_id;
+      institutionMap[inst.name] = inst.school_id;
     });
     
     // Create a map of sport abbreviations to IDs
@@ -306,7 +306,7 @@ async function updateTeamsComprehensive() {
     
     // Get current teams
     const teamsResult = await client.query(`
-      SELECT team_id, institution_id, sport_id FROM teams;
+      SELECT team_id, school_id, sport_id FROM teams;
     `);
     
     const existingTeams = teamsResult.rows;
@@ -340,18 +340,18 @@ async function updateTeamsComprehensive() {
           continue; // Skip schools we don't have in our database
         }
         
-        const institutionId = institutionMap[institutionName];
-        if (!institutionId) {
+        const schoolId = institutionMap[institutionName];
+        if (!schoolId) {
           logger.warn(`Institution ${institutionName} not found in database`);
           continue;
         }
         
         // Add this combination to valid set
-        validTeamCombinations.add(`${institutionId}-${sportId}`);
+        validTeamCombinations.add(`${schoolId}-${sportId}`);
         
         // Check if team exists
         const teamExists = existingTeams.some(team => 
-          team.institution_id === institutionId && team.sport_id === sportId
+          team.school_id === schoolId && team.sport_id === sportId
         );
         
         if (!teamExists) {
@@ -380,7 +380,7 @@ async function updateTeamsComprehensive() {
           // Insert team
           const insertTeamResult = await client.query(`
             INSERT INTO teams (
-              name, institution_id, sport_id, season, time_zone,
+              name, school_id, sport_id, season, time_zone,
               travel_constraints, rival_teams, scheduling_priority, 
               blackout_dates, media_contracts, code,
               created_at, updated_at
@@ -392,7 +392,7 @@ async function updateTeamsComprehensive() {
             RETURNING team_id;
           `, [
             teamData.name, 
-            institutionId, 
+            schoolId, 
             sportId,
             teamData.season,
             teamData.timeZone,
@@ -415,7 +415,7 @@ async function updateTeamsComprehensive() {
     // Delete teams that don't match the comprehensive data
     let deletedCount = 0;
     for (const team of existingTeams) {
-      const combinationKey = `${team.institution_id}-${team.sport_id}`;
+      const combinationKey = `${team.school_id}-${team.sport_id}`;
       if (!validTeamCombinations.has(combinationKey)) {
         await client.query(`
           DELETE FROM teams WHERE team_id = $1;
@@ -437,7 +437,7 @@ async function updateTeamsComprehensive() {
     const teamsByInstitutionResult = await client.query(`
       SELECT i.name, COUNT(t.team_id) 
       FROM institutions i 
-      JOIN teams t ON i.institution_id = t.institution_id 
+      JOIN teams t ON i.school_id = t.school_id 
       GROUP BY i.name 
       ORDER BY COUNT(t.team_id) DESC;
     `);

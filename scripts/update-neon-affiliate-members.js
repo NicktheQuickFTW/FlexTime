@@ -109,10 +109,10 @@ async function updateAffiliateMembers() {
     for (const member of affiliateMembers) {
       // Check if institution already exists
       const institutionResult = await client.query(`
-        SELECT institution_id FROM institutions WHERE name = $1 LIMIT 1;
+        SELECT school_id FROM institutions WHERE name = $1 LIMIT 1;
       `, [member.name]);
       
-      let institutionId;
+      let schoolId;
       
       if (institutionResult.rows.length === 0) {
         // Create new institution
@@ -123,7 +123,7 @@ async function updateAffiliateMembers() {
             created_at, updated_at
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true, NOW(), NOW())
-          RETURNING institution_id;
+          RETURNING school_id;
         `, [
           member.name,
           member.abbreviation,
@@ -136,16 +136,16 @@ async function updateAffiliateMembers() {
           member.longitude
         ]);
         
-        institutionId = insertInstitutionResult.rows[0].institution_id;
-        logger.info(`Created affiliate institution: ${member.name} (ID: ${institutionId})`);
+        schoolId = insertInstitutionResult.rows[0].school_id;
+        logger.info(`Created affiliate institution: ${member.name} (ID: ${schoolId})`);
       } else {
-        institutionId = institutionResult.rows[0].institution_id;
-        logger.info(`Institution ${member.name} already exists (ID: ${institutionId})`);
+        schoolId = institutionResult.rows[0].school_id;
+        logger.info(`Institution ${member.name} already exists (ID: ${schoolId})`);
         
         // Update the institution to mark as affiliate
         await client.query(`
-          UPDATE institutions SET is_affiliate = true WHERE institution_id = $1;
-        `, [institutionId]);
+          UPDATE institutions SET is_affiliate = true WHERE school_id = $1;
+        `, [schoolId]);
       }
       
       // Create teams for each sport
@@ -160,8 +160,8 @@ async function updateAffiliateMembers() {
         // Check if team already exists
         const teamResult = await client.query(`
           SELECT team_id FROM teams 
-          WHERE institution_id = $1 AND sport_id = $2 LIMIT 1;
-        `, [institutionId, sportId]);
+          WHERE school_id = $1 AND sport_id = $2 LIMIT 1;
+        `, [schoolId, sportId]);
         
         if (teamResult.rows.length === 0) {
           // Create new team
@@ -174,7 +174,7 @@ async function updateAffiliateMembers() {
           // Insert team
           const insertTeamResult = await client.query(`
             INSERT INTO teams (
-              name, institution_id, sport_id, season, time_zone,
+              name, school_id, sport_id, season, time_zone,
               travel_constraints, rival_teams, scheduling_priority, 
               blackout_dates, media_contracts, code, is_affiliate,
               created_at, updated_at
@@ -186,7 +186,7 @@ async function updateAffiliateMembers() {
             RETURNING team_id;
           `, [
             teamData.name, 
-            institutionId, 
+            schoolId, 
             sportId,
             teamData.season,
             teamData.timeZone,
@@ -214,13 +214,13 @@ async function updateAffiliateMembers() {
     }
     
     // Add note about Utah dropping beach volleyball after spring 2025
-    // First, find Utah's institution_id
+    // First, find Utah's school_id
     const utahResult = await client.query(`
-      SELECT institution_id FROM institutions WHERE name = 'Utah' LIMIT 1;
+      SELECT school_id FROM institutions WHERE name = 'Utah' LIMIT 1;
     `);
     
     if (utahResult.rows.length > 0) {
-      const utahId = utahResult.rows[0].institution_id;
+      const utahId = utahResult.rows[0].school_id;
       
       // Find Beach Volleyball sport_id
       const bvbResult = await client.query(`
@@ -233,7 +233,7 @@ async function updateAffiliateMembers() {
         // Find Utah's Beach Volleyball team
         const teamResult = await client.query(`
           SELECT team_id FROM teams 
-          WHERE institution_id = $1 AND sport_id = $2 LIMIT 1;
+          WHERE school_id = $1 AND sport_id = $2 LIMIT 1;
         `, [utahId, bvbId]);
         
         if (teamResult.rows.length > 0) {

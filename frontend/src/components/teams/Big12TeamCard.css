@@ -1,0 +1,290 @@
+/* Big 12 Team Card Styles */
+
+/* Base Team Card */
+.ft-team-card {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--team-primary-rgb), 0.1) 0%,
+    var(--ft-glass-primary) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid rgba(var(--team-primary-rgb), 0.3);
+  border-radius: var(--ft-radius-xl);
+  padding: var(--ft-space-4);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ft-team-card-clickable {
+  cursor: pointer;
+}
+
+.ft-team-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--team-primary-rgb), 0.15) 0%,
+    var(--ft-glass-secondary) 100%
+  );
+  border-color: rgba(var(--team-primary-rgb), 0.5);
+  box-shadow: 
+    var(--ft-shadow-card),
+    0 0 20px rgba(var(--team-primary-rgb), 0.2);
+}
+
+.ft-team-card-selected {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--team-primary-rgb), 0.2) 0%,
+    var(--ft-glass-secondary) 100%
+  );
+  border-color: var(--team-primary);
+  box-shadow: 
+    var(--ft-shadow-float),
+    0 0 0 2px rgba(var(--team-primary-rgb), 0.3);
+}
+
+/* Team Card Header */
+.ft-team-card-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-4);
+  margin-bottom: var(--ft-space-3);
+}
+
+.ft-team-logo-container {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ft-glass-primary);
+  border-radius: var(--ft-radius-lg);
+  padding: var(--ft-space-2);
+}
+
+.ft-team-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.ft-team-info {
+  flex: 1;
+}
+
+.ft-team-name {
+  font-size: var(--ft-scale-xl);
+  font-weight: 600;
+  color: var(--ft-crystal-white);
+  margin: 0;
+  font-family: var(--ft-font-hero);
+}
+
+.ft-team-mascot {
+  font-size: var(--ft-scale-base);
+  color: var(--ft-silver-mist);
+  margin: 0;
+  margin-top: var(--ft-space-1);
+}
+
+/* Team Details (Detailed Variant) */
+.ft-team-details {
+  margin-top: var(--ft-space-4);
+  padding-top: var(--ft-space-4);
+  border-top: 1px solid var(--ft-glass-border);
+}
+
+.ft-team-location {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: var(--ft-space-3);
+}
+
+.ft-detail-label {
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-silver-mist);
+  font-weight: 500;
+}
+
+.ft-detail-value {
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-crystal-white);
+}
+
+.ft-team-venues {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-2);
+}
+
+.ft-venue-item {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-2);
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-silver-mist);
+}
+
+.ft-venue-icon {
+  font-size: var(--ft-scale-base);
+}
+
+.ft-venue-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Color Bar */
+.ft-team-color-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 0 0 var(--ft-radius-xl) var(--ft-radius-xl);
+}
+
+.ft-color-primary,
+.ft-color-secondary,
+.ft-color-accent {
+  flex: 1;
+  transition: transform 0.3s ease;
+}
+
+.ft-color-primary {
+  background: var(--team-primary);
+}
+
+.ft-color-secondary {
+  background: var(--team-secondary);
+}
+
+.ft-color-accent {
+  background: var(--team-accent);
+}
+
+.ft-team-card:hover .ft-team-color-bar > * {
+  transform: scaleY(2);
+}
+
+/* Compact Variant */
+.ft-team-card-compact {
+  padding: var(--ft-space-3);
+}
+
+.ft-team-card-compact .ft-team-card-header {
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.ft-team-card-compact .ft-team-logo-container {
+  width: 48px;
+  height: 48px;
+}
+
+/* Team Grid */
+.ft-team-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns, 4), 1fr);
+  gap: var(--ft-space-4);
+  width: 100%;
+}
+
+/* Team-Specific Styling Overrides */
+.ft-team-kansas {
+  --team-glow: rgba(0, 81, 186, 0.3);
+}
+
+.ft-team-kansas_state {
+  --team-glow: rgba(81, 40, 136, 0.3);
+}
+
+.ft-team-texas_tech {
+  --team-glow: rgba(204, 0, 0, 0.3);
+}
+
+.ft-team-oklahoma_state {
+  --team-glow: rgba(255, 102, 0, 0.3);
+}
+
+/* Light Theme Adjustments */
+[data-theme="light"] .ft-team-card {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--team-primary-rgb), 0.05) 0%,
+    rgba(255, 255, 255, 0.9) 100%
+  );
+}
+
+[data-theme="light"] .ft-team-logo-container {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .ft-team-name {
+  color: var(--ft-space-navy);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .ft-team-grid {
+    --grid-columns: 3 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ft-team-grid {
+    --grid-columns: 2 !important;
+    gap: var(--ft-space-3);
+  }
+  
+  .ft-team-card {
+    padding: var(--ft-space-3);
+  }
+  
+  .ft-team-logo-container {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .ft-team-name {
+    font-size: var(--ft-scale-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-team-grid {
+    --grid-columns: 1 !important;
+  }
+}
+
+/* Loading State */
+.ft-team-card.ft-loading {
+  animation: ft-shimmer 1.5s ease-in-out infinite;
+  background: linear-gradient(
+    90deg,
+    var(--ft-glass-primary) 0px,
+    rgba(255, 255, 255, 0.08) 40px,
+    var(--ft-glass-primary) 80px
+  );
+  background-size: 200px 100%;
+}
+
+/* Animation */
+@keyframes ft-team-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--team-glow, rgba(var(--team-primary-rgb), 0.3));
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(var(--team-primary-rgb), 0);
+  }
+}
+
+.ft-team-card-selected {
+  animation: ft-team-pulse 2s ease-in-out infinite;
+}

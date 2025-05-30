@@ -6,7 +6,7 @@
  */
 
 const logger = require('../../utils/logger');
-const AdvancedSchedulingService = require('../../services/advanced_scheduling_service');
+const FTBuilderEngine = require('../../services/FT_Builder_Engine');
 
 // Travel Optimization Agents (specialized sub-agents)
 const TransportModeOptimizationAgent = require('../specialized/travel_optimization/transport_mode_optimization_agent');
@@ -152,6 +152,79 @@ class AgentSystem {
       logger.error(`Failed to store experience for agent ${agentId}: ${error.message}`);
       return false;
     }
+  }
+  
+  /**
+   * Register an optimizer with the system
+   * 
+   * @param {string} optimizerName - Name of the optimizer
+   * @param {Object} optimizer - Optimizer instance
+   * @returns {boolean} - Whether registration was successful
+   */
+  registerOptimizer(optimizerName, optimizer) {
+    if (!this.optimizers) {
+      this.optimizers = new Map();
+    }
+    
+    if (this.optimizers.has(optimizerName)) {
+      logger.warn(`Optimizer with name ${optimizerName} is already registered`);
+      return false;
+    }
+    
+    this.optimizers.set(optimizerName, optimizer);
+    logger.info(`Optimizer ${optimizerName} registered with the system`);
+    return true;
+  }
+  
+  /**
+   * Register a constraint evaluator with the system
+   * 
+   * @param {Object} evaluator - Constraint evaluator instance
+   * @returns {boolean} - Whether registration was successful
+   */
+  registerConstraintEvaluator(evaluator) {
+    if (!this.constraintEvaluators) {
+      this.constraintEvaluators = new Map();
+    }
+    
+    const evaluatorName = evaluator.name || 'default_evaluator';
+    this.constraintEvaluators.set(evaluatorName, evaluator);
+    logger.info(`Constraint evaluator ${evaluatorName} registered with the system`);
+    return true;
+  }
+  
+  /**
+   * Register a sport-specific optimizer
+   * 
+   * @param {string} sport - Sport name
+   * @param {Object} optimizer - Sport optimizer instance
+   * @returns {boolean} - Whether registration was successful
+   */
+  registerSportOptimizer(sport, optimizer) {
+    if (!this.sportOptimizers) {
+      this.sportOptimizers = new Map();
+    }
+    
+    this.sportOptimizers.set(sport, optimizer);
+    logger.info(`Sport optimizer for ${sport} registered with the system`);
+    return true;
+  }
+  
+  /**
+   * Register an agent sub-system
+   * 
+   * @param {string} systemName - Name of the agent system
+   * @param {Object} agentSystem - Agent system instance
+   * @returns {boolean} - Whether registration was successful
+   */
+  registerAgentSystem(systemName, agentSystem) {
+    if (!this.agentSystems) {
+      this.agentSystems = new Map();
+    }
+    
+    this.agentSystems.set(systemName, agentSystem);
+    logger.info(`Agent system ${systemName} registered with the system`);
+    return true;
   }
   
   /**

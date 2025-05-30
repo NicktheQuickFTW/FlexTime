@@ -603,8 +603,8 @@ app.get('/api/schedules/:scheduleId/games', async (req, res) => {
       FROM games g
       JOIN teams ht ON g.home_team_id = ht.team_id
       JOIN teams at ON g.away_team_id = at.team_id
-      JOIN institutions hi ON ht.institution_id = hi.institution_id
-      JOIN institutions ai ON at.institution_id = ai.institution_id
+      JOIN institutions hi ON ht.school_id = hi.school_id
+      JOIN institutions ai ON at.school_id = ai.school_id
       LEFT JOIN venues v ON g.venue_id = v.venue_id
       WHERE g.schedule_id = $1
       ORDER BY g.game_date, g.start_time

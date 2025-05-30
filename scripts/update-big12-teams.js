@@ -303,7 +303,7 @@ async function updateBig12Teams() {
     
     // Reset sequences for institutions and teams
     await client.query(`
-      SELECT setval('${currentUser}.institutions_institution_id_seq', 1, false);
+      SELECT setval('${currentUser}.institutions_school_id_seq', 1, false);
       SELECT setval('${currentUser}.teams_team_id_seq', 1, false);
       SELECT setval('${currentUser}.venues_venue_id_seq', 1, false);
     `);
@@ -377,20 +377,20 @@ async function updateBig12Teams() {
       }
       
       const institutionResult = await client.query(`
-        INSERT INTO ${currentUser}.institutions (institution_id, name, short_name, code)
+        INSERT INTO ${currentUser}.institutions (school_id, name, short_name, code)
         VALUES ($1, $2, $3, $4)
-        RETURNING institution_id;
+        RETURNING school_id;
       `, [teamData.id, teamData.name, teamData.nickname, institutionCode]);
       
-      const institutionId = institutionResult.rows[0].institution_id;
-      logger.info(`Created institution: ${teamData.name} (ID: ${institutionId})`);
+      const schoolId = institutionResult.rows[0].school_id;
+      logger.info(`Created institution: ${teamData.name} (ID: ${schoolId})`);
       
       // Create team with specific ID
       const teamResult = await client.query(`
-        INSERT INTO ${currentUser}.teams (team_id, name, mascot, institution_id, sport_id, championship_id)
+        INSERT INTO ${currentUser}.teams (team_id, name, mascot, school_id, sport_id, championship_id)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING team_id;
-      `, [teamData.id, teamData.name, teamData.nickname, institutionId, basketballSportId, championshipId]);
+      `, [teamData.id, teamData.name, teamData.nickname, schoolId, basketballSportId, championshipId]);
       
       const teamId = teamResult.rows[0].team_id;
       logger.info(`Created team: ${teamData.name} ${teamData.nickname} (ID: ${teamId})`);

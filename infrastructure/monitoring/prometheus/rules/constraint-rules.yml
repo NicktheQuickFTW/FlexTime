@@ -1,0 +1,150 @@
+groups:
+  - name: constraint_monitoring
+    interval: 30s
+    rules:
+      # Constraint violation alerts
+      - alert: HighConstraintViolationRate
+        expr: rate(flextime_constraint_violations_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+          component: scheduler
+        annotations:
+          summary: "High constraint violation rate detected"
+          description: "Constraint violations are occurring at {{ $value }} per second (threshold: 0.1/s)"
+
+      - alert: CriticalConstraintViolation
+        expr: flextime_critical_constraint_violations_total > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: scheduler
+        annotations:
+          summary: "Critical constraint violation detected"
+          description: "{{ $value }} critical constraint violations detected. Immediate action required."
+
+      # Scheduling performance alerts
+      - alert: SlowScheduleGeneration
+        expr: histogram_quantile(0.95, rate(flextime_schedule_generation_duration_seconds_bucket[5m])) > 30
+        for: 10m
+        labels:
+          severity: warning
+          component: scheduler
+        annotations:
+          summary: "Schedule generation is slow"
+          description: "95th percentile schedule generation time is {{ $value }}s (threshold: 30s)"
+
+      - alert: ScheduleGenerationFailure
+        expr: rate(flextime_schedule_generation_failures_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: critical
+          component: scheduler
+        annotations:
+          summary: "High schedule generation failure rate"
+          description: "Schedule generation failing at {{ $value }} per second"
+
+      # Travel optimization alerts
+      - alert: ExcessiveTravelDistance
+        expr: flextime_schedule_total_travel_distance_miles > 50000
+        for: 15m
+        labels:
+          severity: warning
+          component: travel_optimizer
+        annotations:
+          summary: "Excessive travel distance in schedule"
+          description: "Total travel distance is {{ $value }} miles (threshold: 50,000 miles)"
+
+      - alert: UnbalancedTravelLoad
+        expr: stddev(flextime_team_travel_distance_miles) / avg(flextime_team_travel_distance_miles) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+          component: travel_optimizer
+        annotations:
+          summary: "Unbalanced travel load between teams"
+          description: "Travel distance standard deviation is {{ $value }}% of average"
+
+      # Venue constraint alerts
+      - alert: VenueDoubleBooking
+        expr: flextime_venue_double_bookings_total > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: venue_manager
+        annotations:
+          summary: "Venue double booking detected"
+          description: "{{ $value }} venue double bookings detected"
+
+      - alert: VenueCapacityExceeded
+        expr: flextime_venue_capacity_violations_total > 0
+        for: 5m
+        labels:
+          severity: warning
+          component: venue_manager
+        annotations:
+          summary: "Venue capacity exceeded"
+          description: "{{ $value }} games scheduled in venues with insufficient capacity"
+
+      # Date constraint alerts
+      - alert: ChampionshipDateConflict
+        expr: flextime_championship_date_conflicts_total > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: date_manager
+        annotations:
+          summary: "Championship date conflict detected"
+          description: "{{ $value }} conflicts with championship dates detected"
+
+      - alert: BlackoutDateViolation
+        expr: flextime_blackout_date_violations_total > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: date_manager
+        annotations:
+          summary: "Blackout date violation detected"
+          description: "{{ $value }} games scheduled during blackout periods"
+
+      # Team constraint alerts  
+      - alert: BackToBackGameViolation
+        expr: flextime_back_to_back_violations_total > 0
+        for: 5m
+        labels:
+          severity: warning
+          component: team_scheduler
+        annotations:
+          summary: "Back-to-back game violations"
+          description: "{{ $value }} teams have back-to-back games scheduled"
+
+      - alert: RestPeriodViolation
+        expr: flextime_rest_period_violations_total > 0
+        for: 5m
+        labels:
+          severity: warning
+          component: team_scheduler
+        annotations:
+          summary: "Insufficient rest period between games"
+          description: "{{ $value }} violations of minimum rest period requirements"
+
+      # Conference constraint alerts
+      - alert: ConferenceGameImbalance
+        expr: abs(flextime_conference_game_balance - 1) > 0.1
+        for: 15m
+        labels:
+          severity: warning
+          component: conference_scheduler
+        annotations:
+          summary: "Conference game imbalance detected"
+          description: "Conference game balance ratio is {{ $value }} (expected: 1.0 ± 0.1)"
+
+      - alert: DivisionPlayRequirementNotMet
+        expr: flextime_division_play_completion_ratio < 0.95
+        for: 30m
+        labels:
+          severity: critical
+          component: conference_scheduler
+        annotations:
+          summary: "Division play requirements not met"
+          description: "Only {{ $value }}% of required division games scheduled (minimum: 95%)"

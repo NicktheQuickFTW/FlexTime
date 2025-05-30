@@ -1,0 +1,35 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0e17;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#060a10;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00bfff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="128" height="128" rx="12.8" fill="url(#bg)"/>
+  
+  <!-- Border -->
+  <rect x="2" y="2" width="124" height="124" rx="10.24" 
+        fill="none" stroke="rgba(0, 191, 255, 0.3)" stroke-width="2"/>
+  
+  <!-- FT Monogram -->
+  <g transform="translate(25.6, 38.4)">
+    <!-- F -->
+    <rect x="0" y="0" width="10.24" height="51.2" fill="url(#accent)"/>
+    <rect x="0" y="0" width="25.6" height="7.68" fill="url(#accent)"/>
+    <rect x="0" y="21.76" width="19.2" height="7.68" fill="url(#accent)"/>
+    
+    <!-- T -->
+    <rect x="32" y="0" width="38.4" height="7.68" fill="url(#accent)"/>
+    <rect x="46.08" y="0" width="10.24" height="51.2" fill="url(#accent)"/>
+  </g>
+  
+  <!-- Glow effect -->
+  <circle cx="64" cy="64" r="51.2" 
+          fill="none" stroke="rgba(0, 191, 255, 0.2)" stroke-width="2" opacity="0.6"/>
+</svg>

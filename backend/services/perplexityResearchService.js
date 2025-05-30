@@ -12,6 +12,11 @@ class PerplexityResearchService {
     this.model = 'llama-3.1-sonar-large-128k-online'; // Best model for deep research with web access
   }
 
+  // Alias for backward compatibility
+  async search(query, options = {}) {
+    return this.deepResearch(query, options);
+  }
+
   async deepResearch(query, options = {}) {
     const {
       maxTokens = 4000,
@@ -29,7 +34,7 @@ class PerplexityResearchService {
           messages: [
             {
               role: 'system',
-              content: `You are a comprehensive sports analytics researcher specializing in college basketball. 
+              content: `You are a comprehensive sports analytics researcher specializing in college sports. 
               
               RESEARCH REQUIREMENTS:
               - Conduct deep, multi-source research using current and historical data
@@ -46,6 +51,8 @@ class PerplexityResearchService {
               - 247Sports, Rivals for recruiting data
               - NCAA official statistics and records
               - Local sports media for detailed coverage
+              - X (Twitter) for real-time updates on certain sports (wrestling, tennis, soccer)
+              - Sport-specific sources (TopDrawerSoccer, VolleyballMag, etc.)
               
               OUTPUT FORMAT:
               - Provide detailed, structured information
@@ -474,8 +481,10 @@ class PerplexityResearchService {
     });
   }
 
-  async researchSummer2025TransferPortal(teamName) {
-    const query = `Research SUMMER 2025 TRANSFER PORTAL activity for ${teamName} football program:
+  async researchTransferPortalSummer2025(teamName, sport = 'football') {
+    // Handle sport naming for display
+    const sportDisplay = sport.replace(/_/g, ' ').replace(/mens/g, "men's").replace(/womens/g, "women's");
+    const query = `Research SUMMER 2025 TRANSFER PORTAL activity for ${teamName} ${sportDisplay} program:
 
     SUMMER 2025 TRANSFER PORTAL FOCUS:
     1. Key Transfers IN (Spring/Summer 2025):
@@ -517,8 +526,10 @@ class PerplexityResearchService {
     });
   }
 
-  async research2025RecruitingUpdate(teamName) {
-    const query = `Research current 2025-26 RECRUITING STATUS for ${teamName} football program:
+  async researchRecruitingSummer2025(teamName, sport = 'football') {
+    // Handle sport naming for display
+    const sportDisplay = sport.replace(/_/g, ' ').replace(/mens/g, "men's").replace(/womens/g, "women's");
+    const query = `Research current 2025-26 RECRUITING STATUS for ${teamName} ${sportDisplay} program:
 
     2025 RECRUITING CLASS ANALYSIS:
     1. Current 2025 Commits:
@@ -1117,6 +1128,22 @@ class PerplexityResearchService {
   }
 
   // Sport configuration method for unified pipeline assessment
+  // Validate sport name
+  validateSport(sport) {
+    const validSports = [
+      'football', 'basketball', 'men\'s basketball', 'women\'s basketball',
+      'baseball', 'softball', 'volleyball', 'women\'s volleyball',
+      'soccer', 'women\'s soccer', 'tennis', 'men\'s tennis', 'women\'s tennis',
+      'wrestling', 'gymnastics', 'women\'s gymnastics', 'lacrosse',
+      'swimming & diving', 'men\'s swimming & diving', 'women\'s swimming & diving',
+      'golf', 'men\'s golf', 'women\'s golf',
+      'track & field', 'men\'s track & field', 'women\'s track & field',
+      'cross country', 'men\'s cross country', 'women\'s cross country'
+    ];
+    
+    return validSports.includes(sport.toLowerCase());
+  }
+
   getSportConfiguration(sport, gender = null) {
     const configs = {
       'football': {

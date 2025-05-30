@@ -8,7 +8,7 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const Institution = sequelize.define('Institution', {
-    institution_id: {
+    school_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -78,7 +78,7 @@ module.exports = (sequelize) => {
   Institution.associate = (models) => {
     // An Institution can have many Teams
     Institution.hasMany(models.Team, {
-      foreignKey: 'institution_id',
+      foreignKey: 'school_id',
       as: 'teams'
     });
   };

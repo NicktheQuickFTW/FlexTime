@@ -119,12 +119,12 @@ const reorderInstitutions = async (client) => {
   
   // Assign IDs 1-16 to Big 12 institutions
   for (let i = 0; i < big12.length; i++) {
-    idMapping.set(big12[i].institution_id, i + 1);
+    idMapping.set(big12[i].school_id, i + 1);
   }
   
   // Assign IDs 17+ to affiliate institutions
   for (let i = 0; i < affiliates.length; i++) {
-    idMapping.set(affiliates[i].institution_id, i + 17);
+    idMapping.set(affiliates[i].school_id, i + 17);
   }
   
   // Log the ID mappings
@@ -145,7 +145,7 @@ const reorderInstitutions = async (client) => {
   // Create a temporary table for institutions with new IDs
   await client.query(`
     CREATE TEMPORARY TABLE temp_institutions (
-      institution_id INTEGER,
+      school_id INTEGER,
       name VARCHAR(100),
       abbreviation VARCHAR(10),
       mascot VARCHAR(50),
@@ -165,15 +165,15 @@ const reorderInstitutions = async (client) => {
     
     await client.query(`
       INSERT INTO temp_institutions (
-        institution_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
+        school_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       ) 
       SELECT 
         $1, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       FROM 
         institutions
       WHERE 
-        institution_id = $2
-    `, [newId, inst.institution_id]);
+        school_id = $2
+    `, [newId, inst.school_id]);
     
     console.log(`Inserted ${inst.name} with new ID ${newId}`);
   }
@@ -185,15 +185,15 @@ const reorderInstitutions = async (client) => {
     
     await client.query(`
       INSERT INTO temp_institutions (
-        institution_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
+        school_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       ) 
       SELECT 
         $1, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
       FROM 
         institutions
       WHERE 
-        institution_id = $2
-    `, [newId, inst.institution_id]);
+        school_id = $2
+    `, [newId, inst.school_id]);
     
     console.log(`Inserted ${inst.name} with new ID ${newId}`);
   }
@@ -212,12 +212,12 @@ const reorderInstitutions = async (client) => {
   // Update institution IDs in the temporary tables
   for (const [oldId, newId] of idMapping) {
     await client.query(
-      'UPDATE temp_teams SET institution_id = $1 WHERE institution_id = $2',
+      'UPDATE temp_teams SET school_id = $1 WHERE school_id = $2',
       [newId, oldId]
     );
     
     await client.query(
-      'UPDATE temp_venues SET institution_id = $1 WHERE institution_id = $2',
+      'UPDATE temp_venues SET school_id = $1 WHERE school_id = $2',
       [newId, oldId]
     );
   }
@@ -228,8 +228,8 @@ const reorderInstitutions = async (client) => {
   // SQL for dropping constraints
   const dropConstraintsSQL = `
     -- Drop foreign key constraints
-    ALTER TABLE teams DROP CONSTRAINT IF EXISTS teams_institution_id_fkey;
-    ALTER TABLE venues DROP CONSTRAINT IF EXISTS venues_institution_id_fkey;
+    ALTER TABLE teams DROP CONSTRAINT IF EXISTS teams_school_id_fkey;
+    ALTER TABLE venues DROP CONSTRAINT IF EXISTS venues_school_id_fkey;
     
     -- Drop primary key constraints
     ALTER TABLE institutions DROP CONSTRAINT IF EXISTS institutions_pkey;
@@ -243,27 +243,27 @@ const reorderInstitutions = async (client) => {
     
     -- Insert the reordered institutions
     INSERT INTO institutions (
-      institution_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
+      school_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
     )
     SELECT 
-      institution_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
+      school_id, name, abbreviation, mascot, primary_color, secondary_color, city, state, created_at, updated_at
     FROM 
       temp_institutions
     ORDER BY 
-      institution_id;
+      school_id;
   `;
   
   // SQL for updating teams and venues
   const updateReferencesSQL = `
     -- Update teams
     UPDATE teams t
-    SET institution_id = tt.institution_id
+    SET school_id = tt.school_id
     FROM temp_teams tt
     WHERE t.team_id = tt.team_id;
     
     -- Update venues
     UPDATE venues v
-    SET institution_id = tv.institution_id
+    SET school_id = tv.school_id
     FROM temp_venues tv
     WHERE v.venue_id = tv.venue_id;
   `;
@@ -271,14 +271,14 @@ const reorderInstitutions = async (client) => {
   // SQL for recreating constraints
   const recreateConstraintsSQL = `
     -- Recreate primary key constraints
-    ALTER TABLE institutions ADD PRIMARY KEY (institution_id);
+    ALTER TABLE institutions ADD PRIMARY KEY (school_id);
     ALTER TABLE institutions ADD CONSTRAINT institutions_name_key UNIQUE (name);
     
     -- Recreate foreign key constraints
-    ALTER TABLE teams ADD CONSTRAINT teams_institution_id_fkey 
-      FOREIGN KEY (institution_id) REFERENCES institutions(institution_id);
-    ALTER TABLE venues ADD CONSTRAINT venues_institution_id_fkey 
-      FOREIGN KEY (institution_id) REFERENCES institutions(institution_id);
+    ALTER TABLE teams ADD CONSTRAINT teams_school_id_fkey 
+      FOREIGN KEY (school_id) REFERENCES institutions(school_id);
+    ALTER TABLE venues ADD CONSTRAINT venues_school_id_fkey 
+      FOREIGN KEY (school_id) REFERENCES institutions(school_id);
   `;
   
   // Execute the SQL statements
@@ -321,18 +321,18 @@ const main = async () => {
     
     // Show the final list of institutions
     const { rows: finalInstitutions } = await client.query(
-      'SELECT institution_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY institution_id'
+      'SELECT school_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY school_id'
     );
     
     console.log('\nFinal list of institutions:');
     console.log('\nBig 12 Institutions (IDs 1-16):');
-    finalInstitutions.filter(inst => inst.institution_id <= 16).forEach(inst => {
-      console.log(`ID: ${inst.institution_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
+    finalInstitutions.filter(inst => inst.school_id <= 16).forEach(inst => {
+      console.log(`ID: ${inst.school_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
     });
     
     console.log('\nAffiliate Institutions (IDs 17+):');
-    finalInstitutions.filter(inst => inst.institution_id > 16).forEach(inst => {
-      console.log(`ID: ${inst.institution_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
+    finalInstitutions.filter(inst => inst.school_id > 16).forEach(inst => {
+      console.log(`ID: ${inst.school_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}`);
     });
     
   } catch (error) {

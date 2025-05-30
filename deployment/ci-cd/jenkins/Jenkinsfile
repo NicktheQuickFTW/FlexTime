@@ -1,0 +1,290 @@
+pipeline {
+    agent any
+    
+    environment {
+        REGISTRY = 'ghcr.io'
+        IMAGE_NAME = 'big12/flextime'
+        AWS_REGION = 'us-east-1'
+        KUBECONFIG = credentials('kubeconfig')
+        AWS_CREDENTIALS = credentials('aws-credentials')
+        DOCKER_REGISTRY_CREDS = credentials('docker-registry')
+        SLACK_WEBHOOK = credentials('slack-webhook')
+    }
+    
+    parameters {
+        choice(
+            name: 'ENVIRONMENT',
+            choices: ['staging', 'production'],
+            description: 'Target deployment environment'
+        )
+        string(
+            name: 'VERSION',
+            defaultValue: 'latest',
+            description: 'Version to deploy'
+        )
+        booleanParam(
+            name: 'SKIP_TESTS',
+            defaultValue: false,
+            description: 'Skip test execution'
+        )
+        booleanParam(
+            name: 'FORCE_DEPLOY',
+            defaultValue: false,
+            description: 'Force deployment even if tests fail'
+        )
+    }
+    
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+                script {
+                    env.GIT_COMMIT_SHORT = sh(
+                        script: 'git rev-parse --short HEAD',
+                        returnStdout: true
+                    ).trim()
+                    env.BUILD_VERSION = "${env.BUILD_NUMBER}-${env.GIT_COMMIT_SHORT}"
+                }
+            }
+        }
+        
+        stage('Setup') {
+            parallel {
+                stage('Install Dependencies') {
+                    steps {
+                        sh '''
+                            npm ci
+                            npm run build
+                        '''
+                    }
+                }
+                stage('Setup Tools') {
+                    steps {
+                        sh '''
+                            # Install kubectl
+                            curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+                            chmod +x kubectl
+                            sudo mv kubectl /usr/local/bin/
+                            
+                            # Install Helm
+                            curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+                            
+                            # Install AWS CLI
+                            pip install awscli
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Code Quality') {
+            when {
+                not { params.SKIP_TESTS }
+            }
+            parallel {
+                stage('Lint') {
+                    steps {
+                        sh 'npm run lint'
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: true,
+                            reportDir: 'reports/lint',
+                            reportFiles: 'index.html',
+                            reportName: 'Lint Report'
+                        ])
+                    }
+                }
+                stage('Type Check') {
+                    steps {
+                        sh 'npm run type-check'
+                    }
+                }
+                stage('Security Scan') {
+                    steps {
+                        sh '''
+                            npm audit --audit-level moderate
+                            
+                            # Run Trivy scan
+                            docker run --rm -v "${PWD}:/workspace" \
+                                aquasec/trivy fs --format json --output /workspace/trivy-report.json /workspace
+                        '''
+                        archiveArtifacts artifacts: 'trivy-report.json'
+                    }
+                }
+            }
+        }
+        
+        stage('Test') {
+            when {
+                not { params.SKIP_TESTS }
+            }
+            steps {
+                script {
+                    docker.image('postgres:15').withRun('-e POSTGRES_DB=flextime_test -e POSTGRES_PASSWORD=postgres') { postgres ->
+                        docker.image('redis:7').withRun() { redis ->
+                            sh '''
+                                export DATABASE_URL="postgresql://postgres:postgres@localhost:5432/flextime_test"
+                                export REDIS_URL="redis://localhost:6379"
+                                
+                                npm run test:unit
+                                npm run test:integration
+                                npm run test:coverage
+                            '''
+                        }
+                    }
+                }
+                
+                publishTestResults testResultsPattern: 'test-results.xml'
+                publishCoverage adapters: [
+                    istanbulCoberturaAdapter('coverage/cobertura-coverage.xml')
+                ], sourceFileResolver: sourceFiles('STORE_LAST_BUILD')
+            }
+        }
+        
+        stage('Build Images') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                    buildingTag()
+                }
+            }
+            steps {
+                script {
+                    def images = ['backend', 'frontend', 'worker']
+                    
+                    withCredentials([usernamePassword(credentialsId: 'docker-registry', 
+                                                   usernameVariable: 'DOCKER_USER', 
+                                                   passwordVariable: 'DOCKER_PASS')]) {
+                        sh 'echo $DOCKER_PASS | docker login $REGISTRY -u $DOCKER_USER --password-stdin'
+                        
+                        images.each { component ->
+                            sh """
+                                docker build -f Dockerfile.${component} -t ${REGISTRY}/${IMAGE_NAME}:${BUILD_VERSION}-${component} .
+                                docker push ${REGISTRY}/${IMAGE_NAME}:${BUILD_VERSION}-${component}
+                                
+                                # Tag as latest for main branch
+                                if [ "${env.BRANCH_NAME}" = "main" ]; then
+                                    docker tag ${REGISTRY}/${IMAGE_NAME}:${BUILD_VERSION}-${component} ${REGISTRY}/${IMAGE_NAME}:latest-${component}
+                                    docker push ${REGISTRY}/${IMAGE_NAME}:latest-${component}
+                                fi
+                            """
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            when {
+                anyOf {
+                    branch 'develop'
+                    allOf {
+                        expression { params.ENVIRONMENT == 'staging' }
+                        expression { env.BRANCH_NAME == 'main' }
+                    }
+                }
+            }
+            steps {
+                script {
+                    deployToEnvironment('staging')
+                }
+            }
+        }
+        
+        stage('Deploy to Production') {
+            when {
+                anyOf {
+                    buildingTag()
+                    allOf {
+                        expression { params.ENVIRONMENT == 'production' }
+                        expression { env.BRANCH_NAME == 'main' }
+                    }
+                }
+            }
+            steps {
+                script {
+                    deployToEnvironment('production')
+                }
+            }
+        }
+        
+        stage('Post-Deploy Tests') {
+            steps {
+                script {
+                    def environment = params.ENVIRONMENT ?: (env.BRANCH_NAME == 'main' ? 'production' : 'staging')
+                    def baseUrl = environment == 'production' ? 
+                        'https://flextime.big12sports.com' : 
+                        'https://staging.flextime.big12sports.com'
+                    
+                    sh """
+                        # Health checks
+                        curl -f ${baseUrl}/health
+                        curl -f ${baseUrl}/api/health
+                        
+                        # Run smoke tests
+                        npm run test:smoke -- --base-url=${baseUrl}
+                    """
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            script {
+                if (env.BRANCH_NAME == 'main' || env.TAG_NAME) {
+                    slackSend(
+                        channel: '#deployments',
+                        color: 'good',
+                        message: "✅ Flextime deployment successful!\nEnvironment: ${params.ENVIRONMENT ?: 'staging'}\nVersion: ${BUILD_VERSION}"
+                    )
+                }
+            }
+        }
+        failure {
+            script {
+                slackSend(
+                    channel: '#deployments',
+                    color: 'danger',
+                    message: "❌ Flextime deployment failed!\nEnvironment: ${params.ENVIRONMENT ?: 'staging'}\nBuild: ${BUILD_URL}"
+                )
+            }
+        }
+        unstable {
+            script {
+                slackSend(
+                    channel: '#deployments',
+                    color: 'warning',
+                    message: "⚠️ Flextime deployment unstable!\nEnvironment: ${params.ENVIRONMENT ?: 'staging'}\nBuild: ${BUILD_URL}"
+                )
+            }
+        }
+    }
+}
+
+def deployToEnvironment(environment) {
+    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-credentials']]) {
+        sh """
+            # Configure kubectl
+            aws eks update-kubeconfig --region ${AWS_REGION} --name flextime-${environment}-cluster
+            
+            # Deploy with Helm
+            helm upgrade --install flextime-${environment} ./kubernetes/helm-charts/flextime \\
+                --namespace flextime-${environment} \\
+                --create-namespace \\
+                --set image.backend.tag=${BUILD_VERSION}-backend \\
+                --set image.frontend.tag=${BUILD_VERSION}-frontend \\
+                --set image.worker.tag=${BUILD_VERSION}-worker \\
+                --values ./environments/${environment}/values.yaml \\
+                --wait --timeout=15m
+            
+            # Wait for deployment
+            kubectl wait --for=condition=available --timeout=600s deployment/flextime-app -n flextime-${environment}
+        """
+    }
+}

@@ -278,49 +278,49 @@ async function seedBig12Teams() {
       
       // First check if institution exists
       const checkInstitution = await client.query(`
-        SELECT institution_id FROM ${currentUser}.institutions 
+        SELECT school_id FROM ${currentUser}.institutions 
         WHERE code = $1 LIMIT 1;
       `, [institutionCode]);
       
-      let institutionId;
+      let schoolId;
       
       if (checkInstitution.rows.length === 0) {
         // Insert new institution
         const institutionResult = await client.query(`
           INSERT INTO ${currentUser}.institutions (name, short_name, code)
           VALUES ($1, $2, $3)
-          RETURNING institution_id;
+          RETURNING school_id;
         `, [teamData.name, teamData.nickname, institutionCode]);
         
-        institutionId = institutionResult.rows[0].institution_id;
-        logger.info(`Created institution: ${teamData.name} (ID: ${institutionId})`);
+        schoolId = institutionResult.rows[0].school_id;
+        logger.info(`Created institution: ${teamData.name} (ID: ${schoolId})`);
       } else {
         // Update existing institution
-        institutionId = checkInstitution.rows[0].institution_id;
+        schoolId = checkInstitution.rows[0].school_id;
         await client.query(`
           UPDATE ${currentUser}.institutions 
           SET name = $1, short_name = $2
-          WHERE institution_id = $3;
-        `, [teamData.name, teamData.nickname, institutionId]);
+          WHERE school_id = $3;
+        `, [teamData.name, teamData.nickname, schoolId]);
         
-        logger.info(`Updated institution: ${teamData.name} (ID: ${institutionId})`);
+        logger.info(`Updated institution: ${teamData.name} (ID: ${schoolId})`);
       }
       
       // Check if team exists
       const checkTeam = await client.query(`
         SELECT team_id FROM ${currentUser}.teams 
-        WHERE institution_id = $1 AND sport_id = $2 AND championship_id = $3 LIMIT 1;
-      `, [institutionId, sportId, championshipId]);
+        WHERE school_id = $1 AND sport_id = $2 AND championship_id = $3 LIMIT 1;
+      `, [schoolId, sportId, championshipId]);
       
       let teamId;
       
       if (checkTeam.rows.length === 0) {
         // Insert new team
         const teamResult = await client.query(`
-          INSERT INTO ${currentUser}.teams (name, mascot, institution_id, sport_id, championship_id)
+          INSERT INTO ${currentUser}.teams (name, mascot, school_id, sport_id, championship_id)
           VALUES ($1, $2, $3, $4, $5)
           RETURNING team_id;
-        `, [teamData.name, teamData.nickname, institutionId, sportId, championshipId]);
+        `, [teamData.name, teamData.nickname, schoolId, sportId, championshipId]);
         
         teamId = teamResult.rows[0].team_id;
         logger.info(`Created team: ${teamData.name} ${teamData.nickname} (ID: ${teamId})`);

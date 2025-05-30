@@ -302,7 +302,7 @@ class Big12RagAgent extends Agent {
       // Get the team ID for this institution
       const teamResult = await this.dbClient.query(`
         SELECT team_id FROM ${this.currentUser}.teams 
-        WHERE institution_id = $1 LIMIT 1;
+        WHERE school_id = $1 LIMIT 1;
       `, [institution.id]);
       
       if (teamResult.rows.length === 0) {
@@ -448,9 +448,9 @@ class Big12RagAgent extends Agent {
         return await this.collectData();
       
       case 'collect_institution_data':
-        const institution = big12Institutions.find(inst => inst.id === task.parameters.institutionId);
+        const institution = big12Institutions.find(inst => inst.id === task.parameters.schoolId);
         if (!institution) {
-          throw new Error(`Institution with ID ${task.parameters.institutionId} not found`);
+          throw new Error(`Institution with ID ${task.parameters.schoolId} not found`);
         }
         
         const rawData = await this.scrapeScheduleData(institution);

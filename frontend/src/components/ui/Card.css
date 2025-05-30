@@ -1,0 +1,257 @@
+/* FTCard - Glassmorphic Card Component Styles */
+
+.ft-card {
+  /* Base glassmorphic styling */
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  
+  /* Layout and spacing */
+  padding: 1.5rem;
+  margin: 0;
+  
+  /* Shadows for depth */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  
+  /* Transitions */
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Text and content styling */
+  color: var(--flextime-text-primary, #ffffff);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Dark theme optimizations */
+[data-theme="dark"] .ft-card {
+  background: rgba(20, 20, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    0 4px 16px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Light theme optimizations */
+[data-theme="light"] .ft-card {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: var(--flextime-text-dark, #1a1a1a);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Elevated variant - enhanced depth and prominence */
+.ft-card-elevated {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  transform: translateY(-2px);
+  
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="dark"] .ft-card-elevated {
+  background: rgba(30, 30, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    0 8px 24px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="light"] .ft-card-elevated {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Interactive variant - optimized for clickable cards */
+.ft-card-interactive {
+  cursor: pointer;
+  user-select: none;
+  
+  /* Enhanced border for interactivity */
+  border: 1px solid rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.3);
+  
+  /* Subtle glow effect */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.ft-card-interactive:hover {
+  transform: translateY(-4px);
+  border: 1px solid rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.5);
+  
+  box-shadow: 
+    0 16px 48px rgba(0, 0, 0, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 0 0 1px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.2),
+    0 0 24px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.ft-card-interactive:active {
+  transform: translateY(-1px);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus styles for accessibility */
+.ft-card-interactive:focus {
+  outline: none;
+  border: 1px solid rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.8);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 0 0 3px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Content styling within cards */
+.ft-card h1,
+.ft-card h2,
+.ft-card h3,
+.ft-card h4,
+.ft-card h5,
+.ft-card h6 {
+  margin-top: 0;
+  color: inherit;
+}
+
+.ft-card p {
+  margin-bottom: 0;
+  opacity: 0.9;
+}
+
+.ft-card .ft-card-header {
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ft-card .ft-card-body {
+  flex: 1;
+}
+
+.ft-card .ft-card-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0.8;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ft-card {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+  
+  .ft-card-interactive:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-card {
+    padding: 0.75rem;
+    border-radius: 8px;
+  }
+}
+
+/* Animation keyframes for enhanced effects */
+@keyframes ft-card-glow {
+  0% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.3),
+      0 0 16px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  100% {
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.08),
+      0 0 0 1px rgba(var(--flextime-primary-rgb, 59, 130, 246), 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Loading state */
+.ft-card.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.ft-card.loading::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  animation: ft-card-shimmer 1.5s infinite;
+}
+
+@keyframes ft-card-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Content overflow protection */
+.ft-card > * {
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
+/* Nested card support */
+.ft-card .ft-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin: 0.5rem 0;
+}
+
+/* Print styles */
+@media print {
+  .ft-card {
+    background: white !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    color: black !important;
+    break-inside: avoid;
+  }
+}

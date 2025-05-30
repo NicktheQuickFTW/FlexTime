@@ -1,16 +1,20 @@
 /**
  * Feedback Controller for FlexTime 2.1
  * 
- * This controller handles feedback submission and retrieval for schedules,
- * feeding into the learning system for continuous improvement.
+ * This controller handles all feedback-related functionality including:
+ * - Feedback submission and retrieval for schedules
+ * - Constraint weight management and retrieval
+ * - Feedback analytics and processing
+ * - Integration with learning system and agent-based analysis
  */
 
 const express = require('express');
 const router = express.Router();
-// const mongoose = require('mongoose'); // MongoDB removed - using Neon DB
-const logger = require("../utils/logger")
+const logger = require("../utils/logger");
 const MCPIntegration = require('../agents/mcp_integration');
 const { FlexTimeAgentSystem } = require('../agents');
+const { FeedbackSystem } = require('../agents/learning/feedback_system');
+const { EnhancedMemoryManager } = require('../agents/memory/enhanced_memory_manager');
 
 // Initialize MCP integration
 const mcpIntegration = new MCPIntegration();
@@ -25,6 +29,41 @@ try {
 } catch (error) {
   logger.error(`Failed to initialize agent system: ${error.message}`);
 }
+
+// Singleton instance of the feedback system
+let feedbackSystemInstance = null;
+
+// Get or create the feedback system instance
+const getFeedbackSystem = async () => {
+  if (!feedbackSystemInstance) {
+    const memoryManager = new EnhancedMemoryManager();
+    
+    // Try to load previous constraint weights from memory
+    let savedWeights = null;
+    try {
+      const systemMemory = await memoryManager.searchMemories('system', {
+        type: 'constraint_weights',
+        limit: 1,
+        sortBy: 'timestamp',
+        sortDirection: 'desc'
+      });
+      
+      if (systemMemory && systemMemory.length > 0) {
+        savedWeights = systemMemory[0].weights;
+      }
+    } catch (error) {
+      logger.warn('Could not load saved constraint weights:', error.message);
+    }
+    
+    // Create the feedback system with saved weights if available
+    feedbackSystemInstance = new FeedbackSystem({
+      memoryManager,
+      constraintWeights: savedWeights || undefined
+    });
+  }
+  
+  return feedbackSystemInstance;
+};
 
 /**
  * Submit feedback for a schedule
@@ -175,6 +214,64 @@ router.post('/process-cycle', async (req, res) => {
     });
   } catch (error) {
     logger.error(`Error processing feedback cycle: ${error.message}`);
+    
+    return res.status(500).json({
+      success: false,
+      error: 'An internal server error occurred'
+    });
+  }
+});
+
+/**
+ * Get current constraint weights
+ * 
+ * @route GET /api/feedback/constraint-weights
+ * @returns {object} Current constraint weights
+ */
+router.get('/constraint-weights', async (req, res) => {
+  try {
+    const feedbackSystem = await getFeedbackSystem();
+    const weights = feedbackSystem.getConstraintWeights();
+    
+    return res.json({
+      success: true,
+      weights
+    });
+  } catch (error) {
+    logger.error(`Error retrieving constraint weights: ${error.message}`);
+    
+    return res.status(500).json({
+      success: false,
+      error: 'An internal server error occurred'
+    });
+  }
+});
+
+/**
+ * Trigger constraint analysis
+ * 
+ * @route POST /api/feedback/analyze-constraints
+ * @returns {object} Analysis results
+ */
+router.post('/analyze-constraints', async (req, res) => {
+  try {
+    // Check if user has admin privileges
+    if (!req.user?.isAdmin) {
+      return res.status(403).json({
+        success: false,
+        error: 'Unauthorized: Admin privileges required'
+      });
+    }
+    
+    const feedbackSystem = await getFeedbackSystem();
+    const results = await feedbackSystem.runPeriodicAnalysis();
+    
+    return res.json({
+      success: true,
+      results
+    });
+  } catch (error) {
+    logger.error(`Error triggering constraint analysis: ${error.message}`);
     
     return res.status(500).json({
       success: false,

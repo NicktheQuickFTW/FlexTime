@@ -1,0 +1,11 @@
+email,password,role,department
+testuser1@flextime.com,Test123!@#,user,Engineering
+testuser2@flextime.com,Test123!@#,user,Sales
+testuser3@flextime.com,Test123!@#,manager,Marketing
+testuser4@flextime.com,Test123!@#,user,Support
+testuser5@flextime.com,Test123!@#,admin,IT
+testuser6@flextime.com,Test123!@#,user,HR
+testuser7@flextime.com,Test123!@#,manager,Engineering
+testuser8@flextime.com,Test123!@#,user,Finance
+testuser9@flextime.com,Test123!@#,user,Operations
+testuser10@flextime.com,Test123!@#,manager,Product

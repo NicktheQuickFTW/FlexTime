@@ -67,7 +67,7 @@ async function seedAdditionalTeams() {
     for (const institutionName of big12Institutions) {
       // Get institution ID
       const institutionResult = await client.query(`
-        SELECT institution_id FROM institutions WHERE name = $1 LIMIT 1;
+        SELECT school_id FROM institutions WHERE name = $1 LIMIT 1;
       `, [institutionName]);
       
       if (institutionResult.rows.length === 0) {
@@ -75,8 +75,8 @@ async function seedAdditionalTeams() {
         continue;
       }
       
-      const institutionId = institutionResult.rows[0].institution_id;
-      logger.info(`Processing institution: ${institutionName} (ID: ${institutionId})`);
+      const schoolId = institutionResult.rows[0].school_id;
+      logger.info(`Processing institution: ${institutionName} (ID: ${schoolId})`);
       
       // Process each sport
       for (const sport of sports) {
@@ -86,8 +86,8 @@ async function seedAdditionalTeams() {
         // Check if team already exists
         const teamResult = await client.query(`
           SELECT team_id FROM teams 
-          WHERE institution_id = $1 AND sport_id = $2 LIMIT 1;
-        `, [institutionId, sport.sport_id]);
+          WHERE school_id = $1 AND sport_id = $2 LIMIT 1;
+        `, [schoolId, sport.sport_id]);
         
         if (teamResult.rows.length === 0) {
           // Create new team
@@ -101,7 +101,7 @@ async function seedAdditionalTeams() {
           // Insert team
           const insertTeamResult = await client.query(`
             INSERT INTO teams (
-              name, institution_id, sport_id, season, time_zone,
+              name, school_id, sport_id, season, time_zone,
               travel_constraints, rival_teams, scheduling_priority, 
               blackout_dates, media_contracts, code,
               created_at, updated_at
@@ -113,7 +113,7 @@ async function seedAdditionalTeams() {
             RETURNING team_id;
           `, [
             teamData.name, 
-            institutionId, 
+            schoolId, 
             teamData.sport_id,
             teamData.season,
             teamData.timeZone,

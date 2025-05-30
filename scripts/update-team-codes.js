@@ -56,7 +56,7 @@ const updateTeamCodes = async () => {
         s.abbreviation AS sport_abbreviation
       FROM 
         teams t
-        JOIN institutions i ON t.institution_id = i.institution_id
+        JOIN institutions i ON t.school_id = i.school_id
         JOIN sports s ON t.sport_id = s.sport_id
     `;
     
@@ -95,7 +95,7 @@ const updateTeamCodes = async () => {
         s.abbreviation AS sport_abbreviation
       FROM 
         teams t
-        JOIN institutions i ON t.institution_id = i.institution_id
+        JOIN institutions i ON t.school_id = i.school_id
         JOIN sports s ON t.sport_id = s.sport_id
       ORDER BY t.name
       LIMIT 10

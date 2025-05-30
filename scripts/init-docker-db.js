@@ -264,7 +264,7 @@ async function seedTestData(models) {
       // Create team with the season info (using winter sport format for basketball)
       const team = await Team.create({
         ...teamData.team,
-        institution_id: institution.institution_id,
+        school_id: institution.school_id,
         sport_id: menBasketballSportId,
         season: '2024-25'  // Format for winter sports is yyyy-yy
       });
@@ -272,7 +272,7 @@ async function seedTestData(models) {
       // Create venue for the team
       await Venue.create({
         ...teamData.venue,
-        institution_id: institution.institution_id,
+        school_id: institution.school_id,
         team_id: team.team_id
       });
     }

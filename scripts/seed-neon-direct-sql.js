@@ -245,10 +245,10 @@ async function seedDirectSQL() {
     for (const teamData of big12TeamsData) {
       // Create or update institution
       const institutionResult = await client.query(`
-        SELECT institution_id FROM institutions WHERE abbreviation = $1 LIMIT 1;
+        SELECT school_id FROM institutions WHERE abbreviation = $1 LIMIT 1;
       `, [teamData.abbreviation]);
       
-      let institutionId;
+      let schoolId;
       
       if (institutionResult.rows.length === 0) {
         // Insert new institution
@@ -259,7 +259,7 @@ async function seedDirectSQL() {
             created_at, updated_at
           )
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
-          RETURNING institution_id;
+          RETURNING school_id;
         `, [
           teamData.name, 
           teamData.abbreviation, 
@@ -272,16 +272,16 @@ async function seedDirectSQL() {
           teamData.longitude
         ]);
         
-        institutionId = insertInstitutionResult.rows[0].institution_id;
-        logger.info(`Created institution: ${teamData.name} (ID: ${institutionId})`);
+        schoolId = insertInstitutionResult.rows[0].school_id;
+        logger.info(`Created institution: ${teamData.name} (ID: ${schoolId})`);
       } else {
         // Update existing institution
-        institutionId = institutionResult.rows[0].institution_id;
+        schoolId = institutionResult.rows[0].school_id;
         await client.query(`
           UPDATE institutions 
           SET name = $1, mascot = $2, primary_color = $3, secondary_color = $4,
               city = $5, state = $6, latitude = $7, longitude = $8
-          WHERE institution_id = $9;
+          WHERE school_id = $9;
         `, [
           teamData.name, 
           teamData.nickname,
@@ -291,17 +291,17 @@ async function seedDirectSQL() {
           teamData.state,
           teamData.latitude,
           teamData.longitude,
-          institutionId
+          schoolId
         ]);
         
-        logger.info(`Updated institution: ${teamData.name} (ID: ${institutionId})`);
+        logger.info(`Updated institution: ${teamData.name} (ID: ${schoolId})`);
       }
       
       // Create or update team with enhanced fields
       const teamResult = await client.query(`
         SELECT team_id FROM teams 
-        WHERE institution_id = $1 AND sport_id = $2 LIMIT 1;
-      `, [institutionId, sportId]);
+        WHERE school_id = $1 AND sport_id = $2 LIMIT 1;
+      `, [schoolId, sportId]);
       
       let teamId;
       
@@ -309,7 +309,7 @@ async function seedDirectSQL() {
         // Insert new team with enhanced fields
         const insertTeamResult = await client.query(`
           INSERT INTO teams (
-            name, institution_id, sport_id, season, time_zone,
+            name, school_id, sport_id, season, time_zone,
             travel_constraints, rival_teams, scheduling_priority, 
             blackout_dates, media_contracts, code,
             created_at, updated_at
@@ -321,7 +321,7 @@ async function seedDirectSQL() {
           RETURNING team_id;
         `, [
           teamData.name, 
-          institutionId, 
+          schoolId, 
           sportId,
           teamData.season,
           teamData.timeZone,
@@ -371,7 +371,7 @@ async function seedDirectSQL() {
         // Insert new venue with enhanced fields
         const insertVenueResult = await client.query(`
           INSERT INTO venues (
-            name, city, state, capacity, institution_id,
+            name, city, state, capacity, school_id,
             venue_type, setup_time_required, teardown_time_required, 
             media_facilities, transport_hubs, accessibility_features,
             latitude, longitude, supported_sports,
@@ -387,7 +387,7 @@ async function seedDirectSQL() {
           teamData.city,
           teamData.state,
           teamData.venueCapacity,
-          institutionId,
+          schoolId,
           teamData.venueType,
           teamData.setupTime,
           teamData.teardownTime,
@@ -406,7 +406,7 @@ async function seedDirectSQL() {
         venueId = venueResult.rows[0].venue_id;
         await client.query(`
           UPDATE venues 
-          SET city = $1, state = $2, capacity = $3, institution_id = $4,
+          SET city = $1, state = $2, capacity = $3, school_id = $4,
               venue_type = $5, setup_time_required = $6, teardown_time_required = $7,
               media_facilities = $8, transport_hubs = $9, accessibility_features = $10,
               latitude = $11, longitude = $12, supported_sports = $13
@@ -415,7 +415,7 @@ async function seedDirectSQL() {
           teamData.city,
           teamData.state,
           teamData.venueCapacity,
-          institutionId,
+          schoolId,
           teamData.venueType,
           teamData.setupTime,
           teamData.teardownTime,

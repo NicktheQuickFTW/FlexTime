@@ -1,0 +1,604 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "FlexTime Legacy API Compatibility Layer",
+    "version": "1.0.0",
+    "description": "Backward compatibility layer for existing FlexTime API endpoints during microservices migration",
+    "contact": {
+      "name": "FlexTime Development Team",
+      "email": "dev@flextime.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.flextime.com/v1",
+      "description": "Production Legacy API"
+    },
+    {
+      "url": "https://staging-api.flextime.com/v1",
+      "description": "Staging Legacy API"
+    },
+    {
+      "url": "http://localhost:3005/api",
+      "description": "Local Development"
+    }
+  ],
+  "paths": {
+    "/schedules": {
+      "get": {
+        "summary": "Get all schedules (Legacy)",
+        "description": "Retrieve all schedules with backward compatibility mapping to microservices",
+        "tags": ["Legacy Schedules"],
+        "parameters": [
+          {
+            "name": "sport_id",
+            "in": "query",
+            "schema": {"type": "integer"},
+            "description": "Filter by sport ID"
+          },
+          {
+            "name": "season_id",
+            "in": "query",
+            "schema": {"type": "integer"},
+            "description": "Filter by season ID"
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["draft", "published", "archived"]
+            },
+            "description": "Filter by schedule status"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of schedules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "schedules": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/LegacySchedule"}
+                    },
+                    "total": {"type": "integer"},
+                    "page": {"type": "integer"},
+                    "limit": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-microservice-mapping": {
+          "primary_service": "schedule-generation-service",
+          "fallback_services": ["team-availability-service", "venue-management-service"],
+          "data_aggregation": true
+        }
+      },
+      "post": {
+        "summary": "Create new schedule (Legacy)",
+        "description": "Create a new schedule using legacy format, mapped to new microservices",
+        "tags": ["Legacy Schedules"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/LegacyScheduleCreate"}
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Schedule created successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/LegacySchedule"}
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/Error"}
+              }
+            }
+          }
+        },
+        "x-microservice-mapping": {
+          "primary_service": "schedule-generation-service",
+          "workflow": [
+            "validate_request",
+            "create_generation_request",
+            "trigger_schedule_generation",
+            "return_legacy_format"
+          ]
+        }
+      }
+    },
+    "/schedules/{id}": {
+      "get": {
+        "summary": "Get schedule by ID (Legacy)",
+        "description": "Retrieve a specific schedule by ID with legacy format",
+        "tags": ["Legacy Schedules"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"},
+            "description": "Schedule ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Schedule details",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/LegacySchedule"}
+              }
+            }
+          },
+          "404": {
+            "description": "Schedule not found",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/Error"}
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update schedule (Legacy)",
+        "description": "Update an existing schedule using legacy format",
+        "tags": ["Legacy Schedules"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/LegacyScheduleUpdate"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Schedule updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/LegacySchedule"}
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete schedule (Legacy)",
+        "description": "Delete a schedule (legacy endpoint)",
+        "tags": ["Legacy Schedules"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Schedule deleted successfully"
+          },
+          "404": {
+            "description": "Schedule not found"
+          }
+        }
+      }
+    },
+    "/schedules/{id}/optimize": {
+      "post": {
+        "summary": "Optimize schedule (Legacy)",
+        "description": "Trigger schedule optimization using legacy parameters",
+        "tags": ["Legacy Schedules"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/LegacyOptimizationRequest"}
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Optimization started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "job_id": {"type": "string"},
+                    "status": {"type": "string"},
+                    "estimated_completion": {"type": "string", "format": "date-time"}
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-microservice-mapping": {
+          "primary_service": "schedule-generation-service",
+          "workflow": ["create_optimization_request", "queue_optimization_job", "return_job_status"]
+        }
+      }
+    },
+    "/schedules/{id}/games": {
+      "get": {
+        "summary": "Get schedule games (Legacy)",
+        "description": "Retrieve all games for a specific schedule",
+        "tags": ["Legacy Schedules"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of games in schedule",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "games": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/LegacyGame"}
+                    },
+                    "total": {"type": "integer"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/teams": {
+      "get": {
+        "summary": "Get all teams (Legacy)",
+        "description": "Retrieve all teams with availability information",
+        "tags": ["Legacy Teams"],
+        "responses": {
+          "200": {
+            "description": "List of teams",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "teams": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/LegacyTeam"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-microservice-mapping": {
+          "primary_service": "team-availability-service",
+          "data_sources": ["teams", "team_scheduling_profiles", "team_availability_preferences"]
+        }
+      }
+    },
+    "/venues": {
+      "get": {
+        "summary": "Get all venues (Legacy)",
+        "description": "Retrieve all venues with management information",
+        "tags": ["Legacy Venues"],
+        "responses": {
+          "200": {
+            "description": "List of venues",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "venues": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/LegacyVenue"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-microservice-mapping": {
+          "primary_service": "venue-management-service",
+          "data_sources": ["venues", "venue_profiles", "venue_operational_hours"]
+        }
+      }
+    },
+    "/constraints": {
+      "get": {
+        "summary": "Get all constraints (Legacy)",
+        "description": "Retrieve schedule constraints",
+        "tags": ["Legacy Constraints"],
+        "responses": {
+          "200": {
+            "description": "List of constraints",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "constraints": {
+                      "type": "array",
+                      "items": {"$ref": "#/components/schemas/LegacyConstraint"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-microservice-mapping": {
+          "primary_service": "constraint-validation-service",
+          "data_sources": ["schedule_constraints", "constraint_templates", "constraint_categories"]
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "LegacySchedule": {
+        "type": "object",
+        "properties": {
+          "schedule_id": {"type": "integer"},
+          "name": {"type": "string"},
+          "sport_id": {"type": "integer"},
+          "season_id": {"type": "integer"},
+          "year": {"type": "string"},
+          "start_date": {"type": "string", "format": "date"},
+          "end_date": {"type": "string", "format": "date"},
+          "status": {
+            "type": "string",
+            "enum": ["draft", "published", "archived"]
+          },
+          "created_by": {"type": "integer"},
+          "updated_by": {"type": "integer"},
+          "metadata": {"type": "object"},
+          "created_at": {"type": "string", "format": "date-time"},
+          "updated_at": {"type": "string", "format": "date-time"},
+          "games": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LegacyGame"}
+          },
+          "teams": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LegacyTeam"}
+          },
+          "constraints": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LegacyConstraint"}
+          }
+        },
+        "x-microservice-mapping": {
+          "aggregation_strategy": "parallel",
+          "services": {
+            "schedule-generation-service": ["schedule_id", "name", "sport_id", "season_id", "year", "start_date", "end_date", "status", "metadata"],
+            "team-availability-service": ["teams"],
+            "venue-management-service": ["venues"],
+            "constraint-validation-service": ["constraints"]
+          }
+        }
+      },
+      "LegacyScheduleCreate": {
+        "type": "object",
+        "required": ["name", "sport_id", "year", "start_date", "end_date"],
+        "properties": {
+          "name": {"type": "string"},
+          "sport_id": {"type": "integer"},
+          "season_id": {"type": "integer"},
+          "year": {"type": "string"},
+          "start_date": {"type": "string", "format": "date"},
+          "end_date": {"type": "string", "format": "date"},
+          "metadata": {"type": "object"},
+          "teams": {
+            "type": "array",
+            "items": {"type": "integer"}
+          },
+          "constraints": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/LegacyConstraintCreate"}
+          }
+        }
+      },
+      "LegacyScheduleUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {"type": "string"},
+          "start_date": {"type": "string", "format": "date"},
+          "end_date": {"type": "string", "format": "date"},
+          "status": {
+            "type": "string",
+            "enum": ["draft", "published", "archived"]
+          },
+          "metadata": {"type": "object"}
+        }
+      },
+      "LegacyOptimizationRequest": {
+        "type": "object",
+        "properties": {
+          "algorithm": {
+            "type": "string",
+            "enum": ["simulated_annealing", "genetic_algorithm", "constraint_programming"]
+          },
+          "objectives": {
+            "type": "array",
+            "items": {"type": "string"}
+          },
+          "max_iterations": {"type": "integer", "default": 10000},
+          "time_limit_minutes": {"type": "integer", "default": 30}
+        }
+      },
+      "LegacyGame": {
+        "type": "object",
+        "properties": {
+          "game_id": {"type": "integer"},
+          "schedule_id": {"type": "integer"},
+          "home_team_id": {"type": "integer"},
+          "away_team_id": {"type": "integer"},
+          "venue_id": {"type": "integer"},
+          "game_datetime": {"type": "string", "format": "date-time"},
+          "game_type": {"type": "string"},
+          "status": {"type": "string"},
+          "metadata": {"type": "object"}
+        }
+      },
+      "LegacyTeam": {
+        "type": "object",
+        "properties": {
+          "team_id": {"type": "integer"},
+          "season_id": {"type": "integer"},
+          "school_id": {"type": "integer"},
+          "name": {"type": "string"},
+          "code": {"type": "string"},
+          "division": {"type": "string"},
+          "status": {"type": "string"},
+          "availability": {
+            "type": "object",
+            "properties": {
+              "max_games_per_week": {"type": "integer"},
+              "min_rest_days": {"type": "integer"},
+              "preferred_times": {"type": "array", "items": {"type": "string"}},
+              "blackout_dates": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      },
+      "LegacyVenue": {
+        "type": "object",
+        "properties": {
+          "venue_id": {"type": "integer"},
+          "name": {"type": "string"},
+          "city": {"type": "string"},
+          "state": {"type": "string"},
+          "capacity": {"type": "integer"},
+          "school_id": {"type": "integer"},
+          "is_primary": {"type": "boolean"},
+          "supported_sports": {"type": "array", "items": {"type": "integer"}},
+          "availability": {
+            "type": "object",
+            "properties": {
+              "operational_hours": {"type": "object"},
+              "unavailable_periods": {"type": "array"}
+            }
+          }
+        }
+      },
+      "LegacyConstraint": {
+        "type": "object",
+        "properties": {
+          "constraint_id": {"type": "integer"},
+          "schedule_id": {"type": "integer"},
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "type": {
+            "type": "string",
+            "enum": ["Hard", "Soft"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Travel", "Rest", "Venue", "Broadcast", "Competitive", "Academic", "Custom"]
+          },
+          "parameters": {"type": "object"},
+          "weight": {"type": "number"},
+          "is_active": {"type": "boolean"}
+        }
+      },
+      "LegacyConstraintCreate": {
+        "type": "object",
+        "required": ["name", "type", "category"],
+        "properties": {
+          "name": {"type": "string"},
+          "description": {"type": "string"},
+          "type": {
+            "type": "string",
+            "enum": ["Hard", "Soft"]
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Travel", "Rest", "Venue", "Broadcast", "Competitive", "Academic", "Custom"]
+          },
+          "parameters": {"type": "object"},
+          "weight": {"type": "number", "default": 1.0},
+          "is_active": {"type": "boolean", "default": true}
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {"type": "string"},
+          "message": {"type": "string"},
+          "code": {"type": "integer"},
+          "details": {"type": "object"}
+        }
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {"ApiKeyAuth": []},
+    {"BearerAuth": []}
+  ],
+  "x-microservices-migration": {
+    "version": "1.0",
+    "compatibility_level": "full",
+    "deprecated_endpoints": [],
+    "migration_timeline": {
+      "phase_1": "Legacy API compatibility layer",
+      "phase_2": "Gradual migration to microservice APIs",
+      "phase_3": "Legacy API deprecation",
+      "phase_4": "Legacy API removal"
+    },
+    "data_transformation": {
+      "request_mapping": "Transform legacy requests to microservice formats",
+      "response_aggregation": "Aggregate microservice responses to legacy format",
+      "error_handling": "Map microservice errors to legacy error format"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+---
+# Master playbook for Flextime deployment
+- name: Deploy Flextime Infrastructure
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  tasks:
+    - name: Include infrastructure deployment
+      include: infrastructure.yml
+      tags: [infrastructure, terraform]
+
+- name: Configure Application Servers
+  hosts: app_servers
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - docker
+    - monitoring
+    - security
+  tags: [servers, configuration]
+
+- name: Configure Database Servers
+  hosts: database_servers
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - postgresql
+    - monitoring
+    - security
+    - backup
+  tags: [database, configuration]
+
+- name: Configure Load Balancers
+  hosts: load_balancers
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - nginx
+    - ssl
+    - monitoring
+    - security
+  tags: [loadbalancer, configuration]
+
+- name: Deploy Kubernetes Cluster
+  hosts: k8s_masters:k8s_workers
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - kubernetes
+    - monitoring
+    - security
+  tags: [kubernetes, k8s]
+
+- name: Deploy Application to Kubernetes
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
+  tasks:
+    - name: Include Kubernetes deployment
+      include: k8s-deploy.yml
+      tags: [app, deployment, k8s]
+
+- name: Configure Monitoring Stack
+  hosts: monitoring_servers
+  become: yes
+  gather_facts: yes
+  roles:
+    - common
+    - prometheus
+    - grafana
+    - alertmanager
+    - elasticsearch
+    - kibana
+  tags: [monitoring, observability]
+
+- name: Post-deployment verification
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+    - name: Include verification tasks
+      include: verify.yml
+      tags: [verify, test]

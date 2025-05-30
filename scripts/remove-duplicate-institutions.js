@@ -126,7 +126,7 @@ const handleDuplicateSets = async (client) => {
     
     // Get all institutions in this set
     const { rows: institutions } = await client.query(
-      'SELECT * FROM institutions WHERE institution_id = ANY($1)',
+      'SELECT * FROM institutions WHERE school_id = ANY($1)',
       [duplicateSet.ids]
     );
     
@@ -136,21 +136,21 @@ const handleDuplicateSets = async (client) => {
     }
     
     // Find the institution to keep
-    const keepInstitution = institutions.find(i => i.institution_id === duplicateSet.keepId);
+    const keepInstitution = institutions.find(i => i.school_id === duplicateSet.keepId);
     if (!keepInstitution) {
       console.log(`Warning: Could not find institution with ID ${duplicateSet.keepId} to keep`);
       continue;
     }
     
     // Get the duplicates to remove
-    const duplicatesToRemove = institutions.filter(i => i.institution_id !== duplicateSet.keepId);
+    const duplicatesToRemove = institutions.filter(i => i.school_id !== duplicateSet.keepId);
     
-    console.log(`Keeping institution: ${keepInstitution.name} (ID: ${keepInstitution.institution_id}, Abbreviation: ${keepInstitution.abbreviation})`);
+    console.log(`Keeping institution: ${keepInstitution.name} (ID: ${keepInstitution.school_id}, Abbreviation: ${keepInstitution.abbreviation})`);
     
     // Merge information from duplicates into the keeper
     let updatedInstitution = { ...keepInstitution };
     for (const duplicate of duplicatesToRemove) {
-      console.log(`Processing duplicate: ${duplicate.name} (ID: ${duplicate.institution_id}, Abbreviation: ${duplicate.abbreviation})`);
+      console.log(`Processing duplicate: ${duplicate.name} (ID: ${duplicate.school_id}, Abbreviation: ${duplicate.abbreviation})`);
       updatedInstitution = mergeInstitutionInfo(updatedInstitution, duplicate);
     }
     
@@ -162,7 +162,7 @@ const handleDuplicateSets = async (client) => {
       
       // Build the update query dynamically based on what needs to be updated
       for (const [key, value] of Object.entries(updatedInstitution)) {
-        if (key !== 'institution_id' && value !== keepInstitution[key]) {
+        if (key !== 'school_id' && value !== keepInstitution[key]) {
           updateFields.push(`${key} = $${paramIndex}`);
           updateValues.push(value);
           paramIndex++;
@@ -170,12 +170,12 @@ const handleDuplicateSets = async (client) => {
       }
       
       if (updateFields.length > 0) {
-        updateValues.push(keepInstitution.institution_id);
+        updateValues.push(keepInstitution.school_id);
         await client.query(
-          `UPDATE institutions SET ${updateFields.join(', ')}, updated_at = NOW() WHERE institution_id = $${paramIndex}`,
+          `UPDATE institutions SET ${updateFields.join(', ')}, updated_at = NOW() WHERE school_id = $${paramIndex}`,
           updateValues
         );
-        console.log(`Updated institution ID ${keepInstitution.institution_id} with merged information`);
+        console.log(`Updated institution ID ${keepInstitution.school_id} with merged information`);
       }
     }
     
@@ -183,21 +183,21 @@ const handleDuplicateSets = async (client) => {
     for (const duplicate of duplicatesToRemove) {
       // Update teams
       const { rowCount: teamCount } = await client.query(
-        'UPDATE teams SET institution_id = $1, updated_at = NOW() WHERE institution_id = $2',
-        [keepInstitution.institution_id, duplicate.institution_id]
+        'UPDATE teams SET school_id = $1, updated_at = NOW() WHERE school_id = $2',
+        [keepInstitution.school_id, duplicate.school_id]
       );
-      console.log(`Updated ${teamCount} teams from institution ID ${duplicate.institution_id} to ${keepInstitution.institution_id}`);
+      console.log(`Updated ${teamCount} teams from institution ID ${duplicate.school_id} to ${keepInstitution.school_id}`);
       
       // Update venues
       const { rowCount: venueCount } = await client.query(
-        'UPDATE venues SET institution_id = $1, updated_at = NOW() WHERE institution_id = $2',
-        [keepInstitution.institution_id, duplicate.institution_id]
+        'UPDATE venues SET school_id = $1, updated_at = NOW() WHERE school_id = $2',
+        [keepInstitution.school_id, duplicate.school_id]
       );
-      console.log(`Updated ${venueCount} venues from institution ID ${duplicate.institution_id} to ${keepInstitution.institution_id}`);
+      console.log(`Updated ${venueCount} venues from institution ID ${duplicate.school_id} to ${keepInstitution.school_id}`);
       
       // Delete the duplicate
-      await client.query('DELETE FROM institutions WHERE institution_id = $1', [duplicate.institution_id]);
-      console.log(`Deleted institution ID ${duplicate.institution_id}`);
+      await client.query('DELETE FROM institutions WHERE school_id = $1', [duplicate.school_id]);
+      console.log(`Deleted institution ID ${duplicate.school_id}`);
     }
   }
   
@@ -212,8 +212,8 @@ const findAndHandleAdditionalDuplicates = async (client) => {
   const duplicatesQuery = `
     SELECT 
       LOWER(name) as lower_name,
-      array_agg(institution_id ORDER BY institution_id) as institution_ids,
-      array_agg(name ORDER BY institution_id) as institution_names
+      array_agg(school_id ORDER BY school_id) as school_ids,
+      array_agg(name ORDER BY school_id) as institution_names
     FROM 
       institutions
     GROUP BY 
@@ -234,13 +234,13 @@ const findAndHandleAdditionalDuplicates = async (client) => {
   // Process each duplicate set
   for (const duplicate of duplicates) {
     console.log(`\nProcessing duplicates for: ${duplicate.lower_name}`);
-    console.log(`Institution IDs: ${duplicate.institution_ids.join(', ')}`);
+    console.log(`Institution IDs: ${duplicate.school_ids.join(', ')}`);
     console.log(`Institution Names: ${duplicate.institution_names.join(', ')}`);
     
     // Get all institutions in this set
     const { rows: institutions } = await client.query(
-      'SELECT * FROM institutions WHERE institution_id = ANY($1)',
-      [duplicate.institution_ids]
+      'SELECT * FROM institutions WHERE school_id = ANY($1)',
+      [duplicate.school_ids]
     );
     
     // Calculate completeness score for each institution
@@ -256,12 +256,12 @@ const findAndHandleAdditionalDuplicates = async (client) => {
     const keepInstitution = scoredInstitutions[0];
     const duplicatesToRemove = scoredInstitutions.slice(1);
     
-    console.log(`Keeping institution with highest score: ${keepInstitution.name} (ID: ${keepInstitution.institution_id}, Score: ${keepInstitution.score})`);
+    console.log(`Keeping institution with highest score: ${keepInstitution.name} (ID: ${keepInstitution.school_id}, Score: ${keepInstitution.score})`);
     
     // Merge information from duplicates into the keeper
     let updatedInstitution = { ...keepInstitution };
     for (const duplicate of duplicatesToRemove) {
-      console.log(`Processing duplicate: ${duplicate.name} (ID: ${duplicate.institution_id}, Score: ${duplicate.score})`);
+      console.log(`Processing duplicate: ${duplicate.name} (ID: ${duplicate.school_id}, Score: ${duplicate.score})`);
       updatedInstitution = mergeInstitutionInfo(updatedInstitution, duplicate);
     }
     
@@ -273,7 +273,7 @@ const findAndHandleAdditionalDuplicates = async (client) => {
       
       // Build the update query dynamically based on what needs to be updated
       for (const [key, value] of Object.entries(updatedInstitution)) {
-        if (key !== 'institution_id' && key !== 'score' && value !== keepInstitution[key]) {
+        if (key !== 'school_id' && key !== 'score' && value !== keepInstitution[key]) {
           updateFields.push(`${key} = $${paramIndex}`);
           updateValues.push(value);
           paramIndex++;
@@ -281,12 +281,12 @@ const findAndHandleAdditionalDuplicates = async (client) => {
       }
       
       if (updateFields.length > 0) {
-        updateValues.push(keepInstitution.institution_id);
+        updateValues.push(keepInstitution.school_id);
         await client.query(
-          `UPDATE institutions SET ${updateFields.join(', ')}, updated_at = NOW() WHERE institution_id = $${paramIndex}`,
+          `UPDATE institutions SET ${updateFields.join(', ')}, updated_at = NOW() WHERE school_id = $${paramIndex}`,
           updateValues
         );
-        console.log(`Updated institution ID ${keepInstitution.institution_id} with merged information`);
+        console.log(`Updated institution ID ${keepInstitution.school_id} with merged information`);
       }
     }
     
@@ -294,21 +294,21 @@ const findAndHandleAdditionalDuplicates = async (client) => {
     for (const duplicate of duplicatesToRemove) {
       // Update teams
       const { rowCount: teamCount } = await client.query(
-        'UPDATE teams SET institution_id = $1, updated_at = NOW() WHERE institution_id = $2',
-        [keepInstitution.institution_id, duplicate.institution_id]
+        'UPDATE teams SET school_id = $1, updated_at = NOW() WHERE school_id = $2',
+        [keepInstitution.school_id, duplicate.school_id]
       );
-      console.log(`Updated ${teamCount} teams from institution ID ${duplicate.institution_id} to ${keepInstitution.institution_id}`);
+      console.log(`Updated ${teamCount} teams from institution ID ${duplicate.school_id} to ${keepInstitution.school_id}`);
       
       // Update venues
       const { rowCount: venueCount } = await client.query(
-        'UPDATE venues SET institution_id = $1, updated_at = NOW() WHERE institution_id = $2',
-        [keepInstitution.institution_id, duplicate.institution_id]
+        'UPDATE venues SET school_id = $1, updated_at = NOW() WHERE school_id = $2',
+        [keepInstitution.school_id, duplicate.school_id]
       );
-      console.log(`Updated ${venueCount} venues from institution ID ${duplicate.institution_id} to ${keepInstitution.institution_id}`);
+      console.log(`Updated ${venueCount} venues from institution ID ${duplicate.school_id} to ${keepInstitution.school_id}`);
       
       // Delete the duplicate
-      await client.query('DELETE FROM institutions WHERE institution_id = $1', [duplicate.institution_id]);
-      console.log(`Deleted institution ID ${duplicate.institution_id}`);
+      await client.query('DELETE FROM institutions WHERE school_id = $1', [duplicate.school_id]);
+      console.log(`Deleted institution ID ${duplicate.school_id}`);
     }
   }
   
@@ -336,12 +336,12 @@ const removeDuplicateInstitutions = async () => {
     
     // Show the final list of institutions
     const { rows: finalInstitutions } = await client.query(
-      'SELECT institution_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY name'
+      'SELECT school_id, name, abbreviation, mascot, primary_color FROM institutions ORDER BY name'
     );
     
     console.log('\nFinal list of institutions:');
     finalInstitutions.forEach(inst => {
-      console.log(`ID: ${inst.institution_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}, Color: ${inst.primary_color}`);
+      console.log(`ID: ${inst.school_id}, Name: ${inst.name}, Abbreviation: ${inst.abbreviation}, Mascot: ${inst.mascot}, Color: ${inst.primary_color}`);
     });
     
     console.log(`\nTotal institutions after removing duplicates: ${finalInstitutions.length}`);

@@ -275,7 +275,7 @@ async function seedEnhancedBig12Teams() {
       // Create or update team with enhanced fields
       const [team, teamCreated] = await models.Team.findOrCreate({
         where: { 
-          institution_id: institution.id,
+          school_id: institution.id,
           sport_id: basketballSport.id
         },
         defaults: {

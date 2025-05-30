@@ -226,15 +226,23 @@ The interface adapts beautifully across all screen sizes:
 
 ## 🔌 API Integration Points
 
-Ready for integration with the existing FlexTime backend:
+Ready for integration with the refactored FlexTime backend (May 30, 2025):
 
 ```javascript
-// Sample API endpoints
-GET /api/status        // System health
+// Sample API endpoints (Enhanced with 20 workers per task scaling)
+GET /api/status        // System health with worker metrics
+GET /api/health        // Enhanced health check with worker allocation
+GET /api/metrics       // Performance metrics including worker stats
 GET /api/teams         // Team data
 GET /api/schedules     // Schedule information
-POST /api/optimize     // AI optimization
+POST /api/optimize     // AI optimization with worker scaling
 ```
+
+### Backend Integration Benefits
+- ✅ **Enhanced Performance**: 20 workers per task scaling for faster API responses
+- ✅ **Improved Reliability**: Modular backend with graceful error handling
+- ✅ **Better Monitoring**: Real-time worker allocation and health metrics
+- ✅ **Production Security**: Rate limiting and security middleware protection
 
 ## 🎨 Brand Alignment
 

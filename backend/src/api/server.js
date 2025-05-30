@@ -15,6 +15,7 @@ const mcpConfig = require('../config/mcp_config');
 // Import API routers
 const enhancedRouter = require('./enhanced');
 const notionSyncRoutes = require('../routes/notionSyncRoutes');
+const { registerConstraintAPI } = require('../constraints/v2/api/expressIntegration');
 
 // Create Express application
 const app = express();
@@ -34,6 +35,9 @@ app.use(API_PREFIX, enhancedRouter);
 
 // Register Notion sync routes
 app.use(`${API_PREFIX}/notion-sync`, notionSyncRoutes);
+
+// Register Constraint Management API v2
+registerConstraintAPI(app, `${API_PREFIX}/v2/constraints`);
 
 // API health check endpoint
 app.get(`${API_PREFIX}/health`, (req, res) => {

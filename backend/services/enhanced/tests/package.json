@@ -1,0 +1,59 @@
+{
+  "name": "ft-engine-tests",
+  "version": "1.0.0",
+  "description": "Comprehensive testing framework for FT Engine",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:performance": "jest --testPathPattern=performance",
+    "test:memory": "jest --testPathPattern=memory-leak",
+    "test:benchmark": "node benchmark/run-benchmarks.js",
+    "test:stress": "node stress/stress-test-runner.js",
+    "test:ci": "jest --ci --coverage --watchAll=false",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": ["<rootDir>/config/jest.setup.js"],
+    "testMatch": [
+      "**/__tests__/**/*.js",
+      "**/*.(test|spec).js"
+    ],
+    "collectCoverageFrom": [
+      "../**/*.js",
+      "!../node_modules/**",
+      "!../tests/**",
+      "!../workers/**"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "coverageReporters": ["text", "lcov", "html"],
+    "testTimeout": 30000
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "eslint": "^8.57.0",
+    "sinon": "^17.0.1",
+    "faker": "^5.5.3",
+    "autocannon": "^7.12.0",
+    "clinic": "^13.0.1",
+    "0x": "^5.5.0",
+    "heapdump": "^0.3.15",
+    "memwatch-next": "^0.3.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  }
+}

@@ -7,7 +7,7 @@
 
 require('dotenv').config();
 const { Sequelize } = require('sequelize');
-const neonConfig = require('../config/neon_db_config');
+const neonConfig = require('../backend/config/neon_db_config');
 const logger = require('../utils/logger');
 
 async function createCompassTables() {

@@ -1,0 +1,485 @@
+/* COMPASS Analytics Dashboard Styles */
+
+.ft-compass-dashboard {
+  width: 100%;
+  height: 100%;
+  background: var(--ft-glass-primary);
+  backdrop-filter: blur(20px) saturate(1.8);
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-xl);
+  padding: var(--ft-space-6);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Dashboard Header */
+.ft-dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--ft-space-6);
+  padding-bottom: var(--ft-space-4);
+  border-bottom: 1px solid var(--ft-glass-border);
+}
+
+.ft-dashboard-title {
+  font-size: var(--ft-scale-2xl);
+  font-weight: 700;
+  color: var(--ft-crystal-white);
+  font-family: var(--ft-font-hero);
+  letter-spacing: -0.5px;
+}
+
+.ft-dashboard-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-4);
+}
+
+/* View Tabs */
+.ft-view-tabs {
+  display: flex;
+  gap: var(--ft-space-2);
+  background: var(--ft-glass-secondary);
+  padding: var(--ft-space-1);
+  border-radius: var(--ft-radius-lg);
+}
+
+.ft-tab {
+  padding: var(--ft-space-2) var(--ft-space-4);
+  background: transparent;
+  border: none;
+  color: var(--ft-silver-mist);
+  font-size: var(--ft-scale-sm);
+  font-weight: 500;
+  font-family: var(--ft-font-hero);
+  cursor: pointer;
+  border-radius: var(--ft-radius-md);
+  transition: all 0.2s ease;
+}
+
+.ft-tab:hover {
+  color: var(--ft-crystal-white);
+  background: var(--ft-glass-primary);
+}
+
+.ft-tab-active {
+  background: var(--ft-cyber-cyan);
+  color: var(--ft-space-navy);
+  font-weight: 600;
+}
+
+.ft-btn-refresh {
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-2);
+  padding: var(--ft-space-2) var(--ft-space-4);
+  background: var(--ft-glass-primary);
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-md);
+  color: var(--ft-cyber-cyan);
+  font-size: var(--ft-scale-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ft-btn-refresh:hover {
+  background: var(--ft-glass-secondary);
+  border-color: var(--ft-cyber-cyan);
+  box-shadow: 0 0 0 1px var(--ft-glass-glow);
+}
+
+.ft-refresh-icon {
+  font-size: var(--ft-scale-base);
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.ft-btn-refresh:hover .ft-refresh-icon {
+  transform: rotate(180deg);
+}
+
+/* Dashboard Content */
+.ft-dashboard-content {
+  width: 100%;
+  height: calc(100% - 80px);
+  overflow-y: auto;
+}
+
+.ft-dashboard-grid {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: var(--ft-space-6);
+  height: 100%;
+}
+
+.ft-dashboard-section {
+  background: var(--ft-glass-secondary);
+  border-radius: var(--ft-radius-xl);
+  padding: var(--ft-space-6);
+}
+
+/* COMPASS Score Meter */
+.ft-compass-meter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--ft-space-6);
+}
+
+.ft-compass-circle {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--score-color, var(--ft-cyber-cyan)) 0deg,
+    var(--score-color, var(--ft-cyber-cyan)) calc(var(--score) * 3.6deg),
+    var(--ft-glass-primary) calc(var(--score) * 3.6deg),
+    var(--ft-glass-primary) 360deg
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 
+    0 0 40px rgba(0, 191, 255, 0.3),
+    inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.ft-compass-inner {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: var(--ft-space-navy);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ft-glass-border);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.ft-compass-score {
+  font-size: var(--ft-scale-hero);
+  font-weight: 700;
+  color: var(--score-color, var(--ft-cyber-cyan));
+  font-family: var(--ft-font-mono);
+  text-shadow: 0 0 20px var(--score-color, var(--ft-cyber-cyan));
+}
+
+.ft-compass-label {
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-silver-mist);
+  margin-top: var(--ft-space-2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Metric Breakdown */
+.ft-compass-breakdown {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-3);
+}
+
+.ft-metric-item {
+  display: grid;
+  grid-template-columns: 140px 1fr 40px;
+  align-items: center;
+  gap: var(--ft-space-3);
+}
+
+.ft-metric-label {
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-silver-mist);
+  font-weight: 500;
+}
+
+.ft-metric-bar {
+  height: 8px;
+  background: var(--ft-glass-primary);
+  border-radius: var(--ft-radius-sm);
+  overflow: hidden;
+}
+
+.ft-metric-fill {
+  height: 100%;
+  border-radius: var(--ft-radius-sm);
+  box-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+}
+
+.ft-metric-value {
+  font-size: var(--ft-scale-sm);
+  font-weight: 600;
+  color: var(--ft-crystal-white);
+  text-align: right;
+  font-family: var(--ft-font-mono);
+}
+
+/* Stats Section */
+.ft-stats-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ft-space-4);
+}
+
+.ft-section-title {
+  font-size: var(--ft-scale-xl);
+  font-weight: 600;
+  color: var(--ft-crystal-white);
+  margin-bottom: var(--ft-space-3);
+}
+
+.ft-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ft-space-4);
+}
+
+.ft-stat-card {
+  background: var(--ft-glass-primary);
+  border: 1px solid var(--ft-glass-border);
+  border-radius: var(--ft-radius-lg);
+  padding: var(--ft-space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--ft-space-3);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ft-stat-card:hover {
+  background: var(--ft-glass-secondary);
+  border-color: var(--ft-cyber-cyan);
+  transform: translateY(-2px);
+  box-shadow: var(--ft-shadow-card);
+}
+
+.ft-stat-success {
+  border-color: var(--ft-success, #00ff88);
+}
+
+.ft-stat-warning {
+  border-color: var(--ft-warning, #ffaa00);
+}
+
+.ft-stat-error {
+  border-color: var(--ft-error, #ff4444);
+}
+
+.ft-stat-icon {
+  font-size: var(--ft-scale-2xl);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ft-glass-secondary);
+  border-radius: var(--ft-radius-md);
+}
+
+.ft-stat-content {
+  flex: 1;
+}
+
+.ft-stat-value {
+  font-size: var(--ft-scale-xl);
+  font-weight: 700;
+  color: var(--ft-crystal-white);
+  font-family: var(--ft-font-mono);
+}
+
+.ft-stat-label {
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-silver-mist);
+}
+
+/* Charts */
+.ft-performance-chart,
+.ft-team-balance-chart {
+  background: var(--ft-glass-secondary);
+  border-radius: var(--ft-radius-xl);
+  padding: var(--ft-space-6);
+  margin-bottom: var(--ft-space-6);
+}
+
+.ft-chart-title {
+  font-size: var(--ft-scale-lg);
+  font-weight: 600;
+  color: var(--ft-crystal-white);
+  margin-bottom: var(--ft-space-4);
+}
+
+/* Insights */
+.ft-metrics-insights {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ft-space-4);
+}
+
+.ft-insight-card {
+  background: var(--ft-glass-secondary);
+  border-radius: var(--ft-radius-lg);
+  padding: var(--ft-space-4);
+  border-left: 4px solid var(--ft-glass-border);
+}
+
+.ft-insight-positive {
+  border-left-color: var(--ft-success, #00ff88);
+}
+
+.ft-insight-negative {
+  border-left-color: var(--ft-error, #ff4444);
+}
+
+.ft-insight-neutral {
+  border-left-color: var(--ft-cyber-cyan);
+}
+
+.ft-insight-title {
+  font-size: var(--ft-scale-base);
+  font-weight: 600;
+  color: var(--ft-crystal-white);
+  margin-bottom: var(--ft-space-2);
+}
+
+.ft-insight-description {
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-silver-mist);
+  line-height: 1.5;
+}
+
+/* Team Metrics Table */
+.ft-team-metrics-table {
+  background: var(--ft-glass-secondary);
+  border-radius: var(--ft-radius-xl);
+  padding: var(--ft-space-6);
+}
+
+.ft-table-container {
+  overflow-x: auto;
+}
+
+.ft-metrics-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ft-metrics-table th {
+  text-align: left;
+  padding: var(--ft-space-3);
+  font-size: var(--ft-scale-sm);
+  font-weight: 600;
+  color: var(--ft-silver-mist);
+  border-bottom: 1px solid var(--ft-glass-border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ft-metrics-table td {
+  padding: var(--ft-space-3);
+  font-size: var(--ft-scale-sm);
+  color: var(--ft-crystal-white);
+  border-bottom: 1px solid var(--ft-glass-border);
+}
+
+.ft-team-name-cell {
+  font-weight: 600;
+  color: var(--ft-cyber-cyan);
+}
+
+.ft-warning {
+  color: var(--ft-warning, #ffaa00);
+  font-weight: 600;
+}
+
+/* Loading State */
+.ft-compass-dashboard.ft-loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.ft-compass-dashboard.ft-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--ft-glass-border);
+  border-top-color: var(--ft-cyber-cyan);
+  border-radius: 50%;
+  animation: ft-spin 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .ft-dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+  
+  .ft-compass-circle {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .ft-compass-inner {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .ft-compass-score {
+    font-size: var(--ft-scale-4xl);
+  }
+}
+
+@media (max-width: 768px) {
+  .ft-compass-dashboard {
+    padding: var(--ft-space-4);
+  }
+  
+  .ft-dashboard-header {
+    flex-direction: column;
+    gap: var(--ft-space-3);
+    align-items: stretch;
+  }
+  
+  .ft-dashboard-controls {
+    justify-content: space-between;
+  }
+  
+  .ft-stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .ft-metrics-insights {
+    grid-template-columns: 1fr;
+  }
+  
+  .ft-metrics-table {
+    font-size: var(--ft-scale-xs);
+  }
+}
+
+/* Light Theme Adjustments */
+[data-theme="light"] .ft-compass-dashboard {
+  background: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="light"] .ft-dashboard-section {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .ft-compass-inner {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .ft-dashboard-title {
+  color: var(--ft-space-navy);
+}

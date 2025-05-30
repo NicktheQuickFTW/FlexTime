@@ -53,7 +53,7 @@ export interface Venue {
 }
 
 export interface Institution {
-  institution_id?: number;
+  school_id?: number;
   name: string;
   abbreviation: string;
   mascot?: string;
@@ -128,6 +128,15 @@ export interface ScheduleOptimizationResult {
     homeAwayBalance: number;
     constraintViolations: number;
   };
+}
+
+export interface Conflict {
+  type: 'schedule' | 'venue' | 'team' | 'travel';
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  message: string;
+  constraint?: Constraint;
+  gameId?: string;
+  affectedGames?: string[];
 }
 
 export interface ApiResponse<T> {

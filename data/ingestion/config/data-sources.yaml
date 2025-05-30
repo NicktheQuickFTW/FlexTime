@@ -1,0 +1,65 @@
+# Data Sources Configuration
+# Configuration for all data ingestion sources
+
+sources:
+  big12_api:
+    type: "rest_api"
+    endpoint: "${BIG12_API_ENDPOINT}"
+    auth:
+      type: "api_key"
+      key: "${BIG12_API_KEY}"
+    rate_limit:
+      requests_per_minute: 100
+      burst_limit: 20
+    retry_policy:
+      max_retries: 3
+      backoff_strategy: "exponential"
+    
+  venue_systems:
+    type: "database"
+    connection_string: "${VENUE_DB_CONNECTION}"
+    tables:
+      - "venues"
+      - "availability"
+      - "capacity"
+    sync_frequency: "hourly"
+    
+  team_rosters:
+    type: "file_watcher"
+    directory: "/data/incoming/rosters"
+    file_patterns:
+      - "*.csv"
+      - "*.json"
+      - "*.xlsx"
+    processing_mode: "immediate"
+    
+  constraint_feeds:
+    type: "message_queue"
+    queue_name: "constraint_updates"
+    connection: "${REDIS_CONNECTION}"
+    batch_size: 50
+    
+  calendar_systems:
+    type: "caldav"
+    endpoints:
+      - "${CALDAV_ENDPOINT_1}"
+      - "${CALDAV_ENDPOINT_2}"
+    sync_frequency: "every_15_minutes"
+    
+  historical_data:
+    type: "s3_bucket"
+    bucket: "${HISTORICAL_DATA_BUCKET}"
+    prefix: "schedules/"
+    format: "parquet"
+
+validation:
+  schema_validation: true
+  data_quality_checks: true
+  constraint_verification: true
+  duplicate_detection: true
+
+monitoring:
+  metrics_enabled: true
+  alerting_enabled: true
+  log_level: "info"
+  health_check_interval: "30s"

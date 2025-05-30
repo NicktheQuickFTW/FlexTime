@@ -1,0 +1,303 @@
+/* Constraint Management Styles */
+
+/* Constraint Cards */
+.constraint-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300;
+  @apply border border-gray-200 dark:border-gray-700;
+}
+
+.constraint-card-header {
+  @apply flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700;
+}
+
+.constraint-card-body {
+  @apply p-4;
+}
+
+/* Priority Badges */
+.priority-badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.priority-high {
+  @apply bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200;
+}
+
+.priority-medium {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200;
+}
+
+.priority-low {
+  @apply bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200;
+}
+
+/* Category Colors */
+.category-team {
+  @apply bg-blue-500 text-white;
+}
+
+.category-venue {
+  @apply bg-yellow-500 text-white;
+}
+
+.category-schedule {
+  @apply bg-red-600 text-white;
+}
+
+/* Conflict Indicators */
+.conflict-indicator {
+  @apply relative inline-flex rounded-full h-3 w-3;
+}
+
+.conflict-critical {
+  @apply bg-red-500;
+  animation: pulse-red 2s infinite;
+}
+
+.conflict-warning {
+  @apply bg-yellow-500;
+  animation: pulse-yellow 2s infinite;
+}
+
+.conflict-resolved {
+  @apply bg-green-500;
+}
+
+/* Status Indicators */
+.status-satisfied {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.status-violated {
+  @apply text-red-600 dark:text-red-400;
+}
+
+.status-partial {
+  @apply text-yellow-600 dark:text-yellow-400;
+}
+
+.status-pending {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
+/* Form Elements */
+.constraint-input {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply dark:bg-gray-700 dark:text-white;
+}
+
+.constraint-select {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply dark:bg-gray-700 dark:text-white;
+}
+
+.constraint-textarea {
+  @apply w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply dark:bg-gray-700 dark:text-white resize-y;
+}
+
+/* Buttons */
+.constraint-btn {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md;
+  @apply focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200;
+}
+
+.constraint-btn-primary {
+  @apply constraint-btn bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500;
+}
+
+.constraint-btn-secondary {
+  @apply constraint-btn bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-500;
+  @apply dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600;
+}
+
+.constraint-btn-danger {
+  @apply constraint-btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+.constraint-btn-success {
+  @apply constraint-btn bg-green-600 text-white hover:bg-green-700 focus:ring-green-500;
+}
+
+/* Tooltips */
+.constraint-tooltip {
+  @apply absolute z-10 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg shadow-sm;
+  @apply dark:bg-gray-700;
+}
+
+/* Tables */
+.constraint-table {
+  @apply min-w-full divide-y divide-gray-200 dark:divide-gray-700;
+}
+
+.constraint-table-header {
+  @apply bg-gray-50 dark:bg-gray-900;
+}
+
+.constraint-table-row {
+  @apply hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150;
+}
+
+.constraint-table-cell {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100;
+}
+
+/* Animations */
+@keyframes pulse-red {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes pulse-yellow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Loading States */
+.constraint-skeleton {
+  @apply animate-pulse bg-gray-200 dark:bg-gray-700 rounded;
+}
+
+/* Alert Styles */
+.constraint-alert {
+  @apply p-4 rounded-md border;
+}
+
+.constraint-alert-info {
+  @apply constraint-alert bg-blue-50 border-blue-200 text-blue-800;
+  @apply dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-200;
+}
+
+.constraint-alert-warning {
+  @apply constraint-alert bg-yellow-50 border-yellow-200 text-yellow-800;
+  @apply dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200;
+}
+
+.constraint-alert-error {
+  @apply constraint-alert bg-red-50 border-red-200 text-red-800;
+  @apply dark:bg-red-900/20 dark:border-red-800 dark:text-red-200;
+}
+
+.constraint-alert-success {
+  @apply constraint-alert bg-green-50 border-green-200 text-green-800;
+  @apply dark:bg-green-900/20 dark:border-green-800 dark:text-green-200;
+}
+
+/* Dashboard Cards */
+.dashboard-metric-card {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow p-6;
+  @apply border border-gray-200 dark:border-gray-700;
+}
+
+.dashboard-metric-value {
+  @apply text-3xl font-bold text-gray-900 dark:text-white;
+}
+
+.dashboard-metric-label {
+  @apply text-sm text-gray-600 dark:text-gray-400 mt-1;
+}
+
+/* Charts Container */
+.chart-container {
+  @apply bg-white dark:bg-gray-800 rounded-lg shadow p-4;
+  @apply border border-gray-200 dark:border-gray-700;
+}
+
+.chart-title {
+  @apply text-lg font-semibold text-gray-900 dark:text-white mb-4;
+}
+
+/* Responsive Grid */
+.constraint-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4;
+}
+
+/* Stepper Styles */
+.constraint-stepper {
+  @apply relative;
+}
+
+.constraint-step {
+  @apply flex items-center;
+}
+
+.constraint-step-indicator {
+  @apply flex items-center justify-center w-10 h-10 rounded-full;
+  @apply bg-gray-200 dark:bg-gray-700;
+}
+
+.constraint-step-active {
+  @apply bg-blue-600 text-white;
+}
+
+.constraint-step-completed {
+  @apply bg-green-600 text-white;
+}
+
+/* Modal Overlays */
+.constraint-modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 z-40;
+}
+
+.constraint-modal-content {
+  @apply fixed inset-x-4 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-800;
+  @apply rounded-lg shadow-xl max-w-2xl mx-auto z-50 p-6;
+}
+
+/* Transitions */
+.constraint-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Scrollbar Styles */
+.constraint-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: theme('colors.gray.400') transparent;
+}
+
+.constraint-scrollbar::-webkit-scrollbar {
+  @apply w-2;
+}
+
+.constraint-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.constraint-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 dark:bg-gray-600 rounded-full;
+}
+
+.constraint-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500 dark:bg-gray-500;
+}

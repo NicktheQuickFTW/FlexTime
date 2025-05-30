@@ -7,11 +7,11 @@
 
 const express = require('express');
 const router = express.Router();
-const AdvancedSchedulingService = require('../services/advanced_scheduling_service');
+const FTBuilderEngine = require('../services/FT_Builder_Engine');
 const logger = require('../utils/logger');
 
 // Create service instance
-const schedulingService = new AdvancedSchedulingService();
+const schedulingService = new FTBuilderEngine();
 
 // Initialize service
 (async () => {

@@ -1,0 +1,371 @@
+/**
+ * Integration Example: How to add the FlexTime Animation System to your existing App
+ * This shows the minimal changes needed to add smooth animations to your application
+ */
+
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AnimationProvider, RouteTransitionWrapper } from './index';
+import './animations.css';
+
+// Import your existing components
+// import Dashboard from '../pages/Dashboard';
+// import Schedule from '../pages/Schedule';
+// import Constraints from '../pages/Constraints';
+
+/**
+ * Step 1: Wrap your app with AnimationProvider
+ * This enables animation context throughout your application
+ */
+export const AnimatedFlexTimeApp: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <AnimationProvider>
+        <div className="flextime-app">
+          <AppContent />
+        </div>
+      </AnimationProvider>
+    </BrowserRouter>
+  );
+};
+
+/**
+ * Step 2: Wrap your routes with RouteTransitionWrapper
+ * This automatically handles page transitions between routes
+ */
+const AppContent: React.FC = () => {
+  return (
+    <div className="app-layout">
+      {/* Your existing header/navigation */}
+      <header className="app-header">
+        <h1>FlexTime Scheduling</h1>
+        {/* Your navigation component */}
+      </header>
+
+      {/* Main content with route transitions */}
+      <main className="app-main">
+        <RouteTransitionWrapper>
+          <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/constraints" element={<Constraints />} />
+            <Route path="/sports/:sport" element={<SportDetail />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </RouteTransitionWrapper>
+      </main>
+
+      {/* Your existing footer */}
+      <footer className="app-footer">
+        {/* Footer content */}
+      </footer>
+    </div>
+  );
+};
+
+/**
+ * Step 3: Enhance individual pages with animations
+ * Example of converting an existing page to use animations
+ */
+
+// Before: Static Dashboard
+// const Dashboard = () => {
+//   return (
+//     <div className="dashboard">
+//       <h1>Dashboard</h1>
+//       <div className="cards">
+//         {cards.map(card => <Card key={card.id} {...card} />)}
+//       </div>
+//     </div>
+//   );
+// };
+
+// After: Animated Dashboard
+import { PageTransition, StaggerContainer, CardTransition } from './index';
+
+const Dashboard: React.FC = () => {
+  const cards = [
+    { id: 1, title: 'Teams', count: 16 },
+    { id: 2, title: 'Sports', count: 23 },
+    { id: 3, title: 'Venues', count: 45 },
+    { id: 4, title: 'Games', count: 234 },
+  ];
+
+  return (
+    <PageTransition key="dashboard" transition="fade">
+      <div className="dashboard">
+        <h1>Dashboard</h1>
+        <StaggerContainer staggerDelay={0.1} className="cards">
+          {cards.map((card, index) => (
+            <CardTransition key={card.id} delay={index * 0.05}>
+              <div className="card">
+                <h3>{card.title}</h3>
+                <span className="count">{card.count}</span>
+              </div>
+            </CardTransition>
+          ))}
+        </StaggerContainer>
+      </div>
+    </PageTransition>
+  );
+};
+
+/**
+ * Step 4: Add animations to specific components
+ * Example of enhancing a sport profile list
+ */
+
+// Before: Static list
+// const SportsList = ({ sports }) => (
+//   <div className="sports-list">
+//     {sports.map(sport => (
+//       <div key={sport.id} className="sport-item">
+//         <h3>{sport.name}</h3>
+//         <p>{sport.teams} teams</p>
+//       </div>
+//     ))}
+//   </div>
+// );
+
+// After: Animated list with stagger
+import { ListItemTransition } from './index';
+
+const SportsList: React.FC<{ sports: any[] }> = ({ sports }) => {
+  return (
+    <div className="sports-list">
+      {sports.map((sport, index) => (
+        <ListItemTransition key={sport.id} index={index}>
+          <div className={`sport-item ft-sport-${sport.slug}`}>
+            <h3>{sport.name}</h3>
+            <p>{sport.teams} teams</p>
+          </div>
+        </ListItemTransition>
+      ))}
+    </div>
+  );
+};
+
+/**
+ * Step 5: Add loading states with smooth transitions
+ */
+
+// Before: Basic loading
+// const ScheduleComponent = () => {
+//   const [loading, setLoading] = useState(true);
+//   const [data, setData] = useState([]);
+//   
+//   if (loading) return <div>Loading...</div>;
+//   return <div>{data.map(...)}</div>;
+// };
+
+// After: Smooth loading transitions
+import { LoadingTransition } from './index';
+
+const Schedule: React.FC = () => {
+  const [loading, setLoading] = React.useState(true);
+  const [scheduleData, setScheduleData] = React.useState([]);
+
+  React.useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      setScheduleData([/* your data */]);
+      setLoading(false);
+    }, 1000);
+  }, []);
+
+  return (
+    <PageTransition key="schedule" transition="slide" direction="left">
+      <div className="schedule-page">
+        <h1>Schedule</h1>
+        
+        <LoadingTransition 
+          isLoading={loading}
+          loadingComponent={
+            <div className="loading-state">
+              <div className="ft-animate-spin">⏳</div>
+              <p>Loading schedule...</p>
+            </div>
+          }
+        >
+          <div className="schedule-content">
+            {/* Your schedule content */}
+          </div>
+        </LoadingTransition>
+      </div>
+    </PageTransition>
+  );
+};
+
+/**
+ * Step 6: Add modal animations
+ */
+
+// Before: Basic modal
+// const ConstraintModal = ({ isOpen, onClose, children }) => {
+//   if (!isOpen) return null;
+//   return (
+//     <div className="modal-backdrop" onClick={onClose}>
+//       <div className="modal-content">
+//         {children}
+//       </div>
+//     </div>
+//   );
+// };
+
+// After: Smooth modal with backdrop animation
+import { ModalTransition } from './index';
+
+const ConstraintModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+}> = ({ isOpen, onClose, children }) => {
+  return (
+    <ModalTransition isOpen={isOpen} onClose={onClose}>
+      <div className="constraint-modal">
+        {children}
+      </div>
+    </ModalTransition>
+  );
+};
+
+/**
+ * Step 7: Optimize performance for slower devices
+ */
+
+import { useAnimation } from './index';
+
+const PerformanceSensitiveComponent: React.FC = () => {
+  const { shouldAnimate, animationQuality, getOptimizedConfig } = useAnimation();
+
+  // Skip expensive animations on low-performance devices
+  if (!shouldAnimate || animationQuality === 'low') {
+    return (
+      <div className="simple-layout">
+        {/* Simplified version without animations */}
+      </div>
+    );
+  }
+
+  return (
+    <div className="enhanced-layout">
+      {/* Full animated version */}
+    </div>
+  );
+};
+
+/**
+ * Step 8: Add scroll-triggered animations
+ */
+
+import { useScrollAnimation } from './index';
+import { motion } from 'framer-motion';
+
+const ScrollTriggeredSection: React.FC = () => {
+  const { ref, isVisible } = useScrollAnimation(0.2);
+
+  return (
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0, y: 50 }}
+      animate={isVisible ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.6 }}
+      className="scroll-section"
+    >
+      <h2>This animates when scrolled into view</h2>
+      <p>Content appears smoothly as user scrolls</p>
+    </motion.section>
+  );
+};
+
+/**
+ * Step 9: Sport-specific theming
+ */
+
+const SportSpecificPage: React.FC<{ sport: string }> = ({ sport }) => {
+  return (
+    <div className={`sport-page ft-sport-${sport}`}>
+      <PageTransition key={`sport-${sport}`} transition="scale">
+        <div className="sport-content">
+          <h1>{sport.charAt(0).toUpperCase() + sport.slice(1)} Schedule</h1>
+          {/* Sport-specific content with themed animations */}
+        </div>
+      </PageTransition>
+    </div>
+  );
+};
+
+/**
+ * Step 10: Constraints page with form animations
+ */
+
+const Constraints: React.FC = () => {
+  return (
+    <PageTransition key="constraints" transition="blur">
+      <div className="constraints-page">
+        <h1>Scheduling Constraints</h1>
+        
+        <StaggerContainer staggerDelay={0.1}>
+          <div className="constraint-form">
+            <CardTransition delay={0.1}>
+              <div className="form-section">
+                <h3>Time Constraints</h3>
+                {/* Form fields */}
+              </div>
+            </CardTransition>
+            
+            <CardTransition delay={0.2}>
+              <div className="form-section">
+                <h3>Venue Constraints</h3>
+                {/* Form fields */}
+              </div>
+            </CardTransition>
+            
+            <CardTransition delay={0.3}>
+              <div className="form-section">
+                <h3>Travel Constraints</h3>
+                {/* Form fields */}
+              </div>
+            </CardTransition>
+          </div>
+        </StaggerContainer>
+      </div>
+    </PageTransition>
+  );
+};
+
+/**
+ * Additional utility: Admin page with drawer navigation
+ */
+
+import { DrawerTransition } from './index';
+
+const Admin: React.FC = () => {
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+
+  return (
+    <PageTransition key="admin" transition="slide" direction="right">
+      <div className="admin-page">
+        <h1>Admin Dashboard</h1>
+        
+        <button onClick={() => setDrawerOpen(true)}>
+          Open Settings
+        </button>
+
+        <DrawerTransition isOpen={drawerOpen} direction="right">
+          <div className="admin-drawer">
+            <h3>Admin Settings</h3>
+            <button onClick={() => setDrawerOpen(false)}>
+              Close
+            </button>
+            {/* Drawer content */}
+          </div>
+        </DrawerTransition>
+      </div>
+    </PageTransition>
+  );
+};
+
+const SportDetail: React.FC = () => <div>Sport Detail Page</div>;
+
+export default AnimatedFlexTimeApp;

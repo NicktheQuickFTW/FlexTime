@@ -1,0 +1,77 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: flextime-service-account
+  namespace: flextime
+  labels:
+    app: flextime
+    component: rbac
+  annotations:
+    eks.amazonaws.com/role-arn: ${SERVICE_ACCOUNT_ROLE_ARN}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: flextime
+  name: flextime-role
+  labels:
+    app: flextime
+    component: rbac
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "endpoints", "configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["extensions", "networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: flextime-role-binding
+  namespace: flextime
+  labels:
+    app: flextime
+    component: rbac
+subjects:
+- kind: ServiceAccount
+  name: flextime-service-account
+  namespace: flextime
+roleRef:
+  kind: Role
+  name: flextime-role
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flextime-cluster-role
+  labels:
+    app: flextime
+    component: rbac
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "namespaces"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["metrics.k8s.io"]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flextime-cluster-role-binding
+  labels:
+    app: flextime
+    component: rbac
+subjects:
+- kind: ServiceAccount
+  name: flextime-service-account
+  namespace: flextime
+roleRef:
+  kind: ClusterRole
+  name: flextime-cluster-role
+  apiGroup: rbac.authorization.k8s.io

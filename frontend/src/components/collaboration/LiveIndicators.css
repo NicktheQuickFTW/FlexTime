@@ -1,0 +1,353 @@
+/* ============================================================================
+   FlexTime Live Indicators - Collaboration Presence System Styles
+   ============================================================================ */
+
+/* Container */
+.ft-live-indicators {
+  @apply relative flex items-center justify-end p-4;
+  z-index: 1000;
+}
+
+/* User Avatars Section */
+.ft-user-avatars {
+  @apply flex items-center gap-2;
+}
+
+.ft-user-avatar {
+  @apply relative transition-all duration-200 ease-out;
+}
+
+.ft-user-avatar:hover {
+  @apply transform scale-110;
+}
+
+/* Avatar image styling */
+.ft-user-avatar img {
+  @apply w-full h-full object-cover;
+  border-radius: inherit;
+}
+
+/* User count overflow indicator */
+.ft-user-count {
+  @apply flex items-center justify-center w-10 h-10 rounded-full text-sm font-semibold;
+  @apply backdrop-blur-sm border border-white/20;
+  background: var(--flextime-glass-bg, rgba(255, 255, 255, 0.1));
+  color: var(--flextime-text-primary);
+  transition: all 0.2s ease-out;
+}
+
+.ft-user-count:hover {
+  @apply transform scale-110;
+  background: var(--flextime-glass-bg-hover, rgba(255, 255, 255, 0.15));
+}
+
+/* Activity Toggle Button */
+.ft-activity-toggle {
+  @apply relative p-2 rounded-full transition-all duration-200;
+  @apply backdrop-blur-sm border border-white/20;
+  background: var(--flextime-glass-bg, rgba(255, 255, 255, 0.1));
+}
+
+.ft-activity-toggle:hover {
+  @apply transform scale-110;
+  background: var(--flextime-glass-bg-hover, rgba(255, 255, 255, 0.15));
+}
+
+/* Live Cursors */
+.ft-live-cursors {
+  @apply fixed inset-0 pointer-events-none;
+  z-index: 9999;
+}
+
+.ft-live-cursor {
+  @apply absolute pointer-events-none;
+  will-change: transform;
+}
+
+.ft-cursor-label {
+  @apply absolute whitespace-nowrap px-2 py-1 rounded text-xs font-medium;
+  @apply backdrop-blur-sm border border-white/20;
+  left: 20px;
+  top: 0;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.ft-cursor-action {
+  @apply absolute rounded-full;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* User Tooltip */
+.ft-user-tooltip {
+  @apply absolute z-50;
+}
+
+.ft-user-tooltip > div {
+  @apply backdrop-blur-sm border border-white/10;
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Activity Feed */
+.ft-activity-panel {
+  @apply backdrop-blur-sm border border-white/10;
+  box-shadow: 
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.ft-activity-feed {
+  @apply space-y-2;
+}
+
+.ft-activity-item {
+  @apply transition-all duration-200 ease-out;
+  @apply backdrop-blur-sm border border-white/5;
+}
+
+.ft-activity-item:hover {
+  @apply transform translate-x-1;
+  background: var(--flextime-glass-bg-hover, rgba(255, 255, 255, 0.08));
+}
+
+/* Connection Status */
+.ft-connection-status {
+  @apply fixed bottom-4 right-4 z-50;
+}
+
+.ft-connection-status > div {
+  @apply backdrop-blur-sm border border-white/10;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+/* Dark mode adjustments */
+[data-theme-mode="dark"] .ft-user-count {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+[data-theme-mode="dark"] .ft-activity-toggle {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme-mode="dark"] .ft-activity-panel {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme-mode="dark"] .ft-activity-item {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme-mode="dark"] .ft-activity-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme-mode="dark"] .ft-connection-status > div {
+  background: rgba(0, 0, 0, 0.6);
+  color: #ffffff;
+}
+
+/* Light mode adjustments */
+[data-theme-mode="light"] .ft-user-count {
+  background: rgba(0, 0, 0, 0.1);
+  color: #000000;
+}
+
+[data-theme-mode="light"] .ft-activity-toggle {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme-mode="light"] .ft-activity-panel {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme-mode="light"] .ft-activity-item {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+[data-theme-mode="light"] .ft-activity-item:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme-mode="light"] .ft-connection-status > div {
+  background: rgba(255, 255, 255, 0.8);
+  color: #000000;
+}
+
+/* Sport-specific theming */
+[data-theme-sport="football"] .ft-live-indicators {
+  --cursor-glow: #FF6600;
+}
+
+[data-theme-sport="basketball"] .ft-live-indicators {
+  --cursor-glow: #FFA500;
+}
+
+[data-theme-sport="baseball"] .ft-live-indicators {
+  --cursor-glow: #32CD32;
+}
+
+[data-theme-sport="softball"] .ft-live-indicators {
+  --cursor-glow: #FFD700;
+}
+
+/* Animation performance optimizations */
+@media (prefers-reduced-motion: reduce) {
+  .ft-live-cursor,
+  .ft-cursor-action,
+  .ft-user-avatar,
+  .ft-activity-item {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .ft-live-cursor {
+    transition: transform 0.1s linear !important;
+  }
+}
+
+/* High contrast mode support */
+[data-contrast-mode="high"] .ft-user-avatar {
+  @apply border-2 border-current;
+}
+
+[data-contrast-mode="high"] .ft-cursor-label {
+  @apply border-2 border-current;
+  box-shadow: none;
+}
+
+[data-contrast-mode="high"] .ft-activity-panel {
+  @apply border-2;
+  box-shadow: none;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .ft-live-indicators {
+    @apply px-2;
+  }
+  
+  .ft-user-avatars {
+    @apply gap-1;
+  }
+  
+  .ft-user-avatar {
+    @apply w-8 h-8;
+  }
+  
+  .ft-user-count {
+    @apply w-8 h-8 text-xs;
+  }
+  
+  .ft-activity-panel {
+    @apply w-72 max-h-80;
+    right: 0;
+    left: auto;
+  }
+  
+  .ft-connection-status {
+    @apply bottom-2 right-2;
+  }
+  
+  .ft-connection-status > div {
+    @apply px-2 py-1 text-xs;
+  }
+  
+  /* Hide cursors on mobile for performance */
+  .ft-live-cursors {
+    @apply hidden;
+  }
+}
+
+@media (max-width: 480px) {
+  .ft-activity-panel {
+    @apply w-64 max-h-64;
+  }
+  
+  .ft-activity-panel .ft-activity-item {
+    @apply px-2 py-1;
+  }
+  
+  .ft-activity-panel h3 {
+    @apply text-base mb-2;
+  }
+}
+
+/* Custom scrollbar for activity feed */
+.ft-activity-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ft-activity-panel::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+.ft-activity-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.ft-activity-panel::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Focus states for accessibility */
+.ft-activity-toggle:focus-visible,
+.ft-user-avatar:focus-visible {
+  @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+[data-theme-mode="dark"] .ft-activity-toggle:focus-visible,
+[data-theme-mode="dark"] .ft-user-avatar:focus-visible {
+  @apply ring-offset-gray-800;
+}
+
+/* Pulse animation for activity notifications */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Glow effect for active cursors */
+.ft-cursor-action {
+  box-shadow: 0 0 10px var(--cursor-glow, currentColor);
+}
+
+/* Glassmorphism effects */
+.ft-live-indicators [class*="backdrop-blur"] {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Performance optimizations */
+.ft-live-cursor,
+.ft-cursor-label,
+.ft-cursor-action {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Print styles */
+@media print {
+  .ft-live-indicators,
+  .ft-live-cursors,
+  .ft-connection-status {
+    @apply hidden;
+  }
+}

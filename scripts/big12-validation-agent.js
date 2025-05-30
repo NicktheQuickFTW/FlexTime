@@ -118,7 +118,7 @@ async function fetchTeamInfo(client, currentUser, teamId) {
     const result = await client.query(`
       SELECT t.team_id, t.name, t.mascot, i.code
       FROM ${currentUser}.teams t
-      JOIN ${currentUser}.institutions i ON t.institution_id = i.institution_id
+      JOIN ${currentUser}.institutions i ON t.school_id = i.school_id
       WHERE t.team_id = $1;
     `, [teamId]);
     

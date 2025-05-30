@@ -242,7 +242,7 @@ const basketballResults = await analyzer.executeUnifiedSportAnalysis('basketball
 
 ### **✅ FULLY OPERATIONAL**
 - **Unified Research Method**: Complete pipeline assessment for any sport
-- **Unified COMPASS Ratings**: Sport-specific COMPASS methodology
+- **Sport-Specific COMPASS Ratings**: Sport-specific COMPASS methodology
 - **Dynamic Configuration**: Automatic sport detection and optimization
 - **Rankings Integration**: Comprehensive transfer portal and recruiting rankings
 - **Execution Scripts**: Individual sport and master analysis capabilities

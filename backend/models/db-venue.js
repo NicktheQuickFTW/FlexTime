@@ -15,63 +15,30 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     name: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-      validate: {
-        notEmpty: true
-      }
+      type: DataTypes.STRING,
+      allowNull: false
     },
     city: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING,
       allowNull: true
     },
     state: {
-      type: DataTypes.STRING(2),
-      allowNull: true
-    },
-    address: {
-      type: DataTypes.STRING(200),
-      allowNull: true
-    },
-    latitude: {
-      type: DataTypes.DECIMAL(10, 6),
-      allowNull: true
-    },
-    longitude: {
-      type: DataTypes.DECIMAL(10, 6),
+      type: DataTypes.STRING,
       allowNull: true
     },
     capacity: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    facilities: {
-      type: DataTypes.JSON,
-      allowNull: true
-    },
-    institution_id: {
+    team_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: 'institutions',
-        key: 'institution_id'
+        model: 'teams',
+        key: 'team_id'
       }
     },
-    is_primary: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
-    },
-    metadata: {
-      type: DataTypes.JSON,
-      allowNull: true
-    },
-    // Enhanced fields
-    supported_sports: {
-      type: DataTypes.ARRAY(DataTypes.INTEGER),
-      allowNull: true,
-      comment: 'IDs of sports supported at this venue'
-    },
+    // Enhanced fields (removed supported_sports since team_id contains sport info)
     time_zone: {
       type: DataTypes.STRING(50),
       allowNull: true,
@@ -139,11 +106,64 @@ module.exports = (sequelize) => {
     underscored: true
   });
 
+  // Helper function to calculate team_id from school_id and sport_id
+  Venue.calculateTeamId = (schoolId, sportId) => {
+    return parseInt(`${schoolId}${sportId.toString().padStart(2, '0')}`);
+  };
+
+  // Venue ID generation helpers
+  Venue.generateVenueId = (schoolId, venueType = 1) => {
+    // Format: SSVV (school + venue type)
+    // 01 = Football Stadium, 02 = Arena, 03 = Baseball, etc.
+    const school = schoolId.toString().padStart(2, '0');
+    const venue = venueType.toString().padStart(2, '0');
+    return parseInt(`${school}${venue}`);
+  };
+
+  Venue.parseVenueId = (venueId) => {
+    const venueStr = venueId.toString();
+    
+    // School-venue pattern (4 digits: SSVV)
+    if (venueStr.length === 4) {
+      return {
+        schoolId: parseInt(venueStr.substring(0, 2)),
+        venueType: parseInt(venueStr.substring(2, 4)),
+        pattern: 'school-venue-type'
+      };
+    }
+    
+    // Legacy pattern (1-3 digits)
+    if (venueStr.length <= 3) {
+      return { venueId: venueId, pattern: 'legacy' };
+    }
+    
+    return null;
+  };
+
+  // Venue type constants
+  Venue.VENUE_TYPES = {
+    FOOTBALL_STADIUM: 1,
+    ARENA_GYMNASIUM: 2,     // Basketball, Gymnastics
+    BASEBALL_COMPLEX: 3,    // Baseball
+    SOFTBALL_COMPLEX: 4,    // Softball  
+    SOCCER_FIELD: 5,        // Soccer
+    VOLLEYBALL_FACILITY: 6, // Volleyball
+    TENNIS_COMPLEX: 7,      // Tennis
+    TRACK_FIELD: 8,         // Track & Field, Cross Country
+    SWIMMING_POOL: 9,       // Swimming & Diving
+    GOLF_COURSE: 10         // Golf
+  };
+
+  // Helper to get venue ID by type
+  Venue.getVenueId = (schoolId, venueType) => {
+    return Venue.generateVenueId(schoolId, venueType);
+  };
+
   Venue.associate = (models) => {
-    // A Venue can belong to an Institution
-    Venue.belongsTo(models.Institution, {
-      foreignKey: 'institution_id',
-      as: 'institution'
+    // A Venue belongs to a Team (which contains school and sport info)
+    Venue.belongsTo(models.Team, {
+      foreignKey: 'team_id',
+      as: 'team'
     });
     
     // A Venue can have many Games

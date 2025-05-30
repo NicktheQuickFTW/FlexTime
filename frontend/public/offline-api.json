@@ -1,0 +1,17 @@
+{
+  "error": "offline",
+  "message": "This data is not available while offline. Please check your internet connection and try again.",
+  "offline_features": [
+    "View cached schedules",
+    "Browse team information",
+    "Access saved constraints",
+    "Work with stored analytics"
+  ],
+  "status": "service_unavailable",
+  "timestamp": "offline",
+  "suggestions": [
+    "Check your internet connection",
+    "Try again when back online",
+    "Use cached data if available"
+  ]
+}

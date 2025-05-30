@@ -130,7 +130,7 @@ async function createChampionshipTable(client, schema) {
 async function createInstitutionTable(client, schema) {
   const query = `
     CREATE TABLE ${schema}.institutions (
-      institution_id SERIAL PRIMARY KEY,
+      school_id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       short_name VARCHAR(50),
       code VARCHAR(10) NOT NULL UNIQUE,
@@ -149,7 +149,7 @@ async function createTeamTable(client, schema) {
       team_id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       mascot VARCHAR(100),
-      institution_id INTEGER REFERENCES ${schema}.institutions(institution_id),
+      school_id INTEGER REFERENCES ${schema}.institutions(school_id),
       sport_id INTEGER REFERENCES ${schema}.sports(sport_id),
       championship_id INTEGER REFERENCES ${schema}.championships(championship_id),
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -179,7 +179,7 @@ async function createVenueTable(client, schema) {
       accessibility_features JSON,
       latitude NUMERIC(10,6),
       longitude NUMERIC(10,6),
-      institution_id INTEGER REFERENCES ${schema}.institutions(institution_id) ON DELETE SET NULL,
+      school_id INTEGER REFERENCES ${schema}.institutions(school_id) ON DELETE SET NULL,
       created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );

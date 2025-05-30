@@ -1,0 +1,49 @@
+# Spike Load Test Scenario
+# Tests system behavior under sudden traffic spikes
+
+name: "Spike Load Test"
+description: "Simulates sudden traffic spikes"
+
+stages:
+  - duration: 1m
+    target: 50
+    description: "Normal load - 50 users"
+  - duration: 30s
+    target: 500
+    description: "Spike to 500 users"
+  - duration: 3m
+    target: 500
+    description: "Maintain spike load"
+  - duration: 30s
+    target: 50
+    description: "Return to normal"
+  - duration: 2m
+    target: 50
+    description: "Maintain normal load"
+  - duration: 1m
+    target: 0
+    description: "Ramp down"
+
+thresholds:
+  - metric: http_req_duration
+    threshold: p(99)<2000
+    description: "99% of requests should be under 2s"
+  - metric: http_req_failed
+    threshold: rate<0.1
+    description: "Error rate should be below 10%"
+  - metric: system_recovery_time
+    threshold: value<60s
+    description: "System should recover within 60 seconds"
+
+scenarios:
+  critical_paths:
+    - login_spike
+    - dashboard_load
+    - time_entry_submission
+    - report_generation
+
+recovery_metrics:
+  - time_to_normal_response
+  - queue_drain_time
+  - error_recovery_rate
+  - auto_scaling_effectiveness

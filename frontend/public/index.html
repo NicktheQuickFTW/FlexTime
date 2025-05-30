@@ -1,52 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLEXTIME - INTELLIGENT SPORTS SCHEDULING</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="ft-builder/ft-builder-styles.css">
-    <link rel="stylesheet" href="ft-builder/ft-builder-additional-styles.css">
+    <title>FlexTime - Next-Gen Sports Scheduling Platform</title>
+    
+    <!-- Basic favicon only -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script>
-        // Big 12 Conference school data
-        const big12Schools = [
-          { name: 'Arizona', abbreviation: 'ARIZ', lat: 32.2319, lng: -110.9501, city: 'Tucson, AZ' },
-          { name: 'Arizona State', abbreviation: 'ASU', lat: 33.4255, lng: -111.9400, city: 'Tempe, AZ' },
-          { name: 'Baylor', abbreviation: 'BAY', lat: 31.5804, lng: -97.1139, city: 'Waco, TX' },
-          { name: 'BYU', abbreviation: 'BYU', lat: 40.2518, lng: -111.6493, city: 'Provo, UT' },
-          { name: 'Cincinnati', abbreviation: 'CIN', lat: 39.1329, lng: -84.5150, city: 'Cincinnati, OH' },
-          { name: 'Colorado', abbreviation: 'COLO', lat: 40.0076, lng: -105.2659, city: 'Boulder, CO' },
-          { name: 'Houston', abbreviation: 'HOU', lat: 29.7174, lng: -95.4018, city: 'Houston, TX' },
-          { name: 'Iowa State', abbreviation: 'ISU', lat: 42.0308, lng: -93.6319, city: 'Ames, IA' },
-          { name: 'Kansas', abbreviation: 'KU', lat: 38.9543, lng: -95.2558, city: 'Lawrence, KS' },
-          { name: 'Kansas State', abbreviation: 'KSU', lat: 39.1955, lng: -96.5847, city: 'Manhattan, KS' },
-          { name: 'Oklahoma State', abbreviation: 'OKST', lat: 36.1156, lng: -97.0683, city: 'Stillwater, OK' },
-          { name: 'TCU', abbreviation: 'TCU', lat: 32.7096, lng: -97.3677, city: 'Fort Worth, TX' },
-          { name: 'Texas Tech', abbreviation: 'TTU', lat: 33.5906, lng: -101.8227, city: 'Lubbock, TX' },
-          { name: 'UCF', abbreviation: 'UCF', lat: 28.6024, lng: -81.2001, city: 'Orlando, FL' },
-          { name: 'Utah', abbreviation: 'UTAH', lat: 40.7649, lng: -111.8421, city: 'Salt Lake City, UT' },
-          { name: 'West Virginia', abbreviation: 'WVU', lat: 39.6295, lng: -79.9559, city: 'Morgantown, WV' }
-        ];
-
-        // Make big12Schools available globally
-        window.big12Schools = big12Schools;
-    </script>
 </head>
 <body>
     <div id="root"></div>
-    <!-- FT Builder Components -->
-    <script src="neon-connection.js"></script>
-    <script src="ft-builder/ft-builder.js"></script>
-    <script src="ft-builder/ft-builder-components.js"></script>
-    <script src="ft-builder/ft-builder-views.js"></script>
-    <script src="ft-builder/ft-builder-sidebar.js"></script>
-    <script src="ft-builder/ft-builder-flextime-sidebar.js"></script>
-    <script src="ft-builder/ft-builder-integration.js"></script>
-    <script src="app.js"></script>
 </body>
 </html>

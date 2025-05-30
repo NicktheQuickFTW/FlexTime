@@ -254,7 +254,7 @@ async function storeDataInNeonDB(data, institution, client, currentUser) {
     // Get the team ID for this institution
     const teamResult = await client.query(`
       SELECT team_id FROM ${currentUser}.teams 
-      WHERE institution_id = $1 LIMIT 1;
+      WHERE school_id = $1 LIMIT 1;
     `, [institution.id]);
     
     if (teamResult.rows.length === 0) {

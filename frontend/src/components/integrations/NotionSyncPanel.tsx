@@ -1,8 +1,20 @@
 import React, { useState } from 'react';
-import { Box, Button, Select, Text, Stack, Alert, AlertIcon, VStack, Heading, Divider, useToast } from '@mui/material';
+import { 
+  Box, 
+  Button, 
+  Select, 
+  Typography as Text, 
+  Stack, 
+  Alert, 
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Divider,
+  Snackbar
+} from '@mui/material';
 import { Sync as SyncIcon, Link as LinkIcon, SportsBasketball, Schedule, ContactMail } from '@mui/icons-material';
 import api from '../../services/api';
-import { SportSelector } from '../common/SportSelector';
+import SportSelector from '../common/SportSelector';
 
 /**
  * NotionSyncPanel Component
@@ -15,7 +27,8 @@ const NotionSyncPanel: React.FC = () => {
   const [result, setResult] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedSport, setSelectedSport] = useState<string>('');
-  const toast = useToast();
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const handleSync = async (endpoint: string, params = {}) => {
     setIsSyncing(true);
@@ -27,24 +40,14 @@ const NotionSyncPanel: React.FC = () => {
       const response = await api.post(`/api/notion-sync/${endpoint}`, params);
       setResult(response.data.result);
       
-      toast({
-        title: 'Synchronization Successful',
-        description: `Completed ${endpoint} operation`,
-        status: 'success',
-        duration: 5000,
-        isClosable: true,
-      });
+      setToastMessage(`Synchronization successful: ${endpoint} operation completed`);
+      setToastOpen(true);
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || err.message;
       setError(errorMessage);
       
-      toast({
-        title: 'Synchronization Failed',
-        description: errorMessage,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
+      setToastMessage(`Synchronization failed: ${errorMessage}`);
+      setToastOpen(true);
     } finally {
       setIsSyncing(false);
     }
@@ -72,13 +75,13 @@ const NotionSyncPanel: React.FC = () => {
     
     if (typeof result === 'object') {
       return (
-        <VStack align="start" spacing={1} mt={2}>
+        <Stack spacing={1} sx={{ mt: 2 }}>
           {Object.entries(result).map(([key, value]) => (
             <Text key={key}>
               <strong>{key}:</strong> {JSON.stringify(value)}
             </Text>
           ))}
-        </VStack>
+        </Stack>
       );
     }
     
@@ -92,12 +95,12 @@ const NotionSyncPanel: React.FC = () => {
       boxShadow: 2,
       bgcolor: 'background.paper' 
     }}>
-      <Heading variant="h5" mb={3} display="flex" alignItems="center">
+      <Text variant="h5" sx={{ mb: 3, display: 'flex', alignItems: 'center' }}>
         <LinkIcon sx={{ mr: 1 }} />
         Notion Integration
-      </Heading>
+      </Text>
       
-      <Text mb={2}>
+      <Text sx={{ mb: 2 }}>
         Synchronize data between Notion and FlexTime's Neon database
       </Text>
       
@@ -116,10 +119,10 @@ const NotionSyncPanel: React.FC = () => {
         </Button>
         
         <Box>
-          <Heading variant="h6" mb={2} display="flex" alignItems="center">
+          <Text variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
             <ContactMail sx={{ mr: 1 }} />
             Contacts
-          </Heading>
+          </Text>
           
           <Button
             variant="contained"
@@ -134,10 +137,10 @@ const NotionSyncPanel: React.FC = () => {
         </Box>
         
         <Box>
-          <Heading variant="h6" mb={2} display="flex" alignItems="center">
+          <Text variant="h6" sx={{ mb: 2, display: 'flex', alignItems: 'center' }}>
             <Schedule sx={{ mr: 1 }} />
             Schedules
-          </Heading>
+          </Text>
           
           <SportSelector
             value={selectedSport}
@@ -189,17 +192,23 @@ const NotionSyncPanel: React.FC = () => {
       
       {error && (
         <Alert severity="error" sx={{ mt: 3 }}>
-          <AlertIcon />
           {error}
         </Alert>
       )}
       
       {result && (
         <Box sx={{ mt: 3, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
-          <Heading variant="h6" mb={1}>Sync Results</Heading>
+          <Text variant="h6" sx={{ mb: 1 }}>Sync Results</Text>
           {formatResult(result)}
         </Box>
       )}
+      
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={5000}
+        onClose={() => setToastOpen(false)}
+        message={toastMessage}
+      />
     </Box>
   );
 };

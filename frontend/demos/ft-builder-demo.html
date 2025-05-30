@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlexTime FT Builder - The Ultimate Collegiate Athletics Scheduling Platform</title>
+    
+    <!-- Import existing FlexTime styles -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- FT Builder styles -->
+    <link rel="stylesheet" href="schedule-builder-styles.css">
+    <link rel="stylesheet" href="schedule-builder-additional-styles.css">
+    
+    <!-- React Development -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <style>
+        /* Demo-specific styles */
+        .demo-banner {
+            background: linear-gradient(135deg, var(--color-dark-gray), var(--color-black));
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid var(--color-neon-blue);
+            position: sticky;
+            top: 0;
+            z-index: 10000;
+        }
+        
+        .demo-title {
+            font-family: var(--font-family-secondary);
+            font-size: 1rem;
+            color: var(--color-neon-blue);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-description {
+            font-family: var(--font-family-body);
+            font-size: 0.8rem;
+            color: var(--color-lighter-gray);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.4;
+        }
+        
+        .demo-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 0.5rem;
+            font-family: var(--font-family-secondary);
+            font-size: 0.7rem;
+            color: var(--color-white);
+        }
+        
+        .demo-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .stat-value {
+            color: var(--color-neon-blue);
+            font-weight: var(--font-weight-bold);
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo Banner -->
+    <div class="demo-banner">
+        <div class="demo-title">🚀 FlexTime Ultimate FT Builder - Live Demo</div>
+        <div class="demo-description">
+            Experience the most advanced collegiate athletics scheduling platform ever created. 
+            Built with cutting-edge AI, advanced UX patterns, and Big 12 Conference expertise.
+        </div>
+        <div class="demo-stats">
+            <div class="demo-stat">
+                <span>🤖</span>
+                <span><span class="stat-value">4</span> AI Agents</span>
+            </div>
+            <div class="demo-stat">
+                <span>⚡</span>
+                <span><span class="stat-value">6</span> Optimization Algorithms</span>
+            </div>
+            <div class="demo-stat">
+                <span>🏟️</span>
+                <span><span class="stat-value">16</span> Big 12 Schools</span>
+            </div>
+            <div class="demo-stat">
+                <span>📊</span>
+                <span><span class="stat-value">COMPASS</span> ML Analytics</span>
+            </div>
+            <div class="demo-stat">
+                <span>🎯</span>
+                <span><span class="stat-value">Real-time</span> Optimization</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Container -->
+    <div id="schedule-builder-root"></div>
+
+    <!-- Load all component scripts -->
+    <script src="schedule-builder.js"></script>
+    <script src="schedule-builder-components.js"></script>
+    <script src="schedule-builder-sidebar.js"></script>
+    <script src="schedule-builder-integration.js"></script>
+
+    <!-- Demo initialization script -->
+    <script>
+        // Demo data and initialization
+        const demoData = {
+            // Sample schedule with demo games
+            schedule: {
+                id: 'demo-football-2024',
+                sport: 'football',
+                season: '2024-2025',
+                created: new Date().toISOString(),
+                lastModified: new Date().toISOString(),
+                status: 'draft',
+                games: [
+                    {
+                        id: 'game-1',
+                        homeTeam: 'texas-tech',
+                        awayTeam: 'baylor',
+                        date: '2024-09-07',
+                        time: '7:00 PM',
+                        venue: 'Jones AT&T Stadium',
+                        tv: 'ESPN2',
+                        week: 1
+                    },
+                    {
+                        id: 'game-2',
+                        homeTeam: 'kansas',
+                        awayTeam: 'kansas-state',
+                        date: '2024-09-14',
+                        time: '3:30 PM',
+                        venue: 'Memorial Stadium',
+                        tv: 'FOX',
+                        week: 2
+                    },
+                    {
+                        id: 'game-3',
+                        homeTeam: 'houston',
+                        awayTeam: 'cincinnati',
+                        date: '2024-09-21',
+                        time: '12:00 PM',
+                        venue: 'TDECU Stadium',
+                        tv: 'ESPN+',
+                        week: 3
+                    },
+                    {
+                        id: 'game-4',
+                        homeTeam: 'arizona',
+                        awayTeam: 'utah',
+                        date: '2024-09-28',
+                        time: '10:30 PM',
+                        venue: 'Arizona Stadium',
+                        tv: 'FS1',
+                        week: 4
+                    },
+                    {
+                        id: 'game-5',
+                        homeTeam: 'iowa-state',
+                        awayTeam: 'west-virginia',
+                        date: '2024-10-05',
+                        time: '6:00 PM',
+                        venue: 'Jack Trice Stadium',
+                        tv: 'ESPN2',
+                        week: 5
+                    }
+                ]
+            },
+
+            // Demo conflicts
+            conflicts: [
+                {
+                    id: 'conflict-1',
+                    type: 'Venue Conflict',
+                    severity: 'critical',
+                    description: 'Jones AT&T Stadium double-booked for September 7th',
+                    teams: ['Texas Tech', 'Texas Tech Soccer'],
+                    date: '2024-09-07',
+                    resolution: 'Move soccer game to alternate venue'
+                },
+                {
+                    id: 'conflict-2',
+                    type: 'Travel Constraint',
+                    severity: 'warning',
+                    description: 'Utah has less than 5 days rest between games',
+                    teams: ['Utah'],
+                    date: '2024-09-28',
+                    resolution: 'Adjust game time or add bye week'
+                }
+            ],
+
+            // Demo AI suggestions
+            aiSuggestions: [
+                {
+                    id: 'suggestion-1',
+                    type: 'Schedule Optimization',
+                    confidence: 92,
+                    description: 'Move Arizona vs Utah game to earlier time slot to reduce travel fatigue',
+                    reason: 'Based on COMPASS analysis, this change would improve team performance by 15%',
+                    action: 'change-time',
+                    parameters: { gameId: 'game-4', newTime: '7:00 PM' }
+                },
+                {
+                    id: 'suggestion-2',
+                    type: 'Travel Optimization',
+                    confidence: 87,
+                    description: 'Create back-to-back road games for Cincinnati to reduce total travel',
+                    reason: 'Would save $12,000 in travel costs and reduce carbon footprint',
+                    action: 'reschedule-games',
+                    parameters: { team: 'cincinnati', strategy: 'cluster-away-games' }
+                },
+                {
+                    id: 'suggestion-3',
+                    type: 'TV Revenue Optimization',
+                    confidence: 95,
+                    description: 'Move Kansas vs Kansas State to primetime for increased TV revenue',
+                    reason: 'Historical rivalry games in primetime generate 40% more revenue',
+                    action: 'change-time-slot',
+                    parameters: { gameId: 'game-2', newSlot: 'primetime' }
+                }
+            ],
+
+            // Demo COMPASS scores
+            compassScores: {
+                'texas-tech': {
+                    overall: 87,
+                    performance: 89,
+                    resources: 85,
+                    balance: 88
+                },
+                'kansas': {
+                    overall: 92,
+                    performance: 94,
+                    resources: 90,
+                    balance: 92
+                },
+                'houston': {
+                    overall: 85,
+                    performance: 83,
+                    resources: 87,
+                    balance: 86
+                },
+                'arizona': {
+                    overall: 78,
+                    performance: 76,
+                    resources: 80,
+                    balance: 79
+                },
+                'iowa-state': {
+                    overall: 91,
+                    performance: 93,
+                    resources: 89,
+                    balance: 91
+                }
+            },
+
+            // Demo optimization metrics
+            optimizationMetrics: {
+                travelEfficiency: 85,
+                homeAwayBalance: 92,
+                conflicts: 2,
+                revenuePotential: 88,
+                fanSatisfaction: 90,
+                tvOptimization: 87
+            },
+
+            // Demo active users for collaboration
+            activeUsers: [
+                {
+                    id: 'user-1',
+                    name: 'Sarah Chen',
+                    initials: 'SC',
+                    color: '#ff6b6b',
+                    role: 'Athletic Director'
+                },
+                {
+                    id: 'user-2',
+                    name: 'Mike Rodriguez',
+                    initials: 'MR',
+                    color: '#4ecdc4',
+                    role: 'Scheduling Coordinator'
+                },
+                {
+                    id: 'user-3',
+                    name: 'Dr. Lisa Thompson',
+                    initials: 'LT',
+                    color: '#45b7d1',
+                    role: 'Conference Commissioner'
+                }
+            ],
+
+            // Demo live changes
+            liveChanges: [
+                {
+                    id: 'change-1',
+                    user: {
+                        id: 'user-1',
+                        name: 'Sarah Chen',
+                        initials: 'SC',
+                        color: '#ff6b6b'
+                    },
+                    description: 'Moved Texas Tech vs Baylor to 8:00 PM for TV optimization',
+                    timestamp: new Date(Date.now() - 120000).toISOString(),
+                    type: 'game-time-change'
+                },
+                {
+                    id: 'change-2',
+                    user: {
+                        id: 'user-2',
+                        name: 'Mike Rodriguez',
+                        initials: 'MR',
+                        color: '#4ecdc4'
+                    },
+                    description: 'Added venue availability constraint for November games',
+                    timestamp: new Date(Date.now() - 300000).toISOString(),
+                    type: 'constraint-update'
+                }
+            ]
+        };
+
+        // Enhanced FT Builder App with demo data
+        function DemoFTBuilderApp() {
+            // State management with demo data
+            const [currentView, setCurrentView] = React.useState('timeline');
+            const [selectedSport, setSelectedSport] = React.useState('football');
+            const [activeSchedule, setActiveSchedule] = React.useState(demoData.schedule);
+            const [conflicts, setConflicts] = React.useState(demoData.conflicts);
+            const [aiSuggestions, setAiSuggestions] = React.useState(demoData.aiSuggestions);
+            const [compassScores, setCompassScores] = React.useState(demoData.compassScores);
+            const [optimizationMetrics, setOptimizationMetrics] = React.useState(demoData.optimizationMetrics);
+            const [activeUsers, setActiveUsers] = React.useState(demoData.activeUsers);
+            const [liveChanges, setLiveChanges] = React.useState(demoData.liveChanges);
+
+            // Simulated AI agent status
+            const [agentStatus, setAgentStatus] = React.useState({
+                scheduler: 'idle',
+                optimizer: 'idle',
+                analyzer: 'idle',
+                ml_predictor: 'idle'
+            });
+
+            // Demo handlers
+            const handleAIGeneration = () => {
+                setAgentStatus(prev => ({ ...prev, scheduler: 'generating' }));
+                
+                // Simulate AI generation process
+                setTimeout(() => {
+                    setAgentStatus(prev => ({ ...prev, scheduler: 'complete' }));
+                    
+                    // Add a demo notification
+                    const newChange = {
+                        id: `change-${Date.now()}`,
+                        user: {
+                            id: 'ai-agent',
+                            name: 'FlexTime AI',
+                            initials: 'AI',
+                            color: '#00bfff'
+                        },
+                        description: 'Generated optimized schedule with 95% efficiency rating',
+                        timestamp: new Date().toISOString(),
+                        type: 'ai-generation'
+                    };
+                    setLiveChanges(prev => [newChange, ...prev.slice(0, 4)]);
+                    
+                    setTimeout(() => {
+                        setAgentStatus(prev => ({ ...prev, scheduler: 'idle' }));
+                    }, 2000);
+                }, 3000);
+            };
+
+            const handleOptimization = () => {
+                setAgentStatus(prev => ({ ...prev, optimizer: 'optimizing' }));
+                
+                // Simulate optimization process
+                setTimeout(() => {
+                    setOptimizationMetrics(prev => ({
+                        ...prev,
+                        travelEfficiency: Math.min(100, prev.travelEfficiency + 5),
+                        homeAwayBalance: Math.min(100, prev.homeAwayBalance + 3),
+                        conflicts: Math.max(0, prev.conflicts - 1)
+                    }));
+                    
+                    setAgentStatus(prev => ({ ...prev, optimizer: 'complete' }));
+                    
+                    const newChange = {
+                        id: `change-${Date.now()}`,
+                        user: {
+                            id: 'ai-agent',
+                            name: 'FlexTime AI',
+                            initials: 'AI',
+                            color: '#00bfff'
+                        },
+                        description: 'Optimized travel efficiency by 5% and reduced conflicts',
+                        timestamp: new Date().toISOString(),
+                        type: 'optimization'
+                    };
+                    setLiveChanges(prev => [newChange, ...prev.slice(0, 4)]);
+                    
+                    setTimeout(() => {
+                        setAgentStatus(prev => ({ ...prev, optimizer: 'idle' }));
+                    }, 2000);
+                }, 2500);
+            };
+
+            const handleApplySuggestion = (suggestion) => {
+                // Remove the applied suggestion
+                setAiSuggestions(prev => prev.filter(s => s.id !== suggestion.id));
+                
+                // Add to live changes
+                const newChange = {
+                    id: `change-${Date.now()}`,
+                    user: {
+                        id: 'user-current',
+                        name: 'Current User',
+                        initials: 'CU',
+                        color: '#ffa500'
+                    },
+                    description: `Applied AI suggestion: ${suggestion.description}`,
+                    timestamp: new Date().toISOString(),
+                    type: 'suggestion-applied'
+                };
+                setLiveChanges(prev => [newChange, ...prev.slice(0, 4)]);
+                
+                // Update metrics based on suggestion
+                if (suggestion.type === 'Travel Optimization') {
+                    setOptimizationMetrics(prev => ({
+                        ...prev,
+                        travelEfficiency: Math.min(100, prev.travelEfficiency + 8)
+                    }));
+                }
+            };
+
+            const handleExportSchedule = (format) => {
+                console.log(`Exporting schedule in ${format} format...`);
+                alert(`Schedule export in ${format.toUpperCase()} format initiated! Check your downloads folder.`);
+            };
+
+            // Periodic updates to simulate real-time activity
+            React.useEffect(() => {
+                const interval = setInterval(() => {
+                    // Randomly update agent status
+                    if (Math.random() < 0.1) {
+                        const agents = ['analyzer', 'ml_predictor'];
+                        const randomAgent = agents[Math.floor(Math.random() * agents.length)];
+                        const statuses = ['processing', 'analyzing'];
+                        const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                        
+                        setAgentStatus(prev => ({ ...prev, [randomAgent]: randomStatus }));
+                        
+                        setTimeout(() => {
+                            setAgentStatus(prev => ({ ...prev, [randomAgent]: 'idle' }));
+                        }, 2000);
+                    }
+                    
+                    // Occasionally add new AI suggestions
+                    if (Math.random() < 0.05 && aiSuggestions.length < 5) {
+                        const newSuggestion = {
+                            id: `suggestion-${Date.now()}`,
+                            type: 'Performance Optimization',
+                            confidence: Math.floor(Math.random() * 20) + 80,
+                            description: 'Detected opportunity to improve team rest periods between games',
+                            reason: 'COMPASS analysis indicates 12% performance improvement potential',
+                            action: 'adjust-schedule',
+                            parameters: { strategy: 'rest-optimization' }
+                        };
+                        setAiSuggestions(prev => [...prev, newSuggestion]);
+                    }
+                }, 5000);
+
+                return () => clearInterval(interval);
+            }, [aiSuggestions.length]);
+
+            return React.createElement(FTBuilderApp, {
+                initialData: {
+                    schedule: activeSchedule,
+                    conflicts: conflicts,
+                    aiSuggestions: aiSuggestions,
+                    compassScores: compassScores,
+                    optimizationMetrics: optimizationMetrics,
+                    activeUsers: activeUsers,
+                    liveChanges: liveChanges,
+                    agentStatus: agentStatus
+                },
+                onAIGeneration: handleAIGeneration,
+                onOptimization: handleOptimization,
+                onApplySuggestion: handleApplySuggestion,
+                onExportSchedule: handleExportSchedule
+            });
+        }
+
+        // Initialize the demo
+        function initializeDemo() {
+            const root = document.getElementById('schedule-builder-root');
+            if (root) {
+                ReactDOM.render(React.createElement(DemoFTBuilderApp), root);
+            }
+            
+            // Add demo console messages
+            console.log('🚀 FlexTime Ultimate FT Builder Demo Loaded!');
+            console.log('Features:');
+            console.log('  • Multi-agent AI system with real-time status');
+            console.log('  • Advanced drag-drop timeline interface');
+            console.log('  • COMPASS ML analytics and predictions');
+            console.log('  • Real-time collaboration and conflict detection');
+            console.log('  • Big 12 Conference data and optimization');
+            console.log('  • Multiple export formats and stakeholder views');
+            console.log('');
+            console.log('Try these demo actions:');
+            console.log('  • Click "AI Generate" to see AI schedule generation');
+            console.log('  • Click "Optimize" to run schedule optimization');
+            console.log('  • Apply AI suggestions from the sidebar');
+            console.log('  • Switch between Timeline, Calendar, Gantt, and Matrix views');
+            console.log('  • Use the AI FAB button (bottom right) for quick actions');
+        }
+
+        // Start the demo when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeDemo);
+        } else {
+            initializeDemo();
+        }
+    </script>
+</body>
+</html>
