@@ -5,11 +5,6 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { FlexTimeHero } from '../src/components/ui/FlexTimeHero'
 import { FlexTimeShinyButton } from '../src/components/ui/FlexTimeShinyButton'
-import styles from './styles/home.module.css';
-import AnimatedBackground from './components/AnimatedBackground';
-import FeatureHighlight from './components/FeatureHighlight';
-import GlassCard from './components/GlassCard';
-import GlowText from './components/GlowText';
 
 export default function Home() {
   return (
@@ -18,40 +13,6 @@ export default function Home() {
         <FlexTimeHero />
       </div>
       
-      {/* Key Metrics Section */}
-      <section className="relative py-16">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-10">
-            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 ft-font-brand uppercase tracking-wide">
-              KEY METRICS
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg ft-font-ui">FlexTime delivers exceptional performance across the Big 12 Conference</p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-            {[
-              { value: '16', label: 'Big 12 Teams' },
-              { value: '23', label: 'Sports Supported' },
-              { value: '95%', label: 'Optimization Rate' },
-              { value: '<2s', label: 'Schedule Generation' },
-            ].map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="bg-white/90 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 backdrop-blur-xl border-2 border-[#00bfff] rounded-2xl p-5 text-center h-full transition-all duration-300 shadow-[0_0_20px_rgba(0,191,255,0.3)] hover:shadow-[0_0_30px_rgba(0,191,255,0.5)]"
-              >
-                <div className="text-4xl font-bold mb-2 text-[color:var(--ft-neon)] ft-font-brand">
-                  {stat.value}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-400 ft-font-ui">{stat.label}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* Platform Features Section */}
       <section className="relative py-16">
@@ -62,7 +23,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 ft-font-brand uppercase tracking-wide">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-black to-[color:var(--ft-neon)] dark:from-white dark:to-[color:var(--ft-neon)] bg-clip-text text-transparent ft-font-brand uppercase tracking-wide">
               PLATFORM CAPABILITIES
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-lg ft-font-ui leading-tight">Comprehensive scheduling solution for Big 12 Conference athletics</p>
@@ -72,18 +33,18 @@ export default function Home() {
             {[
               {
                 title: 'Big 12 Sports',
-                description: 'Complete scheduling for all 23 sports across the Big 12 Conference',
+                description: 'Complete scheduling for all 12 sports across the Big 12 Conference',
                 href: '/sports',
-                features: ['23 Sports', 'Multi-Season', 'Tournament Ready']
+                features: ['12 Sports', 'Multi-season Scheduling', 'NCAA Tournament Ready']
               },
               {
                 title: 'Big 12 Universities',
                 description: 'Comprehensive profiles and analytics for all 16 member institutions',
                 href: '/universities',
-                features: ['16 Schools', 'Athletic Profiles', 'Performance Data']
+                features: ['16 Schools', 'Team Profiles', 'Performance-driven Data']
               },
               {
-                title: 'COMPASS Analytics',
+                title: 'Compass Analytics',
                 description: 'Advanced performance metrics and predictive insights platform',
                 href: '/analytics',
                 features: ['Real-time Data', 'Predictive Models', 'Performance Tracking']
@@ -92,7 +53,7 @@ export default function Home() {
                 title: 'HELiiX Intelligence',
                 description: 'AI-powered optimization engine with machine learning capabilities',
                 href: '/intelligence',
-                features: ['AI Optimization', 'ML Algorithms', 'Smart Scheduling']
+                features: ['AI Analysis', 'Machine Learning Algorithms', 'Predictive Insights']
               },
             ].map((feature, index) => (
               <Link key={feature.title} href={feature.href} className="h-full block">
@@ -101,7 +62,7 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 * index }}
                   whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                  className="bg-white/90 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 backdrop-blur-xl border-2 border-[#00bfff] rounded-2xl p-6 h-full flex flex-col transition-all duration-300 shadow-[0_0_20px_rgba(0,191,255,0.3)] hover:shadow-[0_0_30px_rgba(0,191,255,0.5)]"
+                  className="bg-white/90 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 backdrop-blur-xl border-2 border-[#00bfff] rounded-2xl p-4 h-48 flex flex-col transition-all duration-300 shadow-[0_0_20px_rgba(0,191,255,0.3)] hover:shadow-[0_0_30px_rgba(0,191,255,0.5)]"
                 >
                   {/* Animated indicator dot */}
                   <div className="flex justify-between items-center mb-4">
@@ -122,13 +83,13 @@ export default function Home() {
                     />
                   </div>
                   
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4 flex-grow">
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 flex-grow">
                     {feature.description}
                   </p>
                   
                   {feature.features.length > 0 && (
-                    <div className="border-t border-white/5 pt-4 mt-auto">
-                      <ul className="space-y-2">
+                    <div className="border-t border-white/5 pt-2 mt-auto">
+                      <ul className="space-y-1">
                         {feature.features.map((feat, i) => (
                           <li key={i} className="flex items-center text-xs text-gray-600 dark:text-gray-300">
                             <motion.div 
@@ -156,61 +117,7 @@ export default function Home() {
 
 
 
-      {/* AI Intelligence Engine Preview */}
-      <section className="relative py-16">
-        <div className="container mx-auto px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 ft-font-brand uppercase tracking-wide">
-              HELiiX INTELLIGENCE ENGINE
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg ft-font-ui leading-tight mb-8">
-              Advanced machine learning algorithms optimize Big 12 Conference schedules with intelligent 
-              conflict resolution, travel optimization, and championship-grade efficiency.
-            </p>
-            
-            <div className="flex justify-center">
-              <div className="grid md:grid-cols-4 gap-8">
-                <div className="flex items-start justify-center">
-                  <div className="w-2 h-2 rounded-full mr-3 mt-2 animate-pulse bg-[color:var(--ft-neon)] shadow-[0_0_8px_var(--ft-neon)]" />
-                  <div className="text-center">
-                    <div className="text-black dark:text-white font-medium">Lightning Fast</div>
-                    <div className="text-black dark:text-white text-sm">&lt;2 seconds</div>
-                  </div>
-                </div>
-                <div className="flex items-start justify-center">
-                  <div className="w-2 h-2 rounded-full mr-3 mt-2 animate-pulse bg-[color:var(--ft-neon)] shadow-[0_0_8px_var(--ft-neon)]" />
-                  <div className="text-center">
-                    <div className="text-black dark:text-white font-medium">Precision Optimized</div>
-                    <div className="text-black dark:text-white text-sm">95% efficiency</div>
-                  </div>
-                </div>
-                <div className="flex items-start justify-center">
-                  <div className="w-2 h-2 rounded-full mr-3 mt-2 animate-pulse bg-[color:var(--ft-neon)] shadow-[0_0_8px_var(--ft-neon)]" />
-                  <div className="text-center">
-                    <div className="text-black dark:text-white font-medium">AI-Powered</div>
-                    <div className="text-black dark:text-white text-sm">ML algorithms</div>
-                  </div>
-                </div>
-                <div className="flex items-start justify-center">
-                  <div className="w-2 h-2 rounded-full mr-3 mt-2 animate-pulse bg-[color:var(--ft-neon)] shadow-[0_0_8px_var(--ft-neon)]" />
-                  <div className="text-center">
-                    <div className="text-black dark:text-white font-medium">Championship Ready</div>
-                    <div className="text-black dark:text-white text-sm">All constraints</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-          
-          <div className="max-w-4xl mx-auto">
-          </div>
-        </div>
-      </section>
+      {/* AI Intelligence Engine Preview section removed as requested */}
 
       {/* Big 12 Teams Showcase */}
       <section className="relative py-16">
@@ -221,7 +128,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-black dark:text-white mb-4 ft-font-brand uppercase tracking-wide">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-black to-[color:var(--ft-neon)] dark:from-white dark:to-[color:var(--ft-neon)] bg-clip-text text-transparent ft-font-brand uppercase tracking-wide">
               BIG 12 CONFERENCE TEAMS
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-lg ft-font-ui leading-tight">
@@ -253,7 +160,7 @@ export default function Home() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.4, delay: 0.03 * index + 0.5 }}
-                className="aspect-square flex flex-col items-center justify-center p-3 rounded-lg bg-white/90 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 backdrop-blur-xl border border-gray-200 dark:border-white/10 hover:border-gray-400 dark:hover:border-[color:var(--ft-neon)]/30 transition-all duration-300 group cursor-pointer"
+                className="flex flex-col items-center justify-center p-3 rounded-lg bg-white/90 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 backdrop-blur-xl border border-gray-200 dark:border-white/10 hover:border-gray-400 dark:hover:border-[color:var(--ft-neon)]/30 transition-all duration-300 group cursor-pointer h-24 w-24"
               >
                 <div className="w-8 h-8 mb-2 flex items-center justify-center">
                   {/* Light mode logo */}
@@ -282,11 +189,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 1 }}
             className="text-center mt-8"
           >
-            <Link href="/universities">
-              <FlexTimeShinyButton variant="secondary" className="px-8 py-3 text-lg">
-                View All 16 Teams
-              </FlexTimeShinyButton>
-            </Link>
+            {/* Button removed as requested */}
           </motion.div>
         </div>
       </section>
@@ -300,7 +203,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.7 }}
             className="text-center backdrop-blur-xl bg-black/5 dark:bg-white/5 border border-gray-300/50 dark:border-white/10 rounded-2xl p-12 max-w-4xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-black to-gray-700 dark:from-white dark:to-[color:var(--ft-neon)] bg-clip-text text-transparent uppercase tracking-wide ft-font-brand">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-black to-[color:var(--ft-neon)] dark:from-white dark:to-[color:var(--ft-neon)] bg-clip-text text-transparent uppercase tracking-wide ft-font-brand">
               EXPERIENCE THE FUTURE OF ATHLETIC SCHEDULING
             </h2>
             <p className="text-gray-600 dark:text-gray-300 text-lg mb-8 max-w-3xl mx-auto leading-tight ft-font-ui">
@@ -319,7 +222,7 @@ export default function Home() {
               </div>
               <div className="text-center">
                 <div className="text-sm text-gray-600 dark:text-slate-400">Championship Ready</div>
-                <div className="text-lg font-semibold text-[color:var(--ft-neon)]">12 RS Sports</div>
+                <div className="text-lg font-semibold text-[color:var(--ft-neon)]">12 Sports</div>
               </div>
             </div>
             
