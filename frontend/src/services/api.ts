@@ -1,260 +1,551 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import { ApiResponse, Schedule, Game, Team, Venue, Constraint, ScheduleOptimizationResult } from '../types';
+/**
+ * FlexTime Unified API Service
+ * 
+ * Single source of truth for all API communication with the FlexTime backend.
+ * Replaces multiple fragmented API files with one clean, type-safe service.
+ * 
+ * Backend endpoints (from backend analysis):
+ * - /api/scheduling-service/* - Teams, constraints, optimization
+ * - /api/schedule/* - Schedule CRUD operations
+ * - /api/export/* - Export functionality
+ * - /api/metrics/* - System metrics
+ */
 
-// Create axios instance with base configuration
-const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3004/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+// Types (unified from scheduleApi.ts and enhanced)
+export interface Team {
+  team_id: number;
+  name: string;
+  shortName: string;
+  school_id: number;
+  sport: string;
+  conference: string;
+  division?: string;
+  logo?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  venue?: string;
+  capacity?: number;
+  coach?: string;
+  abbreviation?: string;
+  sport_id?: number;
+}
 
-// Response interceptor for API calls
-api.interceptors.response.use(
-  (response: AxiosResponse) => response,
-  (error: AxiosError) => {
-    // Fix TypeScript error by properly typing the data object
-    const data = error.response?.data as { message?: string } || {};
-    const message = data.message || error.message;
-    console.error('API Error:', message);
-    return Promise.reject(error);
+export interface Schedule {
+  id?: string;
+  name: string;
+  sport: string;
+  season: string;
+  conference: string;
+  status: 'draft' | 'published' | 'optimizing' | 'archived';
+  description?: string;
+  start_date: string;
+  end_date: string;
+  created_by?: string;
+  created_at?: string;
+  updated_at?: string;
+  games?: Game[];
+  metrics?: ScheduleMetrics;
+}
+
+export interface Game {
+  id: string;
+  schedule_id: string;
+  home_team_id: number;
+  away_team_id: number;
+  game_date: string;
+  game_time: string;
+  venue_id?: number;
+  venue_name?: string;
+  status: 'scheduled' | 'confirmed' | 'conflict' | 'tentative' | 'cancelled';
+  broadcast_network?: string;
+  notes?: string;
+  created_at?: string;
+  updated_at?: string;
+  homeTeam?: Team;
+  awayTeam?: Team;
+  venue?: Venue;
+  constraints?: ConstraintViolation[];
+}
+
+export interface Venue {
+  id: number;
+  name: string;
+  school_id: number;
+  sport: string;
+  capacity: number;
+  location: string;
+  timezone: string;
+  surface_type?: string;
+  indoor: boolean;
+  setup_time_minutes?: number;
+  teardown_time_minutes?: number;
+  notes?: string;
+}
+
+export interface Constraint {
+  id: string;
+  name: string;
+  type: 'hard' | 'soft';
+  category: 'travel' | 'rest' | 'venue' | 'broadcast' | 'academic' | 'competitive';
+  description: string;
+  weight: number;
+  active: boolean;
+  sport_specific?: string[];
+  parameters?: Record<string, any>;
+  sportType?: string;
+  isActive?: boolean;
+}
+
+export interface ConstraintViolation {
+  id: string;
+  constraint_id: string;
+  game_id?: string;
+  schedule_id: string;
+  type: 'error' | 'warning' | 'info';
+  severity: number;
+  message: string;
+  description?: string;
+  suggestion?: string;
+  autoFixable: boolean;
+  constraint?: Constraint;
+}
+
+export interface ScheduleMetrics {
+  totalGames: number;
+  totalTeams: number;
+  conflicts: number;
+  averageRestDays: number;
+  optimizationScore: number;
+  balanceScore: number;
+  travelDistance: number;
+  constraintViolations: {
+    hard: number;
+    soft: number;
+    total: number;
+  };
+}
+
+export interface ScheduleGenerationOptions {
+  sport: string;
+  season: string;
+  teams: number[];
+  algorithm: 'round_robin' | 'partial_round_robin' | 'agent_optimized' | 'custom';
+  constraints: string[];
+  startDate: string;
+  endDate: string;
+  gameFormat?: 'single' | 'series';
+  restDays?: number;
+  homeAwayBalance?: boolean;
+  avoidBackToBack?: boolean;
+  respectAcademicCalendar?: boolean;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  data?: T;
+  error?: string;
+  message?: string;
+  teams?: T;
+  constraints?: T;
+  schedule?: T;
+  count?: number;
+}
+
+// API Configuration
+const API_CONFIG = {
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3005',
+  timeout: 10000,
+  retries: 3,
+  retryDelay: 1000,
+};
+
+// Utility function for delay
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+/**
+ * Unified FlexTime API Service
+ * 
+ * Provides a clean, type-safe interface to all FlexTime backend services.
+ * Handles errors, retries, and response normalization automatically.
+ */
+export class FlexTimeAPI {
+  private baseURL: string;
+
+  constructor(baseURL: string = API_CONFIG.baseURL) {
+    this.baseURL = baseURL;
   }
-);
 
-// API service functions
+  /**
+   * Generic request method with error handling and retries
+   */
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {},
+    retries: number = API_CONFIG.retries
+  ): Promise<T> {
+    const url = `${this.baseURL}${endpoint}`;
+    
+    const config: RequestInit = {
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+      ...options,
+    };
+
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        const response = await fetch(url, config);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data as T;
+      } catch (error) {
+        if (attempt === retries) {
+          throw new Error(`Failed to fetch ${endpoint}: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+        
+        // Wait before retry
+        await delay(API_CONFIG.retryDelay * (attempt + 1));
+      }
+    }
+
+    throw new Error(`Failed to fetch ${endpoint} after ${retries} retries`);
+  }
+
+  // ===================
+  // TEAM OPERATIONS
+  // ===================
+
+  /**
+   * Get all teams or filter by sport/conference
+   */
+  async getTeams(sport?: string, conference?: string): Promise<Team[]> {
+    const params = new URLSearchParams();
+    if (sport) params.append('sport', sport);
+    if (conference) params.append('conference', conference);
+    
+    const response = await this.request<ApiResponse<Team[]>>(
+      `/api/scheduling-service/teams?${params}`
+    );
+    
+    // Handle different response formats from backend
+    return response.teams || response.data || response as unknown as Team[];
+  }
+
+  /**
+   * Get teams by conference
+   */
+  async getTeamsByConference(conference: string): Promise<Team[]> {
+    const response = await this.request<ApiResponse<Team[]>>(
+      `/api/scheduling-service/teams/${conference}`
+    );
+    
+    return response.teams || response.data || response as unknown as Team[];
+  }
+
+  /**
+   * Get a specific team by ID
+   */
+  async getTeam(id: number): Promise<Team> {
+    const response = await this.request<ApiResponse<Team>>(
+      `/api/scheduling-service/teams/${id}`
+    );
+    
+    return response.data || response as unknown as Team;
+  }
+
+  // ===================
+  // SCHEDULE OPERATIONS
+  // ===================
+
+  /**
+   * Get all schedules or filter by sport/season
+   */
+  async getSchedules(sport?: string, season?: string): Promise<Schedule[]> {
+    const params = new URLSearchParams();
+    if (sport) params.append('sport', sport);
+    if (season) params.append('season', season);
+    
+    const response = await this.request<ApiResponse<Schedule[]>>(
+      `/api/schedule/schedules?${params}`
+    );
+    
+    return response.data || response as unknown as Schedule[];
+  }
+
+  /**
+   * Get a specific schedule by ID
+   */
+  async getSchedule(id: string): Promise<Schedule> {
+    const response = await this.request<ApiResponse<Schedule>>(
+      `/api/schedule/schedules/${id}`
+    );
+    
+    return response.data || response as unknown as Schedule;
+  }
+
+  /**
+   * Create a new schedule
+   */
+  async createSchedule(schedule: Omit<Schedule, 'id' | 'created_at' | 'updated_at'>): Promise<Schedule> {
+    const response = await this.request<ApiResponse<Schedule>>(
+      `/api/schedule/schedules`,
+      {
+        method: 'POST',
+        body: JSON.stringify(schedule),
+      }
+    );
+    
+    return response.data || response.schedule || response as unknown as Schedule;
+  }
+
+  /**
+   * Update an existing schedule
+   */
+  async updateSchedule(id: string, schedule: Partial<Schedule>): Promise<Schedule> {
+    const response = await this.request<ApiResponse<Schedule>>(
+      `/api/schedule/schedules/${id}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(schedule),
+      }
+    );
+    
+    return response.data || response.schedule || response as unknown as Schedule;
+  }
+
+  /**
+   * Delete a schedule
+   */
+  async deleteSchedule(id: string): Promise<void> {
+    await this.request<void>(`/api/schedule/schedules/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  /**
+   * Generate a new schedule using AI
+   */
+  async generateSchedule(options: ScheduleGenerationOptions): Promise<Schedule> {
+    const response = await this.request<ApiResponse<Schedule>>(
+      `/api/schedule/schedules/generate`,
+      {
+        method: 'POST',
+        body: JSON.stringify(options),
+      }
+    );
+    
+    return response.data || response.schedule || response as unknown as Schedule;
+  }
+
+  /**
+   * Optimize an existing schedule
+   */
+  async optimizeSchedule(id: string, constraints?: string[]): Promise<Schedule> {
+    const response = await this.request<ApiResponse<Schedule>>(
+      `/api/schedule/schedules/${id}/optimize`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ constraints }),
+      }
+    );
+    
+    return response.data || response.schedule || response as unknown as Schedule;
+  }
+
+  /**
+   * Get schedule performance metrics
+   */
+  async getScheduleMetrics(id: string): Promise<ScheduleMetrics> {
+    const response = await this.request<ApiResponse<ScheduleMetrics>>(
+      `/api/schedule/schedules/${id}/metrics`
+    );
+    
+    return response.data || response as unknown as ScheduleMetrics;
+  }
+
+  // ===================
+  // CONSTRAINT OPERATIONS
+  // ===================
+
+  /**
+   * Get all constraints or filter by sport
+   */
+  async getConstraints(sport?: string): Promise<Constraint[]> {
+    const endpoint = sport 
+      ? `/api/scheduling-service/constraints/${sport}`
+      : `/api/scheduling-service/constraints`;
+    
+    const response = await this.request<ApiResponse<Constraint[]>>(endpoint);
+    
+    return response.constraints || response.data || response as unknown as Constraint[];
+  }
+
+  /**
+   * Get constraint violations for a schedule
+   */
+  async getConstraintViolations(scheduleId: string): Promise<ConstraintViolation[]> {
+    const response = await this.request<ApiResponse<ConstraintViolation[]>>(
+      `/api/scheduling-service/schedules/${scheduleId}/conflicts`
+    );
+    
+    return response.data || response as unknown as ConstraintViolation[];
+  }
+
+  /**
+   * Auto-fix a constraint violation
+   */
+  async autoFixViolation(violationId: string): Promise<Game | null> {
+    const response = await this.request<ApiResponse<Game>>(
+      `/api/scheduling-service/violations/${violationId}/fix`,
+      { method: 'POST' }
+    );
+    
+    return response.data || null;
+  }
+
+  // ===================
+  // GAME OPERATIONS
+  // ===================
+
+  /**
+   * Get games for a schedule
+   */
+  async getGames(scheduleId: string): Promise<Game[]> {
+    const response = await this.request<ApiResponse<Game[]>>(
+      `/api/schedule/schedules/${scheduleId}/games`
+    );
+    
+    return response.data || response as unknown as Game[];
+  }
+
+  /**
+   * Create a new game
+   */
+  async createGame(scheduleId: string, game: Omit<Game, 'id' | 'schedule_id' | 'created_at' | 'updated_at'>): Promise<Game> {
+    const response = await this.request<ApiResponse<Game>>(
+      `/api/schedule/schedules/${scheduleId}/games`,
+      {
+        method: 'POST',
+        body: JSON.stringify(game),
+      }
+    );
+    
+    return response.data || response as unknown as Game;
+  }
+
+  /**
+   * Update a game
+   */
+  async updateGame(gameId: string, game: Partial<Game>): Promise<Game> {
+    const response = await this.request<ApiResponse<Game>>(
+      `/api/schedule/games/${gameId}`,
+      {
+        method: 'PUT',
+        body: JSON.stringify(game),
+      }
+    );
+    
+    return response.data || response as unknown as Game;
+  }
+
+  /**
+   * Delete a game
+   */
+  async deleteGame(gameId: string): Promise<void> {
+    await this.request<void>(`/api/schedule/games/${gameId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ===================
+  // EXPORT OPERATIONS
+  // ===================
+
+  /**
+   * Export schedule in various formats
+   */
+  async exportSchedule(id: string, format: 'csv' | 'pdf' | 'ics' | 'json' | 'xlsx'): Promise<Blob> {
+    const response = await fetch(
+      `${this.baseURL}/api/export/schedules/${id}?format=${format}`
+    );
+    
+    if (!response.ok) {
+      throw new Error(`Failed to export schedule: ${response.statusText}`);
+    }
+    
+    return response.blob();
+  }
+
+  // ===================
+  // SYSTEM OPERATIONS
+  // ===================
+
+  /**
+   * Get API status
+   */
+  async getStatus(): Promise<{ status: string; message: string; version: string }> {
+    return this.request<{ status: string; message: string; version: string }>('/api/status');
+  }
+
+  /**
+   * Get system metrics
+   */
+  async getMetrics(): Promise<any> {
+    return this.request<any>('/api/metrics');
+  }
+
+  /**
+   * Submit feedback
+   */
+  async submitFeedback(feedback: {
+    type: string;
+    message: string;
+    scheduleId?: string;
+    rating?: number;
+  }): Promise<void> {
+    await this.request<void>('/api/scheduling-service/feedback', {
+      method: 'POST',
+      body: JSON.stringify(feedback),
+    });
+  }
+}
+
+// Default API instance
+export const api = new FlexTimeAPI();
+
+// Legacy exports for compatibility
 export const ScheduleService = {
-  // Get all schedules
-  getSchedules: async (): Promise<ApiResponse<Schedule[]>> => {
-    try {
-      const response = await api.get<ApiResponse<Schedule[]>>('/schedules');
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Get a single schedule by ID
-  getScheduleById: async (id: number): Promise<ApiResponse<Schedule>> => {
-    try {
-      const response = await api.get<ApiResponse<Schedule>>(`/schedules/${id}`);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Create a new schedule
-  createSchedule: async (schedule: Schedule): Promise<ApiResponse<Schedule>> => {
-    try {
-      const response = await api.post<ApiResponse<Schedule>>('/schedules', schedule);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Update an existing schedule
-  updateSchedule: async (id: number, schedule: Schedule): Promise<ApiResponse<Schedule>> => {
-    try {
-      const response = await api.put<ApiResponse<Schedule>>(`/schedules/${id}`, schedule);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Delete a schedule
-  deleteSchedule: async (id: number): Promise<ApiResponse<void>> => {
-    try {
-      const response = await api.delete<ApiResponse<void>>(`/schedules/${id}`);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Generate a schedule
-  generateSchedule: async (params: {
-    sport_id: number;
-    teams: number[];
-    start_date: string;
-    end_date: string;
-    name: string;
-    season: string;
-    championship_id?: number;
-    constraints?: Constraint[];
-  }): Promise<ApiResponse<Schedule>> => {
-    try {
-      const response = await api.post<ApiResponse<Schedule>>('/schedules/generate', params);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Optimize a schedule
-  optimizeSchedule: async (id: number, params?: {
-    optimizationType?: 'travel' | 'balance' | 'constraints';
-    maxIterations?: number;
-    timeLimit?: number;
-  }): Promise<ApiResponse<ScheduleOptimizationResult>> => {
-    try {
-      const response = await api.post<ApiResponse<ScheduleOptimizationResult>>(
-        `/schedules/${id}/optimize`, 
-        params || {}
-      );
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Get schedule metrics
-  getScheduleMetrics: async (id: number): Promise<ApiResponse<any>> => {
-    try {
-      const response = await api.get<ApiResponse<any>>(`/schedules/${id}/metrics`);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Add a game to a schedule
-  addGame: async (scheduleId: number, game: Game): Promise<ApiResponse<Game>> => {
-    try {
-      const response = await api.post<ApiResponse<Game>>(`/schedules/${scheduleId}/games`, game);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Update a game in a schedule
-  updateGame: async (scheduleId: number, gameId: number, game: Game): Promise<ApiResponse<Game>> => {
-    try {
-      const response = await api.put<ApiResponse<Game>>(
-        `/schedules/${scheduleId}/games/${gameId}`, 
-        game
-      );
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Delete a game from a schedule
-  deleteGame: async (scheduleId: number, gameId: number): Promise<ApiResponse<void>> => {
-    try {
-      const response = await api.delete<ApiResponse<void>>(
-        `/schedules/${scheduleId}/games/${gameId}`
-      );
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Add a constraint to a schedule
-  addConstraint: async (scheduleId: number, constraint: Constraint): Promise<ApiResponse<Constraint>> => {
-    try {
-      const response = await api.post<ApiResponse<Constraint>>(
-        `/schedules/${scheduleId}/constraints`, 
-        constraint
-      );
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Delete a constraint from a schedule
-  deleteConstraint: async (scheduleId: number, constraintId: number): Promise<ApiResponse<void>> => {
-    try {
-      const response = await api.delete<ApiResponse<void>>(
-        `/schedules/${scheduleId}/constraints/${constraintId}`
-      );
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  }
+  getSchedules: () => api.getSchedules(),
+  getScheduleById: (id: number) => api.getSchedule(id.toString()),
+  createSchedule: (schedule: Schedule) => api.createSchedule(schedule),
+  updateSchedule: (id: number, schedule: Schedule) => api.updateSchedule(id.toString(), schedule),
+  deleteSchedule: (id: number) => api.deleteSchedule(id.toString()),
+  generateSchedule: (params: any) => api.generateSchedule(params),
+  optimizeSchedule: (id: number, params?: any) => api.optimizeSchedule(id.toString(), params?.constraints),
+  getScheduleMetrics: (id: number) => api.getScheduleMetrics(id.toString()),
+  addGame: (scheduleId: number, game: Game) => api.createGame(scheduleId.toString(), game),
+  updateGame: (scheduleId: number, gameId: number, game: Game) => api.updateGame(gameId.toString(), game),
+  deleteGame: (scheduleId: number, gameId: number) => api.deleteGame(gameId.toString()),
+  addConstraint: async () => { throw new Error('Not implemented'); },
+  deleteConstraint: async () => { throw new Error('Not implemented'); },
 };
 
 export const TeamService = {
-  // Get all teams
-  getTeams: async (): Promise<ApiResponse<Team[]>> => {
-    try {
-      const response = await api.get<ApiResponse<Team[]>>('/teams');
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Get teams by championship ID
-  getTeamsByChampionship: async (championshipId: number): Promise<ApiResponse<Team[]>> => {
-    try {
-      const response = await api.get<ApiResponse<Team[]>>(`/teams?championship_id=${championshipId}`);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  }
+  getTeams: () => api.getTeams(),
+  getTeamsByChampionship: (championshipId: number) => api.getTeamsByConference(championshipId.toString()),
 };
 
 export const VenueService = {
-  // Get all venues
-  getVenues: async (): Promise<ApiResponse<Venue[]>> => {
-    try {
-      const response = await api.get<ApiResponse<Venue[]>>('/venues');
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Create a new venue
-  createVenue: async (venue: Venue): Promise<ApiResponse<Venue>> => {
-    try {
-      const response = await api.post<ApiResponse<Venue>>('/venues', venue);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Update an existing venue
-  updateVenue: async (id: number, venue: Venue): Promise<ApiResponse<Venue>> => {
-    try {
-      const response = await api.put<ApiResponse<Venue>>(`/venues/${id}`, venue);
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  },
-
-  // Add unavailable dates to a venue
-  addUnavailableDates: async (
-    venueId: number, 
-    dates: string[]
-  ): Promise<ApiResponse<Venue>> => {
-    try {
-      const response = await api.post<ApiResponse<Venue>>(
-        `/venues/${venueId}/unavailable-dates`, 
-        { dates }
-      );
-      return response.data;
-    } catch (error) {
-      return { success: false, error: (error as Error).message };
-    }
-  }
+  getVenues: async () => { throw new Error('Venue endpoints not yet implemented'); },
+  createVenue: async () => { throw new Error('Venue endpoints not yet implemented'); },
+  updateVenue: async () => { throw new Error('Venue endpoints not yet implemented'); },
+  addUnavailableDates: async () => { throw new Error('Venue endpoints not yet implemented'); },
 };
 
-// Create a services object for the default export
-const services = {
-  ScheduleService,
-  TeamService,
-  VenueService
-};
-
-export default services;
+// Default export
+export default api;

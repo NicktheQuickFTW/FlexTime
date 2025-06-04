@@ -39,10 +39,12 @@ function configureMiddleware(app, scaleConfig) {
       'http://localhost:3000',
       'http://localhost:3001',
       'http://localhost:3005',
+      'http://localhost:64880',
       'http://frontend:3000',
       'http://127.0.0.1:3000',
       'http://127.0.0.1:3001',
-      'http://127.0.0.1:3005'
+      'http://127.0.0.1:3005',
+      'http://127.0.0.1:64880'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],

@@ -151,7 +151,7 @@ export class ScheduleAPI {
     if (sport) params.append('sport', sport);
     if (conference) params.append('conference', conference);
     
-    const response = await fetch(`${this.baseUrl}/api/teams?${params}`);
+    const response = await fetch(`${this.baseUrl}/api/scheduling-service/teams?${params}`);
     if (!response.ok) throw new Error('Failed to fetch teams');
     const data = await response.json();
     // Extract teams from the response (backend returns {success: true, teams: [...]}
@@ -297,7 +297,7 @@ export class ScheduleAPI {
   }
 
   async getConstraintViolations(scheduleId: string): Promise<ConstraintViolation[]> {
-    const response = await fetch(`${this.baseUrl}/api/schedule/schedules/${scheduleId}/violations`);
+    const response = await fetch(`${this.baseUrl}/api/scheduling-service/schedules/${scheduleId}/conflicts`);
     if (!response.ok) throw new Error('Failed to fetch constraint violations');
     return response.json();
   }
@@ -312,17 +312,16 @@ export class ScheduleAPI {
     return response.json();
   }
 
-  async autoFixViolation(violationId: string): Promise<Game | null> {
-    const response = await fetch(`${this.baseUrl}/api/violations/${violationId}/fix`, {
-      method: 'POST'
-    });
-    if (!response.ok) throw new Error('Failed to auto-fix violation');
-    return response.json();
+  async autoFixViolation(violationId: string, scheduleId?: string): Promise<Game | null> {
+    // Note: This endpoint requires scheduleId and specific resolution format
+    // For now, return null since the exact implementation depends on conflict resolution flow
+    console.warn('autoFixViolation: Endpoint needs to be implemented with proper scheduleId and conflictId');
+    return null;
   }
 
   // Export operations
   async exportSchedule(id: string, format: 'csv' | 'pdf' | 'ics' | 'json' | 'xlsx'): Promise<Blob> {
-    const response = await fetch(`${this.baseUrl}/api/schedule/schedules/${id}/export?format=${format}`);
+    const response = await fetch(`${this.baseUrl}/api/export/schedules/${id}?format=${format}`);
     if (!response.ok) throw new Error('Failed to export schedule');
     return response.blob();
   }
