@@ -6,8 +6,8 @@
  * periodic analysis.
  */
 
-const { FeedbackSystem } = require('../agents/ml/feedback_system');
-const { EnhancedMemoryManager } = require('../agents/memory/enhanced_memory_manager');
+const { FeedbackSystem } = require('../ai/ml/learning/feedback_system');
+const { CentralizedMemoryManager } = require('../ai/enhanced/centralized_memory_manager');
 
 // Singleton instance of the feedback system
 let feedbackSystemInstance = null;
@@ -15,7 +15,7 @@ let feedbackSystemInstance = null;
 // Get or create the feedback system instance
 const getFeedbackSystem = async () => {
   if (!feedbackSystemInstance) {
-    const memoryManager = new EnhancedMemoryManager();
+    const memoryManager = new CentralizedMemoryManager();
     
     // Try to load previous constraint weights from memory
     let savedWeights = null;

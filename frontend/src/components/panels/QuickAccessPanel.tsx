@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { 
   Box, 
-  Typography, 
   useTheme 
 } from '@mui/material';
 import GradientText from '../common/GradientText';

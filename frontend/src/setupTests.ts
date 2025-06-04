@@ -1,7 +1,25 @@
 // Global test setup for FlexTime
 import '@testing-library/jest-dom';
 import { cleanup } from '@testing-library/react';
-import { afterEach, vi } from '@jest/globals';
+
+// Create mock function factory
+const createMockFn = () => {
+  const fn = jest.fn();
+  fn.mockImplementation = jest.fn();
+  return fn;
+};
+
+// Global vi mock for compatibility
+const vi = {
+  fn: createMockFn,
+  mock: jest.mock,
+  resetAllMocks: jest.resetAllMocks,
+  clearAllMocks: jest.clearAllMocks,
+  restoreAllMocks: jest.restoreAllMocks
+};
+
+// Make vi available globally
+(global as any).vi = vi;
 
 // Auto cleanup after each test
 afterEach(() => {
@@ -24,18 +42,29 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  unobserve() {}
-  takeRecords() {
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | null = null;
+  readonly rootMargin: string = '0px';
+  readonly thresholds: ReadonlyArray<number> = [];
+  
+  constructor(
+    private callback: IntersectionObserverCallback,
+    private options?: IntersectionObserverInit
+  ) {}
+  
+  disconnect(): void {}
+  observe(): void {}
+  unobserve(): void {}
+  takeRecords(): IntersectionObserverEntry[] {
     return [];
   }
-};
+}
+
+global.IntersectionObserver = MockIntersectionObserver as any;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
+  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor() {}
   disconnect() {}
   observe() {}
@@ -46,15 +75,11 @@ global.ResizeObserver = class ResizeObserver {
 window.scrollTo = vi.fn();
 
 // Mock WebSocket
-global.WebSocket = class WebSocket {
-  constructor(url: string) {
-    this.url = url;
-    this.readyState = WebSocket.CONNECTING;
-    setTimeout(() => {
-      this.readyState = WebSocket.OPEN;
-      if (this.onopen) this.onopen(new Event('open'));
-    }, 0);
-  }
+class MockWebSocket implements WebSocket {
+  readonly CONNECTING = 0;
+  readonly OPEN = 1;
+  readonly CLOSING = 2;
+  readonly CLOSED = 3;
   
   url: string;
   readyState: number;
@@ -63,22 +88,50 @@ global.WebSocket = class WebSocket {
   onerror: ((event: Event) => void) | null = null;
   onclose: ((event: CloseEvent) => void) | null = null;
   
-  static CONNECTING = 0;
-  static OPEN = 1;
-  static CLOSING = 2;
-  static CLOSED = 3;
+  binaryType: BinaryType = 'blob';
+  bufferedAmount: number = 0;
+  extensions: string = '';
+  protocol: string = '';
   
-  send(data: string) {
+  static readonly CONNECTING = 0;
+  static readonly OPEN = 1;
+  static readonly CLOSING = 2;
+  static readonly CLOSED = 3;
+  
+  constructor(url: string | URL, protocols?: string | string[]) {
+    this.url = url.toString();
+    this.readyState = MockWebSocket.CONNECTING;
+    setTimeout(() => {
+      this.readyState = MockWebSocket.OPEN;
+      if (this.onopen) this.onopen(new Event('open'));
+    }, 0);
+  }
+  
+  send(data: string | ArrayBufferLike | Blob | ArrayBufferView): void {
     // Mock implementation
   }
   
-  close() {
-    this.readyState = WebSocket.CLOSED;
+  close(code?: number, reason?: string): void {
+    this.readyState = MockWebSocket.CLOSED;
     if (this.onclose) {
-      this.onclose(new CloseEvent('close'));
+      this.onclose(new CloseEvent('close', { code, reason }));
     }
   }
-};
+  
+  addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void {
+    // Mock implementation
+  }
+  
+  removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void {
+    // Mock implementation
+  }
+  
+  dispatchEvent(event: Event): boolean {
+    return true;
+  }
+}
+
+global.WebSocket = MockWebSocket as any;
 
 // Mock canvas for charts
 HTMLCanvasElement.prototype.getContext = vi.fn(() => ({

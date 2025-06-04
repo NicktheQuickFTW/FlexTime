@@ -4,9 +4,12 @@ import {
   screen,
   checkA11y,
   userEvent,
-  within
+  fireEvent,
+  waitFor
 } from '../../utils/testUtils';
 import { axe, toHaveNoViolations } from 'jest-axe';
+
+// Global vi is available from setupTests
 import { DragDropScheduleBuilder } from '../../components/scheduler';
 import { COMPASSAnalyticsDashboard } from '../../components/analytics';
 import { Big12TeamCard, Big12TeamGrid } from '../../components/teams';
@@ -68,6 +71,7 @@ describe('Accessibility Tests', () => {
   
   describe('Keyboard Navigation', () => {
     it('should navigate through schedule builder with keyboard', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       render(
@@ -91,6 +95,7 @@ describe('Accessibility Tests', () => {
     });
     
     it('should navigate analytics dashboard tabs with keyboard', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       render(
@@ -118,6 +123,7 @@ describe('Accessibility Tests', () => {
     });
     
     it('should trap focus in mobile drawer', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       const onClose = vi.fn();
       
@@ -237,6 +243,7 @@ describe('Accessibility Tests', () => {
   
   describe('Focus Management', () => {
     it('should show visible focus indicators', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       render(
@@ -253,6 +260,7 @@ describe('Accessibility Tests', () => {
     });
     
     it('should restore focus after modal closes', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       const { rerender } = render(
         <div>

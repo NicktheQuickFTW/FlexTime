@@ -108,7 +108,7 @@ const saveToStorage = (key: string, data: any) => {
   }
 };
 
-const loadFromStorage = <T>(key: string, defaultValue: T): T => {
+const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
   try {
     const stored = localStorage.getItem(key);
     return stored ? JSON.parse(stored) : defaultValue;
@@ -321,7 +321,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
       console.error('Failed to connect:', error);
       return false;
     }
-  }, [enableWebSocket, websocketUrl, state.settings.enableAudioCues]);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [enableWebSocket, websocketUrl, state.settings.enableAudioCues, addActivity, handleWebSocketMessage]);
 
   const disconnect = useCallback(() => {
     if (ws) {
@@ -351,7 +352,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
 
     // Clean up storage
     localStorage.removeItem(STORAGE_KEYS.USER);
-  }, [ws, state.currentUser, state.settings.enableAudioCues]);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [ws, state.currentUser, state.settings.enableAudioCues, addActivity]);
 
   // ============================================================================
   // WebSocket Message Handling
@@ -377,7 +379,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
       default:
         console.warn('Unknown WebSocket message type:', message.type);
     }
-  }, []);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [addActivity, addUser, removeUser, updateCursor, updateUser]);
 
   // ============================================================================
   // User Management
@@ -403,7 +406,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
     if (state.settings.enableAudioCues) {
       AudioCues.join();
     }
-  }, [state.settings.enableNotifications, state.settings.enableAudioCues]);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [state.settings.enableNotifications, state.settings.enableAudioCues, showNotification]);
 
   const removeUser = useCallback((userId: string) => {
     const user = state.activeUsers.find(u => u.id === userId);
@@ -423,7 +427,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
     if (state.settings.enableAudioCues) {
       AudioCues.leave();
     }
-  }, [state.activeUsers, state.settings.enableNotifications, state.settings.enableAudioCues]);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [state.activeUsers, state.settings.enableNotifications, state.settings.enableAudioCues, showNotification]);
 
   const updateUser = useCallback((userId: string, updates: Partial<User>) => {
     setState(prev => ({
@@ -458,7 +463,8 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({
       action: 'move',
       details: { location }
     });
-  }, [state.currentUser, ws, updateUser]);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [state.currentUser, ws, updateUser, addActivity]);
 
   // ============================================================================
   // Cursor Management

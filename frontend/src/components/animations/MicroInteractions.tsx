@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, ReactNode, MouseEvent } from 'react';
-import { motion, AnimatePresence, MotionProps } from 'framer-motion';
+import React, { ReactNode, MouseEvent } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { styled, useTheme, alpha } from '@mui/material/styles';
 import { CircularProgress } from '@mui/material';
 
@@ -595,7 +595,7 @@ export const ELEVATION_SHADOWS = {
 } as const;
 
 // Export all components
-export default {
+const microInteractions = {
   HoverCard,
   RippleButton,
   LoadingSpinner,
@@ -604,3 +604,5 @@ export default {
   StaggerContainer,
   StaggerItem,
 };
+
+export default microInteractions;

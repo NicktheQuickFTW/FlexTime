@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, IconButtonProps, Tooltip, useTheme as useMuiTheme } from '@mui/material';
+import { IconButton, IconButtonProps, Tooltip } from '@mui/material';
 import { Brightness4 as DarkModeIcon, Brightness7 as LightModeIcon } from '@mui/icons-material';
 import { useThemeContext } from '../../contexts/ThemeContext';
 import useReducedMotion from '../../hooks/useReducedMotion';
@@ -19,7 +19,6 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
   ...props
 }) => {
   const { themeMode, toggleThemeMode } = useThemeContext();
-  const muiTheme = useMuiTheme();
   const prefersReducedMotion = useReducedMotion();
   
   // Determine icon and tooltip text based on current theme mode

@@ -268,9 +268,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }));
   };
 
-  const resetTheme = () => {
+  const resetTheme = useCallback(() => {
     setTheme({ mode: theme.mode }); // Keep current mode but reset everything else
-  };
+  }, [theme.mode]);
 
   // Save theme to localStorage and apply to document when theme changes
   useEffect(() => {
@@ -319,7 +319,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     resetTheme,
     currentSport: theme.sport || currentSportType,
     currentTeam: theme.team
-  }), [theme, currentSportType]);
+  }), [theme, currentSportType, resetTheme]);
 
   return (
     <ThemeContext.Provider value={contextValue}>

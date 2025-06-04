@@ -6,7 +6,7 @@
  */
 
 const { SchedulingAgentSystem } = require('../core/scheduling_agent_system');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 
 /**
  * Scheduling Agent System with parallel processing capabilities

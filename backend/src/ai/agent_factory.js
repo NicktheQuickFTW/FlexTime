@@ -15,8 +15,8 @@ const MCPIntegration = require('../mcp_integration');
 // MCP config removed, using default config instead
 const mcpConfig = { agents: { knowledge_graph: {} } }; // Empty config with structure
 const LearningSystem = require('../ml/learning_system');
-const EnhancedMemoryManager = require('../memory/enhanced_memory_manager');
-const logger = require('../../utils/logger');
+const { CentralizedMemoryManager } = require('./enhanced/centralized_memory_manager');
+const logger = require("../utils/logger");
 const KnowledgeGraphAgent = require('../enhanced/knowledge_graph/knowledge_graph_agent');
 const ConflictExplanation = require('../enhanced/conflict_explanation');
 // HELiiX Intelligence Connector removed
@@ -94,7 +94,7 @@ class AgentFactory {
       // Initialize memory manager if enabled
       if (this.config.enableMemory) {
         logger.info('Initializing Agent Memory Manager');
-        this.memoryManager = new EnhancedMemoryManager({
+        this.memoryManager = new CentralizedMemoryManager({
           enabled: true,
           neonConnection: this.config.neonConnection || process.env.NEON_DB_CONNECTION_STRING
         });

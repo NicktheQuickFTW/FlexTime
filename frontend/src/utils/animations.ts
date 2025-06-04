@@ -122,9 +122,9 @@ export const createAnimation = (
     ? `${finalConfig.duration}ms` 
     : `${durations[finalConfig.duration!]}ms`;
     
-  const easing = finalConfig.easing in easings 
+  const easing = finalConfig.easing && finalConfig.easing in easings 
     ? easings[finalConfig.easing as keyof typeof easings]
-    : finalConfig.easing;
+    : finalConfig.easing || 'ease';
 
   return [
     keyframeName,
@@ -365,7 +365,7 @@ export const commonAnimations = {
   floatSlow: (config?: AnimationConfig) => createAnimation('float', { ...config, duration: 'slowest', iterationCount: 'infinite' })
 };
 
-export default {
+const animationLibrary = {
   easings,
   durations,
   keyframes,
@@ -375,6 +375,7 @@ export default {
   useStaggerAnimation,
   useHoverAnimation,
   useReducedMotion,
-  animationUtils,
   commonAnimations
 };
+
+export default animationLibrary;

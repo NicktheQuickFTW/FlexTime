@@ -1,0 +1,598 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@200;300;400;500;600;700;800;900&display=swap');
+@import "tw-animate-css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom variant */
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  :root {
+    /* FlexTime Design System - Clean Monochrome Light */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 0%; /* Pure black */
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 0 0% 0%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+ 
+    --primary: 0 0% 0%; /* Black primary */
+    --primary-foreground: 0 0% 100%;
+ 
+    --secondary: 0 0% 40%; /* Gray secondary */
+    --secondary-foreground: 0 0% 100%;
+ 
+    --muted: 0 0% 95%; /* Light gray */
+    --muted-foreground: 0 0% 40%;
+ 
+    --accent: 0 0% 0%; /* Black accent */
+    --accent-foreground: 0 0% 100%;
+ 
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 0 0% 90%; /* Light gray borders */
+    --input: 0 0% 95%;
+    --ring: 0 0% 0%;
+ 
+    --radius: 0.5rem;
+
+    /* FlexTime Animated Background */
+    --ft-bg-grid-opacity: 0.02;
+    --ft-bg-dots-opacity: 0.1;
+    --ft-bg-mouse-opacity: 0.3;
+    --ft-bg-ripple-opacity: 0.3;
+
+    /* Chart Colors - Light Theme */
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+    --chart-3: oklch(0.398 0.07 227.392);
+    --chart-4: oklch(0.828 0.189 84.429);
+    --chart-5: oklch(0.769 0.188 70.08);
+    
+    /* FlexTime Brand Colors - Monochrome */
+    --ft-pure-white: 0 0% 100%;
+    --ft-pure-black: 0 0% 0%;
+    --ft-light-gray: 0 0% 95%;
+    --ft-medium-gray: 0 0% 60%;
+    --ft-dark-gray: 0 0% 20%;
+    --ft-border-gray: 0 0% 90%;
+  }
+
+  .dark {
+    /* FlexTime Design System - Metal & Black */
+    --background: 0 0% 0%; /* Pure black */
+    --foreground: 0 0% 100%; /* Pure white */
+
+    --card: 0 0% 2%; /* Almost black cards */
+    --card-foreground: 0 0% 100%;
+ 
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+ 
+    --primary: 0 0% 100%; /* White primary */
+    --primary-foreground: 0 0% 0%;
+ 
+    --secondary: 0 0% 60%; /* Light gray secondary */
+    --secondary-foreground: 0 0% 0%;
+ 
+    --muted: 0 0% 8%; /* Darker gray */
+    --muted-foreground: 0 0% 60%;
+ 
+    --accent: 195 100% 50%; /* Neon blue accent */
+    --accent-foreground: 0 0% 0%;
+ 
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 0%;
+
+    --border: 0 0% 15%; /* Metal gray borders */
+    --input: 0 0% 8%;
+    --ring: 195 100% 50%; /* Neon blue ring */
+
+    /* FlexTime Animated Background - Dark Theme */
+    --ft-bg-grid-opacity: 0.05;
+    --ft-bg-dots-opacity: 0.15;
+    --ft-bg-mouse-opacity: 0.5;
+    --ft-bg-ripple-opacity: 0.4;
+
+    /* Chart Colors - Dark Theme */
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+    --chart-3: oklch(0.769 0.188 70.08);
+    --chart-4: oklch(0.627 0.265 303.9);
+    --chart-5: oklch(0.645 0.246 16.439);
+  }
+  
+  /* FlexTime Brand Effects and Variables */
+  :root {
+    /* FlexTime Brand Colors - Monochrome */
+    --ft-pure-white: 0 0% 100%;
+    --ft-pure-black: 0 0% 0%;
+    --ft-light-gray: 0 0% 95%;
+    --ft-medium-gray: 0 0% 60%;
+    --ft-dark-gray: 0 0% 20%;
+    --ft-border-gray: 0 0% 90%;
+    
+    /* Clean Effects */
+    --ft-clean-border: rgba(0, 0, 0, 0.1);
+    --ft-clean-shadow: rgba(0, 0, 0, 0.08);
+    --ft-clean-hover: rgba(0, 0, 0, 0.04);
+    
+    /* Metal Effects */
+    --ft-metal-surface: rgba(255, 255, 255, 0.05);
+    --ft-metal-border: rgba(255, 255, 255, 0.1);
+    --ft-metal-shadow: rgba(0, 0, 0, 0.3);
+    --ft-metal-sheen: rgba(255, 255, 255, 0.1);
+    
+    /* Glass Effects */
+    --ft-glass-surface: rgba(0, 0, 0, 0.4);
+    --ft-glass-border: rgba(0, 191, 255, 0.2);
+    --ft-glass-glow: rgba(0, 191, 255, 0.1);
+    
+    /* Neon Colors */
+    --ft-neon: #00bfff; /* Standard FlexTime neon color (cyan-blue) */
+    --ft-neon-glow: rgba(0, 191, 255, 0.3);
+    
+    /* FlexTime Brand Typography - Legacy System */
+    --ft-font-primary: 'Orbitron', monospace; /* Futuristic headers & brand */
+    --ft-font-secondary: 'Rajdhani', sans-serif; /* Modern UI text */
+    --ft-font-body: 'Exo 2', sans-serif; /* Clean body text */
+    --ft-font-mono: 'JetBrains Mono', monospace; /* Code & data */
+    
+    /* Font Weights */
+    --ft-weight-thin: 200;
+    --ft-weight-light: 300;
+    --ft-weight-regular: 400;
+    --ft-weight-medium: 500;
+    --ft-weight-semibold: 600;
+    --ft-weight-bold: 700;
+    --ft-weight-black: 800;
+    --ft-weight-ultra: 900;
+    
+    /* Legacy Font System */
+    --font-family-primary: 'Orbitron', monospace;
+    --font-family-secondary: 'Rajdhani', sans-serif;
+    --font-family-body: 'Exo 2', sans-serif;
+    --font-weight-thin: 200;
+    --font-weight-light: 300;
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-black: 800;
+    --font-weight-ultra: 900;
+    
+    /* Readable Font Sizes */
+    --font-size-xs: 0.875rem;    /* 14px - minimum readable size */
+    --font-size-sm: 0.9375rem;   /* 15px - small text */
+    --font-size-base: 1rem;      /* 16px - body text */
+    --font-size-md: 1.125rem;    /* 18px - emphasized text */
+    --font-size-lg: 1.25rem;     /* 20px - subheadings */
+    --font-size-xl: 1.5rem;      /* 24px - headings */
+    --font-size-2xl: 2rem;       /* 32px - large headings */
+    --font-size-3xl: 2.5rem;     /* 40px - hero text */
+    
+    /* Animations */
+    --ft-transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --ft-transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+}
+
+@layer components {
+  /* FlexTime Clean Components */
+  .ft-card {
+    @apply bg-card border border-border rounded-lg;
+    box-shadow: 0 2px 8px var(--ft-clean-shadow);
+  }
+  
+  .ft-card-hover {
+    @apply transition-all duration-200 hover:shadow-lg;
+    transition: var(--ft-transition-smooth);
+  }
+  
+  .ft-clean-button {
+    @apply bg-primary text-primary-foreground border border-primary rounded-lg px-6 py-3 font-medium;
+    transition: all 0.2s ease;
+  }
+  
+  .ft-clean-button:hover {
+    @apply transform -translate-y-0.5;
+    box-shadow: 0 4px 12px var(--ft-clean-shadow);
+  }
+  
+  .ft-clean-button-outline {
+    @apply bg-background text-foreground border border-primary rounded-lg px-6 py-3 font-medium;
+    transition: all 0.2s ease;
+  }
+  
+  .ft-clean-button-outline:hover {
+    @apply bg-muted;
+  }
+  
+  /* Metal Components */
+  .ft-metal-card {
+    background: var(--ft-metal-surface);
+    border: 1px solid var(--ft-metal-border);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px var(--ft-metal-shadow), inset 0 1px 0 var(--ft-metal-sheen);
+    transition: all 0.3s ease;
+  }
+  
+  .ft-metal-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+  
+  /* Glass Components */
+  .ft-glass-card {
+    background: var(--ft-glass-surface);
+    border: 1px solid var(--ft-glass-border);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px var(--ft-glass-glow);
+    transition: all 0.3s ease;
+  }
+  
+  .ft-glass-card:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 60px rgba(0, 191, 255, 0.2);
+  }
+  
+  /* Glass Variants */
+  .ft-glass-light {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(255, 255, 255, 0.1);
+  }
+  
+  .ft-glass-dark {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+  
+  .ft-glass-neon {
+    background: rgba(0, 191, 255, 0.05);
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 40px rgba(0, 191, 255, 0.2), inset 0 1px 0 rgba(0, 191, 255, 0.1);
+  }
+  
+  .ft-glass-frosted {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(30px) saturate(180%);
+    box-shadow: 0 16px 64px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  /* Glass Button Variants */
+  .ft-glass-button {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(15px);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    letter-spacing: 0.025em;
+  }
+  
+  .ft-glass-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.2);
+    transform: translateY(-1px);
+  }
+  
+  .ft-glass-button-neon {
+    background: rgba(0, 191, 255, 0.1);
+    border: 1px solid rgba(0, 191, 255, 0.3);
+    backdrop-filter: blur(15px);
+    color: #00bfff;
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
+  }
+  
+  .ft-glass-button-neon:hover {
+    background: rgba(0, 191, 255, 0.15);
+    border-color: rgba(0, 191, 255, 0.5);
+    box-shadow: 0 0 30px rgba(0, 191, 255, 0.3);
+    color: white;
+  }
+  
+  /* Neon Glow Effects */
+  .ft-neon-glow {
+    color: var(--ft-neon-blue);
+    text-shadow: 0 0 10px var(--ft-neon-blue-glow);
+  }
+  
+  .ft-neon-border {
+    border: 1px solid var(--ft-neon-blue);
+    box-shadow: 0 0 20px var(--ft-neon-blue-glow);
+  }
+  
+  /* Glass Layout Components */
+  .ft-glass-nav {
+    background: rgba(0, 0, 0, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(25px) saturate(180%);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ft-glass-sidebar {
+    background: rgba(0, 0, 0, 0.7);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(30px);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .ft-glass-panel {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border-radius: 1rem;
+  }
+  
+  .ft-glass-modal {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(40px) saturate(120%);
+    box-shadow: 0 32px 128px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Glass Text Effects */
+  .ft-glass-text {
+    color: rgba(0, 0, 0, 0.9);
+    text-shadow: none;
+  }
+  
+  .dark .ft-glass-text {
+    color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .ft-glass-text-muted {
+    color: rgba(255, 255, 255, 0.6);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+  
+  .ft-glass-text-accent {
+    color: #00bfff;
+    text-shadow: 0 0 10px rgba(0, 191, 255, 0.5);
+  }
+  
+  /* Glass Input Components */
+  .ft-glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+  }
+  
+  .ft-glass-input:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(0, 191, 255, 0.3);
+    box-shadow: 0 0 20px rgba(0, 191, 255, 0.1);
+    outline: none;
+  }
+  
+  .ft-glass-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+  
+  /* FlexTime Typography Classes */
+  .ft-font-brand {
+    font-family: var(--ft-font-primary);
+    font-weight: var(--ft-weight-bold);
+    letter-spacing: -0.025em;
+  }
+  
+  .ft-font-ui {
+    font-family: var(--ft-font-secondary);
+    font-weight: var(--ft-weight-medium);
+    letter-spacing: 0.025em;
+  }
+  
+  .ft-font-body {
+    font-family: var(--ft-font-body);
+    font-weight: var(--ft-weight-regular);
+    letter-spacing: 0.015em;
+  }
+  
+  .ft-font-mono {
+    font-family: var(--ft-font-mono);
+    font-weight: var(--ft-weight-regular);
+    letter-spacing: 0.05em;
+  }
+
+  /* Legacy Typography Classes */
+  .nav-logo {
+    font-family: var(--font-family-primary);
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+    background: linear-gradient(45deg, #e8e8e8 0%, #ffffff 25%, #c0c0c0 50%, #ffffff 75%, #e8e8e8 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    animation: metallicShimmer 4s ease-in-out infinite;
+  }
+  
+  .nav-link {
+    font-family: var(--font-family-secondary);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+  
+  .conference-tagline {
+    font-family: var(--font-family-secondary);
+    font-size: 1rem;
+    font-weight: var(--font-weight-medium);
+    background: linear-gradient(45deg, #c0c0c0 0%, #ffffff 25%, #a8a8a8 50%, #ffffff 75%, #c0c0c0 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 10px var(--ft-neon-blue-glow);
+    animation: metallicShimmer 6s ease-in-out infinite;
+  }
+  
+  .hero-title {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-black);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  
+  .hero-subtitle {
+    font-family: var(--font-family-secondary);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-light);
+    letter-spacing: 0.025em;
+    line-height: 1.8;
+  }
+  
+  .btn {
+    font-family: var(--font-family-secondary);
+    font-weight: var(--font-weight-semibold);
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  
+  .card-title {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+  }
+  
+  .section-header {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .metallic-text {
+    background: linear-gradient(45deg, #e8e8e8 0%, #ffffff 25%, #c0c0c0 50%, #ffffff 75%, #e8e8e8 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: metallicShimmer 4s ease-in-out infinite;
+  }
+
+  /* Metallic Shimmer Animation */
+  @keyframes metallicShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Logo Utility Classes */
+  .ft-logo-primary {
+    content: url('/logos/flextime/flextime-light.svg');
+  }
+  
+  .ft-logo-dark {
+    content: url('/logos/flextime/flextime-dark.svg');
+  }
+  
+  .ft-logo-white {
+    content: url('/logos/flextime/flextime-white240x240.svg');
+  }
+  
+  .ft-logo-black {
+    content: url('/logos/flextime/flextime-black240x240.svg');
+  }
+
+  .ft-container {
+    @apply w-full max-w-7xl mx-auto px-6;
+  }
+  
+  .ft-grid {
+    display: grid;
+    grid-template-columns: [sidebar-start] 380px [sidebar-end main-start] 1fr [main-end panel-start] 420px [panel-end];
+    grid-template-rows: [header-start] 72px [header-end content-start] 1fr [content-end];
+    gap: 1.5rem;
+    min-height: 100vh;
+  }
+  
+  @media (max-width: 1280px) {
+    .ft-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+    }
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--ft-font-body);
+    font-weight: var(--ft-weight-regular);
+    min-height: 100vh;
+    letter-spacing: 0.015em;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-100;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+}
+
+@layer base {
+  :root {
+    --chart-1: oklch(0.646 0.222 41.116);
+    --chart-2: oklch(0.6 0.118 184.704);
+  }
+
+  .dark {
+    --chart-1: oklch(0.488 0.243 264.376);
+    --chart-2: oklch(0.696 0.17 162.48);
+  }
+}

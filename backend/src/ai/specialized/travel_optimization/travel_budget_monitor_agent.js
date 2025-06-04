@@ -11,7 +11,7 @@
  * - Budget optimization recommendations
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class TravelBudgetMonitorAgent extends Agent {
   constructor(options = {}) {

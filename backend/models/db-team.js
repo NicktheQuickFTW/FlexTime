@@ -11,24 +11,19 @@ module.exports = (sequelize) => {
     team_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true,
       allowNull: false
     },
-    season_id: {
+    sport_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'seasons',
-        key: 'season_id'
-      }
+      allowNull: false
     },
     school_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'institutions',
-        key: 'school_id'
-      }
+      allowNull: false
+    },
+    sport: {
+      type: DataTypes.STRING,
+      allowNull: false
     },
     name: {
       type: DataTypes.STRING,
@@ -197,26 +192,6 @@ module.exports = (sequelize) => {
   };
 
   Team.associate = (models) => {
-    // A Team belongs to a Season
-    Team.belongsTo(models.Season, {
-      foreignKey: 'season_id',
-      as: 'season'
-    });
-
-    // A Team belongs to a School
-    Team.belongsTo(models.School, {
-      foreignKey: 'school_id',
-      as: 'school'
-    });
-    
-    // A Team can belong to many Schedules
-    Team.belongsToMany(models.Schedule, {
-      through: 'schedule_teams',
-      foreignKey: 'team_id',
-      otherKey: 'schedule_id',
-      as: 'schedules'
-    });
-    
     // A Team can be associated with many Games as home team
     Team.hasMany(models.Game, {
       foreignKey: 'home_team_id',
@@ -229,12 +204,12 @@ module.exports = (sequelize) => {
       as: 'awayGames'
     });
     
-    // A Team can have many constraints
-    Team.belongsToMany(models.ScheduleConstraint, {
-      through: 'constraint_teams',
+    // A Team can belong to many Schedules
+    Team.belongsToMany(models.Schedule, {
+      through: 'schedule_teams',
       foreignKey: 'team_id',
-      otherKey: 'constraint_id',
-      as: 'constraints'
+      otherKey: 'schedule_id',
+      as: 'schedules'
     });
   };
 

@@ -8,8 +8,8 @@
  */
 
 const { ScheduleOptimizer } = require('../schedule-optimizer');
-const Schedule = require('../../models/schedule');
-const Game = require('../../models/game');
+const Schedule = require('../../../models/schedule');
+const Game = require('../../../models/game');
 
 class AdaptiveSimulatedAnnealingOptimizer extends ScheduleOptimizer {
   /**

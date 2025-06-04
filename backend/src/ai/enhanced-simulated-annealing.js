@@ -11,12 +11,12 @@
  * Performance target: 50%+ improvement over v2.1
  */
 
-const Schedule = require('../models/schedule');
+const Schedule = require('../../models/schedule');
 const TravelDistanceCalculator = require('./travel-distance-calculator');
-const { ConstraintType } = require('../models/constraint');
+const { ConstraintType } = require('../../models/constraint');
 const { Worker } = require('worker_threads');
 const path = require('path');
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 const EventEmitter = require('events');
 
 // Performance monitoring

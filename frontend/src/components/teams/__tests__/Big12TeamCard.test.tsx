@@ -1,7 +1,7 @@
 import React from 'react';
 import { Big12TeamCard, Big12TeamGrid } from '../Big12TeamCard';
 import { BIG12_TEAMS } from '../../../data/big12Teams';
-import { render, screen, fireEvent, userEvent } from '../../../utils/testUtils';
+import { render, screen, userEvent } from '../../../utils/testUtils';
 import { vi } from '@jest/globals';
 
 describe('Big12TeamCard', () => {

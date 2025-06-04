@@ -1,3 +1,6 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+
 const { useState, useEffect } = React;
 
 // Function to get theme-appropriate logo path
@@ -8,6 +11,7 @@ const getThemedLogo = (logoFileName) => {
 };
 
 // Big 12 teams data
+// eslint-disable-next-line no-unused-vars
 const big12Teams = [
   { name: 'Arizona', abbreviation: 'ARIZ', logo: 'arizona.svg' },
   { name: 'Arizona State', abbreviation: 'ASU', logo: 'arizona_state.svg' },
@@ -27,6 +31,7 @@ const big12Teams = [
   { name: 'West Virginia', abbreviation: 'WVU', logo: 'west_virginia.svg' }
 ];
 
+// eslint-disable-next-line no-unused-vars
 function TeamCard({ team, index }) {
   return React.createElement('div', {
     className: 'team-card',
@@ -111,7 +116,7 @@ function FlexTimeApp() {
           React.createElement('h2', { className: 'hero-title-massive title-metallic', key: 'title' }, [
             'THE LANDSCAPE IS EVOLVING.',
             React.createElement('br', { key: 'br' }),
-            React.createElement('span', { className: 'gradient-text-neon', key: 'span' }, 'SO SHOULD YOU.')
+            React.createElement('span', { className: 'bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent', key: 'span' }, 'SO SHOULD YOU.')
           ]),
           React.createElement('p', { className: 'hero-description-modern', key: 'desc' }, [
             'The competition has heightened — now every advantage counts.',
@@ -207,4 +212,5 @@ function FlexTimeApp() {
 }
 
 // Render the app
-ReactDOM.render(React.createElement(FlexTimeApp), document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(FlexTimeApp));

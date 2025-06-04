@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { LiveIndicators, User, CursorPosition, UserActivity } from './LiveIndicators';
 import { useCollaboration, CollaborationProvider } from './CollaborationContext';
@@ -34,7 +34,7 @@ const CollaborationExampleInner: React.FC<CollaborationExampleProps> = ({ classN
   // Mock User Data for Demo
   // ============================================================================
 
-  const mockUsers: User[] = [
+  const mockUsers: User[] = useMemo(() => [
     {
       id: 'user_1',
       name: 'Alex Thompson',
@@ -88,7 +88,7 @@ const CollaborationExampleInner: React.FC<CollaborationExampleProps> = ({ classN
       currentLocation: 'Team Management',
       permissions: ['view', 'edit']
     }
-  ];
+  ], []);
 
   // ============================================================================
   // Initialization
@@ -126,7 +126,7 @@ const CollaborationExampleInner: React.FC<CollaborationExampleProps> = ({ classN
         }, 1000);
       });
     }
-  }, [isInitialized, isConnected, connect, addActivity]);
+  }, [isInitialized, isConnected, connect, addActivity, mockUsers]);
 
   // ============================================================================
   // Event Handlers

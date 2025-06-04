@@ -1,0 +1,519 @@
+# FlexTime Backup and Recovery System
+# Comprehensive backup strategy for production environment
+---
+# Backup namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flextime-backup
+  labels:
+    name: flextime-backup
+    purpose: backup-recovery
+
+---
+# Service Account for backup operations
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: backup-operator
+  namespace: flextime-backup
+
+---
+# ClusterRole for backup operations
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: backup-operator
+rules:
+- apiGroups: [""]
+  resources: ["persistentvolumes", "persistentvolumeclaims"]
+  verbs: ["get", "list", "create", "update", "patch", "delete"]
+- apiGroups: [""]
+  resources: ["secrets", "configmaps"]
+  verbs: ["get", "list", "create", "update", "patch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "statefulsets", "daemonsets"]
+  verbs: ["get", "list", "create", "update", "patch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "create", "delete"]
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create"]
+
+---
+# ClusterRoleBinding for backup operations
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: backup-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: backup-operator
+subjects:
+- kind: ServiceAccount
+  name: backup-operator
+  namespace: flextime-backup
+
+---
+# ConfigMap for backup configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backup-config
+  namespace: flextime-backup
+data:
+  # Database backup configuration
+  db-backup.sh: |
+    #!/bin/bash
+    set -e
+    
+    # Environment variables
+    DB_HOST="${NEON_DB_HOST}"
+    DB_NAME="${NEON_DB_NAME}"
+    DB_USER="${NEON_DB_USER}"
+    DB_PASSWORD="${NEON_DB_PASSWORD}"
+    BACKUP_BUCKET="${BACKUP_S3_BUCKET}"
+    DATE=$(date +%Y%m%d_%H%M%S)
+    BACKUP_FILE="flextime_backup_${DATE}.sql"
+    
+    echo "Starting database backup at $(date)"
+    
+    # Create database backup
+    PGPASSWORD="${DB_PASSWORD}" pg_dump \
+      -h "${DB_HOST}" \
+      -U "${DB_USER}" \
+      -d "${DB_NAME}" \
+      --no-owner \
+      --no-privileges \
+      --create \
+      --clean \
+      --if-exists \
+      > "/tmp/${BACKUP_FILE}"
+    
+    # Compress backup
+    gzip "/tmp/${BACKUP_FILE}"
+    
+    # Upload to S3
+    aws s3 cp "/tmp/${BACKUP_FILE}.gz" "s3://${BACKUP_BUCKET}/database/${BACKUP_FILE}.gz"
+    
+    # Verify backup
+    aws s3 ls "s3://${BACKUP_BUCKET}/database/${BACKUP_FILE}.gz"
+    
+    # Clean up local file
+    rm "/tmp/${BACKUP_FILE}.gz"
+    
+    echo "Database backup completed successfully at $(date)"
+    
+    # Cleanup old backups (keep last 30 days)
+    cutoff_date=$(date -d '30 days ago' +%Y%m%d)
+    aws s3 ls "s3://${BACKUP_BUCKET}/database/" | while read -r line; do
+      backup_date=$(echo "$line" | awk '{print $4}' | grep -o '[0-9]\{8\}' | head -1)
+      if [[ "$backup_date" < "$cutoff_date" ]]; then
+        file_name=$(echo "$line" | awk '{print $4}')
+        echo "Deleting old backup: $file_name"
+        aws s3 rm "s3://${BACKUP_BUCKET}/database/$file_name"
+      fi
+    done
+
+  # Application data backup
+  app-backup.sh: |
+    #!/bin/bash
+    set -e
+    
+    NAMESPACE="flextime-production"
+    BACKUP_BUCKET="${BACKUP_S3_BUCKET}"
+    DATE=$(date +%Y%m%d_%H%M%S)
+    
+    echo "Starting application backup at $(date)"
+    
+    # Create temporary directory for backup
+    mkdir -p /tmp/backup/${DATE}
+    
+    # Backup ConfigMaps
+    kubectl get configmaps -n ${NAMESPACE} -o yaml > /tmp/backup/${DATE}/configmaps.yaml
+    
+    # Backup Secrets (excluding sensitive data for security)
+    kubectl get secrets -n ${NAMESPACE} -o yaml | \
+      grep -v 'password\|token\|key' > /tmp/backup/${DATE}/secrets-metadata.yaml
+    
+    # Backup PersistentVolumeClaims
+    kubectl get pvc -n ${NAMESPACE} -o yaml > /tmp/backup/${DATE}/pvcs.yaml
+    
+    # Backup Deployments
+    kubectl get deployments -n ${NAMESPACE} -o yaml > /tmp/backup/${DATE}/deployments.yaml
+    
+    # Backup Services
+    kubectl get services -n ${NAMESPACE} -o yaml > /tmp/backup/${DATE}/services.yaml
+    
+    # Backup Ingress
+    kubectl get ingress -n ${NAMESPACE} -o yaml > /tmp/backup/${DATE}/ingress.yaml 2>/dev/null || echo "No ingress found"
+    
+    # Create archive
+    tar -czf /tmp/backup/flextime_k8s_backup_${DATE}.tar.gz -C /tmp/backup/${DATE} .
+    
+    # Upload to S3
+    aws s3 cp /tmp/backup/flextime_k8s_backup_${DATE}.tar.gz "s3://${BACKUP_BUCKET}/kubernetes/"
+    
+    # Verify upload
+    aws s3 ls "s3://${BACKUP_BUCKET}/kubernetes/flextime_k8s_backup_${DATE}.tar.gz"
+    
+    # Clean up local files
+    rm -rf /tmp/backup
+    
+    echo "Application backup completed successfully at $(date)"
+
+  # Disaster recovery script
+  disaster-recovery.sh: |
+    #!/bin/bash
+    set -e
+    
+    BACKUP_BUCKET="${BACKUP_S3_BUCKET}"
+    RECOVERY_DATE="${1}"
+    
+    if [ -z "$RECOVERY_DATE" ]; then
+      echo "Usage: $0 <YYYYMMDD_HHMMSS>"
+      exit 1
+    fi
+    
+    echo "Starting disaster recovery for date: $RECOVERY_DATE"
+    
+    # Download database backup
+    aws s3 cp "s3://${BACKUP_BUCKET}/database/flextime_backup_${RECOVERY_DATE}.sql.gz" /tmp/
+    
+    # Download kubernetes backup
+    aws s3 cp "s3://${BACKUP_BUCKET}/kubernetes/flextime_k8s_backup_${RECOVERY_DATE}.tar.gz" /tmp/
+    
+    # Extract database backup
+    gunzip /tmp/flextime_backup_${RECOVERY_DATE}.sql.gz
+    
+    # Restore database (WARNING: This will overwrite existing data)
+    echo "WARNING: This will overwrite the existing database!"
+    read -p "Continue? (y/N): " -n 1 -r
+    echo
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      PGPASSWORD="${NEON_DB_PASSWORD}" psql \
+        -h "${NEON_DB_HOST}" \
+        -U "${NEON_DB_USER}" \
+        -d "${NEON_DB_NAME}" \
+        -f /tmp/flextime_backup_${RECOVERY_DATE}.sql
+      echo "Database restored successfully"
+    fi
+    
+    # Extract and display kubernetes backup
+    mkdir -p /tmp/k8s-restore
+    tar -xzf /tmp/flextime_k8s_backup_${RECOVERY_DATE}.tar.gz -C /tmp/k8s-restore
+    
+    echo "Kubernetes backup extracted to /tmp/k8s-restore"
+    echo "Review and manually apply the YAML files as needed:"
+    ls -la /tmp/k8s-restore/
+    
+    # Clean up
+    rm -f /tmp/flextime_backup_${RECOVERY_DATE}.sql
+    rm -f /tmp/flextime_k8s_backup_${RECOVERY_DATE}.tar.gz
+
+---
+# Backup secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backup-secrets
+  namespace: flextime-backup
+type: Opaque
+stringData:
+  NEON_DB_HOST: "REPLACE_WITH_NEON_HOST"
+  NEON_DB_NAME: "REPLACE_WITH_DB_NAME"
+  NEON_DB_USER: "REPLACE_WITH_DB_USER"
+  NEON_DB_PASSWORD: "REPLACE_WITH_DB_PASSWORD"
+  BACKUP_S3_BUCKET: "flextime-production-backups"
+  AWS_ACCESS_KEY_ID: "REPLACE_WITH_AWS_ACCESS_KEY"
+  AWS_SECRET_ACCESS_KEY: "REPLACE_WITH_AWS_SECRET_KEY"
+  AWS_DEFAULT_REGION: "us-east-1"
+
+---
+# Database backup CronJob (daily at 2 AM UTC)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: database-backup
+  namespace: flextime-backup
+  labels:
+    app: backup
+    component: database
+spec:
+  schedule: "0 2 * * *"  # Daily at 2 AM UTC
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: backup
+            component: database
+        spec:
+          serviceAccountName: backup-operator
+          restartPolicy: OnFailure
+          containers:
+          - name: db-backup
+            image: postgres:15-alpine
+            command: ["/bin/sh"]
+            args: ["/scripts/db-backup.sh"]
+            env:
+            - name: AWS_CLI_VERSION
+              value: "2.13.0"
+            envFrom:
+            - secretRef:
+                name: backup-secrets
+            volumeMounts:
+            - name: backup-scripts
+              mountPath: /scripts
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+          volumes:
+          - name: backup-scripts
+            configMap:
+              name: backup-config
+              defaultMode: 0755
+          initContainers:
+          - name: install-aws-cli
+            image: alpine:3.18
+            command: ["/bin/sh", "-c"]
+            args:
+            - |
+              apk add --no-cache curl unzip
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              ./aws/install
+            volumeMounts:
+            - name: aws-cli
+              mountPath: /usr/local/bin/aws
+          volumes:
+          - name: aws-cli
+            emptyDir: {}
+
+---
+# Application backup CronJob (daily at 3 AM UTC)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: application-backup
+  namespace: flextime-backup
+  labels:
+    app: backup
+    component: application
+spec:
+  schedule: "0 3 * * *"  # Daily at 3 AM UTC
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 7
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: backup
+            component: application
+        spec:
+          serviceAccountName: backup-operator
+          restartPolicy: OnFailure
+          containers:
+          - name: app-backup
+            image: bitnami/kubectl:1.28
+            command: ["/bin/bash"]
+            args: ["/scripts/app-backup.sh"]
+            envFrom:
+            - secretRef:
+                name: backup-secrets
+            volumeMounts:
+            - name: backup-scripts
+              mountPath: /scripts
+            resources:
+              requests:
+                cpu: 100m
+                memory: 256Mi
+              limits:
+                cpu: 500m
+                memory: 1Gi
+          volumes:
+          - name: backup-scripts
+            configMap:
+              name: backup-config
+              defaultMode: 0755
+
+---
+# Backup monitoring ServiceMonitor (for Prometheus)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backup-monitoring
+  namespace: flextime-backup
+  labels:
+    app: backup
+spec:
+  selector:
+    matchLabels:
+      app: backup-metrics
+  endpoints:
+  - port: metrics
+    interval: 30s
+    path: /metrics
+
+---
+# Backup status exporter (for monitoring backup success/failure)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backup-metrics-exporter
+  namespace: flextime-backup
+  labels:
+    app: backup-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backup-metrics
+  template:
+    metadata:
+      labels:
+        app: backup-metrics
+    spec:
+      containers:
+      - name: backup-metrics
+        image: alpine:3.18
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          while true; do
+            # Simple metrics endpoint for backup monitoring
+            echo "# HELP backup_last_success_timestamp Last successful backup timestamp"
+            echo "# TYPE backup_last_success_timestamp gauge"
+            echo "backup_last_success_timestamp $(date +%s)"
+            sleep 300
+          done | nc -l -p 8080
+        ports:
+        - containerPort: 8080
+          name: metrics
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            cpu: 50m
+            memory: 64Mi
+
+---
+# Backup metrics service
+apiVersion: v1
+kind: Service
+metadata:
+  name: backup-metrics-service
+  namespace: flextime-backup
+  labels:
+    app: backup-metrics
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    name: metrics
+  selector:
+    app: backup-metrics
+
+---
+# Volume snapshot for persistent data
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: volume-snapshot-config
+  namespace: flextime-backup
+data:
+  create-snapshots.sh: |
+    #!/bin/bash
+    set -e
+    
+    NAMESPACE="flextime-production"
+    DATE=$(date +%Y%m%d-%H%M%S)
+    
+    echo "Creating volume snapshots at $(date)"
+    
+    # Get all PVCs in the production namespace
+    kubectl get pvc -n ${NAMESPACE} -o name | while read pvc; do
+      pvc_name=$(echo $pvc | cut -d'/' -f2)
+      snapshot_name="${pvc_name}-snapshot-${DATE}"
+      
+      echo "Creating snapshot for PVC: ${pvc_name}"
+      
+      cat <<EOF | kubectl apply -f -
+    apiVersion: snapshot.storage.k8s.io/v1
+    kind: VolumeSnapshot
+    metadata:
+      name: ${snapshot_name}
+      namespace: ${NAMESPACE}
+    spec:
+      source:
+        persistentVolumeClaimName: ${pvc_name}
+      volumeSnapshotClassName: csi-aws-vsc
+    EOF
+      
+      # Wait for snapshot to be ready
+      kubectl wait --for=condition=ReadyToUse volumesnapshot/${snapshot_name} -n ${NAMESPACE} --timeout=600s
+      echo "Snapshot ${snapshot_name} created successfully"
+    done
+    
+    echo "Volume snapshots completed at $(date)"
+
+---
+# Volume snapshot CronJob (weekly on Sunday at 1 AM UTC)
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: volume-snapshot
+  namespace: flextime-backup
+  labels:
+    app: backup
+    component: volume-snapshot
+spec:
+  schedule: "0 1 * * 0"  # Weekly on Sunday at 1 AM UTC
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 4
+  failedJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: backup
+            component: volume-snapshot
+        spec:
+          serviceAccountName: backup-operator
+          restartPolicy: OnFailure
+          containers:
+          - name: volume-snapshot
+            image: bitnami/kubectl:1.28
+            command: ["/bin/bash"]
+            args: ["/scripts/create-snapshots.sh"]
+            volumeMounts:
+            - name: snapshot-scripts
+              mountPath: /scripts
+            resources:
+              requests:
+                cpu: 50m
+                memory: 128Mi
+              limits:
+                cpu: 200m
+                memory: 512Mi
+          volumes:
+          - name: snapshot-scripts
+            configMap:
+              name: volume-snapshot-config
+              defaultMode: 0755

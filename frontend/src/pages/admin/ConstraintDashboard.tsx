@@ -30,8 +30,8 @@ import {
   Refresh as RefreshIcon,
   Download as DownloadIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
-import { LineChart, Line, AreaChart, Area, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { useRouter } from 'next/router';
+import { AreaChart, Area, PieChart, Pie, Cell, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 // Color palette for charts
 const COLORS = ['#0066cc', '#3399ff', '#00c2ff', '#00f2ff', '#FF9800', '#28A745'];
@@ -64,7 +64,7 @@ interface Activity {
 }
 
 const ConstraintDashboard: React.FC = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState<SystemMetrics | null>(null);
   const [constraintStats, setConstraintStats] = useState<ConstraintStat[]>([]);
@@ -238,7 +238,7 @@ const ConstraintDashboard: React.FC = () => {
           </Button>
           <Button
             variant="contained"
-            onClick={() => navigate('/admin/constraints/new')}
+            onClick={() => router.push('/admin/constraints/new')}
             sx={{
               background: 'linear-gradient(135deg, #0066cc, #3399ff)',
               '&:hover': {
@@ -526,7 +526,7 @@ const ConstraintDashboard: React.FC = () => {
                 </Typography>
                 <Button
                   size="small"
-                  onClick={() => navigate('/admin/audit-log')}
+                  onClick={() => router.push('/admin/audit-log')}
                 >
                   View All
                 </Button>
@@ -583,7 +583,7 @@ const ConstraintDashboard: React.FC = () => {
                     fullWidth
                     variant="outlined"
                     startIcon={<HealthIcon />}
-                    onClick={() => navigate('/admin/system-health')}
+                    onClick={() => router.push('/admin/system-health')}
                     sx={{ py: 1.5 }}
                   >
                     System Health
@@ -594,7 +594,7 @@ const ConstraintDashboard: React.FC = () => {
                     fullWidth
                     variant="outlined"
                     startIcon={<PeopleIcon />}
-                    onClick={() => navigate('/admin/users')}
+                    onClick={() => router.push('/admin/users')}
                     sx={{ py: 1.5 }}
                   >
                     User Management
@@ -605,7 +605,7 @@ const ConstraintDashboard: React.FC = () => {
                     fullWidth
                     variant="outlined"
                     startIcon={<HistoryIcon />}
-                    onClick={() => navigate('/admin/audit-log')}
+                    onClick={() => router.push('/admin/audit-log')}
                     sx={{ py: 1.5 }}
                   >
                     Audit Log
@@ -616,7 +616,7 @@ const ConstraintDashboard: React.FC = () => {
                     fullWidth
                     variant="outlined"
                     startIcon={<AnalyticsIcon />}
-                    onClick={() => navigate('/admin/analytics')}
+                    onClick={() => router.push('/admin/analytics')}
                     sx={{ py: 1.5 }}
                   >
                     Analytics

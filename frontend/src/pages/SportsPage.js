@@ -1,9 +1,10 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import SportsNavigation from '../components/SportsNavigation';
 
 const SportsPage = () => {
-  const { sportId } = useParams();
+  const router = useRouter();
+  const { sportId } = router.query;
 
   // If a specific sport is selected, show its details
   if (sportId) {

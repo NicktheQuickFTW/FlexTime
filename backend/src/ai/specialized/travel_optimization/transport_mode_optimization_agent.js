@@ -11,7 +11,7 @@
  * - Real-time cost optimization
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class TransportModeOptimizationAgent extends Agent {
   constructor(options = {}) {

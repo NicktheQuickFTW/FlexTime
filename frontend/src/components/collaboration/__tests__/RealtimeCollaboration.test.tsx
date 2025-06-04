@@ -9,7 +9,7 @@ import {
   mockUser,
   MockWebSocket
 } from '../../../utils/testUtils';
-import { vi } from '@jest/globals';
+// Global vi is available from setupTests
 
 // Mock WebSocket globally
 global.WebSocket = MockWebSocket as any;
@@ -37,6 +37,7 @@ describe('RealtimeCollaboration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Capture WebSocket instance
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const originalWebSocket = global.WebSocket;
     global.WebSocket = class extends MockWebSocket {
       constructor(url: string) {

@@ -1,8 +1,9 @@
 /**
- * FlexTime COMPASS Database Models
+ * FlexTime COMPASS Database Models - DISABLED (Future Enhancement Q1 2026)
  * 
  * This module defines Sequelize models for storing COMPASS data in the Neon database,
  * including team ratings, predictions, strength of schedule metrics, and training data.
+ * Currently disabled as COMPASS ratings are planned for future implementation.
  */
 
 module.exports = (sequelize) => {

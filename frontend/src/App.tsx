@@ -20,6 +20,7 @@ import WrestlingProfiles from './pages/WrestlingProfiles';
 import MensTennisProfiles from './pages/MensTennisProfiles';
 import WomensTennisProfiles from './pages/WomensTennisProfiles';
 import LacrosseProfiles from './pages/LacrosseProfiles';
+import FTBuilderDemo from './pages/FTBuilderDemo';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/sports/mens-tennis" element={<MensTennisProfiles />} />
           <Route path="/sports/womens-tennis" element={<WomensTennisProfiles />} />
           <Route path="/sports/lacrosse" element={<LacrosseProfiles />} />
+          <Route path="/builder" element={<FTBuilderDemo />} />
         </Routes>
       </MainLayout>
     </ThemeProvider>

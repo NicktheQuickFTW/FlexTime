@@ -6,7 +6,7 @@
  * accommodation, meals, equipment, and variable adjustments.
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class TravelCostCalculationAgent extends Agent {
   constructor(options = {}) {

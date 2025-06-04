@@ -11,7 +11,7 @@
  * - Schedule synchronization methods
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class SharedCharterAgent extends Agent {
   constructor(options = {}) {

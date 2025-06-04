@@ -85,31 +85,33 @@ const pageVariants: Record<string, Variants> = {
 };
 
 // Stagger animation variants
-const staggerVariants: Variants = {
-  container: {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
+const staggerContainerVariants: Variants = {
+  initial: {},
+  animate: {
+    transition: {
+      staggerChildren: 0.1,
     },
   },
-  item: (direction: string) => ({
-    initial: {
-      opacity: 0,
-      y: direction === 'up' ? -20 : direction === 'down' ? 20 : 0,
-      x: direction === 'left' ? -20 : direction === 'right' ? 20 : 0,
+  exit: {},
+};
+
+const staggerItemVariants: Variants = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: 'easeOut',
     },
-    animate: {
-      opacity: 1,
-      y: 0,
-      x: 0,
-    },
-    exit: {
-      opacity: 0,
-      y: direction === 'up' ? 20 : direction === 'down' ? -20 : 0,
-      x: direction === 'left' ? 20 : direction === 'right' ? -20 : 0,
-    },
-  }),
+  },
+  exit: {
+    opacity: 0,
+    y: -20,
+  },
 };
 
 /**
@@ -163,14 +165,7 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
 }) => {
   return (
     <motion.div
-      variants={{
-        ...staggerVariants.container,
-        animate: {
-          transition: {
-            staggerChildren: staggerDelay,
-          },
-        },
-      }}
+      variants={staggerContainerVariants}
       initial={initial ? 'initial' : false}
       animate="animate"
       exit="exit"
@@ -180,7 +175,7 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
         <motion.div
           key={index}
           custom={direction}
-          variants={staggerVariants.item}
+          variants={staggerItemVariants}
           transition={{
             duration: 0.4,
             ease: 'easeOut',
@@ -427,7 +422,7 @@ export type {
 };
 
 // Default export for easy importing
-export default {
+const pageTransitions = {
   PageTransition,
   StaggerContainer,
   RouteTransition,
@@ -437,3 +432,5 @@ export default {
   LoadingTransition,
   ListItemTransition,
 };
+
+export default pageTransitions;

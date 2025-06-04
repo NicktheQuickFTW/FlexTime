@@ -5,10 +5,10 @@
 
 // Database configuration from environment
 const NEON_CONFIG = {
-  connectionString: 'postgres://xii-os_owner:npg_4qYJFR0lneIg@ep-wandering-sea-aa01qr2o-pooler.westus3.azure.neon.tech:5432/flextime?sslmode=require',
+  connectionString: 'postgres://xii-os_owner:npg_4qYJFR0lneIg@ep-wandering-sea-aa01qr2o-pooler.westus3.azure.neon.tech:5432/HELiiX?sslmode=require',
   host: 'ep-wandering-sea-aa01qr2o-pooler.westus3.azure.neon.tech',
   port: 5432,
-  database: 'flextime',
+  database: 'HELiiX',
   user: 'xii-os_owner',
   password: 'npg_4qYJFR0lneIg',
   ssl: true
@@ -19,9 +19,8 @@ const NEON_CONFIG = {
 
 class NeonDBClient {
   constructor() {
-    // Use current host port for API or fallback to 3000 for backend
-    const currentPort = window.location.port || '3006';
-    this.baseUrl = `http://localhost:3000/api`; // Backend API endpoint for database operations (backend runs on 3000)
+    // Backend API endpoint for database operations (backend runs on 3000)
+    this.baseUrl = `http://localhost:3000/api`;
     this.cache = new Map();
     this.isConnected = false;
   }

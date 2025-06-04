@@ -1,0 +1,106 @@
+{
+  "executionSummary": {
+    "title": "Big 12 Football Unified Pipeline Analysis - 2025-26 Season",
+    "timestamp": "2025-05-31T22:10:16.597Z",
+    "sport": "--sport",
+    "gender": "lacrosse",
+    "focusPeriod": "Spring 2025 - Summer 2025 - Complete 2025-26 Preparation",
+    "teams": 16,
+    "methodology": "Unified Sport Pipeline Assessment",
+    "totalAnalyses": 32
+  },
+  "keyFindings": {
+    "unifiedPipelineAssessments": {
+      "teamsAnalyzed": 16,
+      "totalCitations": 80,
+      "averageContentLength": 9375
+    },
+    "unifiedCompassRatings": {
+      "teamsAnalyzed": 16,
+      "totalAnalyses": 16
+    }
+  },
+  "teamSummaries": {
+    "Iowa State": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Cincinnati": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Houston": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Oklahoma State": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Arizona": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "West Virginia": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Baylor": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "TCU": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "BYU": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Kansas State": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Texas Tech": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Colorado": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Utah": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Kansas": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "Arizona State": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    },
+    "UCF": {
+      "hasUnifiedPipeline": true,
+      "hasUnifiedCompass": true,
+      "completionStatus": "complete"
+    }
+  },
+  "methodology": "Unified Sport Pipeline Assessment with Comprehensive Rankings Integration"
+}

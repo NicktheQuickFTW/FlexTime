@@ -4,6 +4,7 @@ import {
   screen, 
   waitFor, 
   userEvent,
+  fireEvent,
   mockGame,
   mockTimeSlot,
   MockWebSocket
@@ -11,7 +12,8 @@ import {
 import { DragDropScheduleBuilder } from '../../components/scheduler';
 import { RealtimeCollaboration } from '../../components/collaboration';
 import { COMPASSAnalyticsDashboard } from '../../components/analytics';
-import { vi } from '@jest/globals';
+
+// Global vi is available from setupTests
 
 // Mock WebSocket
 global.WebSocket = MockWebSocket as any;
@@ -49,6 +51,7 @@ describe('Complete Scheduling Flow Integration', () => {
   
   describe('Multi-User Scheduling Scenario', () => {
     it('should handle complete scheduling workflow with collaboration', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       // Render the complete scheduling interface
@@ -160,6 +163,7 @@ describe('Complete Scheduling Flow Integration', () => {
   
   describe('Analytics Integration', () => {
     it('should update analytics dashboard after scheduling changes', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       const compassScore = {
@@ -285,6 +289,7 @@ describe('Complete Scheduling Flow Integration', () => {
   
   describe('Error Handling', () => {
     it('should handle network errors gracefully', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       // Mock failed game move
@@ -382,6 +387,7 @@ describe('Complete Scheduling Flow Integration', () => {
     });
     
     it('should handle rapid user interactions', async () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const user = userEvent.setup();
       
       render(

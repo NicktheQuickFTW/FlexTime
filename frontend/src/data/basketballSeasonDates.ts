@@ -1,5 +1,4 @@
 import { SeasonDates, TournamentInfo } from '../models/SeasonDates';
-import { SportType } from '../types';
 
 /**
  * Men's Basketball season dates for the next five seasons

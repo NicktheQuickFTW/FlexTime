@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
   Chip,
   CircularProgress,
   Dialog,
@@ -11,8 +9,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-  Divider,
-  Grid,
   IconButton,
   Paper,
   Table,
@@ -36,7 +32,7 @@ import {
   Search as SearchIcon,
   TrendingUp as OptimizeIcon
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ScheduleService } from '../services/api';
 import { Schedule, SportType } from '../types';
 
@@ -51,7 +47,7 @@ const Schedules: React.FC = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [scheduleToDelete, setScheduleToDelete] = useState<number | null>(null);
   
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     fetchSchedules();
@@ -171,7 +167,7 @@ const Schedules: React.FC = () => {
           variant="contained" 
           color="primary" 
           startIcon={<AddIcon />}
-          onClick={() => navigate('/schedules/new')}
+          onClick={() => router.push('/schedules/new')}
           sx={{ bgcolor: '#AB0520' }} // Big 12 cardinal red
         >
           Create New Schedule
@@ -225,7 +221,7 @@ const Schedules: React.FC = () => {
               <Button 
                 variant="contained" 
                 startIcon={<AddIcon />}
-                onClick={() => navigate('/schedules/new')}
+                onClick={() => router.push('/schedules/new')}
               >
                 Create Schedule
               </Button>
@@ -270,7 +266,7 @@ const Schedules: React.FC = () => {
                           <Tooltip title="View">
                             <IconButton 
                               size="small"
-                              onClick={() => navigate(`/schedules/${schedule.schedule_id}`)}
+                              onClick={() => router.push(`/schedules/${schedule.schedule_id}`)}
                             >
                               <ViewIcon />
                             </IconButton>
@@ -278,7 +274,7 @@ const Schedules: React.FC = () => {
                           <Tooltip title="Edit">
                             <IconButton 
                               size="small"
-                              onClick={() => navigate(`/schedules/${schedule.schedule_id}/edit`)}
+                              onClick={() => router.push(`/schedules/${schedule.schedule_id}/edit`)}
                             >
                               <EditIcon />
                             </IconButton>
@@ -286,7 +282,7 @@ const Schedules: React.FC = () => {
                           <Tooltip title="Optimize">
                             <IconButton 
                               size="small"
-                              onClick={() => navigate(`/schedules/${schedule.schedule_id}/optimize`)}
+                              onClick={() => router.push(`/schedules/${schedule.schedule_id}/optimize`)}
                             >
                               <OptimizeIcon />
                             </IconButton>

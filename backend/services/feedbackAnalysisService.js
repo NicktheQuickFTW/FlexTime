@@ -6,7 +6,7 @@
 
 // const { FeedbackSystem } = require('../agents/learning/feedback_system');
 // const { EnhancedMemoryManager } = require('../agents/memory/enhanced_memory_manager');
-const AgentMemoryManager = require('../agents/memory/agent_memory_manager');
+const AgentMemoryManager = require('../src/ai/agent-memory-adapter');
 const logger = require("../utils/logger")
 
 class FeedbackAnalysisService {

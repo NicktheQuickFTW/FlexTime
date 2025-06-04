@@ -9,6 +9,7 @@
 export { default as TopAppBar } from './TopAppBar';
 export { default as NavigationRail } from './NavigationRail';
 export { default as NavigationLayout } from './NavigationLayout';
+export { default as SchoolNavigation } from './SchoolNavigation';
 
 // Mobile Navigation Components
 export { 

@@ -14,7 +14,7 @@
  * 6. Budget Monitoring & Control (financial oversight)
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class TravelOptimizationDirector extends Agent {
   constructor(options = {}) {

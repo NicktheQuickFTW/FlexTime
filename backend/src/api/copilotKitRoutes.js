@@ -131,7 +131,7 @@ const actionHandlers = {
     
     try {
       // Call your existing schedule generation logic
-      const scheduleService = require('../services/scheduleService');
+      const scheduleService = require('../../services/scheduleService');
       
       const result = await scheduleService.generateSchedule({
         sport,

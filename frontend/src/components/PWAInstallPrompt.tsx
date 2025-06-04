@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { usePWA, PWAManager } from '../utils/pwaUtils';
+import { usePWA } from '../utils/pwaUtils';
 
 interface PWAInstallPromptProps {
   className?: string;
@@ -281,7 +281,7 @@ export const NetworkStatusIndicator: React.FC<{ className?: string }> = ({
   className = '' 
 }) => {
   const { isOnline, getNetworkStatus } = usePWA();
-  const [networkInfo, setNetworkInfo] = useState(getNetworkStatus());
+  const [, setNetworkInfo] = useState(getNetworkStatus());
 
   useEffect(() => {
     const updateNetworkInfo = () => {

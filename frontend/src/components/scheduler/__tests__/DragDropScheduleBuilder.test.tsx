@@ -243,6 +243,7 @@ describe('DragDropScheduleBuilder', () => {
       render(<DragDropScheduleBuilder {...defaultProps} />);
       const user = userEvent.setup();
       
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const firstGame = screen.getAllByText(/Kansas/i)[0].closest('.ft-draggable-game');
       
       await user.tab();

@@ -293,7 +293,7 @@ class MultiSportResearchOrchestrator {
 
   async processWrestlingBatchedJobs(jobs) {
     const results = {};
-    const batchSize = 20; // Use full worker capacity
+    const batchSize = this.maxConcurrentJobs || 10; // Use configurable worker capacity
     
     for (let i = 0; i < jobs.length; i += batchSize) {
       const batch = jobs.slice(i, i + batchSize);

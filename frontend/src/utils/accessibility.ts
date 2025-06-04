@@ -173,7 +173,7 @@ export const a11yUtils = {
     register: (shortcut: string, callback: () => void, element: HTMLElement = document.body) => {
       const handleKeyDown = (e: KeyboardEvent) => {
         const keys = shortcut.toLowerCase().split('+');
-        const pressedKeys = [];
+        const pressedKeys: string[] = [];
         
         if (e.ctrlKey) pressedKeys.push('ctrl');
         if (e.altKey) pressedKeys.push('alt');

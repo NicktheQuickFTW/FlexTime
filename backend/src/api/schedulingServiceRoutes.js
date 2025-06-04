@@ -8,7 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const FTBuilderEngine = require('../../services/FT_Builder_Engine');
-const logger = require("../../utils/logger")
+const logger = require("../utils/logger")
 
 // Create service instance
 const schedulingService = new FTBuilderEngine();
@@ -379,6 +379,85 @@ router.post('/store', async (req, res) => {
     });
   } catch (error) {
     logger.error(`Error storing schedule data: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Constraints endpoints
+router.get('/constraints', async (req, res) => {
+  try {
+    const { sport } = req.query;
+    const constraints = await schedulingService.getConstraints(sport);
+    
+    res.json({
+      success: true,
+      constraints: constraints
+    });
+  } catch (error) {
+    logger.error(`Error getting constraints: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+router.get('/constraints/:sport', async (req, res) => {
+  try {
+    const sport = req.params.sport;
+    const constraints = await schedulingService.getConstraints(sport);
+    
+    res.json({
+      success: true,
+      sport: sport,
+      constraints: constraints
+    });
+  } catch (error) {
+    logger.error(`Error getting constraints for ${req.params.sport}: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Teams endpoints
+router.get('/teams', async (req, res) => {
+  try {
+    const { conference, sport } = req.query;
+    const teams = await schedulingService.getTeams(conference, sport);
+    
+    res.json({
+      success: true,
+      teams: teams,
+      count: teams.length
+    });
+  } catch (error) {
+    logger.error(`Error getting teams: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+router.get('/teams/:conference', async (req, res) => {
+  try {
+    const conference = req.params.conference;
+    const { sport } = req.query;
+    const teams = await schedulingService.getTeams(conference, sport);
+    
+    res.json({
+      success: true,
+      conference: conference,
+      teams: teams,
+      count: teams.length
+    });
+  } catch (error) {
+    logger.error(`Error getting teams for ${req.params.conference}: ${error.message}`);
     res.status(500).json({
       success: false,
       error: error.message

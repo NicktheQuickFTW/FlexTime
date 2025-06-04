@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { 
   Box, 
   Button, 
-  Select, 
   Typography as Text, 
   Stack, 
   Alert, 
-  MenuItem,
-  FormControl,
-  InputLabel,
   Divider,
   Snackbar
 } from '@mui/material';
-import { Sync as SyncIcon, Link as LinkIcon, SportsBasketball, Schedule, ContactMail } from '@mui/icons-material';
+import { Sync as SyncIcon, Link as LinkIcon, Schedule, ContactMail } from '@mui/icons-material';
 import api from '../../services/api';
 import SportSelector from '../common/SportSelector';
 

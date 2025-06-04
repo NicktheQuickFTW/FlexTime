@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Box, BoxProps, styled } from '@mui/material';
+import { Box, BoxProps } from '@mui/material';
 
 interface DashboardGridProps extends BoxProps {
   children: ReactNode;

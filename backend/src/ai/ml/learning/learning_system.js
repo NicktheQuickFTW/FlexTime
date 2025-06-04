@@ -6,13 +6,13 @@
  * It now connects with the HELiiX Intelligence Engine for enhanced learning capabilities.
  */
 
-const logger = require('../../utils/logger');
-const EnhancedMemoryManager = require('../memory/enhanced_memory_manager');
+const logger = require("../utils/logger");
+const { CentralizedMemoryManager } = require('../../enhanced/centralized_memory_manager');
 const { MachineLearningManager } = require('./machine_learning');
 const FeedbackLoopSystem = require('./feedback_loop');
-const IntelligenceEngineClient = require('../intelligence_engine_client');
-const intelligenceEngineConfig = require('../../config/intelligence_engine_config');
-const neonConfig = require('../../config/neon_db_config');
+const IntelligenceEngineClient = require('../../intelligence_engine_client');
+// const intelligenceEngineConfig = require('../../config/intelligence_engine_config'); // Config file doesn't exist
+const neonConfig = require('../../../../config/neon_db_config');
 
 /**
  * Learning System that integrates memory, ML, and feedback
@@ -28,7 +28,7 @@ class LearningSystem {
     this.modelsPath = config.modelsPath || './models';
 
     // Initialize components
-    this.memorySystem = new EnhancedMemoryManager({
+    this.memorySystem = new CentralizedMemoryManager({
       neon: {
         enabled: true,
         connectionString: this.neonConfig.connectionString

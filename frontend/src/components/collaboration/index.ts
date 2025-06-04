@@ -2,6 +2,9 @@
 // FlexTime Collaboration System - Main Exports
 // ============================================================================
 
+// CSS Styles
+import './LiveIndicators.css';
+
 // Core Components
 export { default as LiveIndicators, UserAvatar, LiveCursor, ActivityFeed } from './LiveIndicators';
 export type { User, CursorPosition, UserActivity } from './LiveIndicators';
@@ -133,8 +136,7 @@ export const collaborationUtils = {
   }
 };
 
-// CSS Styles
-import './LiveIndicators.css';
+// Note: CSS import moved to top of file if needed
 
 // ============================================================================
 // Re-export commonly used types for convenience

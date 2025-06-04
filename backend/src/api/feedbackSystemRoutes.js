@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const feedbackSystemController = require('../../controllers/feedbackSystemController');
+const feedbackSystemController = require('./feedbackSystemController');
 
 /**
  * @route   POST /api/feedback/submit

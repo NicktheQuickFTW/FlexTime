@@ -1,48 +1,33 @@
 /**
- * FlexTime Agent Memory Adapter
+ * Simple Agent Memory Adapter
  * 
- * This module adapts the FlexTime agent memory capabilities to work with
- * the centralized HELiiX Intelligence Engine, providing persistent memory
- * storage for agents across the platform.
+ * Provides basic memory storage for agents without external dependencies
  */
 
-const logger = require('../utils/logger');
-const IntelligenceEngineClient = require('../clients/intelligence-engine-client');
+const logger = require("../utils/logger");
 
 /**
- * Adapter for integrating agent memory with Intelligence Engine
+ * Simple memory adapter for agent storage
  */
 class AgentMemoryAdapter {
-  /**
-   * Create a new Agent Memory Adapter
-   * @param {Object} config - Configuration options
-   */
   constructor(config = {}) {
     this.config = {
       enabled: true,
       ...config
     };
     
-    this.intelligenceEngine = new IntelligenceEngineClient(config.intelligenceEngine);
+    this.memoryStore = new Map();
     this.initialized = false;
   }
   
-  /**
-   * Initialize the adapter
-   * @returns {Promise<boolean>} Whether initialization was successful
-   */
   async initialize() {
     try {
       if (!this.initialized) {
         logger.info('Initializing Agent Memory Adapter');
-        
-        // Initialize the intelligence engine client
-        await this.intelligenceEngine.initialize();
-        
+        this.memoryStore.clear();
         this.initialized = true;
         logger.info('Agent Memory Adapter initialized successfully');
       }
-      
       return true;
     } catch (error) {
       logger.error(`Failed to initialize Agent Memory Adapter: ${error.message}`);
@@ -50,262 +35,181 @@ class AgentMemoryAdapter {
     }
   }
   
-  /**
-   * Store a memory
-   * @param {string} agentId - ID of the agent
-   * @param {string} memoryType - Type of memory (episodic, semantic, procedural)
-   * @param {string} key - Key for the memory
-   * @param {Object} content - Content of the memory
-   * @param {Object} options - Additional options
-   * @returns {Promise<Object>} Result of the storage operation
-   */
+  async connect() {
+    return this.initialize();
+  }
+  
   async storeMemory(agentId, memoryType, key, content, options = {}) {
     try {
-      if (!this.initialized) {
-        await this.initialize();
-      }
-      
-      // Format memory for Intelligence Engine
+      const memoryKey = `${agentId}:${memoryType}:${key}`;
       const memory = {
         agentId,
         type: memoryType,
         key,
         content,
         importance: options.importance || 0.5,
-        metadata: {
-          sportType: options.sportType,
-          conferenceId: options.conferenceId,
-          seasonYear: options.seasonYear,
-          tags: options.tags || []
-        }
+        timestamp: new Date(),
+        metadata: options.metadata || {}
       };
       
-      // Store through Intelligence Engine
-      const result = await this.intelligenceEngine.storeMemory(memory);
+      this.memoryStore.set(memoryKey, memory);
+      logger.debug(`Stored ${memoryType} memory for agent ${agentId}: ${key}`);
       
-      if (result.success) {
-        logger.info(`Stored ${memoryType} memory for agent ${agentId}: ${key}`);
-      } else {
-        logger.warn(`Failed to store memory: ${result.error}`);
-      }
-      
-      return result;
+      return { success: true, memory };
     } catch (error) {
       logger.error(`Failed to store memory: ${error.message}`);
       return { success: false, error: error.message };
     }
   }
   
-  /**
-   * Retrieve a memory
-   * @param {string} agentId - ID of the agent
-   * @param {string} memoryType - Type of memory
-   * @param {string} key - Key for the memory
-   * @returns {Promise<Object>} Retrieved memory
-   */
   async retrieveMemory(agentId, memoryType, key) {
     try {
-      if (!this.initialized) {
-        await this.initialize();
+      const memoryKey = `${agentId}:${memoryType}:${key}`;
+      const memory = this.memoryStore.get(memoryKey);
+      
+      if (memory) {
+        logger.debug(`Retrieved ${memoryType} memory for agent ${agentId}: ${key}`);
+        return memory.content;
       }
       
-      // Retrieve through Intelligence Engine
-      const result = await this.intelligenceEngine.retrieveMemory(agentId, memoryType, key);
-      
-      if (result.success) {
-        logger.info(`Retrieved ${memoryType} memory for agent ${agentId}: ${key}`);
-        return result.memory.content;
-      } else {
-        logger.warn(`Failed to retrieve memory: ${result.error}`);
-        return null;
-      }
+      return null;
     } catch (error) {
       logger.error(`Failed to retrieve memory: ${error.message}`);
       return null;
     }
   }
   
-  /**
-   * Query memories
-   * @param {string} agentId - ID of the agent
-   * @param {Object} query - Query parameters
-   * @param {Object} options - Additional options
-   * @returns {Promise<Array>} Matching memories
-   */
   async queryMemories(agentId, query = {}, options = {}) {
     try {
-      if (!this.initialized) {
-        await this.initialize();
+      const results = [];
+      
+      for (const [memoryKey, memory] of this.memoryStore.entries()) {
+        if (memory.agentId === agentId) {
+          // Simple matching logic
+          if (!query.type || memory.type === query.type) {
+            results.push(memory);
+          }
+        }
       }
       
-      // Format query for Intelligence Engine
-      const ieQuery = {
-        agentId,
-        ...query
-      };
-      
-      // Query through Intelligence Engine
-      const result = await this.intelligenceEngine.queryMemories(ieQuery, options);
-      
-      if (result.success) {
-        logger.info(`Retrieved ${result.count} memories for agent ${agentId}`);
-        return result.memories.map(memory => ({
-          id: memory._id,
-          agentId: memory.agentId,
-          memoryType: memory.memoryType,
-          key: memory.key,
-          content: memory.content,
-          importance: memory.importance,
-          context: memory.context,
-          createdAt: memory.createdAt,
-          updatedAt: memory.updatedAt
-        }));
-      } else {
-        logger.warn(`Failed to query memories: ${result.error}`);
-        return [];
-      }
+      logger.debug(`Retrieved ${results.length} memories for agent ${agentId}`);
+      return results;
     } catch (error) {
       logger.error(`Failed to query memories: ${error.message}`);
       return [];
     }
   }
   
-  /**
-   * Delete a memory
-   * @param {string} agentId - ID of the agent
-   * @param {string} memoryType - Type of memory
-   * @param {string} key - Key for the memory
-   * @returns {Promise<boolean>} Whether deletion was successful
-   */
   async deleteMemory(agentId, memoryType, key) {
     try {
-      if (!this.initialized) {
-        await this.initialize();
+      const memoryKey = `${agentId}:${memoryType}:${key}`;
+      const deleted = this.memoryStore.delete(memoryKey);
+      
+      if (deleted) {
+        logger.debug(`Deleted ${memoryType} memory for agent ${agentId}: ${key}`);
       }
       
-      // Delete through Intelligence Engine
-      const result = await this.intelligenceEngine.client.delete(
-        `/memory/agent-memory/${agentId}/${memoryType}/${key}`
-      );
-      
-      if (result.status === 200 && result.data.success) {
-        logger.info(`Deleted ${memoryType} memory for agent ${agentId}: ${key}`);
-        return true;
-      } else {
-        logger.warn(`Failed to delete memory: ${result.data.error || 'Unknown error'}`);
-        return false;
-      }
+      return deleted;
     } catch (error) {
       logger.error(`Failed to delete memory: ${error.message}`);
       return false;
     }
   }
   
-  /**
-   * Store an episodic memory (specific experience)
-   * @param {string} agentId - ID of the agent
-   * @param {string} key - Key for the memory
-   * @param {Object} experience - Experience to store
-   * @param {Object} options - Additional options
-   * @returns {Promise<Object>} Result of the storage operation
-   */
+  // Helper methods for specific memory types
   async storeEpisodicMemory(agentId, key, experience, options = {}) {
     return this.storeMemory(agentId, 'episodic', key, experience, options);
   }
   
-  /**
-   * Store a semantic memory (general knowledge)
-   * @param {string} agentId - ID of the agent
-   * @param {string} key - Key for the memory
-   * @param {Object} knowledge - Knowledge to store
-   * @param {Object} options - Additional options
-   * @returns {Promise<Object>} Result of the storage operation
-   */
   async storeSemanticMemory(agentId, key, knowledge, options = {}) {
     return this.storeMemory(agentId, 'semantic', key, knowledge, options);
   }
   
-  /**
-   * Store a procedural memory (action sequence)
-   * @param {string} agentId - ID of the agent
-   * @param {string} key - Key for the memory
-   * @param {Object} procedure - Procedure to store
-   * @param {Object} options - Additional options
-   * @returns {Promise<Object>} Result of the storage operation
-   */
   async storeProceduralMemory(agentId, key, procedure, options = {}) {
     return this.storeMemory(agentId, 'procedural', key, procedure, options);
   }
   
-  /**
-   * Retrieve an episodic memory
-   * @param {string} agentId - ID of the agent
-   * @param {string} key - Key for the memory
-   * @returns {Promise<Object>} Retrieved experience
-   */
   async retrieveEpisodicMemory(agentId, key) {
     return this.retrieveMemory(agentId, 'episodic', key);
   }
   
-  /**
-   * Retrieve a semantic memory
-   * @param {string} agentId - ID of the agent
-   * @param {string} key - Key for the memory
-   * @returns {Promise<Object>} Retrieved knowledge
-   */
   async retrieveSemanticMemory(agentId, key) {
     return this.retrieveMemory(agentId, 'semantic', key);
   }
   
-  /**
-   * Retrieve a procedural memory
-   * @param {string} agentId - ID of the agent
-   * @param {string} key - Key for the memory
-   * @returns {Promise<Object>} Retrieved procedure
-   */
   async retrieveProceduralMemory(agentId, key) {
     return this.retrieveMemory(agentId, 'procedural', key);
   }
   
-  /**
-   * Query episodic memories
-   * @param {string} agentId - ID of the agent
-   * @param {Object} query - Query parameters
-   * @param {Object} options - Additional options
-   * @returns {Promise<Array>} Matching episodic memories
-   */
-  async queryEpisodicMemories(agentId, query = {}, options = {}) {
-    return this.queryMemories(agentId, { ...query, type: 'episodic' }, options);
+  async retrieveMemories(query = {}) {
+    try {
+      const results = [];
+      
+      for (const [memoryKey, memory] of this.memoryStore.entries()) {
+        let matches = true;
+        
+        // Apply filters based on query
+        if (query.type && memory.type !== query.type) {
+          matches = false;
+        }
+        
+        if (query.metadata) {
+          for (const [key, value] of Object.entries(query.metadata)) {
+            if (memory.metadata[key] !== value) {
+              matches = false;
+              break;
+            }
+          }
+        }
+        
+        if (matches) {
+          results.push({
+            id: memoryKey,
+            content: memory.content,
+            metadata: memory.metadata,
+            type: memory.type,
+            timestamp: memory.timestamp
+          });
+        }
+      }
+      
+      // Apply sorting if specified
+      if (query.sort) {
+        const sortKey = Object.keys(query.sort)[0];
+        const sortOrder = query.sort[sortKey];
+        
+        results.sort((a, b) => {
+          let aVal = a[sortKey] || a.metadata[sortKey];
+          let bVal = b[sortKey] || b.metadata[sortKey];
+          
+          if (sortOrder === -1) {
+            return bVal > aVal ? 1 : -1;
+          } else {
+            return aVal > bVal ? 1 : -1;
+          }
+        });
+      }
+      
+      // Apply limit if specified
+      if (query.limit) {
+        results.splice(query.limit);
+      }
+      
+      logger.debug(`Retrieved ${results.length} memories matching query`);
+      return results;
+    } catch (error) {
+      logger.error(`Failed to retrieve memories: ${error.message}`);
+      return [];
+    }
   }
-  
-  /**
-   * Query semantic memories
-   * @param {string} agentId - ID of the agent
-   * @param {Object} query - Query parameters
-   * @param {Object} options - Additional options
-   * @returns {Promise<Array>} Matching semantic memories
-   */
-  async querySemanticMemories(agentId, query = {}, options = {}) {
-    return this.queryMemories(agentId, { ...query, type: 'semantic' }, options);
+
+  async disconnect() {
+    return this.shutdown();
   }
-  
-  /**
-   * Query procedural memories
-   * @param {string} agentId - ID of the agent
-   * @param {Object} query - Query parameters
-   * @param {Object} options - Additional options
-   * @returns {Promise<Array>} Matching procedural memories
-   */
-  async queryProceduralMemories(agentId, query = {}, options = {}) {
-    return this.queryMemories(agentId, { ...query, type: 'procedural' }, options);
-  }
-  
-  /**
-   * Shutdown the adapter
-   * @returns {Promise<boolean>} Whether shutdown was successful
-   */
+
   async shutdown() {
     try {
+      this.memoryStore.clear();
       this.initialized = false;
       logger.info('Agent Memory Adapter shut down successfully');
       return true;

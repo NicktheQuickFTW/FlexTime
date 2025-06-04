@@ -24,9 +24,40 @@ import {
   Alert,
   AlertIcon
 } from '@chakra-ui/react';
-import { MdCheckCircle, MdError, MdWarning, MdInfo, MdDateRange, MdLocationOn, MdGroup } from 'react-icons/md';
+import { MdCheckCircle, MdWarning, MdInfo, MdDateRange, MdLocationOn, MdGroup } from 'react-icons/md';
 import { format } from 'date-fns';
 import axios from 'axios';
+
+// Utility functions
+const getSeverityColor = (severity: string) => {
+  switch (severity) {
+    case 'high':
+      return 'red';
+    case 'medium':
+      return 'orange';
+    case 'low':
+      return 'yellow';
+    default:
+      return 'gray';
+  }
+};
+
+const getConflictIcon = (type: string) => {
+  switch (type) {
+    case 'venue':
+      return MdLocationOn;
+    case 'team':
+      return MdGroup;
+    case 'travel':
+      return MdDateRange;
+    case 'resource':
+      return MdInfo;
+    case 'rest':
+      return MdWarning;
+    default:
+      return MdInfo;
+  }
+};
 
 // Types for conflicts and visualizations
 interface Event {
@@ -109,39 +140,6 @@ const ConflictVisualizationDashboard: React.FC<ConflictVisualizationDashboardPro
   
   // Color mode for styling
   const cardBg = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  
-  // Get severity colors
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'high':
-        return 'red';
-      case 'medium':
-        return 'orange';
-      case 'low':
-        return 'yellow';
-      default:
-        return 'gray';
-    }
-  };
-  
-  // Get icon for conflict type
-  const getConflictIcon = (type: string) => {
-    switch (type) {
-      case 'venue':
-        return MdLocationOn;
-      case 'team':
-        return MdGroup;
-      case 'travel':
-        return MdDateRange;
-      case 'resource':
-        return MdInfo;
-      case 'rest':
-        return MdWarning;
-      default:
-        return MdInfo;
-    }
-  };
   
   // Fetch explanations for all conflicts
   useEffect(() => {

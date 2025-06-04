@@ -1,5 +1,5 @@
-import { useReducedMotion } from '../../hooks/useReducedMotion';
-import { useEffect, useState, useRef, useCallback } from 'react';
+import useReducedMotion from '../../hooks/useReducedMotion';
+import { useEffect, useState, useRef } from 'react';
 import { useInView } from 'framer-motion';
 
 /**
@@ -27,7 +27,7 @@ export const useScrollAnimation = (threshold = 0.1) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { 
     once: true, 
-    margin: `-${threshold * 100}%` 
+    margin: `-${threshold * 100}%` as any
   });
   const prefersReducedMotion = useReducedMotion();
 
@@ -176,7 +176,7 @@ export const useOptimizedAnimation = () => {
   };
 };
 
-export default {
+const animationHooks = {
   usePageTransition,
   useScrollAnimation,
   useStaggeredAnimation,
@@ -184,3 +184,5 @@ export default {
   useModalAnimation,
   useOptimizedAnimation,
 };
+
+export default animationHooks;

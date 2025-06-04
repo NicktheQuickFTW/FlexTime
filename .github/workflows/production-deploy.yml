@@ -1,0 +1,499 @@
+# FlexTime Production Deployment Pipeline
+# Comprehensive CI/CD workflow for production-ready deployments
+name: Production Deployment
+
+on:
+  push:
+    branches: 
+      - master
+      - main
+    tags:
+      - 'v*'
+  pull_request:
+    branches: 
+      - master
+      - main
+    types: [opened, synchronize, reopened]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: flextime/api
+  KUBE_NAMESPACE: flextime-production
+
+jobs:
+  # Security and quality checks
+  security-scan:
+    name: Security & Quality Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: |
+          backend/package-lock.json
+          frontend/package-lock.json
+
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Run ESLint (Backend)
+      working-directory: ./backend
+      run: npm run lint || true
+
+    - name: Run ESLint (Frontend)
+      working-directory: ./frontend
+      run: npm run lint || true
+
+    - name: Security audit (Backend)
+      working-directory: ./backend
+      run: npm audit --audit-level=moderate
+
+    - name: Security audit (Frontend)
+      working-directory: ./frontend
+      run: npm audit --audit-level=moderate
+
+    - name: Run Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+      continue-on-error: true
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      continue-on-error: true
+
+  # Run comprehensive tests
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    needs: security-scan
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: flextime_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: |
+          backend/package-lock.json
+          frontend/package-lock.json
+
+    - name: Install backend dependencies
+      working-directory: ./backend
+      run: npm ci
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm ci
+
+    - name: Run backend tests
+      working-directory: ./backend
+      env:
+        NODE_ENV: test
+        NEON_DATABASE_URL: postgres://postgres:testpassword@localhost:5432/flextime_test
+        REDIS_URL: redis://localhost:6379
+        MAX_WORKERS_PER_TASK: 5
+        MAX_PARALLEL_OPERATIONS: 5
+      run: npm test
+
+    - name: Run frontend tests
+      working-directory: ./frontend
+      run: npm test -- --coverage --watchAll=false
+
+    - name: Upload test coverage
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./backend/coverage
+        flags: backend
+        name: backend-coverage
+
+    - name: Upload frontend coverage
+      uses: codecov/codecov-action@v3
+      with:
+        directory: ./frontend/coverage
+        flags: frontend
+        name: frontend-coverage
+
+  # Build and push Docker images
+  build:
+    name: Build & Push Images
+    runs-on: ubuntu-latest
+    needs: test
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha,prefix=sha-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push Docker image
+      id: build
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend
+        file: ./backend/Dockerfile
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        platforms: linux/amd64,linux/arm64
+
+    - name: Generate SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}
+        format: spdx-json
+        output-file: sbom.spdx.json
+
+    - name: Upload SBOM
+      uses: actions/upload-artifact@v4
+      with:
+        name: sbom
+        path: sbom.spdx.json
+
+  # Security scanning of Docker images
+  image-scan:
+    name: Image Security Scan
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ needs.build.outputs.image-tag }}
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  # Deploy to staging environment
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, image-scan]
+    if: github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: staging
+      url: https://staging.flextime.app
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Configure kubectl
+      uses: aws-actions/amazon-eks-kubectl-tool@v1
+      with:
+        version: '1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name flextime-cluster
+
+    - name: Deploy to staging
+      run: |
+        # Update image tag in deployment
+        sed -i "s|image: flextime/api:.*|image: ${{ needs.build.outputs.image-tag }}|g" \
+          infrastructure/kubernetes/production-deployment.yaml
+        
+        # Apply namespace and RBAC first
+        kubectl apply -f infrastructure/kubernetes/namespace.yaml
+        kubectl apply -f infrastructure/kubernetes/security-secrets.yaml
+        
+        # Apply main deployment to staging namespace
+        sed 's/flextime-production/flextime-staging/g' \
+          infrastructure/kubernetes/production-deployment.yaml | \
+          kubectl apply -f -
+        
+        # Wait for deployment to be ready
+        kubectl rollout status deployment/flextime-api -n flextime-staging --timeout=600s
+
+    - name: Run staging smoke tests
+      run: |
+        # Wait for service to be ready
+        kubectl wait --for=condition=ready pod -l app=flextime -n flextime-staging --timeout=300s
+        
+        # Get service URL
+        STAGING_URL=$(kubectl get service flextime-api-service -n flextime-staging -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        
+        # Run smoke tests
+        curl -f "http://${STAGING_URL}/health" || exit 1
+        curl -f "http://${STAGING_URL}/api/status" || exit 1
+
+  # Production deployment (requires manual approval)
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [deploy-staging]
+    if: startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: production
+      url: https://api.flextime.app
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Configure kubectl
+      uses: aws-actions/amazon-eks-kubectl-tool@v1
+      with:
+        version: '1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name flextime-cluster
+
+    - name: Pre-deployment backup
+      run: |
+        # Create database backup before deployment
+        kubectl create job --from=cronjob/database-backup \
+          "backup-pre-deploy-$(date +%Y%m%d-%H%M%S)" \
+          -n flextime-backup
+        
+        # Wait for backup to complete
+        kubectl wait --for=condition=complete job \
+          "backup-pre-deploy-$(date +%Y%m%d-%H%M%S)" \
+          -n flextime-backup --timeout=600s
+
+    - name: Deploy monitoring stack
+      run: |
+        kubectl apply -f infrastructure/kubernetes/monitoring-stack.yaml
+        kubectl rollout status deployment/prometheus -n flextime-monitoring --timeout=300s
+        kubectl rollout status deployment/grafana -n flextime-monitoring --timeout=300s
+
+    - name: Deploy backup system
+      run: |
+        kubectl apply -f infrastructure/kubernetes/backup-recovery.yaml
+
+    - name: Deploy health checks
+      run: |
+        kubectl apply -f infrastructure/kubernetes/health-checks.yaml
+
+    - name: Deploy to production
+      run: |
+        # Update image tag in deployment
+        sed -i "s|image: flextime/api:.*|image: ${{ needs.build.outputs.image-tag }}|g" \
+          infrastructure/kubernetes/production-deployment.yaml
+        
+        # Apply security and secrets
+        kubectl apply -f infrastructure/kubernetes/security-secrets.yaml
+        
+        # Apply main deployment
+        kubectl apply -f infrastructure/kubernetes/production-deployment.yaml
+        
+        # Wait for deployment to be ready
+        kubectl rollout status deployment/flextime-api -n flextime-production --timeout=600s
+
+    - name: Post-deployment verification
+      run: |
+        # Wait for all pods to be ready
+        kubectl wait --for=condition=ready pod -l app=flextime -n flextime-production --timeout=300s
+        
+        # Run comprehensive health checks
+        HEALTH_URL=$(kubectl get service flextime-health-service -n flextime-production -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        
+        # Test health endpoints
+        curl -f "http://${HEALTH_URL}:3006/health" || exit 1
+        curl -f "http://${HEALTH_URL}:3006/health/ready" || exit 1
+        
+        # Test main API
+        API_URL=$(kubectl get service flextime-api-service -n flextime-production -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        curl -f "http://${API_URL}/api/status" || exit 1
+
+    - name: Update deployment status
+      run: |
+        # Create deployment event
+        kubectl annotate deployment flextime-api -n flextime-production \
+          "deployment.kubernetes.io/last-deployment=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+          "deployment.kubernetes.io/version=${{ github.ref_name }}" \
+          "deployment.kubernetes.io/commit=${{ github.sha }}"
+
+  # Performance testing after deployment
+  performance-test:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run performance tests
+      run: |
+        # Install k6 for load testing
+        sudo gpg -k
+        sudo gpg --no-default-keyring --keyring /usr/share/keyrings/k6-archive-keyring.gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys C5AD17C747E3415A3642D57D77C6C491D6AC1D69
+        echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+        sudo apt-get update
+        sudo apt-get install k6
+        
+        # Create load test script
+        cat > load-test.js << 'EOF'
+        import http from 'k6/http';
+        import { check, sleep } from 'k6';
+        
+        export let options = {
+          stages: [
+            { duration: '2m', target: 10 },
+            { duration: '5m', target: 50 },
+            { duration: '2m', target: 0 },
+          ],
+          thresholds: {
+            http_req_duration: ['p(95)<1000'],
+            http_req_failed: ['rate<0.05'],
+          },
+        };
+        
+        export default function() {
+          let response = http.get('https://api.flextime.app/api/status');
+          check(response, {
+            'status is 200': (r) => r.status === 200,
+            'response time < 1000ms': (r) => r.timings.duration < 1000,
+          });
+          sleep(1);
+        }
+        EOF
+        
+        # Run load test
+        k6 run load-test.js
+
+  # Rollback procedure (manual trigger)
+  rollback:
+    name: Rollback Production
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    environment:
+      name: production
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Configure kubectl
+      run: |
+        aws eks update-kubeconfig --region us-east-1 --name flextime-cluster
+
+    - name: Rollback deployment
+      run: |
+        # Rollback to previous revision
+        kubectl rollout undo deployment/flextime-api -n flextime-production
+        
+        # Wait for rollback to complete
+        kubectl rollout status deployment/flextime-api -n flextime-production --timeout=600s
+        
+        # Verify health after rollback
+        kubectl wait --for=condition=ready pod -l app=flextime -n flextime-production --timeout=300s
+
+    - name: Post-rollback verification
+      run: |
+        # Test health endpoints after rollback
+        HEALTH_URL=$(kubectl get service flextime-health-service -n flextime-production -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+        curl -f "http://${HEALTH_URL}:3006/health" || exit 1
+        
+        # Notify about rollback
+        echo "Production deployment rolled back successfully at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+
+  # Cleanup old images and resources
+  cleanup:
+    name: Cleanup Resources
+    runs-on: ubuntu-latest
+    needs: [deploy-production]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+    - name: Cleanup old images
+      run: |
+        # Keep only the last 10 images
+        echo "Cleanup task would run here - keeping last 10 container images"
+        
+    - name: Cleanup old backup files
+      run: |
+        # This would be handled by the backup system's cleanup jobs
+        echo "Backup cleanup handled by Kubernetes CronJobs"

@@ -1,9 +1,11 @@
-const { useState, useEffect } = React;
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom/client';
 
 // Import ScheduleBuilderApp from the global scope
 const { ScheduleBuilderApp } = window;
 
 
+// eslint-disable-next-line no-unused-vars
 function TeamCard({ team, index }) {
   return React.createElement('div', {
     className: 'team-card',
@@ -91,7 +93,7 @@ function StandingsSection() {
       setCurrentSport(prev => (prev + 1) % sportsData.length);
     }, 7000);
     return () => clearInterval(interval);
-  }, []);
+  }, [sportsData.length]);
 
   return React.createElement('div', { className: 'standings-section-compact' }, [
     React.createElement('h3', { className: 'standings-title', key: 'title' }, 'STANDINGS'),
@@ -159,7 +161,7 @@ function RecentScoresSection() {
       setScrollIndex(prev => (prev + 1) % recentScores.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [recentScores.length]);
 
   return React.createElement('div', { className: 'scores-section' }, [
     React.createElement('h3', { className: 'scores-title', key: 'title' }, 'RECENT SCORES'),
@@ -207,7 +209,7 @@ function UpcomingGamesSection() {
       setScrollIndex(prev => (prev + 1) % upcomingGames.length);
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [upcomingGames.length]);
 
   return React.createElement('div', { className: 'upcoming-section' }, [
     React.createElement('h3', { className: 'upcoming-title', key: 'title' }, 'UPCOMING GAMES'),
@@ -311,6 +313,8 @@ function SettingsPage({ user }) {
 
   const [activeTab, setActiveTab] = React.useState('general');
   const [hasChanges, setHasChanges] = React.useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [currentTheme, setCurrentTheme] = React.useState('dark');
 
   const updateSetting = (key, value) => {
     setSettings(prev => ({ ...prev, [key]: value }));
@@ -1735,6 +1739,7 @@ function AnalyticsDashboard() {
 }
 
 function AIMLControlCenter() {
+  // eslint-disable-next-line no-unused-vars
   const [agents, setAgents] = useState([
     { 
       id: 'director', 
@@ -2203,6 +2208,7 @@ function AuthModal({ isOpen, mode, onLogin, onClose, onSwitchMode }) {
 }
 
 function FlexTimeApp() {
+  // eslint-disable-next-line no-unused-vars
   const [agentStatus, setAgentStatus] = useState('active');
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -2229,6 +2235,7 @@ function FlexTimeApp() {
   };
   
   const [currentSection, setCurrentSection] = useState(getInitialSection());
+  // eslint-disable-next-line no-unused-vars
   const [stats] = useState({
     totalSchedules: 156,
     optimizationRate: 94.2,
@@ -2252,7 +2259,7 @@ function FlexTimeApp() {
       document.documentElement.setAttribute('data-theme', 'dark');
     }
     setCurrentTheme(theme);
-  }, []);
+  }, [setCurrentTheme]);
 
   // Check authentication status on app load
   useEffect(() => {
@@ -2331,6 +2338,7 @@ function FlexTimeApp() {
     console.log('✅ User logged in:', userData.email);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleLogout = async () => {
     try {
       await fetch('/api/auth/logout', {
@@ -2604,7 +2612,7 @@ function FlexTimeApp() {
           React.createElement('h2', { className: 'hero-title-massive title-metallic', key: 'title' }, [
             'THE LANDSCAPE IS EVOLVING.',
             React.createElement('br', { key: 'br' }),
-            React.createElement('span', { className: 'gradient-text-neon', key: 'span' }, 'SO SHOULD YOU.')
+            React.createElement('span', { className: 'bg-gradient-to-r from-white to-cyan-400 bg-clip-text text-transparent', key: 'span' }, 'SO SHOULD YOU.')
           ]),
           React.createElement('p', { className: 'hero-description-modern', key: 'desc' }, [
             'The competition has heightened — now every advantage counts.',

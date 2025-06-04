@@ -10,6 +10,31 @@ import {
 } from './DragDropCore';
 import { Game, Team } from '../../types';
 
+// Helper function to get proper school display name for scheduling contexts
+const getSchoolDisplayName = (team?: Team, format: 'full' | 'abbreviation' | 'display' = 'abbreviation'): string => {
+  if (!team?.school) return 'TBD';
+  
+  switch (format) {
+    case 'full':
+      // For administrative contexts - full formal name
+      return team.school.name || 'Unknown School';
+    case 'display':
+      // For scheduling contexts - short, recognizable name (Baylor, Kansas, TCU)
+      return (team.school as any).short_display || 
+             (team.school as any).schedule_display || 
+             team.school.name?.replace(/University of |University$/g, '').trim() || 
+             team.school.name || 
+             'Unknown School';
+    case 'abbreviation':
+    default:
+      // For compact displays - official abbreviations (KU, TCU, ISU)
+      return (team.school as any).school_abbreviation || 
+             team.school.abbreviation || 
+             team.name?.split(' ').pop() || 
+             'TBD';
+  }
+};
+
 // Example draggable game component
 const DraggableGame: React.FC<{ game: Game }> = ({ game }) => {
   const dragItem: DragItem = {
@@ -42,9 +67,12 @@ const DraggableGame: React.FC<{ game: Game }> = ({ game }) => {
       }}
     >
       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-        {game.homeTeam?.name} vs {game.awayTeam?.name}
+        {getSchoolDisplayName(game.awayTeam, 'abbreviation')} @ {getSchoolDisplayName(game.homeTeam, 'abbreviation')}
       </Typography>
       <Typography variant="body2" color="text.secondary">
+        {getSchoolDisplayName(game.awayTeam, 'display')} vs {getSchoolDisplayName(game.homeTeam, 'display')}
+      </Typography>
+      <Typography variant="caption" color="text.secondary">
         {game.date || 'No date assigned'}
       </Typography>
     </Paper>
@@ -67,7 +95,7 @@ const DraggableTeam: React.FC<{ team: Team }> = ({ team }) => {
   return (
     <Chip
       {...dragProps}
-      label={team.name}
+      label={getSchoolDisplayName(team, 'abbreviation')}
       sx={{
         cursor: 'grab',
         opacity: isDragging ? 0.5 : 1,
@@ -102,7 +130,7 @@ const MatrixCell: React.FC<{
     }
   };
 
-  const { dropProps, canDrop, hasConflicts, conflictSeverity, conflicts } = useDropTarget(dropTarget);
+  const { dropProps, hasConflicts, conflictSeverity, conflicts } = useDropTarget(dropTarget);
 
   return (
     <Paper
@@ -187,29 +215,118 @@ const DragDropExample: React.FC = () => {
   
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
 
-  // Sample data
+  // Sample data with proper school display fields based on actual database schema
   const sampleGames: Game[] = [
     {
       game_id: 1,
-      home_team_id: 1,
-      away_team_id: 2,
-      homeTeam: { team_id: 1, name: 'Kansas Jayhawks', institution: { school_id: 1, name: 'University of Kansas', abbreviation: 'KU' } },
-      awayTeam: { team_id: 2, name: 'Texas Longhorns', institution: { school_id: 2, name: 'University of Texas', abbreviation: 'UT' } }
+      home_team_id: 1008,
+      away_team_id: 908,
+      homeTeam: { 
+        team_id: 1008, 
+        name: 'Kansas Jayhawks', 
+        school: { 
+          school_id: 10, 
+          name: 'University of Kansas', 
+          abbreviation: 'KU',
+          school_abbreviation: 'KU',
+          preferred_school_name: 'University of Kansas',
+          short_display: 'Kansas'
+        } as any
+      },
+      awayTeam: { 
+        team_id: 908, 
+        name: 'Iowa State Cyclones', 
+        school: { 
+          school_id: 9, 
+          name: 'Iowa State University', 
+          abbreviation: 'ISU',
+          school_abbreviation: 'ISU', 
+          preferred_school_name: 'Iowa State University',
+          short_display: 'Iowa State'
+        } as any
+      }
     },
     {
       game_id: 2,
-      home_team_id: 3,
-      away_team_id: 4,
-      homeTeam: { team_id: 3, name: 'Baylor Bears', institution: { school_id: 3, name: 'Baylor University', abbreviation: 'BU' } },
-      awayTeam: { team_id: 4, name: 'TCU Horned Frogs', institution: { school_id: 4, name: 'Texas Christian University', abbreviation: 'TCU' } }
+      home_team_id: 308,
+      away_team_id: 1308,
+      homeTeam: { 
+        team_id: 308, 
+        name: 'Baylor Bears', 
+        school: { 
+          school_id: 3, 
+          name: 'Baylor University', 
+          abbreviation: 'BU',
+          school_abbreviation: 'BU',
+          preferred_school_name: 'Baylor University',
+          short_display: 'Baylor'
+        } as any
+      },
+      awayTeam: { 
+        team_id: 1308, 
+        name: 'TCU Horned Frogs', 
+        school: { 
+          school_id: 13, 
+          name: 'Texas Christian University', 
+          abbreviation: 'TCU',
+          school_abbreviation: 'TCU',
+          preferred_school_name: 'Texas Christian University', 
+          short_display: 'TCU'
+        } as any
+      }
     }
   ];
 
+  // Sample teams using actual Big 12 schools with proper display fields
   const sampleTeams: Team[] = [
-    { team_id: 1, name: 'Kansas Jayhawks', institution: { school_id: 1, name: 'University of Kansas', abbreviation: 'KU' } },
-    { team_id: 2, name: 'Texas Longhorns', institution: { school_id: 2, name: 'University of Texas', abbreviation: 'UT' } },
-    { team_id: 3, name: 'Baylor Bears', institution: { school_id: 3, name: 'Baylor University', abbreviation: 'BU' } },
-    { team_id: 4, name: 'TCU Horned Frogs', institution: { school_id: 4, name: 'Texas Christian University', abbreviation: 'TCU' } }
+    { 
+      team_id: 1008, 
+      name: 'Kansas Jayhawks', 
+      school: { 
+        school_id: 10, 
+        name: 'University of Kansas', 
+        abbreviation: 'KU',
+        school_abbreviation: 'KU',
+        preferred_school_name: 'University of Kansas',
+        short_display: 'Kansas'
+      } as any
+    },
+    { 
+      team_id: 1108, 
+      name: 'Kansas State Wildcats', 
+      school: { 
+        school_id: 11, 
+        name: 'Kansas State University', 
+        abbreviation: 'K-STATE',
+        school_abbreviation: 'K-STATE',
+        preferred_school_name: 'Kansas State University',
+        short_display: 'Kansas State'
+      } as any
+    },
+    { 
+      team_id: 308, 
+      name: 'Baylor Bears', 
+      school: { 
+        school_id: 3, 
+        name: 'Baylor University', 
+        abbreviation: 'BU',
+        school_abbreviation: 'BU', 
+        preferred_school_name: 'Baylor University',
+        short_display: 'Baylor'
+      } as any
+    },
+    { 
+      team_id: 1308, 
+      name: 'TCU Horned Frogs', 
+      school: { 
+        school_id: 13, 
+        name: 'Texas Christian University', 
+        abbreviation: 'TCU',
+        school_abbreviation: 'TCU',
+        preferred_school_name: 'Texas Christian University',
+        short_display: 'TCU'
+      } as any
+    }
   ];
 
   // Handle drop operations

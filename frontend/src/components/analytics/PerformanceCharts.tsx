@@ -4,7 +4,6 @@ import {
   BarChart,
   AreaChart,
   PieChart,
-  RadarChart,
   Line,
   Bar,
   Area,
@@ -118,6 +117,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 // Performance severity color mapping
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getSeverityColor = (severity: string) => {
   switch (severity) {
     case 'high': return chartTheme.colors.error;

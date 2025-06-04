@@ -4,7 +4,7 @@
  */
 
 const { Client } = require('@notionhq/client');
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 const fs = require('fs');
 const path = require('path');
 

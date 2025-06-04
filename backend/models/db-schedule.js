@@ -8,56 +8,29 @@ const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   const Schedule = sequelize.define('Schedule', {
-    schedule_id: {
-      type: DataTypes.INTEGER,
+    id: {
+      type: DataTypes.UUID,
       primaryKey: true,
-      autoIncrement: true,
+      defaultValue: DataTypes.UUIDV4,
       allowNull: false
     },
-    name: {
-      type: DataTypes.STRING,
+    sport: {
+      type: DataTypes.STRING(50),
       allowNull: false
     },
-    sport_id: {
-      type: DataTypes.INTEGER,
+    season: {
+      type: DataTypes.STRING(20),
+      allowNull: false
+    },
+    conference: {
+      type: DataTypes.STRING(50),
       allowNull: false,
-      references: {
-        model: 'sports',
-        key: 'sport_id'
-      }
-    },
-    season_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'seasons',
-        key: 'season_id'
-      }
-    },
-    year: {
-      type: DataTypes.STRING,
-      allowNull: false
-    },
-    start_date: {
-      type: DataTypes.DATE,
-      allowNull: false
-    },
-    end_date: {
-      type: DataTypes.DATE,
-      allowNull: false
+      defaultValue: 'big12'
     },
     status: {
-      type: DataTypes.ENUM('draft', 'published', 'archived'),
+      type: DataTypes.STRING(20),
       allowNull: false,
       defaultValue: 'draft'
-    },
-    created_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    updated_by: {
-      type: DataTypes.INTEGER,
-      allowNull: true
     },
     metadata: {
       type: DataTypes.JSONB,
@@ -66,22 +39,11 @@ module.exports = (sequelize) => {
   }, {
     tableName: 'schedules',
     timestamps: true,
-    underscored: true
+    createdAt: 'created_at',
+    updatedAt: 'updated_at'
   });
 
   Schedule.associate = (models) => {
-    // A schedule belongs to a sport
-    Schedule.belongsTo(models.Sport, {
-      foreignKey: 'sport_id',
-      as: 'sport'
-    });
-
-    // A schedule can belong to a season
-    Schedule.belongsTo(models.Season, {
-      foreignKey: 'season_id',
-      as: 'season'
-    });
-
     // A schedule has many games
     Schedule.hasMany(models.Game, {
       foreignKey: 'schedule_id',
@@ -94,12 +56,6 @@ module.exports = (sequelize) => {
       foreignKey: 'schedule_id',
       otherKey: 'team_id',
       as: 'teams'
-    });
-
-    // A schedule has many constraints
-    Schedule.hasMany(models.ScheduleConstraint, {
-      foreignKey: 'schedule_id',
-      as: 'constraints'
     });
   };
 

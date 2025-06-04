@@ -3,8 +3,14 @@
  * Export all animation components and utilities
  */
 
-// Main transition components
-export {
+// All imports at the top
+import PageTransitionsDefault from './PageTransitions';
+import { AnimationProvider, useAnimation, withAnimationOptimization } from './AnimationProvider';
+import AnimationHooksDefault from './AnimationHooks';
+import AnimationConstantsDefault from './AnimationConstants';
+
+// Main transition components  
+export const {
   PageTransition,
   StaggerContainer,
   RouteTransition,
@@ -13,32 +19,28 @@ export {
   DrawerTransition,
   LoadingTransition,
   ListItemTransition,
-} from './PageTransitions';
+} = PageTransitionsDefault;
 
 // Animation provider and context
-export {
-  AnimationProvider,
-  useAnimation,
-  withAnimationOptimization,
-} from './AnimationProvider';
+export { AnimationProvider, useAnimation, withAnimationOptimization };
 
 // Animation hooks
-export {
+export const {
   usePageTransition,
   useScrollAnimation,
   useStaggeredAnimation,
   useRouteAnimation,
   useModalAnimation,
   useOptimizedAnimation,
-} from './AnimationHooks';
+} = AnimationHooksDefault;
 
-// Route transition wrapper
-export {
-  RouteTransitionWrapper,
-} from './RouteTransitionWrapper';
+// Route transition wrapper (disabled for Next.js compatibility)
+// export {
+//   RouteTransitionWrapper,
+// } from './RouteTransitionWrapper';
 
-// Animation constants and configurations
-export {
+// Animation constants and configurations (imported at top)
+export const {
   ANIMATION_DURATION,
   ANIMATION_EASING,
   SPRING_CONFIG,
@@ -60,7 +62,7 @@ export {
   SPORT_TRANSITIONS,
   PERFORMANCE_CONFIG,
   ANIMATION_BREAKPOINTS,
-} from './AnimationConstants';
+} = AnimationConstantsDefault;
 
 // Type exports
 export type {
@@ -80,7 +82,7 @@ const AnimationSystem = {
   DrawerTransition,
   LoadingTransition,
   ListItemTransition,
-  RouteTransitionWrapper,
+  // RouteTransitionWrapper, // Disabled for Next.js
   
   // Provider
   AnimationProvider,

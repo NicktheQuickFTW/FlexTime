@@ -5,19 +5,20 @@
  * implementing the main agent initialization, coordination, and lifecycle management.
  */
 
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const FTBuilderEngine = require('../../services/FT_Builder_Engine');
+const AdvancedSchedulingService = require('../../services/advanced_scheduling_service');
 
 // Travel Optimization Agents (specialized sub-agents)
-const TransportModeOptimizationAgent = require('../specialized/travel_optimization/transport_mode_optimization_agent');
-const TravelCostCalculationAgent = require('../specialized/travel_optimization/travel_cost_calculation_agent');
-const CircuitOptimizationAgent = require('../specialized/travel_optimization/circuit_optimization_agent');
-const SeasonalPricingAgent = require('../specialized/travel_optimization/seasonal_pricing_agent');
-const SharedCharterAgent = require('../specialized/travel_optimization/shared_charter_agent');
-const TravelBudgetMonitorAgent = require('../specialized/travel_optimization/travel_budget_monitor_agent');
+const TransportModeOptimizationAgent = require('./specialized/travel_optimization/transport_mode_optimization_agent');
+const TravelCostCalculationAgent = require('./specialized/travel_optimization/travel_cost_calculation_agent');
+const CircuitOptimizationAgent = require('./specialized/travel_optimization/circuit_optimization_agent');
+const SeasonalPricingAgent = require('./specialized/travel_optimization/seasonal_pricing_agent');
+const SharedCharterAgent = require('./specialized/travel_optimization/shared_charter_agent');
+const TravelBudgetMonitorAgent = require('./specialized/travel_optimization/travel_budget_monitor_agent');
 
 // Travel Optimization Director
-const TravelOptimizationDirector = require('../specialized/travel_optimization/travel_optimization_director');
+const TravelOptimizationDirector = require('./specialized/travel_optimization/travel_optimization_director');
 
 /**
  * Core Agent System for FlexTime

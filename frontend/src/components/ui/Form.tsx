@@ -1,7 +1,6 @@
 import React, { forwardRef, useState } from 'react';
 import { Save, X, RotateCcw, CheckCircle, AlertCircle } from 'lucide-react';
 import { FTButton } from './Button';
-import { FTCard } from './Card';
 
 // Form Context for managing form state
 interface FormContextType {

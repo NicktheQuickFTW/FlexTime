@@ -1,8 +1,53 @@
+// COMPASS Analytics Dashboard - Future Enhancement (Planned for Q1 2026)
+// This component is currently disabled as COMPASS ratings are planned for future implementation
+
+import React from 'react';
+
+// Placeholder component for future COMPASS implementation
+const COMPASSAnalyticsDashboard: React.FC = () => {
+  return (
+    <div style={{ 
+      padding: '2rem', 
+      textAlign: 'center',
+      background: 'rgba(255, 255, 255, 0.05)',
+      borderRadius: '12px',
+      border: '1px solid rgba(0, 191, 255, 0.15)'
+    }}>
+      <h3 style={{ color: '#00bfff', marginBottom: '1rem' }}>
+        🔮 COMPASS Analytics Dashboard
+      </h3>
+      <p style={{ color: '#a0aec0', marginBottom: '1rem' }}>
+        Advanced predictive projections and competitive positioning
+      </p>
+      <p style={{ color: '#718096', fontSize: '0.9rem' }}>
+        This feature is planned for Q1 2026 and will include:
+      </p>
+      <ul style={{ 
+        color: '#718096', 
+        fontSize: '0.9rem', 
+        textAlign: 'left', 
+        maxWidth: '400px', 
+        margin: '1rem auto',
+        paddingLeft: '1rem'
+      }}>
+        <li>Dynamic COMPASS ratings for real-time competitive positioning</li>
+        <li>Predictive projections for championship probability</li>
+        <li>Multi-dimensional team assessment framework</li>
+        <li>Head-to-head matchup predictions</li>
+      </ul>
+    </div>
+  );
+};
+
+export default COMPASSAnalyticsDashboard;
+
+/* ORIGINAL IMPLEMENTATION - COMMENTED OUT FOR FUTURE USE
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LineChart, Line, BarChart, Bar, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, 
-         XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
-import { useTheme } from '../../contexts/ThemeContext';
+import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, 
+         XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart, Line, Legend } from 'recharts';
+import { useThemeContext } from '../../contexts/ThemeContext';
 import './COMPASSAnalyticsDashboard.css';
 
 // Types
@@ -127,7 +172,7 @@ const COMPASSScoreMeter: React.FC<{ score: COMPASSScore }> = ({ score }) => {
 
 // Performance Chart Component
 const PerformanceChart: React.FC<{ data: ScheduleMetrics[] }> = ({ data }) => {
-  const { theme } = useTheme();
+  const { theme } = useThemeContext();
   const isDark = theme.mode === 'dark';
   
   const chartColors = {
@@ -183,7 +228,7 @@ const PerformanceChart: React.FC<{ data: ScheduleMetrics[] }> = ({ data }) => {
 
 // Team Balance Radar Chart
 const TeamBalanceChart: React.FC<{ data: TeamMetrics[] }> = ({ data }) => {
-  const { theme } = useTheme();
+  const { theme } = useThemeContext();
   const isDark = theme.mode === 'dark';
   
   // Transform data for radar chart
@@ -455,3 +500,6 @@ const formatMetricName = (key: string): string => {
 };
 
 export default COMPASSAnalyticsDashboard;
+
+// Export types for external use
+export type { COMPASSScore, ScheduleMetrics, TeamMetrics };

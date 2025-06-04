@@ -120,10 +120,10 @@ echo -e "   • COMPASS Analytics Dashboard"
 echo -e "   • Mobile-First Responsive Design"
 echo ""
 
-echo -e "${CYAN}🌐 Starting React development server...${NC}"
+echo -e "${CYAN}🌐 Starting Next.js development server...${NC}"
 echo -e "${YELLOW}⏱️  This may take 30-60 seconds for the advanced UI to compile...${NC}"
 
-# Start the React app
+# Start the Next.js app
 echo -e "${GREEN}🚀 FlexTime will be available at: http://localhost:3000${NC}"
 echo -e "${GREEN}📊 Backend API available at: http://localhost:3005${NC}"
 echo ""
@@ -133,8 +133,8 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 # Trap Ctrl+C to cleanup
 trap 'echo -e "\n${YELLOW}🛑 Shutting down FlexTime...${NC}"; kill $BACKEND_PID 2>/dev/null; exit 0' INT
 
-# Start React app
-npm start
+# Start Next.js dev server
+npm run dev
 
 # Cleanup on exit
 kill $BACKEND_PID 2>/dev/null

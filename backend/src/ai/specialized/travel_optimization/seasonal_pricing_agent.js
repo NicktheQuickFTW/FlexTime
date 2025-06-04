@@ -11,7 +11,7 @@
  * - Weather impact considerations
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class SeasonalPricingAgent extends Agent {
   constructor(options = {}) {

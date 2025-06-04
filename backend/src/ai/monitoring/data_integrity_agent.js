@@ -6,7 +6,7 @@
  */
 
 const BaseMonitoringAgent = require('./base_monitoring_agent');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const AIAdapter = require('../../adapters/ai-adapter');
 const NeonDBAdapter = require('../../adapters/neon-db-adapter');
 

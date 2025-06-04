@@ -3,14 +3,14 @@ import { COMPASSAnalyticsDashboard } from '../COMPASSAnalyticsDashboard';
 import { 
   render, 
   screen, 
-  fireEvent, 
   waitFor, 
   userEvent,
   mockCOMPASSScore,
   mockScheduleMetrics,
   mockTeamMetrics
 } from '../../../utils/testUtils';
-import { vi } from '@jest/globals';
+
+// Global vi is available from setupTests
 
 describe('COMPASSAnalyticsDashboard', () => {
   const mockOnRefresh = vi.fn().mockResolvedValue(undefined);

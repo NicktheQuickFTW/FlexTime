@@ -1,0 +1,84 @@
+{
+  "executionSummary": {
+    "title": "Big 12 Football Unified Pipeline Analysis - 2025-26 Season",
+    "timestamp": "2025-05-31T21:32:34.966Z",
+    "sport": "--sport",
+    "gender": "basketball",
+    "focusPeriod": "Spring 2025 - Summer 2025 - Complete 2025-26 Preparation",
+    "teams": 16,
+    "methodology": "Unified Sport Pipeline Assessment",
+    "totalAnalyses": 32
+  },
+  "unifiedPipelineAssessments": {},
+  "unifiedCompassRatings": {
+    "Arizona": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Arizona State": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Baylor": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "BYU": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Cincinnati": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Colorado": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Houston": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Iowa State": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Kansas": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Kansas State": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Oklahoma State": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "TCU": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Texas Tech": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "UCF": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "Utah": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    },
+    "West Virginia": {
+      "error": "Gemini Unified --sport COMPASS analysis failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent: fetch failed"
+    }
+  },
+  "sportConfiguration": {
+    "displayName": "Football",
+    "teams": [
+      "Arizona",
+      "Arizona State",
+      "Baylor",
+      "BYU",
+      "Cincinnati",
+      "Colorado",
+      "Houston",
+      "Iowa State",
+      "Kansas",
+      "Kansas State",
+      "Oklahoma State",
+      "TCU",
+      "Texas Tech",
+      "UCF",
+      "Utah",
+      "West Virginia"
+    ]
+  }
+}

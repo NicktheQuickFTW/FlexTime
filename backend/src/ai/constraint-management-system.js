@@ -11,8 +11,8 @@
  */
 
 const EventEmitter = require('events');
-const logger = require('../utils/logger');
-const PerformanceMonitor = require('../utils/performance-monitor');
+const logger = require("../utils/logger");
+const PerformanceMonitor = require('../../utils/performance-monitor');
 
 /**
  * Constraint types and their base priorities
@@ -22,6 +22,7 @@ const ConstraintTypes = {
   TEAM_REST: { type: 'hard', basePriority: 100, category: 'scheduling' },
   VENUE_AVAILABILITY: { type: 'hard', basePriority: 95, category: 'facilities' },
   BYU_SUNDAY_RESTRICTION: { type: 'hard', basePriority: 90, category: 'religious' },
+  SINGLE_GAME_ALTERNATING_VENUE: { type: 'hard', basePriority: 85, category: 'fairness' },
   TV_BROADCAST_MANDATORY: { type: 'hard', basePriority: 85, category: 'media' },
   CHAMPIONSHIP_DATES: { type: 'hard', basePriority: 80, category: 'tournament' },
   
@@ -50,23 +51,27 @@ const SportWeightMultipliers = {
     TV_BROADCAST_MANDATORY: 1.8,
     TRAVEL_DISTANCE: 1.3,
     WEEKEND_DISTRIBUTION: 1.6,
-    RECRUITING_OPTIMAL: 1.4
+    RECRUITING_OPTIMAL: 1.4,
+    SINGLE_GAME_ALTERNATING_VENUE: 1.2
   },
   basketball: {
     CONSECUTIVE_AWAY_GAMES: 1.4,
     VENUE_AVAILABILITY: 1.3,
     TV_BROADCAST_PREFERRED: 1.2,
-    TRAVEL_DISTANCE: 1.1
+    TRAVEL_DISTANCE: 1.1,
+    SINGLE_GAME_ALTERNATING_VENUE: 1.1
   },
   baseball: {
     WEATHER_OPTIMAL: 2.0,
     CONSECUTIVE_HOME_GAMES: 0.7,
-    TEAM_REST: 0.8
+    TEAM_REST: 0.8,
+    SINGLE_GAME_ALTERNATING_VENUE: 1.0
   },
   softball: {
     WEATHER_OPTIMAL: 2.0,
     CONSECUTIVE_HOME_GAMES: 0.7,
-    TEAM_REST: 0.8
+    TEAM_REST: 0.8,
+    SINGLE_GAME_ALTERNATING_VENUE: 1.0
   }
 };
 

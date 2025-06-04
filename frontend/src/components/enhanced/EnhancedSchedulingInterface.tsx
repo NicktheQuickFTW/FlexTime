@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Heading,
@@ -13,8 +13,6 @@ import {
   TabPanel,
   Grid,
   GridItem,
-  Divider,
-  Badge,
   useDisclosure,
   Alert,
   AlertIcon,
@@ -28,7 +26,7 @@ import {
   DrawerCloseButton,
   IconButton
 } from '@chakra-ui/react';
-import { MdRefresh, MdSettings, MdAssistant, MdFeedback, MdInsights } from 'react-icons/md';
+import { MdRefresh, MdFeedback } from 'react-icons/md';
 import axios from 'axios';
 
 // Import our enhanced components
@@ -136,23 +134,11 @@ const EnhancedSchedulingInterface: React.FC<EnhancedSchedulingInterfaceProps> = 
   const cardBg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const headerBg = useColorModeValue('gray.50', 'gray.700');
+  const oddRowBg = useColorModeValue('gray.50', 'gray.700');
   
   // Load initial data
-  useEffect(() => {
-    if (scheduleId) {
-      loadScheduleData();
-    }
-  }, [scheduleId, sportType]);
-  
-  // Set initial schedule when prop changes
-  useEffect(() => {
-    if (initialSchedule && initialSchedule.length > 0) {
-      setSchedule(initialSchedule);
-    }
-  }, [initialSchedule]);
-  
   // Load schedule data
-  const loadScheduleData = async () => {
+  const loadScheduleData = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -182,7 +168,20 @@ const EnhancedSchedulingInterface: React.FC<EnhancedSchedulingInterfaceProps> = 
     } finally {
       setLoading(false);
     }
-  };
+  }, [scheduleId, sportType, schedule.length]);
+
+  useEffect(() => {
+    if (scheduleId) {
+      loadScheduleData();
+    }
+  }, [scheduleId, loadScheduleData]);
+  
+  // Set initial schedule when prop changes
+  useEffect(() => {
+    if (initialSchedule && initialSchedule.length > 0) {
+      setSchedule(initialSchedule);
+    }
+  }, [initialSchedule]);
   
   // Analyze schedule for conflicts
   const analyzeSchedule = async () => {
@@ -395,7 +394,7 @@ const EnhancedSchedulingInterface: React.FC<EnhancedSchedulingInterfaceProps> = 
                             <Box 
                               key={event.id || index} 
                               as="tr"
-                              _odd={{ bg: useColorModeValue('gray.50', 'gray.700') }}
+                              _odd={{ bg: oddRowBg }}
                             >
                               <Box as="td" p={2}>{event.date}</Box>
                               <Box as="td" p={2}>{event.startTime}</Box>

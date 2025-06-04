@@ -9,7 +9,7 @@
  * - Rivalry game placement optimization
  */
 
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const { ConstraintTypes } = require('../constraint-management-system');
 
 /**
@@ -200,6 +200,22 @@ class EnhancedFootballConstraints {
         },
         evaluation: (schedule) => this._evaluateBYUSundayRestriction(schedule),
         violation: 'critical'
+      },
+      
+      {
+        id: 'single_game_alternating_venue',
+        type: 'SINGLE_GAME_ALTERNATING_VENUE',
+        hardness: 'hard',
+        category: 'fairness',
+        weight: 85,
+        description: 'Single-game trips must alternate venues between consecutive seasons',
+        parameters: {
+          requireAlternating: true,
+          lookbackSeasons: 1,
+          scope: 'conference_only'
+        },
+        evaluation: (schedule, previousSeasonSchedule) => this._evaluateSingleGameAlternatingVenue(schedule, previousSeasonSchedule),
+        violation: 'high'
       }
     ];
   }
@@ -722,6 +738,86 @@ class EnhancedFootballConstraints {
       score: byuSundayGames.length === 0 ? 1.0 : 0.0,
       details: { sundayGames: byuSundayGames.length }
     };
+  }
+
+  _evaluateSingleGameAlternatingVenue(schedule, previousSeasonSchedule) {
+    if (!previousSeasonSchedule || !Array.isArray(previousSeasonSchedule)) {
+      // If no previous season data, constraint is satisfied by default
+      return {
+        satisfied: true,
+        score: 1.0,
+        details: { message: 'No previous season data available' }
+      };
+    }
+
+    // Get all conference teams
+    const teams = new Set();
+    schedule.filter(game => game.isConference).forEach(game => {
+      teams.add(game.homeTeam);
+      teams.add(game.awayTeam);
+    });
+
+    let violations = 0;
+    const violationDetails = [];
+
+    for (const team of teams) {
+      // Find single-game opponents from previous season
+      const previousOpponents = this._findSingleGameOpponents(previousSeasonSchedule, team);
+      
+      // Check current season single-game opponents
+      const currentOpponents = this._findSingleGameOpponents(schedule, team);
+      
+      for (const opponent of previousOpponents) {
+        if (currentOpponents.has(opponent)) {
+          // Same opponent appears as single-game in both seasons
+          const prevVenue = previousOpponents.get(opponent);
+          const currVenue = currentOpponents.get(opponent);
+          
+          // Check if venue alternated
+          if (prevVenue === currVenue) {
+            violations++;
+            violationDetails.push({
+              team,
+              opponent,
+              previousVenue: prevVenue,
+              currentVenue: currVenue,
+              message: `${team} vs ${opponent} repeated same venue (${currVenue}) in consecutive seasons`
+            });
+          }
+        }
+      }
+    }
+
+    return {
+      satisfied: violations === 0,
+      score: violations === 0 ? 1.0 : Math.max(0, 1.0 - violations * 0.2),
+      details: {
+        violations,
+        violationDetails,
+        rule: 'single_game_alternating_venue'
+      }
+    };
+  }
+
+  _findSingleGameOpponents(schedule, team) {
+    const opponents = new Map();
+    
+    // Count games against each opponent
+    schedule.filter(game => 
+      (game.homeTeam === team || game.awayTeam === team) && game.isConference
+    ).forEach(game => {
+      const opponent = game.homeTeam === team ? game.awayTeam : game.homeTeam;
+      const venue = game.homeTeam === team ? 'home' : 'away';
+      
+      if (opponents.has(opponent)) {
+        // Multiple games against this opponent, not a single-game trip
+        opponents.delete(opponent);
+      } else {
+        opponents.set(opponent, venue);
+      }
+    });
+
+    return opponents;
   }
 
   _evaluateABCESPNRequirements(schedule) {

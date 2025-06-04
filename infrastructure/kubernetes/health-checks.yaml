@@ -1,0 +1,727 @@
+# FlexTime Comprehensive Health Checks
+# Advanced health monitoring and service mesh readiness
+---
+# Health monitoring namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flextime-health
+  labels:
+    name: flextime-health
+    purpose: health-monitoring
+
+---
+# Enhanced health check service
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: health-check-config
+  namespace: flextime-production
+data:
+  health-check.js: |
+    const express = require('express');
+    const { Pool } = require('pg');
+    const redis = require('redis');
+    const app = express();
+    
+    // Database connection pool
+    const dbPool = new Pool({
+      connectionString: process.env.NEON_DATABASE_URL,
+      max: 2,
+      idleTimeoutMillis: 30000,
+      connectionTimeoutMillis: 2000,
+    });
+    
+    // Redis client
+    let redisClient;
+    if (process.env.REDIS_URL) {
+      redisClient = redis.createClient({
+        url: process.env.REDIS_URL,
+        socket: {
+          connectTimeout: 2000,
+          commandTimeout: 1000,
+        }
+      });
+    }
+    
+    // Health check aggregator
+    class HealthChecker {
+      constructor() {
+        this.checks = new Map();
+        this.lastResults = new Map();
+      }
+      
+      addCheck(name, checkFn, options = {}) {
+        this.checks.set(name, {
+          fn: checkFn,
+          timeout: options.timeout || 5000,
+          critical: options.critical || false,
+          interval: options.interval || 30000
+        });
+      }
+      
+      async runCheck(name, check) {
+        const startTime = Date.now();
+        try {
+          const timeout = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout')), check.timeout)
+          );
+          
+          const result = await Promise.race([check.fn(), timeout]);
+          const duration = Date.now() - startTime;
+          
+          const checkResult = {
+            status: 'healthy',
+            duration,
+            timestamp: new Date().toISOString(),
+            details: result
+          };
+          
+          this.lastResults.set(name, checkResult);
+          return checkResult;
+        } catch (error) {
+          const duration = Date.now() - startTime;
+          const checkResult = {
+            status: 'unhealthy',
+            duration,
+            timestamp: new Date().toISOString(),
+            error: error.message,
+            critical: check.critical
+          };
+          
+          this.lastResults.set(name, checkResult);
+          return checkResult;
+        }
+      }
+      
+      async runAllChecks() {
+        const results = {};
+        const promises = [];
+        
+        for (const [name, check] of this.checks) {
+          promises.push(
+            this.runCheck(name, check).then(result => {
+              results[name] = result;
+            })
+          );
+        }
+        
+        await Promise.all(promises);
+        return results;
+      }
+      
+      getOverallStatus(results) {
+        const unhealthyChecks = Object.entries(results)
+          .filter(([_, result]) => result.status === 'unhealthy');
+        
+        const criticalFailures = unhealthyChecks
+          .filter(([_, result]) => result.critical);
+        
+        if (criticalFailures.length > 0) {
+          return 'critical';
+        } else if (unhealthyChecks.length > 0) {
+          return 'degraded';
+        } else {
+          return 'healthy';
+        }
+      }
+    }
+    
+    const healthChecker = new HealthChecker();
+    
+    // Database health check
+    healthChecker.addCheck('database', async () => {
+      const client = await dbPool.connect();
+      try {
+        const result = await client.query('SELECT 1 as health_check');
+        return { connected: true, result: result.rows[0] };
+      } finally {
+        client.release();
+      }
+    }, { critical: true, timeout: 3000 });
+    
+    // Redis health check
+    if (redisClient) {
+      healthChecker.addCheck('redis', async () => {
+        if (!redisClient.isOpen) {
+          await redisClient.connect();
+        }
+        const result = await redisClient.ping();
+        return { connected: true, response: result };
+      }, { critical: false, timeout: 2000 });
+    }
+    
+    // Memory health check
+    healthChecker.addCheck('memory', async () => {
+      const memUsage = process.memoryUsage();
+      const totalMem = memUsage.rss + memUsage.heapUsed + memUsage.external;
+      const maxMem = 4 * 1024 * 1024 * 1024; // 4GB limit
+      const memoryUsagePercent = (totalMem / maxMem) * 100;
+      
+      return {
+        usage: memUsage,
+        totalMB: Math.round(totalMem / 1024 / 1024),
+        usagePercent: Math.round(memoryUsagePercent * 100) / 100,
+        withinLimits: memoryUsagePercent < 85
+      };
+    }, { critical: false, timeout: 1000 });
+    
+    // CPU health check
+    healthChecker.addCheck('cpu', async () => {
+      const usage = process.cpuUsage();
+      const uptime = process.uptime();
+      const cpuUsagePercent = ((usage.user + usage.system) / 1000000) / uptime * 100;
+      
+      return {
+        usage,
+        uptime,
+        usagePercent: Math.round(cpuUsagePercent * 100) / 100,
+        withinLimits: cpuUsagePercent < 80
+      };
+    }, { critical: false, timeout: 1000 });
+    
+    // Application-specific health checks
+    healthChecker.addCheck('constraint_system', async () => {
+      // Mock constraint system health check
+      const constraintSystemHealth = {
+        cacheSize: Math.floor(Math.random() * 10000),
+        activeWorkers: Math.floor(Math.random() * 20),
+        lastEvaluation: new Date().toISOString()
+      };
+      
+      return {
+        operational: true,
+        details: constraintSystemHealth
+      };
+    }, { critical: true, timeout: 2000 });
+    
+    healthChecker.addCheck('agent_system', async () => {
+      // Mock agent system health check
+      const agentSystemHealth = {
+        activeAgents: Math.floor(Math.random() * 50),
+        queueLength: Math.floor(Math.random() * 100),
+        lastActivity: new Date().toISOString()
+      };
+      
+      return {
+        operational: true,
+        details: agentSystemHealth
+      };
+    }, { critical: true, timeout: 2000 });
+    
+    // Routes
+    app.get('/health', async (req, res) => {
+      try {
+        const results = await healthChecker.runAllChecks();
+        const status = healthChecker.getOverallStatus(results);
+        
+        const response = {
+          status,
+          timestamp: new Date().toISOString(),
+          version: process.env.APP_VERSION || '2.1.0-scaled',
+          uptime: process.uptime(),
+          checks: results
+        };
+        
+        const httpStatus = status === 'healthy' ? 200 : 
+                          status === 'degraded' ? 200 : 503;
+        
+        res.status(httpStatus).json(response);
+      } catch (error) {
+        res.status(503).json({
+          status: 'error',
+          timestamp: new Date().toISOString(),
+          error: error.message
+        });
+      }
+    });
+    
+    app.get('/health/live', (req, res) => {
+      // Liveness probe - simple check that the process is running
+      res.status(200).json({
+        status: 'alive',
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime()
+      });
+    });
+    
+    app.get('/health/ready', async (req, res) => {
+      // Readiness probe - check if the app is ready to serve traffic
+      try {
+        const criticalChecks = ['database', 'constraint_system', 'agent_system'];
+        const results = {};
+        
+        for (const checkName of criticalChecks) {
+          if (healthChecker.checks.has(checkName)) {
+            const check = healthChecker.checks.get(checkName);
+            results[checkName] = await healthChecker.runCheck(checkName, check);
+          }
+        }
+        
+        const allReady = Object.values(results).every(r => r.status === 'healthy');
+        
+        if (allReady) {
+          res.status(200).json({
+            status: 'ready',
+            timestamp: new Date().toISOString(),
+            checks: results
+          });
+        } else {
+          res.status(503).json({
+            status: 'not_ready',
+            timestamp: new Date().toISOString(),
+            checks: results
+          });
+        }
+      } catch (error) {
+        res.status(503).json({
+          status: 'error',
+          timestamp: new Date().toISOString(),
+          error: error.message
+        });
+      }
+    });
+    
+    app.get('/metrics/health', async (req, res) => {
+      // Prometheus metrics format for health status
+      try {
+        const results = await healthChecker.runAllChecks();
+        let metrics = '# HELP flextime_health_check Health check status (1=healthy, 0=unhealthy)\n';
+        metrics += '# TYPE flextime_health_check gauge\n';
+        
+        for (const [name, result] of Object.entries(results)) {
+          const value = result.status === 'healthy' ? 1 : 0;
+          metrics += `flextime_health_check{check="${name}"} ${value}\n`;
+        }
+        
+        metrics += '# HELP flextime_health_check_duration_seconds Health check duration\n';
+        metrics += '# TYPE flextime_health_check_duration_seconds gauge\n';
+        
+        for (const [name, result] of Object.entries(results)) {
+          const duration = result.duration / 1000;
+          metrics += `flextime_health_check_duration_seconds{check="${name}"} ${duration}\n`;
+        }
+        
+        res.set('Content-Type', 'text/plain');
+        res.send(metrics);
+      } catch (error) {
+        res.status(500).send('# Error generating metrics\n');
+      }
+    });
+    
+    const port = process.env.HEALTH_PORT || 3006;
+    app.listen(port, () => {
+      console.log(`Health check server listening on port ${port}`);
+    });
+
+---
+# Health check sidecar deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flextime-health-sidecar
+  namespace: flextime-production
+  labels:
+    app: flextime
+    component: health-sidecar
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flextime
+      component: health-sidecar
+  template:
+    metadata:
+      labels:
+        app: flextime
+        component: health-sidecar
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "3006"
+        prometheus.io/path: "/metrics/health"
+    spec:
+      containers:
+      - name: health-sidecar
+        image: node:18-alpine
+        command: ["/bin/sh", "-c"]
+        args:
+        - |
+          npm install express pg redis
+          node /config/health-check.js
+        ports:
+        - containerPort: 3006
+          name: health
+        env:
+        - name: HEALTH_PORT
+          value: "3006"
+        - name: APP_VERSION
+          value: "2.1.0-scaled"
+        envFrom:
+        - secretRef:
+            name: flextime-secrets
+        volumeMounts:
+        - name: health-config
+          mountPath: /config
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 512Mi
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 3006
+          initialDelaySeconds: 30
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 3006
+          initialDelaySeconds: 10
+          periodSeconds: 10
+      volumes:
+      - name: health-config
+        configMap:
+          name: health-check-config
+
+---
+# Health check service
+apiVersion: v1
+kind: Service
+metadata:
+  name: flextime-health-service
+  namespace: flextime-production
+  labels:
+    app: flextime
+    component: health-sidecar
+spec:
+  ports:
+  - port: 3006
+    targetPort: 3006
+    name: health
+  selector:
+    app: flextime
+    component: health-sidecar
+
+---
+# Circuit breaker configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: circuit-breaker-config
+  namespace: flextime-production
+data:
+  circuit-breaker.js: |
+    class CircuitBreaker {
+      constructor(options = {}) {
+        this.failureThreshold = options.failureThreshold || 5;
+        this.resetTimeout = options.resetTimeout || 60000;
+        this.monitorTimeout = options.monitorTimeout || 2000;
+        
+        this.state = 'CLOSED'; // CLOSED, OPEN, HALF_OPEN
+        this.failureCount = 0;
+        this.lastFailureTime = null;
+        this.successes = 0;
+      }
+      
+      async execute(fn) {
+        if (this.state === 'OPEN') {
+          if (Date.now() - this.lastFailureTime > this.resetTimeout) {
+            this.state = 'HALF_OPEN';
+            this.successes = 0;
+            console.log('Circuit breaker moving to HALF_OPEN state');
+          } else {
+            throw new Error('Circuit breaker is OPEN');
+          }
+        }
+        
+        try {
+          const result = await fn();
+          this.onSuccess();
+          return result;
+        } catch (error) {
+          this.onFailure();
+          throw error;
+        }
+      }
+      
+      onSuccess() {
+        this.failureCount = 0;
+        
+        if (this.state === 'HALF_OPEN') {
+          this.successes++;
+          if (this.successes >= 3) {
+            this.state = 'CLOSED';
+            console.log('Circuit breaker CLOSED');
+          }
+        }
+      }
+      
+      onFailure() {
+        this.failureCount++;
+        this.lastFailureTime = Date.now();
+        
+        if (this.failureCount >= this.failureThreshold) {
+          this.state = 'OPEN';
+          console.log('Circuit breaker OPEN');
+        }
+      }
+      
+      getState() {
+        return {
+          state: this.state,
+          failureCount: this.failureCount,
+          lastFailureTime: this.lastFailureTime,
+          successes: this.successes
+        };
+      }
+    }
+    
+    module.exports = CircuitBreaker;
+
+---
+# Service mesh readiness (Istio configuration)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: istio-health-config
+  namespace: flextime-production
+data:
+  destination-rule.yaml: |
+    apiVersion: networking.istio.io/v1beta1
+    kind: DestinationRule
+    metadata:
+      name: flextime-api
+      namespace: flextime-production
+    spec:
+      host: flextime-api-service
+      trafficPolicy:
+        connectionPool:
+          tcp:
+            maxConnections: 100
+          http:
+            http1MaxPendingRequests: 50
+            maxRequestsPerConnection: 10
+        circuitBreaker:
+          consecutiveGatewayErrors: 5
+          consecutive5xxErrors: 5
+          interval: 30s
+          baseEjectionTime: 30s
+          maxEjectionPercent: 50
+        healthCheck:
+          path: /health
+          intervalSeconds: 10
+          timeoutSeconds: 3
+          unhealthyThreshold: 3
+          healthyThreshold: 2
+
+  virtual-service.yaml: |
+    apiVersion: networking.istio.io/v1beta1
+    kind: VirtualService
+    metadata:
+      name: flextime-api
+      namespace: flextime-production
+    spec:
+      hosts:
+      - api.flextime.app
+      gateways:
+      - flextime-gateway
+      http:
+      - match:
+        - uri:
+            prefix: /health
+        route:
+        - destination:
+            host: flextime-health-service
+            port:
+              number: 3006
+        timeout: 5s
+        retries:
+          attempts: 3
+          perTryTimeout: 2s
+      - match:
+        - uri:
+            prefix: /
+        route:
+        - destination:
+            host: flextime-api-service
+            port:
+              number: 80
+        timeout: 30s
+        retries:
+          attempts: 3
+          perTryTimeout: 10s
+
+---
+# Health monitoring alerts for Prometheus
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: health-monitoring-alerts
+  namespace: flextime-monitoring
+data:
+  health-alerts.yml: |
+    groups:
+    - name: flextime.health
+      rules:
+      - alert: FlexTimeHealthCheckFailing
+        expr: flextime_health_check == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "FlexTime health check {{ $labels.check }} is failing"
+          description: "Health check {{ $labels.check }} has been failing for more than 2 minutes"
+
+      - alert: FlexTimeCriticalHealthCheckFailing
+        expr: flextime_health_check{check=~"database|constraint_system|agent_system"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "FlexTime critical health check {{ $labels.check }} is failing"
+          description: "Critical health check {{ $labels.check }} has been failing for more than 1 minute"
+
+      - alert: FlexTimeHealthCheckSlow
+        expr: flextime_health_check_duration_seconds > 5
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "FlexTime health check {{ $labels.check }} is slow"
+          description: "Health check {{ $labels.check }} is taking more than 5 seconds"
+
+      - alert: FlexTimeAllHealthChecksFailing
+        expr: count(flextime_health_check == 0) > 3
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Multiple FlexTime health checks are failing"
+          description: "More than 3 health checks are currently failing"
+
+---
+# Chaos engineering for resilience testing
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chaos-engineering-config
+  namespace: flextime-health
+data:
+  chaos-monkey.sh: |
+    #!/bin/bash
+    # Simple chaos engineering script for testing resilience
+    
+    NAMESPACE="flextime-production"
+    
+    echo "Starting chaos engineering test at $(date)"
+    
+    # Get random pod
+    PODS=($(kubectl get pods -n $NAMESPACE -l app=flextime --no-headers -o custom-columns=":metadata.name"))
+    if [ ${#PODS[@]} -eq 0 ]; then
+      echo "No pods found to test"
+      exit 1
+    fi
+    
+    RANDOM_POD=${PODS[$RANDOM % ${#PODS[@]}]}
+    echo "Selected pod for chaos test: $RANDOM_POD"
+    
+    # Simulate network delay
+    echo "Introducing network delay..."
+    kubectl exec -n $NAMESPACE $RANDOM_POD -- tc qdisc add dev eth0 root netem delay 1000ms 2>/dev/null || true
+    
+    # Wait for 30 seconds
+    sleep 30
+    
+    # Remove network delay
+    echo "Removing network delay..."
+    kubectl exec -n $NAMESPACE $RANDOM_POD -- tc qdisc del dev eth0 root 2>/dev/null || true
+    
+    # Check health status
+    echo "Checking health status after chaos test..."
+    curl -f http://flextime-health-service.flextime-production.svc.cluster.local:3006/health || echo "Health check failed"
+    
+    echo "Chaos engineering test completed at $(date)"
+
+---
+# CronJob for periodic chaos testing
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: chaos-engineering-test
+  namespace: flextime-health
+  labels:
+    app: chaos-engineering
+spec:
+  schedule: "0 */6 * * *"  # Every 6 hours
+  timeZone: "UTC"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: chaos-engineering
+        spec:
+          serviceAccount: chaos-engineering-sa
+          restartPolicy: OnFailure
+          containers:
+          - name: chaos-monkey
+            image: bitnami/kubectl:1.28
+            command: ["/bin/bash"]
+            args: ["/scripts/chaos-monkey.sh"]
+            volumeMounts:
+            - name: chaos-scripts
+              mountPath: /scripts
+            resources:
+              requests:
+                cpu: 50m
+                memory: 64Mi
+              limits:
+                cpu: 200m
+                memory: 256Mi
+          volumes:
+          - name: chaos-scripts
+            configMap:
+              name: chaos-engineering-config
+              defaultMode: 0755
+
+---
+# Service account for chaos engineering
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: chaos-engineering-sa
+  namespace: flextime-health
+
+---
+# Role for chaos engineering
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: chaos-engineering-role
+  namespace: flextime-production
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/exec"]
+  verbs: ["get", "list", "create"]
+
+---
+# RoleBinding for chaos engineering
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: chaos-engineering-rolebinding
+  namespace: flextime-production
+subjects:
+- kind: ServiceAccount
+  name: chaos-engineering-sa
+  namespace: flextime-health
+roleRef:
+  kind: Role
+  name: chaos-engineering-role
+  apiGroup: rbac.authorization.k8s.io

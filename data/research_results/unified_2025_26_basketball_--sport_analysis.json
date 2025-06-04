@@ -1,0 +1,25 @@
+{
+  "executionSummary": {
+    "title": "Big 12 Football Unified Pipeline Analysis - 2025-26 Season",
+    "timestamp": "2025-05-31T21:32:34.966Z",
+    "sport": "--sport",
+    "gender": "basketball",
+    "focusPeriod": "Spring 2025 - Summer 2025 - Complete 2025-26 Preparation",
+    "teams": 16,
+    "methodology": "Unified Sport Pipeline Assessment",
+    "totalAnalyses": 32
+  },
+  "keyFindings": {
+    "unifiedPipelineAssessments": {
+      "teamsAnalyzed": 0,
+      "totalCitations": 0,
+      "averageContentLength": 0
+    },
+    "unifiedCompassRatings": {
+      "teamsAnalyzed": 16,
+      "totalAnalyses": 0
+    }
+  },
+  "teamSummaries": {},
+  "methodology": "Unified Sport Pipeline Assessment with Comprehensive Rankings Integration"
+}

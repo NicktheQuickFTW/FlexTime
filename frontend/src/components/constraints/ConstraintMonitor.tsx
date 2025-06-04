@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Paper,
@@ -14,14 +14,12 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton,
   Tooltip,
   Alert,
   AlertTitle,
   Stack,
   Button,
   Badge,
-  Divider,
   CircularProgress,
   useTheme
 } from '@mui/material';
@@ -31,8 +29,6 @@ import {
   Error as ErrorIcon,
   Info as InfoIcon,
   Refresh as RefreshIcon,
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
   Schedule as ScheduleIcon,
   Assessment as AssessmentIcon,
   Speed as SpeedIcon
@@ -110,22 +106,8 @@ const ConstraintMonitor: React.FC<ConstraintMonitorProps> = ({
   });
   const [constraintStatuses, setConstraintStatuses] = useState<ConstraintStatus[]>([]);
   const [performanceHistory, setPerformanceHistory] = useState<PerformanceData[]>([]);
-  const [selectedTimeRange, setSelectedTimeRange] = useState<'1h' | '24h' | '7d' | '30d'>('24h');
 
-  useEffect(() => {
-    initializeMonitoring();
-    const interval = setInterval(updateMetrics, 30000); // Update every 30 seconds
-    return () => clearInterval(interval);
-  }, [constraints]);
-
-  const initializeMonitoring = async () => {
-    setLoading(true);
-    await updateMetrics();
-    generateMockPerformanceHistory();
-    setLoading(false);
-  };
-
-  const updateMetrics = async () => {
+  const updateMetrics = useCallback(async () => {
     setRefreshing(true);
     
     // Simulate fetching constraint statuses
@@ -186,7 +168,20 @@ const ConstraintMonitor: React.FC<ConstraintMonitorProps> = ({
     ]);
 
     setRefreshing(false);
-  };
+  }, [constraints]);
+
+  const initializeMonitoring = useCallback(async () => {
+    setLoading(true);
+    await updateMetrics();
+    generateMockPerformanceHistory();
+    setLoading(false);
+  }, [updateMetrics]);
+
+  useEffect(() => {
+    initializeMonitoring();
+    const interval = setInterval(updateMetrics, 30000); // Update every 30 seconds
+    return () => clearInterval(interval);
+  }, [initializeMonitoring, updateMetrics]);
 
   const calculatePerformanceScore = (satisfactionRate: number, violations: number): number => {
     const violationPenalty = violations * 0.1;
@@ -257,7 +252,6 @@ const ConstraintMonitor: React.FC<ConstraintMonitorProps> = ({
   const COLORS = [theme.palette.error.main, theme.palette.warning.main, theme.palette.success.main];
 
   const radarData = Object.values(ConstraintType).map(type => {
-    const typeConstraints = constraints.filter(c => c.type === type);
     const typeStatuses = constraintStatuses.filter(s => {
       const constraint = getConstraintById(s.constraintId);
       return constraint?.type === type;

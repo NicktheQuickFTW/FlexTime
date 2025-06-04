@@ -8,7 +8,7 @@
 const Agent = require('../../agent');
 const SchoolDataAgent = require('../../rag/school_data_agent');
 const path = require('path');
-const logger = require('../../../utils/logger');
+const logger = require("../utils/logger");
 const AIAdapter = require('../../../adapters/ai-adapter');
 
 class BaseSportRagAgent extends Agent {

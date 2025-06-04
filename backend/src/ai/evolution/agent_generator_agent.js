@@ -6,7 +6,7 @@
  */
 
 const BaseEvolutionAgent = require('./base_evolution_agent');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const path = require('path');
 const fs = require('fs').promises;
 
@@ -730,7 +730,7 @@ module.exports = {
  */
 
 const Agent = require('../agent');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 
 class {{AGENT_NAME}} extends Agent {
   /**

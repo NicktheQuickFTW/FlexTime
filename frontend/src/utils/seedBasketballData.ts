@@ -5,7 +5,6 @@ import {
   menBasketballTournamentInfo,
   womenBasketballTournamentInfo
 } from '../data/basketballSeasonDates';
-import { SportType } from '../types';
 
 /**
  * Utility function to seed the database with basketball scheduling data

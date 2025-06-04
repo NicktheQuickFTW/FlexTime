@@ -9,7 +9,7 @@ const Agent = require('../agent');
 const { Client } = require('pg');
 const axios = require('axios');
 const cheerio = require('cheerio');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const { Anthropic } = require('@anthropic-ai/sdk');
 const cron = require('node-cron');
 

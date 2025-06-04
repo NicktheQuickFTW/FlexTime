@@ -6,8 +6,7 @@ import {
   Button, 
   CircularProgress,
   IconButton,
-  Tooltip,
-  useTheme
+  Tooltip
 } from '@mui/material';
 import {
   AutoFixHigh as AutoFixHighIcon,
@@ -20,7 +19,7 @@ import {
 import GlassmorphicCard from '../common/GlassmorphicCard';
 import GradientText from '../common/GradientText';
 import AIService, { ScheduleConflict, ResolutionOption } from '../../services/aiService';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import useReducedMotion from '../../hooks/useReducedMotion';
 
 interface AIScheduleOptimizerProps {
   scheduleId: number;
@@ -232,7 +231,7 @@ const AIScheduleOptimizer: React.FC<AIScheduleOptimizerProps> = ({
   const theme = useTheme();
   const prefersReducedMotion = useReducedMotion();
   
-  const fetchConflicts = async () => {
+  const fetchConflicts = useCallback(async () => {
     if (!scheduleId) return;
     
     setLoading(true);
@@ -262,12 +261,12 @@ const AIScheduleOptimizer: React.FC<AIScheduleOptimizerProps> = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [scheduleId]);
   
   // Fetch conflicts when the component mounts or scheduleId changes
   useEffect(() => {
     fetchConflicts();
-  }, [scheduleId]);
+  }, [fetchConflicts]);
   
   const handleApplySuggestion = async (conflictId: string, suggestion: ResolutionOption) => {
     if (!scheduleId) return;

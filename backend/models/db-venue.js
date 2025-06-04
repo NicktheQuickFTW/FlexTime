@@ -172,11 +172,11 @@ module.exports = (sequelize) => {
       as: 'games'
     });
     
-    // A Venue can have many unavailability periods
-    Venue.hasMany(models.VenueUnavailability, {
-      foreignKey: 'venue_id',
-      as: 'unavailabilityPeriods'
-    });
+    // Note: VenueUnavailability model association removed - model doesn't exist
+    // Venue.hasMany(models.VenueUnavailability, {
+    //   foreignKey: 'venue_id',
+    //   as: 'unavailabilityPeriods'
+    // });
   };
 
   return Venue;

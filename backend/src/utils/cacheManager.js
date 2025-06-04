@@ -1,9 +1,9 @@
 class CacheManager {
-  constructor(config) {
+  constructor(config, workerConfig = {}) {
     this.cache = new Map();
     this.config = config;
     this.workers = new Map(); // Track workers per task
-    this.maxWorkersPerTask = 20; // 20 workers per task as requested
+    this.maxWorkersPerTask = workerConfig.maxWorkersPerTask || 10; // Configurable workers per task
     
     // Start cleanup interval if enabled
     if (config.enabled && config.checkPeriod) {

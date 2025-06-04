@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const heliiXConfig = require('../../config/neon_db_config');
 // Note: fix-schedules-table script removed during refactoring
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 
 // Database connection with HELiiX validation
 async function connectToDatabase() {
@@ -63,7 +63,7 @@ async function setupDatabase() {
       Sport: { findAll: async () => [] },
       Championship: { findAll: async () => [] },
       Team: { findAll: async () => [] },
-      Institution: { findAll: async () => [] },
+      School: { findAll: async () => [] },
       Schedule: { findAll: async () => [], findByPk: async () => null },
       Game: { findAll: async () => [] },
       sequelize: { transaction: async (fn) => fn({ commit: async () => {}, rollback: async () => {} }) }
@@ -76,61 +76,38 @@ async function setupDatabase() {
   try {
     const sequelize = await connectToDatabase();
     
-    // Initialize scheduling models with simplified participant models
-    const Sport = require('../../models/db-sport')(sequelize);
-    const Championship = require('../../models/db-championship')(sequelize);
+    // Initialize core scheduling models
     const Team = require('../../models/db-team')(sequelize);
-    const Institution = require('../../models/db-institution')(sequelize);
     const Schedule = require('../../models/db-schedule')(sequelize);
     const Game = require('../../models/db-game')(sequelize);
+    const Sport = require('../../models/db-sport')(sequelize);
+    const Venue = require('../../models/db-venue')(sequelize);
+    const School = require('../../models/db-school')(sequelize);
+    // const Championship = require('../../models/db-championship')(sequelize); // File doesn't exist
+    const Constraint = require('../../models/db-constraint')(sequelize);
 
     // Note: fix-schedules-table functionality removed during refactoring
     if (process.env.FIX_SCHEDULES_TABLE === 'true') {
       logger.info('fix-schedules-table script is not available in refactored version');
     }
 
-    // Define relationships
-    Team.belongsTo(Institution, { 
-      foreignKey: 'school_id',
-      as: 'institution'
-    });
-    Institution.hasMany(Team, { 
-      foreignKey: 'school_id',
-      as: 'teams'
-    });
-    Team.belongsTo(Sport, { 
-      foreignKey: 'sport_id',
-      as: 'sport'
-    });
-    Sport.hasMany(Team, { 
-      foreignKey: 'sport_id',
-      as: 'teams'
-    });
-    
-    Schedule.belongsTo(Sport, {
-      foreignKey: 'sport_id',
-      as: 'sport'
-    });
-    Schedule.belongsTo(Championship, {
-      foreignKey: 'championship_id',
-      as: 'championship'
-    });
-    Schedule.hasMany(Game, {
-      foreignKey: 'schedule_id',
-      as: 'games'
-    });
-    
-    Game.belongsTo(Schedule, {
-      foreignKey: 'schedule_id',
-      as: 'schedule'
-    });
-    Game.belongsTo(Team, {
-      as: 'home_team',
-      foreignKey: 'home_team_id'
-    });
-    Game.belongsTo(Team, {
-      as: 'away_team',
-      foreignKey: 'away_team_id'
+    // Create models object for associations
+    const models = {
+      Team,
+      Schedule,
+      Game,
+      Sport,
+      Venue,
+      School,
+      // Championship, // File doesn't exist
+      Constraint
+    };
+
+    // Call associate functions if they exist
+    Object.values(models).forEach(model => {
+      if (model.associate) {
+        model.associate(models);
+      }
     });
 
     // Sync models with database (in development)
@@ -142,12 +119,14 @@ async function setupDatabase() {
     // Create a database object to export
     const db = {
       sequelize,
-      Sport,
-      Championship,
       Team,
-      Institution,
       Schedule,
-      Game
+      Game,
+      Sport,
+      Venue,
+      School,
+      // Championship, // File doesn't exist
+      Constraint
     };
 
     return db;

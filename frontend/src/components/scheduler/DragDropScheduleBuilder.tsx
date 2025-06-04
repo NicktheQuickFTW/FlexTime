@@ -1,9 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDrag, useDrop, DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
 import { motion, AnimatePresence } from 'framer-motion';
-import { format, parse, isValid } from 'date-fns';
 import { useAnimation } from '../../contexts/AnimationContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import './DragDropScheduleBuilder.css';
@@ -183,13 +182,17 @@ export const DragDropScheduleBuilder: React.FC<{
   onGameMove: (gameId: string, newSlot: TimeSlot) => Promise<void>;
   onConflictDetected?: (conflicts: ConflictResult) => void;
 }> = ({ games, timeSlots, constraints, onGameMove, onConflictDetected }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { theme } = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { animationQuality } = useAnimation();
   const [unscheduledGames, setUnscheduledGames] = useState<Game[]>([]);
   const [scheduledGames, setScheduledGames] = useState<Map<string, Game>>(new Map());
   const [currentConflicts, setCurrentConflicts] = useState<Map<string, Constraint[]>>(new Map());
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [draggedGame, setDraggedGame] = useState<Game | null>(null);
   const [hoveredSlot, setHoveredSlot] = useState<TimeSlot | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isProcessing, setIsProcessing] = useState(false);
   
   // Initialize games

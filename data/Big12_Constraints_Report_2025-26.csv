@@ -1,0 +1,282 @@
+Sport,Constraint Type,Subcategory,Constraint
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Conference Game Count: Each team must play exactly 9 conference games
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Consecutive Road Games: No school plays more than 2 consecutive conference road games
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Road Game Distribution: No school plays 4-of-5 conference games on the road
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Open Week Advantage: No school plays a conference team coming off an open week more than twice
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Back-to-Back Road Sets: No school plays two sets of back-to-back conference road games in a season
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Thursday Game Recovery: Each school playing in a Thursday game will have similar recovery period
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,Schedule Duration: All games must be scheduled within a 9-week period ending on Thanksgiving Saturday
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,ABC/ESPN Obligations: Meet contractual obligations for ABC/ESPN telecasts
+FOOTBALL,Hard Constraints (Must Be Satisfied),Core Scheduling Requirements,FOX Obligations: Meet contractual obligations for FOX telecasts
+FOOTBALL,Hard Constraints (Must Be Satisfied),BYU Religious Observance (Critical Priority),Sunday Restriction: BYU cannot play games on Sunday
+FOOTBALL,Soft Constraints (Preferences with Weights),Early Home Game (Weight: 0.7),At least one of the first two games will be scheduled as a home game
+FOOTBALL,Soft Constraints (Preferences with Weights),Late Home Game (Weight: 0.6),At least one of the last two games will be scheduled as a home game
+FOOTBALL,Soft Constraints (Preferences with Weights),Three Weeks Without Home (Weight: 0.8),Avoid institutions playing three straight weeks without a home game
+FOOTBALL,Soft Constraints (Preferences with Weights),Away-Bye-Away Avoidance (Weight: 0.7),Avoid the away-bye-away scenario unless Thursday game involved
+FOOTBALL,Soft Constraints (Preferences with Weights),Short Week Equality (Weight: 0.8),Balance recovery time for teams playing on short weeks
+FOOTBALL,Soft Constraints (Preferences with Weights),Travel Optimization (Weight: 0.6),Consider multiple time zone crossings in game sequencing
+FOOTBALL,Soft Constraints (Preferences with Weights),Travel Optimization (Weight: 0.6),Emphasize player health and recovery in travel planning
+FOOTBALL,Soft Constraints (Preferences with Weights),Media Rights Optimization,Provide contractually required weeknight games
+FOOTBALL,Soft Constraints (Preferences with Weights),Media Rights Optimization,Optimize for TV viewership windows
+FOOTBALL,Season Parameters,Conference Play Structure,9 games
+FOOTBALL,Season Parameters,Season Length (Number of Weeks),12 weeks (late August to late November)
+FOOTBALL,Season Parameters,Conference Postseason Start Date,First Saturday of December
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Conference Play Structure,Conference Game Count: Each team must play exactly 18 conference games
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Conference Play Structure,Play Distribution: Each team plays 3 opponents twice (home and away) and 12 opponents once
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Conference Play Structure,Season Windows: 19 total windows with 1 bye week
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),First Four Games: At least 2 home and 2 away
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),Last Four Games: At least 2 home and 2 away
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),Weekend Home Games: Each institution must have minimum 4 weekend home games with similar distribution
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),Maximum Consecutive Road: No more than 2 consecutive conference road games
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Big Monday Prerequisite: Road Big Monday game preceded by home Saturday game (exceptions for nearby opponents)
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Avoid Compressed Schedule: No Saturday-Monday-Wednesday patterns
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Rematch Separation: Minimum 3 games and/or 10 days between rematches (preferred: 4 games/15 days)
+MEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Consecutive Road Minimization: Minimized except for travel efficiency (away-away trips)
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Bye Date Placement (Weight: 0.7),"Bye dates generally placed mid-week (Tuesday, Wednesday)"
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Bye Date Placement (Weight: 0.7),Avoid weekend byes
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Road Game Clustering Avoidance (Weight: 0.7),Avoid 4-of-5 games on the road anywhere in schedule
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Road Game Clustering Avoidance (Weight: 0.7),Avoid 4-of-first-6 games on the road
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Road Game Clustering Avoidance (Weight: 0.7),Avoid 4-of-last-6 games on the road
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Season Start/End Preferences (Weight: 0.5),Avoid opening with consecutive road games
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Season Start/End Preferences (Weight: 0.5),Avoid closing with consecutive road games
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),PAB (Plays After Byes) Balancing (Weight: 0.65),Work to balance teams playing opponents coming off bye dates
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),PAB (Plays After Byes) Balancing (Weight: 0.65),Maximum 1-game difference in PAB games between teams
+MEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Big Monday Home Pattern (Weight: 0.6),Big Monday home games preceded by road games when possible
+MEN'S BASKETBALL,Season Parameters,,Conference Games: 18
+MEN'S BASKETBALL,Season Parameters,,Season Windows: 19 (includes 1 bye)
+MEN'S BASKETBALL,Season Parameters,,Season Period: January 2026 - March 2026
+MEN'S BASKETBALL,Season Parameters,,"Conference Tournament: March 10-14, 2026 (Kansas City)"
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Conference Play Structure,Conference Game Count: Each team must play exactly 20 conference games
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Conference Play Structure,Play Distribution: Each team plays 5 opponents twice (home and away) and 10 opponents once
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Conference Play Structure,Season Windows: 20 total windows with no bye weeks
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),First Four Games: At least 2 home and 2 away
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),Last Four Games: At least 2 home and 2 away
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),Weekend Home Games: Each institution must have minimum 4 weekend home games with similar distribution
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Home/Away Balance (CORE Requirements),Maximum Consecutive Road: No more than 2 consecutive conference road games
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Big Monday Prerequisite: Road Big Monday game preceded by home Saturday game
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Avoid Compressed Schedule: No Saturday-Monday-Wednesday patterns
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Rematch Separation: Minimum 3 games and/or 10 days between rematches
+WOMEN'S BASKETBALL,Hard Constraints (Must Be Satisfied),Schedule Integrity,Consecutive Road Minimization: Minimized except for travel efficiency (away-away trips)
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Road Game Clustering Avoidance (Weight: 0.7),Avoid 4-of-5 games on the road anywhere in schedule
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Road Game Clustering Avoidance (Weight: 0.7),Avoid 4-of-first-6 games on the road
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Road Game Clustering Avoidance (Weight: 0.7),Avoid 4-of-last-6 games on the road
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Season Start/End Preferences (Weight: 0.5),Avoid opening with consecutive road games
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Season Start/End Preferences (Weight: 0.5),Avoid closing with consecutive road games
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Same-Day Game Minimization (Weight: 0.6),Unique to Women's Basketball: Minimize men's and women's games scheduled at home on same day
+WOMEN'S BASKETBALL,Soft Constraints (Preferences with Weights),Same-Day Game Minimization (Weight: 0.6),Conference office puts forth best effort to minimize same-day games
+WOMEN'S BASKETBALL,Season Parameters,,Conference Games: 20
+WOMEN'S BASKETBALL,Season Parameters,,Season Windows: 20 (no byes)
+WOMEN'S BASKETBALL,Season Parameters,,Season Period: December 2025 - February/March 2026
+WOMEN'S BASKETBALL,Season Parameters,,"Conference Tournament: March 4-9, 2026 (Kansas City)"
+BASEBALL,Hard Constraints (Must Be Satisfied),Series Format,Conference Game Count: Each team must play exactly 30 conference games
+BASEBALL,Hard Constraints (Must Be Satisfied),Series Format,Series Structure: Ten 3-game series
+BASEBALL,Hard Constraints (Must Be Satisfied),Series Format,Home Series Limit: Maximum 5 series at home per year
+BASEBALL,Hard Constraints (Must Be Satisfied),Series Format,Series Integrity: All games in a series played at same venue
+BASEBALL,Hard Constraints (Must Be Satisfied),Series Format,Series Scheduling: Three-game series typically played Friday-Sunday
+BASEBALL,Hard Constraints (Must Be Satisfied),BYU Accommodation,BYU Series Format: Thursday-Saturday pattern for BYU series
+BASEBALL,Hard Constraints (Must Be Satisfied),BYU Accommodation,Alternative Format: 2-1 format by mutual agreement
+BASEBALL,Soft Constraints (Preferences with Weights),Home/Away Balance (Weight: 0.7),Balance home and away series throughout season
+BASEBALL,Soft Constraints (Preferences with Weights),Weather Considerations (Weight: 0.6),Consider weather patterns for early season scheduling
+BASEBALL,Soft Constraints (Preferences with Weights),Academic Considerations (Weight: 0.8),Avoid scheduling during final examination periods
+BASEBALL,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.7),Minimize travel distance between series
+BASEBALL,Soft Constraints (Preferences with Weights),TV Opportunities (Weight: 0.5),Consider TV broadcast opportunities for marquee matchups
+BASEBALL,Season Parameters,,Conference Games: 30 (ten 3-game series)
+BASEBALL,Season Parameters,,Season Length: 9 weeks
+BASEBALL,Season Parameters,,Season Period: March - May 2026
+BASEBALL,Season Parameters,,Conference Tournament: May 2026
+SOFTBALL,Hard Constraints (Must Be Satisfied),Series Format,Conference Game Count: Each team must play exactly 24 conference games
+SOFTBALL,Hard Constraints (Must Be Satisfied),Series Format,Series Structure: Eight 3-game series
+SOFTBALL,Hard Constraints (Must Be Satisfied),Series Format,Season Duration: 24-game schedule over 9-week period
+SOFTBALL,Hard Constraints (Must Be Satisfied),Series Format,Series Integrity: All games in a series played at same venue
+SOFTBALL,Hard Constraints (Must Be Satisfied),Series Format,Series Scheduling: Three-game series typically played Friday-Sunday
+SOFTBALL,Hard Constraints (Must Be Satisfied),Special Date Handling,BYU Series: Thursday-Saturday pattern for BYU series
+SOFTBALL,Hard Constraints (Must Be Satisfied),Special Date Handling,Easter Weekend: Thursday-Saturday format for Easter weekend series
+SOFTBALL,Soft Constraints (Preferences with Weights),Home/Away Balance (Weight: 0.7),Balance home and away series throughout season
+SOFTBALL,Soft Constraints (Preferences with Weights),Weather Considerations (Weight: 0.6),Consider weather patterns for scheduling
+SOFTBALL,Soft Constraints (Preferences with Weights),Weather Considerations (Weight: 0.6),Schedule southern/warm weather locations earlier
+SOFTBALL,Soft Constraints (Preferences with Weights),Academic Considerations (Weight: 0.8),Avoid scheduling during final examination periods
+SOFTBALL,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.7),Minimize travel distance between series
+SOFTBALL,Soft Constraints (Preferences with Weights),TV Opportunities (Weight: 0.5),Consider TV broadcast opportunities
+SOFTBALL,Soft Constraints (Preferences with Weights),Alternative Format Flexibility (Weight: 0.4),Allow 2-1 format by mutual agreement
+SOFTBALL,Season Parameters,,Conference Games: 24 (eight 3-game series)
+SOFTBALL,Season Parameters,,Season Length: 9 weeks
+SOFTBALL,Season Parameters,,Season Period: March - May 2026
+SOFTBALL,Season Parameters,,Conference Tournament: May 2026
+SOCCER,Hard Constraints (Must Be Satisfied),Match Structure,Conference Match Count: Each team must have exactly 11 conference matches
+SOCCER,Hard Constraints (Must Be Satisfied),Match Structure,Schedule Duration: All matches within a 7-week period
+SOCCER,Hard Constraints (Must Be Satisfied),Match Structure,Match Cadence: Follow 1-2-2-1-2-2-1 weekly cadence
+SOCCER,Hard Constraints (Must Be Satisfied),Match Structure,Final Match Timing: Final match on Friday before conference championship
+SOCCER,Hard Constraints (Must Be Satisfied),Match Structure,Weather Dependency: Outdoor sport weather considerations
+SOCCER,Hard Constraints (Must Be Satisfied),BYU Religious Observance,No Sunday Play: BYU cannot play on Sunday
+SOCCER,Hard Constraints (Must Be Satisfied),BYU Religious Observance,Special Scheduling: Games with BYU played Thursday and Monday
+SOCCER,Soft Constraints (Preferences with Weights),Home/Away Balance (Weight: 0.7),Balance home/away matches throughout season
+SOCCER,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.6),Minimize travel distance between consecutive away matches
+SOCCER,Soft Constraints (Preferences with Weights),Academic Considerations (Weight: 0.8),Avoid scheduling during examination periods
+SOCCER,Soft Constraints (Preferences with Weights),Field Availability (Weight: 0.5),Ensure field availability for matches
+SOCCER,Soft Constraints (Preferences with Weights),Doubleheader Opportunities (Weight: 0.4),Consider men's/women's doubleheader opportunities when possible
+SOCCER,Season Parameters,,Conference Matches: 11
+SOCCER,Season Parameters,,Season Length: 7 weeks
+SOCCER,Season Parameters,,Match Format: Single matches
+SOCCER,Season Parameters,,Typical Days: Thursday/Sunday (Thursday/Monday for BYU)
+VOLLEYBALL,Hard Constraints (Must Be Satisfied),Match Structure,Conference Match Count: Each team must play exactly 15 conference matches
+VOLLEYBALL,Hard Constraints (Must Be Satisfied),Match Structure,Schedule Duration: All matches within a 9-week period
+VOLLEYBALL,Hard Constraints (Must Be Satisfied),Match Structure,Weekend Emphasis: Most matches scheduled on weekends
+VOLLEYBALL,Hard Constraints (Must Be Satisfied),Match Structure,Arena Availability: Matches at appropriate volleyball venues
+VOLLEYBALL,Hard Constraints (Must Be Satisfied),Match Structure,Tournament Preparation: Schedule allows adequate tournament preparation
+VOLLEYBALL,Hard Constraints (Must Be Satisfied),BYU Religious Observance,No Sunday Play: BYU cannot play on Sunday
+VOLLEYBALL,Soft Constraints (Preferences with Weights),Home/Away Balance (Weight: 0.7),Balance home/away matches throughout season
+VOLLEYBALL,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.6),Minimize travel distance between consecutive away matches
+VOLLEYBALL,Soft Constraints (Preferences with Weights),TV Windows (Weight: 0.5),Consider TV broadcast windows for matches
+VOLLEYBALL,Soft Constraints (Preferences with Weights),Doubleheader Avoidance (Weight: 0.4),Avoid conflicts with other sports when possible
+VOLLEYBALL,Soft Constraints (Preferences with Weights),Academic Calendar (Weight: 0.8),Respect academic calendar constraints
+VOLLEYBALL,Soft Constraints (Preferences with Weights),Fan Attendance (Weight: 0.3),Optimize scheduling for fan attendance
+VOLLEYBALL,Season Parameters,,Conference Matches: 15
+VOLLEYBALL,Season Parameters,,Season Length: 9 weeks
+VOLLEYBALL,Season Parameters,,Match Format: Best of 5 sets
+VOLLEYBALL,Season Parameters,,"Typical Days: Wednesday, Saturday"
+MEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Conference Match Count: Each team must play exactly 8 conference matches
+MEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Round Robin Format: Single round-robin (each team plays every other team exactly once)
+MEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Schedule Duration: All matches within a 5-week period
+MEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Bye Week: Each team must have exactly one bye week
+MEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Travel Partner System: Respect established travel partnerships
+MEN'S TENNIS,Hard Constraints (Must Be Satisfied),BYU Religious Observance,No Sunday Play: BYU cannot play on Sunday
+MEN'S TENNIS,Soft Constraints (Preferences with Weights),Home/Away Balance (Weight: 0.7),Balance home/away matches throughout season
+MEN'S TENNIS,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.6),Minimize travel distance between consecutive away matches
+MEN'S TENNIS,Soft Constraints (Preferences with Weights),Facility Availability (Weight: 0.5),Ensure facilities available for matches
+MEN'S TENNIS,Soft Constraints (Preferences with Weights),Academic Considerations (Weight: 0.8),Avoid scheduling during examination periods
+MEN'S TENNIS,Soft Constraints (Preferences with Weights),Even Distribution (Weight: 0.6),Distribute matches evenly throughout season
+MEN'S TENNIS,Season Parameters,,Conference Matches: 8
+MEN'S TENNIS,Season Parameters,,Season Length: 5 weeks (with 1 bye)
+MEN'S TENNIS,Season Parameters,,Match Format: Individual matches
+MEN'S TENNIS,Season Parameters,,"Typical Days: Friday, Saturday"
+WOMEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Conference Match Count: Each team must play exactly 8 conference matches
+WOMEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Play All Opponents: Each team plays all other teams at least once
+WOMEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,No Bye Weeks: No team has a bye week
+WOMEN'S TENNIS,Hard Constraints (Must Be Satisfied),Match Structure,Schedule Duration: Matches distributed throughout season
+WOMEN'S TENNIS,Hard Constraints (Must Be Satisfied),BYU Religious Observance,No Sunday Play: BYU cannot play on Sunday
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Home/Away Balance (Weight: 0.7),Balance home/away matches throughout season
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.6),Minimize travel distance between consecutive away matches
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Weather Considerations (Weight: 0.6),Consider weather patterns for outdoor matches
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Court Availability (Weight: 0.5),Ensure court availability for matches
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Academic Considerations (Weight: 0.8),Avoid scheduling during examination periods
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Facility Availability (Weight: 0.5),Ensure facilities available for matches
+WOMEN'S TENNIS,Soft Constraints (Preferences with Weights),Even Distribution (Weight: 0.6),Distribute matches evenly throughout season
+WOMEN'S TENNIS,Season Parameters,,Conference Matches: 8
+WOMEN'S TENNIS,Season Parameters,,Season Length: Full season (no byes)
+WOMEN'S TENNIS,Season Parameters,,Match Format: Individual matches
+WOMEN'S TENNIS,Season Parameters,,"Typical Days: Friday, Saturday"
+WRESTLING,Hard Constraints (Must Be Satisfied),Meet Structure,Dual Meet Count: Specific number of conference dual meets
+WRESTLING,Hard Constraints (Must Be Satisfied),Meet Structure,Weight Class Alignment: Ensure proper weight class competition
+WRESTLING,Hard Constraints (Must Be Satisfied),Meet Structure,Venue Requirements: Wrestling-specific venue requirements
+WRESTLING,Hard Constraints (Must Be Satisfied),Meet Structure,Tournament Schedule: Align with conference tournament dates
+WRESTLING,Hard Constraints (Must Be Satisfied),BYU Religious Observance,No Sunday Competition: BYU cannot compete on Sunday
+WRESTLING,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.7),Minimize travel for dual meets
+WRESTLING,Soft Constraints (Preferences with Weights),Recovery Time (Weight: 0.8),Adequate recovery between competitions
+WRESTLING,Soft Constraints (Preferences with Weights),Academic Balance (Weight: 0.6),Balance with academic calendar
+WRESTLING,Soft Constraints (Preferences with Weights),Facility Sharing (Weight: 0.5),Coordinate with other sports using same venues
+WRESTLING,Season Parameters,,Conference Meets: Varies by division
+WRESTLING,Season Parameters,,Season Length: Winter season
+WRESTLING,Season Parameters,,Meet Format: Dual meets
+WRESTLING,Season Parameters,,"Typical Days: Friday, Saturday"
+GYMNASTICS,Hard Constraints (Must Be Satisfied),Meet Structure,Meet Count: Specific number of conference meets
+GYMNASTICS,Hard Constraints (Must Be Satisfied),Meet Structure,Equipment Requirements: Gymnastics-specific equipment needs
+GYMNASTICS,Hard Constraints (Must Be Satisfied),Meet Structure,Venue Setup Time: Extended setup/teardown time requirements
+GYMNASTICS,Hard Constraints (Must Be Satisfied),Meet Structure,Judging Availability: Certified judges must be available
+GYMNASTICS,Soft Constraints (Preferences with Weights),Equipment Sharing (Weight: 0.6),Coordinate equipment usage between meets
+GYMNASTICS,Soft Constraints (Preferences with Weights),Travel Efficiency (Weight: 0.7),Minimize travel costs and distance
+GYMNASTICS,Soft Constraints (Preferences with Weights),Academic Calendar (Weight: 0.8),Respect academic schedules and examination periods
+GYMNASTICS,Soft Constraints (Preferences with Weights),Venue Sharing (Weight: 0.9),High priority for venue coordination with other sports
+GYMNASTICS,Soft Constraints (Preferences with Weights),Spectator Access (Weight: 0.3),Consider spectator accessibility and attendance
+GYMNASTICS,Season Parameters,,Conference Meets: Varies by team
+GYMNASTICS,Season Parameters,,Season Length: Winter season
+GYMNASTICS,Season Parameters,,Meet Format: Individual meets
+GYMNASTICS,Season Parameters,,"Typical Days: Friday, Saturday, Sunday"
+GLOBAL CONSTRAINTS (ALL SPORTS),Team-Specific Global Constraints,BYU Sunday Restriction (CRITICAL - Weight: 100),Universal Application: BYU cannot play on Sunday for ANY sport
+GLOBAL CONSTRAINTS (ALL SPORTS),Team-Specific Global Constraints,BYU Sunday Restriction (CRITICAL - Weight: 100),Implementation: Highest priority constraint across all sports
+GLOBAL CONSTRAINTS (ALL SPORTS),Team-Specific Global Constraints,BYU Sunday Restriction (CRITICAL - Weight: 100),No Exceptions: Applies to all Big 12 conference sports
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Championship Date Alignment (Weight: 85),All sports must align with conference championship dates
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Championship Date Alignment (Weight: 85),Proper preparation time for championship events
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Media Rights Windows (Weight: 80),Respect TV broadcast windows across all sports
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Media Rights Windows (Weight: 80),"Coordinate with ESPN, FOX, and other broadcast partners"
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Academic Calendar Integration (Weight: 80),Coordinate with academic calendar for all sports
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Academic Calendar Integration (Weight: 80),Avoid final examination periods across all institutions
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Travel Cost Optimization (Weight: 75),Minimize total conference travel costs across all sports
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Travel Cost Optimization (Weight: 75),Efficient geographic scheduling patterns
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Venue Utilization Balance (Weight: 70),Optimize usage across all conference venues
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Venue Utilization Balance (Weight: 70),Coordinate shared venue scheduling
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Spring Break Coordination (Weight: 65),Coordinate schedules around spring break periods
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Holiday Considerations (Weight: 60),Respect major holidays across all sports
+GLOBAL CONSTRAINTS (ALL SPORTS),Conference-Wide Constraints,Holiday Considerations (Weight: 60),"Special considerations for Thanksgiving, Easter, etc."
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),No Same-Day Conflicts,Sports sharing venues cannot be scheduled simultaneously
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),No Same-Day Conflicts,Adequate turnaround time between events
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),Venue Availability,Games only scheduled when venues are confirmed available
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),Venue Availability,Real-time availability checking
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),Setup/Teardown Time,Standard Buffer: 4+ hour buffer between events
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),Setup/Teardown Time,Venue Turnaround: 6+ hour turnaround time minimum
+VENUE SHARING CONSTRAINTS,Venue Sharing Hard Constraints (Weight: 95),Setup/Teardown Time,"Gymnastics Special: 12 hours before, 8 hours after gymnastics events"
+VENUE SHARING CONSTRAINTS,Venue Sharing Soft Constraints,Priority Hierarchy Respect (Weight: 0.9),Higher priority sports get preference in scheduling conflicts
+VENUE SHARING CONSTRAINTS,Venue Sharing Soft Constraints,Equipment Coordination (Weight: 0.8),Coordinate equipment setup and breakdown schedules
+VENUE SHARING CONSTRAINTS,Venue Sharing Soft Constraints,Parking Coordination (Weight: 0.4),Coordinate parking availability for events
+VENUE SHARING CONSTRAINTS,Venue Sharing Soft Constraints,Media Facility Access (Weight: 0.5),Ensure media facility availability
+VENUE SHARING CONSTRAINTS,Venue Sharing Soft Constraints,Accessibility Requirements (Weight: 0.7),Meet ADA accessibility standards
+VENUE SHARING CONSTRAINTS,Venue Sharing Soft Constraints,Weather Backup Venues (Weight: 0.6),Coordinate backup venue availability for outdoor sports
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Hard Constraints (Weight: 90),Maximum Travel Distance,Teams cannot exceed maximum total travel distance per season
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Hard Constraints (Weight: 90),Maximum Travel Distance,Varies by sport and geographic considerations
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Hard Constraints (Weight: 90),Consecutive Travel Limit,Limit consecutive away games requiring significant travel
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Hard Constraints (Weight: 90),Charter Availability,Ensure transportation availability for scheduled games
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Total Distance Minimization (Weight: 0.7),Minimize total conference travel distance across all sports
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Travel Load Balance (Weight: 0.6),Balance travel burden across teams within each sport
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Geographic Game Clustering (Weight: 0.5),Group geographically close games when possible
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Road Trip Efficiency (Weight: 0.8),Create efficient road trip sequences for multiple away games
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Time Zone Considerations (Weight: 0.6),Minimize multiple time zone changes
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Charter Cost Optimization (Weight: 0.9),Optimize shared charter opportunities across sports
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Seasonal Pricing (Weight: 0.4),Consider seasonal travel cost variations
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Accommodation Coordination (Weight: 0.5),Coordinate team accommodation needs
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Equipment Transport (Weight: 0.3),Consider equipment transportation requirements for each sport
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Arrival Time Optimization (Weight: 0.6),Optimize arrival times for peak performance
+TRAVEL AND LOGISTICS CONSTRAINTS,Travel Optimization Soft Constraints,Emergency Contingency (Weight: 0.8),Plan for travel disruption contingencies
+CONSTRAINT EVALUATION METRICS,Performance Standards,Constraint Satisfaction Targets,Hard Constraints: 100% satisfaction required
+CONSTRAINT EVALUATION METRICS,Performance Standards,Constraint Satisfaction Targets,Soft Constraints: 85%+ satisfaction target
+CONSTRAINT EVALUATION METRICS,Performance Standards,Constraint Satisfaction Targets,Overall Schedule Quality: 90%+ composite score
+CONSTRAINT EVALUATION METRICS,Performance Standards,Evaluation Speed,Constraint Evaluation Time: <500ms per sport
+CONSTRAINT EVALUATION METRICS,Performance Standards,Evaluation Speed,Full Conference Evaluation: <5 seconds
+CONSTRAINT EVALUATION METRICS,Performance Standards,Evaluation Speed,Real-time Validation: <100ms for single constraint
+CONSTRAINT EVALUATION METRICS,Machine Learning Enhancement,Dynamic Weight Optimization,Historical performance data informs constraint weights
+CONSTRAINT EVALUATION METRICS,Machine Learning Enhancement,Dynamic Weight Optimization,User feedback adjusts optimization priorities
+CONSTRAINT EVALUATION METRICS,Machine Learning Enhancement,Dynamic Weight Optimization,Seasonal patterns influence scheduling preferences
+CONSTRAINT EVALUATION METRICS,Machine Learning Enhancement,Predictive Analytics Integration,Weather pattern forecasting for outdoor sports
+CONSTRAINT EVALUATION METRICS,Machine Learning Enhancement,Predictive Analytics Integration,Travel cost prediction and optimization
+CONSTRAINT EVALUATION METRICS,Machine Learning Enhancement,Predictive Analytics Integration,Fan attendance maximization algorithms
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Continuous Constraint Tracking,Real-time constraint satisfaction monitoring
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Continuous Constraint Tracking,Automatic violation detection and alerting
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Continuous Constraint Tracking,Schedule modification impact analysis
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Continuous Constraint Tracking,Conflict resolution recommendation engine
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Automated Reporting,Weekly constraint compliance summaries
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Automated Reporting,Violation identification and resolution tracking
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Automated Reporting,Schedule quality metrics dashboard
+COMPLIANCE MONITORING,Real-Time Monitoring Capabilities,Automated Reporting,Optimization recommendation reports
+COMPLIANCE MONITORING,Quality Assurance,Multi-Level Validation,Constraint logic validation
+COMPLIANCE MONITORING,Quality Assurance,Multi-Level Validation,Schedule integrity verification
+COMPLIANCE MONITORING,Quality Assurance,Multi-Level Validation,Cross-sport conflict detection
+COMPLIANCE MONITORING,Quality Assurance,Multi-Level Validation,Academic calendar compliance checking
+COMPLIANCE MONITORING,Quality Assurance,Performance Analytics,Constraint satisfaction rate trending
+COMPLIANCE MONITORING,Quality Assurance,Performance Analytics,Optimization algorithm performance
+COMPLIANCE MONITORING,Quality Assurance,Performance Analytics,User satisfaction metrics
+COMPLIANCE MONITORING,Quality Assurance,Performance Analytics,System reliability monitoring
+IMPLEMENTATION NOTES,Technical Architecture,Constraint Processing Engine,Technology: TypeScript-based constraint evaluation system
+IMPLEMENTATION NOTES,Technical Architecture,Constraint Processing Engine,Performance: 90% faster evaluation than legacy systems
+IMPLEMENTATION NOTES,Technical Architecture,Constraint Processing Engine,Scalability: Handles 150+ concurrent constraints
+IMPLEMENTATION NOTES,Technical Architecture,Constraint Processing Engine,Reliability: 99.9% uptime requirement
+IMPLEMENTATION NOTES,Technical Architecture,Machine Learning Integration,Platform: HELiiX Intelligence Engine (Python)
+IMPLEMENTATION NOTES,Technical Architecture,Machine Learning Integration,"Capabilities: Predictive analytics, optimization learning"
+IMPLEMENTATION NOTES,Technical Architecture,Machine Learning Integration,Training Data: Historical Big 12 scheduling data
+IMPLEMENTATION NOTES,Technical Architecture,Machine Learning Integration,Performance: Continuous improvement through feedback loops
+IMPLEMENTATION NOTES,Integration Requirements,External System Integration,NCAA Systems: Championship date integration
+IMPLEMENTATION NOTES,Integration Requirements,External System Integration,TV Partners: Broadcast window coordination
+IMPLEMENTATION NOTES,Integration Requirements,External System Integration,Travel Vendors: Real-time booking and pricing
+IMPLEMENTATION NOTES,Integration Requirements,External System Integration,Weather Services: Outdoor sport forecasting
+IMPLEMENTATION NOTES,Integration Requirements,External System Integration,Academic Systems: Examination period coordination
+IMPLEMENTATION NOTES,Integration Requirements,Data Management,Database: Neon PostgreSQL (HELiiX)
+IMPLEMENTATION NOTES,Integration Requirements,Data Management,Caching: Multi-layer constraint evaluation caching
+IMPLEMENTATION NOTES,Integration Requirements,Data Management,Backup: Real-time data replication
+IMPLEMENTATION NOTES,Integration Requirements,Data Management,Security: Enterprise-grade data protection

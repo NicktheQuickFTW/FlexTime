@@ -12,7 +12,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 const SchedulingServiceClient = require('../clients/scheduling-service-client');
 
 /**

@@ -6,7 +6,7 @@
  */
 
 const BaseEvolutionAgent = require('./base_evolution_agent');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const path = require('path');
 const fs = require('fs').promises;
 const glob = require('glob-promise');

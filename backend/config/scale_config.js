@@ -64,6 +64,13 @@ const SCALE_CONFIG = {
       enabled: true,
       maxSize: 10000,                // 10k items in memory
       ttl: 300000                    // 5 minutes
+    },
+    
+    // Basic monitoring
+    monitoring: {
+      metrics: {
+        enabled: true                // Enable basic metrics endpoint
+      }
     }
   },
   

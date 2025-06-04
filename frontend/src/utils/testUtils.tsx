@@ -1,18 +1,27 @@
 // Test utilities for FlexTime
 import React, { ReactElement } from 'react';
-import { render, RenderOptions, RenderResult } from '@testing-library/react';
+import { 
+  render, 
+  RenderOptions, 
+  RenderResult, 
+  screen, 
+  fireEvent, 
+  waitFor 
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ThemeProvider } from '../contexts/ThemeContext';
-import { AnimationProvider } from '../contexts/AnimationContext';
 import { SportConfigProvider } from '../contexts/SportConfigContext';
 import userEvent from '@testing-library/user-event';
+
+// Re-export testing utilities
+export { fireEvent, waitFor, screen, userEvent };
 
 // Mock data generators
 export const mockUser = (overrides = {}) => ({
   id: 'user-123',
   name: 'Test User',
   email: 'test@flextime.com',
-  avatar: null,
+  avatar: undefined,
   color: '#00bfff',
   isActive: true,
   lastSeen: new Date(),
@@ -80,12 +89,10 @@ const AllProviders: React.FC<AllProvidersProps> = ({
 }) => {
   return (
     <MemoryRouter initialEntries={[initialRoute]}>
-      <ThemeProvider initialTheme={{ mode: theme }}>
-        <AnimationProvider>
-          <SportConfigProvider>
-            {children}
-          </SportConfigProvider>
-        </AnimationProvider>
+      <ThemeProvider>
+        <SportConfigProvider>
+          {children}
+        </SportConfigProvider>
       </ThemeProvider>
     </MemoryRouter>
   );
@@ -213,14 +220,19 @@ export const measureRenderTime = async (component: ReactElement) => {
 };
 
 // Accessibility testing helpers
+interface A11yResult {
+  type: 'error' | 'warning';
+  message: string;
+}
+
 export const checkA11y = async (container: HTMLElement) => {
-  const results = [];
+  const results: A11yResult[] = [];
   
   // Check for missing alt text
   const images = container.querySelectorAll('img');
   images.forEach(img => {
     if (!img.getAttribute('alt')) {
-      results.push({ type: 'error', message: `Image missing alt text: ${img.src}` });
+      results.push({ type: 'error' as const, message: `Image missing alt text: ${img.src}` });
     }
   });
   
@@ -230,7 +242,7 @@ export const checkA11y = async (container: HTMLElement) => {
   headings.forEach(heading => {
     const level = parseInt(heading.tagName[1]);
     if (level > lastLevel + 1) {
-      results.push({ type: 'warning', message: `Heading hierarchy skip: ${heading.tagName}` });
+      results.push({ type: 'warning' as const, message: `Heading hierarchy skip: ${heading.tagName}` });
     }
     lastLevel = level;
   });
@@ -239,7 +251,7 @@ export const checkA11y = async (container: HTMLElement) => {
   const interactiveElements = container.querySelectorAll('button, a, input, select, textarea');
   interactiveElements.forEach(element => {
     if (element.getAttribute('tabindex') === '-1' && !element.getAttribute('aria-hidden')) {
-      results.push({ type: 'warning', message: `Element not keyboard accessible: ${element.tagName}` });
+      results.push({ type: 'warning' as const, message: `Element not keyboard accessible: ${element.tagName}` });
     }
   });
   

@@ -22,8 +22,7 @@ import {
   SportsFootball as FootballIcon,
   SportsTennis as TennisIcon,
   SportsBasketball as BasketballIcon,
-  Link as LinkIcon,
-  Integration as IntegrationIcon
+  Link as LinkIcon
 } from '@mui/icons-material';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { UserRole } from '../dashboard/RoleDashboard';

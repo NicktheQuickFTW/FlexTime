@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react';
 import { Box, Alert, Snackbar, Portal, Typography } from '@mui/material';
-import { ConstraintType, ConstraintCategory, Game, Team, Venue } from '../../types';
+import { ConstraintType, Game, Team, Venue } from '../../types';
 
 // Drag & Drop Types
 export interface DragItem {
@@ -108,7 +108,6 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
       // Game placement conflicts
       if (item.type === 'game' && target.type === 'matrix-cell') {
         const game = item.data as Game;
-        const { row, col } = target.position || { row: 0, col: 0 };
         const targetDate = target.metadata?.date;
         const targetVenue = target.metadata?.venue;
 
@@ -236,8 +235,8 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
       // Constraint-specific validations
       constraints.forEach(constraint => {
         if (constraint.type === ConstraintType.REST_DAYS) {
-          const minRestDays = constraint.parameters.minDays || 1;
           // Add specific rest days validation logic here
+          // const minRestDays = constraint.parameters.minDays || 1;
         }
 
         if (constraint.type === ConstraintType.VENUE_UNAVAILABILITY) {
@@ -439,7 +438,7 @@ export const DragDropProvider: React.FC<DragDropProviderProps> = ({
 
 // Utility Hooks
 export const useDragItem = (item: DragItem) => {
-  const { startDrag, endDrag, isDragging, draggedItem } = useDragDrop();
+  const { startDrag, endDrag, draggedItem } = useDragDrop();
   
   const isDraggedItem = draggedItem?.id === item.id;
   

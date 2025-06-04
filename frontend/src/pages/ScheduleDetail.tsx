@@ -29,7 +29,7 @@ import {
   Archive as ArchiveIcon,
   Add as AddIcon
 } from '@mui/icons-material';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useRouter } from 'next/router';
 import { ScheduleService } from '../services/api';
 import { Schedule, SportType } from '../types';
 import GamesTable from '../components/games/GamesTable';
@@ -64,7 +64,8 @@ function TabPanel(props: TabPanelProps) {
 }
 
 const ScheduleDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const router = useRouter();
+  const { id } = router.query;
   const [schedule, setSchedule] = useState<Schedule | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,10 +74,8 @@ const ScheduleDetail: React.FC = () => {
   const [publishDialogOpen, setPublishDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   
-  const navigate = useNavigate();
-
   useEffect(() => {
-    if (id) {
+    if (id && typeof id === 'string') {
       fetchSchedule(parseInt(id));
     }
   }, [id]);
@@ -107,11 +106,11 @@ const ScheduleDetail: React.FC = () => {
   };
 
   const handleDeleteConfirm = async () => {
-    if (id) {
+    if (id && typeof id === 'string') {
       try {
         const response = await ScheduleService.deleteSchedule(parseInt(id));
         if (response.success) {
-          navigate('/schedules');
+          router.push('/schedules');
         } else {
           setError(response.error || 'Failed to delete schedule');
         }
@@ -128,7 +127,7 @@ const ScheduleDetail: React.FC = () => {
   };
 
   const handlePublishConfirm = async () => {
-    if (id && schedule) {
+    if (id && typeof id === 'string' && schedule) {
       try {
         const updatedSchedule = { 
           ...schedule, 
@@ -153,7 +152,7 @@ const ScheduleDetail: React.FC = () => {
   };
 
   const handleArchiveConfirm = async () => {
-    if (id && schedule) {
+    if (id && typeof id === 'string' && schedule) {
       try {
         const updatedSchedule = { 
           ...schedule, 
@@ -221,7 +220,7 @@ const ScheduleDetail: React.FC = () => {
       <Box>
         <Button 
           startIcon={<BackIcon />} 
-          onClick={() => navigate('/schedules')}
+          onClick={() => router.push('/schedules')}
           sx={{ mb: 2 }}
         >
           Back to Schedules
@@ -239,7 +238,7 @@ const ScheduleDetail: React.FC = () => {
       <Box>
         <Button 
           startIcon={<BackIcon />} 
-          onClick={() => navigate('/schedules')}
+          onClick={() => router.push('/schedules')}
           sx={{ mb: 2 }}
         >
           Back to Schedules
@@ -261,7 +260,7 @@ const ScheduleDetail: React.FC = () => {
                 <Button
                   variant="outlined"
                   startIcon={<BackIcon />}
-                  onClick={() => navigate('/schedules')}
+                  onClick={() => router.push('/schedules')}
                   fullWidth
                 >
                   Back to Schedules
@@ -270,7 +269,7 @@ const ScheduleDetail: React.FC = () => {
                 <Button
                   variant="outlined"
                   startIcon={<EditIcon />}
-                  onClick={() => navigate(`/schedules/${id}/edit`)}
+                  onClick={() => router.push(`/schedules/${id}/edit`)}
                   fullWidth
                 >
                   Edit Schedule
@@ -279,7 +278,7 @@ const ScheduleDetail: React.FC = () => {
                 <Button
                   variant="outlined"
                   startIcon={<OptimizeIcon />}
-                  onClick={() => navigate(`/schedules/${id}/optimize`)}
+                  onClick={() => router.push(`/schedules/${id}/optimize`)}
                   fullWidth
                 >
                   Optimize Schedule
@@ -392,7 +391,7 @@ const ScheduleDetail: React.FC = () => {
                 <Button 
                   variant="contained" 
                   startIcon={<AddIcon />}
-                  onClick={() => navigate(`/schedules/${id}/games/new`)}
+                  onClick={() => router.push(`/schedules/${id}/games/new`)}
                 >
                   Add Game
                 </Button>
@@ -416,7 +415,7 @@ const ScheduleDetail: React.FC = () => {
                 <Button 
                   variant="contained" 
                   startIcon={<AddIcon />}
-                  onClick={() => navigate(`/schedules/${id}/teams/add`)}
+                  onClick={() => router.push(`/schedules/${id}/teams/add`)}
                 >
                   Add Teams
                 </Button>
@@ -434,7 +433,7 @@ const ScheduleDetail: React.FC = () => {
                 <Button 
                   variant="contained" 
                   startIcon={<AddIcon />}
-                  onClick={() => navigate(`/schedules/${id}/constraints/new`)}
+                  onClick={() => router.push(`/schedules/${id}/constraints/new`)}
                 >
                   Add Constraint
                 </Button>

@@ -1,0 +1,11 @@
+@layer base {
+    :root {
+      --gradient-color: #8350e8;
+      --sparkles-color: #8350e8;
+    }
+  
+    .dark {
+      --gradient-color: #8350e8;
+      --sparkles-color: #ffffff;
+    }
+  }

@@ -1,0 +1,167 @@
+/* Home page specific styles using CSS custom properties from globals.css */
+
+.statsCard {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.statValue {
+  font-family: var(--ft-font-brand);
+  font-weight: 700;
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  color: white;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-family: var(--ft-font-body);
+  font-size: 0.875rem;
+  color: var(--ft-medium-gray);
+}
+
+.sectionHeading {
+  font-family: var(--ft-font-secondary);
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(to right, white, rgba(255, 255, 255, 0.7));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin-bottom: 1rem;
+}
+
+.sectionDescription {
+  font-family: var(--ft-font-body);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--ft-medium-gray);
+}
+
+.featureCard {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  height: 100%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.featureTitle {
+  font-family: var(--ft-font-secondary);
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 0.75rem;
+  transition: color 0.15s ease;
+}
+
+.featureCard:hover .featureTitle {
+  color: white;
+}
+
+.featureDescription {
+  font-family: var(--ft-font-body);
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: var(--ft-medium-gray);
+  margin-bottom: 1rem;
+}
+
+.featureCard:hover .featureDescription {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.featureItem {
+  font-family: var(--ft-font-body);
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--ft-medium-gray);
+}
+
+.featureDot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background-color: var(--ft-neon-blue);
+  margin-right: 0.5rem;
+  box-shadow: 0 0 10px var(--ft-neon-blue-glow);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+    box-shadow: 0 0 5px var(--ft-neon-blue-glow);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 0 15px var(--ft-neon-blue-glow);
+  }
+  100% {
+    opacity: 0.5;
+    box-shadow: 0 0 5px var(--ft-neon-blue-glow);
+  }
+}
+
+.exploreLink {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: transform 0.3s ease;
+}
+
+.featureCard:hover .exploreLink {
+  transform: translateX(0.25rem);
+}
+
+.glassPanel {
+  backdrop-filter: blur(8px);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.panelHeading {
+  font-family: var(--ft-font-brand);
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.panelDescription {
+  font-family: var(--ft-font-body);
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  color: var(--ft-medium-gray);
+  margin-bottom: 1.5rem;
+  max-width: 42rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.metricLabel {
+  font-family: var(--ft-font-body);
+  font-size: 0.875rem;
+  color: var(--ft-medium-gray);
+}
+
+.metricValue {
+  font-family: var(--ft-font-body);
+  font-size: 0.75rem;
+  color: white;
+}

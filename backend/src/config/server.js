@@ -11,22 +11,23 @@ function configureServer(server, scaleConfig) {
     server.maxRequestsPerSocket = scaleConfig.server.keepAlive.maxRequests;
   }
 
-  // Set connection limits with 20 workers per task consideration
+  // Set connection limits with configurable workers per task consideration
   const baseConnections = neonConfig.pool.max * 2;
-  const workerMultiplier = 20; // 20 workers per task
+  const workerMultiplier = scaleConfig.workers?.maxWorkersPerTask || 10;
   server.maxConnections = baseConnections * workerMultiplier;
 }
 
-function shouldUseCluster() {
-  return scaleConfig.server.cluster.enabled && cluster.isMaster && process.env.NODE_ENV === 'production';
+function shouldUseCluster(config = {}) {
+  return config.server?.cluster?.enabled && cluster.isMaster && process.env.NODE_ENV === 'production';
 }
 
-function startCluster() {
-  // Scale worker count to support 20 workers per task
-  const baseWorkers = scaleConfig.server.cluster.workers;
+function startCluster(config = {}) {
+  // Scale worker count to support configurable workers per task
+  const baseWorkers = config.server?.cluster?.workers || require('os').cpus().length;
   const scaledWorkers = Math.min(baseWorkers * 2, os.cpus().length * 2); // Cap at 2x CPU cores
+  const maxWorkersPerTask = config.workers?.maxWorkersPerTask || 10;
   
-  console.log(`🔧 Master process: Starting ${scaledWorkers} workers (scaled for 20 workers per task)...`);
+  console.log(`🔧 Master process: Starting ${scaledWorkers} workers (scaled for ${maxWorkersPerTask} workers per task)...`);
   
   for (let i = 0; i < scaledWorkers; i++) {
     const worker = cluster.fork();
@@ -54,7 +55,7 @@ function createHealthCheck(cacheManager) {
     const health = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      version: '2.1.0-scaled-20workers',
+      version: '2.1.0-scaled',
       worker: process.env.WORKER_ID || 'single',
       uptime: process.uptime(),
       memory: process.memoryUsage(),
@@ -64,7 +65,7 @@ function createHealthCheck(cacheManager) {
         compression: scaleConfig.server.compression.enabled,
         rateLimiting: !!scaleConfig.rateLimiting,
         clustering: scaleConfig.server.cluster.enabled,
-        maxWorkersPerTask: 20
+        maxWorkersPerTask: scaleConfig.workers?.maxWorkersPerTask || 10
       }
     };
 
@@ -96,13 +97,13 @@ function createMetricsEndpoint(cacheManager) {
       cpu: process.cpuUsage(),
       ...cacheManager.getStats(),
       scaling: {
-        version: '2.1.0-scaled-20workers',
+        version: '2.1.0-scaled',
         features_enabled: {
           compression: scaleConfig.server.compression.enabled,
           rateLimiting: !!scaleConfig.rateLimiting,
           clustering: scaleConfig.server.cluster.enabled,
           caching: cacheManager.config.enabled,
-          maxWorkersPerTask: 20
+          maxWorkersPerTask: scaleConfig.workers?.maxWorkersPerTask || 10
         }
       }
     };

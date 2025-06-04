@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 
 /**
  * Operations Director Agent that coordinates operations-related specialized agents.

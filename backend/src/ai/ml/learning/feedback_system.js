@@ -7,14 +7,14 @@
  * 3. Integrate with the memory system for long-term knowledge retention
  */
 
-const { EnhancedMemoryManager } = require('../memory/enhanced_memory_manager');
-const { ModelAllocation } = require('../model_allocation');
-const { DelegationPatterns } = require('../delegation_patterns');
-const { AnthropicMCPConnector } = require('../anthropic_mcp_connector');
+const { CentralizedMemoryManager } = require('../../enhanced/centralized_memory_manager');
+const { ModelAllocation } = require('../../model_allocation');
+const { DelegationPatterns } = require('../../delegation_patterns');
+const { AnthropicMCPConnector } = require('../../anthropic_mcp_connector');
 
 class FeedbackSystem {
   constructor(config = {}) {
-    this.memoryManager = config.memoryManager || new EnhancedMemoryManager();
+    this.memoryManager = config.memoryManager || new CentralizedMemoryManager();
     this.modelAllocation = config.modelAllocation || new ModelAllocation();
     this.delegationPatterns = config.delegationPatterns || new DelegationPatterns();
     this.mcpConnector = config.mcpConnector || new AnthropicMCPConnector();

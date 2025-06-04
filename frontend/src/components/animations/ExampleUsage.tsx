@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import {
   AnimationProvider,
-  RouteTransitionWrapper,
+  // RouteTransitionWrapper, // Disabled for Next.js
   PageTransition,
   StaggerContainer,
   CardTransition,
@@ -27,14 +27,14 @@ export const AnimatedApp: React.FC = () => {
     <AnimationProvider>
       <div className="animated-app">
         <Navigation />
-        <RouteTransitionWrapper>
+        {/* <RouteTransitionWrapper> Disabled for Next.js */}
           <Routes>
             <Route path="/dashboard" element={<AnimatedDashboard />} />
             <Route path="/sports" element={<AnimatedSportsGrid />} />
             <Route path="/schedule" element={<AnimatedSchedule />} />
             <Route path="/modal-demo" element={<ModalDemo />} />
           </Routes>
-        </RouteTransitionWrapper>
+        {/* </RouteTransitionWrapper> */}
       </div>
     </AnimationProvider>
   );
@@ -265,6 +265,7 @@ const ModalDemo: React.FC = () => {
 };
 
 // Performance-aware component
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PerformanceAwareComponent: React.FC = () => {
   const { shouldAnimate, getOptimizedConfig, animationQuality } = useAnimation();
 
@@ -297,6 +298,7 @@ const PerformanceAwareComponent: React.FC = () => {
 };
 
 // Example with accessibility considerations
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const AccessibleAnimatedList: React.FC<{ items: string[] }> = ({ items }) => {
   const { shouldAnimate } = useAnimation();
 

@@ -21,8 +21,33 @@ import {
   SportsTennis as SportsIcon,
   Edit as EditIcon
 } from '@mui/icons-material';
-import { Game, Constraint, Conflict } from '../../types';
+import { Game, Conflict, Team } from '../../types';
 import './GameCard.css';
+
+// Helper function to get proper school display name for scheduling contexts
+const getSchoolDisplayName = (team?: Team, format: 'full' | 'abbreviation' | 'display' = 'abbreviation'): string => {
+  if (!team?.school) return 'TBD';
+  
+  switch (format) {
+    case 'full':
+      // For administrative contexts - full formal name
+      return team.school.name || 'Unknown School';
+    case 'display':
+      // For scheduling contexts - short, recognizable name (Baylor, Kansas, TCU)
+      return (team.school as any).short_display || 
+             (team.school as any).schedule_display || 
+             team.school.name?.replace(/University of |University$/g, '').trim() || 
+             team.school.name || 
+             'Unknown School';
+    case 'abbreviation':
+    default:
+      // For compact displays - official abbreviations (KU, TCU, ISU)
+      return (team.school as any).school_abbreviation || 
+             team.school.abbreviation || 
+             team.name?.split(' ').pop() || 
+             'TBD';
+  }
+};
 
 interface GameCardProps {
   game: Game;
@@ -55,8 +80,8 @@ const getTeamColors = (homeTeam?: any, awayTeam?: any) => {
     'West Virginia': { primary: '#002855', secondary: '#EAAA00' }
   };
 
-  const homeColors = teamColorMap[homeTeam?.institution?.name] || { primary: '#00bfff', secondary: '#0088ff' };
-  const awayColors = teamColorMap[awayTeam?.institution?.name] || { primary: '#666666', secondary: '#999999' };
+  const homeColors = teamColorMap[homeTeam?.school?.name] || { primary: '#00bfff', secondary: '#0088ff' };
+  const awayColors = teamColorMap[awayTeam?.school?.name] || { primary: '#666666', secondary: '#999999' };
 
   return {
     home: homeColors.primary,
@@ -114,6 +139,7 @@ export const GameCard: React.FC<GameCardProps> = ({
   onClick,
   onEdit
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isLoading, setIsLoading] = useState(false);
   
   // Set up drag functionality
@@ -267,8 +293,8 @@ export const GameCard: React.FC<GameCardProps> = ({
             {/* Away team */}
             <Box sx={{ display: 'flex', alignItems: 'center', flex: 1 }}>
               <Avatar
-                src={getTeamLogo(game.awayTeam?.institution?.name || '')}
-                alt={game.awayTeam?.institution?.name}
+                src={getTeamLogo(game.awayTeam?.school?.name || '')}
+                alt={game.awayTeam?.school?.name}
                 sx={{ 
                   width: 32, 
                   height: 32, 
@@ -280,7 +306,7 @@ export const GameCard: React.FC<GameCardProps> = ({
               </Avatar>
               <Box>
                 <Typography variant="body2" fontWeight="bold" color="text.primary">
-                  {game.awayTeam?.institution?.abbreviation || 'TBD'}
+                  {getSchoolDisplayName(game.awayTeam, 'abbreviation')}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   Away
@@ -299,15 +325,15 @@ export const GameCard: React.FC<GameCardProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, justifyContent: 'flex-end' }}>
               <Box sx={{ textAlign: 'right', mr: 1 }}>
                 <Typography variant="body2" fontWeight="bold" color="text.primary">
-                  {game.homeTeam?.institution?.abbreviation || 'TBD'}
+                  {getSchoolDisplayName(game.homeTeam, 'abbreviation')}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   Home
                 </Typography>
               </Box>
               <Avatar
-                src={getTeamLogo(game.homeTeam?.institution?.name || '')}
-                alt={game.homeTeam?.institution?.name}
+                src={getTeamLogo(game.homeTeam?.school?.name || '')}
+                alt={game.homeTeam?.school?.name}
                 sx={{ 
                   width: 32, 
                   height: 32,

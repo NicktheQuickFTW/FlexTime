@@ -10,7 +10,7 @@
 // const { createFlexTimeClient } = require('../../../utils/flextime_ai_client');
 // MCP config removed, using default config instead
 const mcpConfig = { agents: { knowledge_graph: {} } }; // Empty config with structure
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const { GraphModel } = require('./graph_model');
 const { KnowledgeRepository } = require('./knowledge_repository');
 const { SemanticEnricher } = require('./semantic_enricher');

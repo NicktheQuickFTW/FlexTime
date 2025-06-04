@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Typography, Chip, useTheme } from '@mui/material';
 import { ScheduleSlot, CellCoordinates } from './ScheduleMatrix';
-import { SportType } from '../../types';
 import { useSportConfigContext } from '../../contexts/SportConfigContext';
 
 interface MatrixCellProps {
@@ -22,6 +21,7 @@ const MatrixCell: React.FC<MatrixCellProps> = ({
   onDrop
 }) => {
   const theme = useTheme();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { currentSportType } = useSportConfigContext();
   
   const getStatusColor = (status?: string) => {

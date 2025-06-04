@@ -25,7 +25,7 @@ const path = require('path');
 // Core dependencies
 const logger = require('../../utils/logger');
 const AgentMemoryManager = require('../../src/ai/agent-memory-adapter');
-const neonConfig = require('../../config/neon_db_config');
+const neonDB = require('../../src/config/neon-database');
 
 // Performance monitoring
 const performanceMonitor = require('../../utils/performance-monitor');
@@ -494,7 +494,7 @@ class FTBuilderEngineV2 extends EventEmitter {
   async _initializeMemoryManager() {
     try {
       this.memoryManager = new AgentMemoryManager({
-        neonDB: neonConfig,
+        neonDB: neonDB,
         cacheSize: Math.floor(this.config.cacheSize / 4) // Use 25% of cache for memory
       });
 

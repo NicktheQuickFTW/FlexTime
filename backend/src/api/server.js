@@ -9,12 +9,12 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
-const logger = require('../utils/logger');
-const mcpConfig = require('../config/mcp_config');
+const logger = require("../utils/logger");
+const mcpConfig = require('../../config/mcp_config');
 
 // Import API routers
 const enhancedRouter = require('./enhanced');
-const notionSyncRoutes = require('../routes/notionSyncRoutes');
+const notionSyncRoutes = require('../../routes/notionSyncRoutes');
 const { registerConstraintAPI } = require('../constraints/v2/api/expressIntegration');
 
 // Create Express application

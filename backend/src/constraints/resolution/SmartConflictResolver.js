@@ -5,7 +5,7 @@
  * resolution strategies to automatically resolve scheduling conflicts.
  */
 
-const logger = require('../../ai/utils/logger');
+const logger = require("../utils/logger");
 const ConflictDetector = require('./ConflictDetector');
 const ResolutionHistory = require('./ResolutionHistory');
 

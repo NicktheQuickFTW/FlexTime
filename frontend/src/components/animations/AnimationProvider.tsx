@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import useReducedMotion from '../../hooks/useReducedMotion';
 
 interface AnimationContextValue {
   isReducedMotion: boolean;
@@ -77,7 +77,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({ children }
   const getOptimizedDuration = (baseDuration: number): number => {
     if (!shouldAnimate) return 0;
     
-    switch (animationQuality) {
+    switch (animationQuality as 'high' | 'medium' | 'low' | 'off') {
       case 'high':
         return baseDuration;
       case 'medium':
@@ -101,7 +101,7 @@ export const AnimationProvider: React.FC<AnimationProviderProps> = ({ children }
       };
     }
 
-    switch (animationQuality) {
+    switch (animationQuality as 'high' | 'medium' | 'low' | 'off') {
       case 'high':
         return baseConfig;
       

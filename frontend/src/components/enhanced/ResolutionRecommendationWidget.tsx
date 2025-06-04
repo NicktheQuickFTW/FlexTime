@@ -8,7 +8,6 @@ import {
   Badge,
   useColorModeValue,
   Stack,
-  Divider,
   RadioGroup,
   Radio,
   Alert,
@@ -21,7 +20,6 @@ import {
   Tr,
   Th,
   Td,
-  Icon,
   Collapse,
   useDisclosure,
   Modal,
@@ -32,7 +30,7 @@ import {
   ModalBody,
   ModalCloseButton
 } from '@chakra-ui/react';
-import { MdCheckCircle, MdError, MdExpandMore, MdExpandLess, MdWarning, MdDone, MdTimeline } from 'react-icons/md';
+import { MdExpandMore, MdExpandLess, MdDone, MdTimeline } from 'react-icons/md';
 import axios from 'axios';
 
 // Types
@@ -102,6 +100,7 @@ const ResolutionRecommendationWidget: React.FC<ResolutionRecommendationWidgetPro
   const [resolutions, setResolutions] = useState<Resolution[]>([]);
   const [selectedResolutions, setSelectedResolutions] = useState<Record<string, string>>({});
   const [modifiedSchedule, setModifiedSchedule] = useState<Event[] | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [previewMode, setPreviewMode] = useState<boolean>(false);
   const { isOpen: isDetailsOpen, onToggle: onToggleDetails } = useDisclosure();
   const { isOpen: isPreviewOpen, onOpen: onOpenPreview, onClose: onClosePreview } = useDisclosure();

@@ -5,7 +5,7 @@
  * and short-term/long-term memory separation.
  */
 
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const { Pool } = require('pg');
 const Redis = require('ioredis');
 const crypto = require('crypto');

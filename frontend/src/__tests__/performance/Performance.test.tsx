@@ -2,6 +2,7 @@ import React from 'react';
 import { 
   render, 
   measureRenderTime,
+  fireEvent,
   mockGame,
   mockTimeSlot,
   mockCOMPASSScore,
@@ -13,7 +14,9 @@ import { COMPASSAnalyticsDashboard } from '../../components/analytics';
 import { Big12TeamGrid } from '../../components/teams';
 import { BIG12_TEAMS } from '../../data/big12Teams';
 import { RealtimeCollaboration } from '../../components/collaboration';
-import { BottomNavigation, SwipeNavigation } from '../../components/navigation';
+import { BottomNavigation } from '../../components/navigation';
+
+// Global vi is available from setupTests
 
 describe('Performance Tests', () => {
   describe('Component Render Performance', () => {

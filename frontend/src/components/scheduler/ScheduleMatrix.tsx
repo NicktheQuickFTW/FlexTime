@@ -335,6 +335,7 @@ export const ScheduleMatrix: React.FC<ScheduleMatrixProps> = ({
   const [matrix, setMatrix] = useState<TimeSlot[][]>([]);
   const [conflicts, setConflicts] = useState<ConflictResult[]>([]);
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [draggedGame, setDraggedGame] = useState<string | null>(null);
 
   // Generate matrix based on view mode

@@ -5,9 +5,9 @@
  * Inspired by the EnhancedSimulatedAnnealingOptimizer from FlexTime v2.1.
  */
 
-const Schedule = require('../models/schedule');
+const Schedule = require('../../../models/schedule');
 const TravelDistanceCalculator = require('./travel-distance-calculator');
-const { ConstraintType } = require('../models/constraint');
+const { ConstraintType } = require('../../../models/constraint');
 
 /**
  * Enhanced simulated annealing optimizer with adaptive cooling and parallel processing

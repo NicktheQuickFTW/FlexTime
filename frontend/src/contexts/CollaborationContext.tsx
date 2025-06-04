@@ -329,26 +329,6 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({ ch
     userPresenceChange: []
   });
 
-  // Setup WebSocket event handlers
-  useEffect(() => {
-    const ws = wsManager.current;
-    
-    ws.onConnectionStateChange = (connectionStatus: ConnectionStatus) => {
-      setState(prev => ({ ...prev, connectionStatus }));
-    };
-    
-    ws.onUsersChange = (users: PresenceUser[]) => {
-      setState(prev => ({ ...prev, activeUsers: users }));
-      eventCallbacks.current.userPresenceChange.forEach(callback => callback(users));
-    };
-    
-    ws.onMessage = handleWebSocketMessage;
-    
-    return () => {
-      ws.disconnect();
-    };
-  }, []);
-
   // Handle incoming WebSocket messages
   const handleWebSocketMessage = useCallback((message: WebSocketMessage) => {
     switch (message.type) {
@@ -390,6 +370,26 @@ export const CollaborationProvider: React.FC<CollaborationProviderProps> = ({ ch
         console.log('Unhandled message type:', message.type);
     }
   }, []);
+
+  // Setup WebSocket event handlers
+  useEffect(() => {
+    const ws = wsManager.current;
+    
+    ws.onConnectionStateChange = (connectionStatus: ConnectionStatus) => {
+      setState(prev => ({ ...prev, connectionStatus }));
+    };
+    
+    ws.onUsersChange = (users: PresenceUser[]) => {
+      setState(prev => ({ ...prev, activeUsers: users }));
+      eventCallbacks.current.userPresenceChange.forEach(callback => callback(users));
+    };
+    
+    ws.onMessage = handleWebSocketMessage;
+    
+    return () => {
+      ws.disconnect();
+    };
+  }, [handleWebSocketMessage]);
 
   // Connect to collaboration session
   const connect = useCallback((scheduleId: string, user: User) => {

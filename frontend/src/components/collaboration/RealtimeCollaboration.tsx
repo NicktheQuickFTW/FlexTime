@@ -232,6 +232,7 @@ export const RealtimeCollaboration: React.FC<RealtimeCollaborationProps> = ({
   onScheduleChange,
   onConflictDetected
 }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { theme } = useTheme();
   const wsRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
@@ -283,10 +284,11 @@ export const RealtimeCollaboration: React.FC<RealtimeCollaborationProps> = ({
     };
     
     wsRef.current = ws;
-  }, [scheduleId, currentUser, wsUrl, isCollaborating]);
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  }, [scheduleId, currentUser, wsUrl, isCollaborating, handleCollaborationMessage]);
   
   // Handle incoming collaboration messages
-  const handleCollaborationMessage = (message: CollaborationMessage) => {
+  const handleCollaborationMessage = useCallback((message: CollaborationMessage) => {
     switch (message.type) {
       case 'user_joined':
         setActiveUsers(prev => {
@@ -341,7 +343,7 @@ export const RealtimeCollaboration: React.FC<RealtimeCollaborationProps> = ({
         onConflictDetected?.(conflict);
         break;
     }
-  };
+  }, [currentUser.id, onScheduleChange, onConflictDetected]);
   
   // Send cursor position
   const sendCursorPosition = useCallback((x: number, y: number) => {

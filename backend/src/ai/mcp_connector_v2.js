@@ -6,8 +6,8 @@
  */
 
 const axios = require('axios');
-const logger = require('./utils/logger');
-const mcpConfig = require('../config/mcp_config');
+const logger = require("../utils/logger");
+const mcpConfig = require('../../config/mcp_config');
 
 /**
  * Enhanced connector for interacting with multiple Model Context Protocol servers.

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Container,
@@ -18,17 +18,13 @@ import {
   TableRow,
   Paper,
   Avatar,
-  Rating,
   Divider
 } from '@mui/material';
 import {
   Sports,
   EmojiEvents,
-  School,
   Person,
-  LocationOn,
-  TrendingUp,
-  Assessment
+  LocationOn
 } from '@mui/icons-material';
 
 interface TeamProfile {
@@ -65,11 +61,7 @@ const SportProfilePage: React.FC<SportProfilePageProps> = ({ sport, sportId }) =
   const [selectedTab, setSelectedTab] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchTeamProfiles();
-  }, [sportId]);
-
-  const fetchTeamProfiles = async () => {
+  const fetchTeamProfiles = useCallback(async () => {
     try {
       const response = await fetch(`/api/sports/${sportId}/profiles`);
       const data = await response.json();
@@ -79,7 +71,11 @@ const SportProfilePage: React.FC<SportProfilePageProps> = ({ sport, sportId }) =
       console.error('Error fetching team profiles:', error);
       setLoading(false);
     }
-  };
+  }, [sportId]);
+
+  useEffect(() => {
+    fetchTeamProfiles();
+  }, [fetchTeamProfiles]);
 
   const getCompassColor = (score: number) => {
     if (score >= 85) return '#4caf50'; // Green - Championship Contender

@@ -1,7 +1,8 @@
 /**
- * COMPASS Training API Routes
+ * COMPASS Training API Routes - DISABLED (Future Enhancement Q1 2026)
  * 
  * These routes provide access to the COMPASS model training functionality
+ * Currently disabled as COMPASS ratings are planned for future implementation
  */
 
 const express = require('express');

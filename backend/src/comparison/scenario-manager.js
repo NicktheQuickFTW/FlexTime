@@ -6,7 +6,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 const MultiVariableOptimizer = require('../algorithms/multi-variable-optimizer');
 
 /**

@@ -103,8 +103,8 @@ class BasketballMLUtilities {
   }
 }
 
-// Enhanced Basketball Constraints
-export const enhancedBasketballConstraints: UnifiedConstraint[] = [
+// Enhanced Men's Basketball Constraints
+export const enhancedMensBasketballConstraints: UnifiedConstraint[] = [
   {
     id: 'bb-big-monday-optimization',
     name: 'Big Monday Premium Game Selection',
@@ -112,7 +112,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
     hardness: ConstraintHardness.SOFT,
     weight: 85,
     scope: {
-      sports: ['Men\'s Basketball', 'Women\'s Basketball'],
+      sports: ['Men\'s Basketball'],
       conferences: ['Big 12']
     },
     parameters: {
@@ -128,7 +128,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
       
       // Find all Monday games
       const mondayGames = schedule.games.filter(g => 
-        (g.sport === 'Men\'s Basketball' || g.sport === 'Women\'s Basketball') &&
+        g.sport === 'Men\'s Basketball' &&
         g.date.getDay() === 1 &&
         g.type === 'conference'
       );
@@ -250,7 +250,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
     hardness: ConstraintHardness.HARD,
     weight: 90,
     scope: {
-      sports: ['Men\'s Basketball', 'Women\'s Basketball'],
+      sports: ['Men\'s Basketball'],
       conferences: ['Big 12']
     },
     parameters: {
@@ -267,7 +267,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
       const matchups = new Map<string, Game[]>();
       
       for (const game of schedule.games.filter(g => 
-        (g.sport === 'Men\'s Basketball' || g.sport === 'Women\'s Basketball') &&
+        g.sport === 'Men\'s Basketball' &&
         g.type === 'conference'
       )) {
         const matchupKey = [game.homeTeamId, game.awayTeamId].sort().join('-');
@@ -358,7 +358,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
     hardness: ConstraintHardness.SOFT,
     weight: 80,
     scope: {
-      sports: ['Men\'s Basketball', 'Women\'s Basketball'],
+      sports: ['Men\'s Basketball'],
       conferences: ['Big 12']
     },
     parameters: {
@@ -376,7 +376,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
       for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
         const teamGames = schedule.games
           .filter(g => 
-            (g.sport === 'Men\'s Basketball' || g.sport === 'Women\'s Basketball') &&
+            g.sport === 'Men\'s Basketball' &&
             (g.homeTeamId === team.id || g.awayTeamId === team.id))
           .sort((a, b) => a.date.getTime() - b.date.getTime());
         
@@ -480,7 +480,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
     hardness: ConstraintHardness.HARD,
     weight: 95,
     scope: {
-      sports: ['Men\'s Basketball', 'Women\'s Basketball'],
+      sports: ['Men\'s Basketball'],
       conferences: ['Big 12']
     },
     parameters: {
@@ -496,7 +496,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
       
       // Check for games after regular season end
       const lateGames = schedule.games.filter(g => 
-        (g.sport === 'Men\'s Basketball' || g.sport === 'Women\'s Basketball') &&
+        g.sport === 'Men\'s Basketball' &&
         g.type === 'conference' &&
         g.date > seasonEnd &&
         g.date < tournamentStart
@@ -518,7 +518,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
       
       for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
         const lastWeekGames = schedule.games.filter(g => 
-          (g.sport === 'Men\'s Basketball' || g.sport === 'Women\'s Basketball') &&
+          g.sport === 'Men\'s Basketball' &&
           (g.homeTeamId === team.id || g.awayTeamId === team.id) &&
           g.date >= lastWeekStart &&
           g.date <= seasonEnd
@@ -566,7 +566,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
     hardness: ConstraintHardness.SOFT,
     weight: 75,
     scope: {
-      sports: ['Men\'s Basketball', 'Women\'s Basketball'],
+      sports: ['Men\'s Basketball'],
       conferences: ['Big 12']
     },
     parameters: {
@@ -580,7 +580,7 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
       const suggestions: ConstraintSuggestion[] = [];
       
       const conferenceGames = schedule.games.filter(g => 
-        (g.sport === 'Men\'s Basketball' || g.sport === 'Women\'s Basketball') &&
+        g.sport === 'Men\'s Basketball' &&
         g.type === 'conference'
       );
       
@@ -647,12 +647,888 @@ export const enhancedBasketballConstraints: UnifiedConstraint[] = [
     cacheable: true,
     parallelizable: true,
     priority: 75
+  },
+
+  {
+    id: 'mbb-weekend-home-games-hard',
+    name: 'Men\'s Basketball Weekend Home Games Requirement (CORE)',
+    type: ConstraintType.LOGICAL,
+    hardness: ConstraintHardness.HARD,
+    weight: 100,
+    scope: {
+      sports: ['Men\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      minimumWeekendHomeGames: 4,
+      weekendDays: [5, 6, 0], // Friday, Saturday, Sunday
+      requireSimilarDistribution: true
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const violations: ConstraintViolation[] = [];
+      let score = 1.0;
+      
+      const teamWeekendHomeGames = new Map<string, number>();
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const homeGames = schedule.games.filter(g => 
+          g.sport === 'Men\'s Basketball' &&
+          g.homeTeamId === team.id &&
+          g.type === 'conference'
+        );
+        
+        const weekendHomeGames = homeGames.filter(g => 
+          params.weekendDays.includes(g.date.getDay())
+        );
+        
+        teamWeekendHomeGames.set(team.id, weekendHomeGames.length);
+        
+        if (weekendHomeGames.length < params.minimumWeekendHomeGames) {
+          violations.push({
+            type: 'insufficient_weekend_home_games',
+            severity: 'critical',
+            affectedEntities: [team.id],
+            description: `${team.name} has only ${weekendHomeGames.length} weekend home games (minimum: ${params.minimumWeekendHomeGames})`,
+            possibleResolutions: ['Move weekday home games to weekends']
+          });
+          score = 0; // Hard constraint violation
+        }
+      }
+      
+      return {
+        constraintId: 'mbb-weekend-home-games-hard',
+        status: violations.length === 0 ? ConstraintStatus.SATISFIED : ConstraintStatus.VIOLATED,
+        satisfied: score > 0,
+        score,
+        message: violations.length === 0 
+          ? 'All teams meet weekend home game requirements'
+          : `Found ${violations.length} weekend home game violations`,
+        violations,
+        confidence: 1.0,
+        details: {
+          teamWeekendHomeGames: Object.fromEntries(teamWeekendHomeGames)
+        }
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'CORE requirement: Each team must have minimum 4 weekend home games with similar distribution',
+      tags: ['mens-basketball', 'weekend', 'core', 'hard-constraint']
+    },
+    cacheable: true,
+    priority: 100
+  },
+
+  {
+    id: 'mbb-bye-placement',
+    name: 'Men\'s Basketball Bye Date Placement',
+    type: ConstraintType.TEMPORAL,
+    hardness: ConstraintHardness.SOFT,
+    weight: 70,
+    scope: {
+      sports: ['Men\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      preferredByeDays: [2, 3], // Tuesday, Wednesday (mid-week)
+      avoidWeekendByes: true,
+      idealByePlacement: 'middle-third' // prefer byes in middle third of season
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const suggestions: ConstraintSuggestion[] = [];
+      let score = 1.0;
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const teamGames = schedule.games
+          .filter(g => 
+            g.sport === 'Men\'s Basketball' &&
+            g.type === 'conference' &&
+            (g.homeTeamId === team.id || g.awayTeamId === team.id))
+          .sort((a, b) => a.date.getTime() - b.date.getTime());
+        
+        // Find bye weeks (gaps of 7+ days between consecutive games)
+        for (let i = 1; i < teamGames.length; i++) {
+          const daysBetween = Math.floor(
+            (teamGames[i].date.getTime() - teamGames[i-1].date.getTime()) / 
+            (1000 * 60 * 60 * 24)
+          );
+          
+          if (daysBetween >= 7) { // This is a bye week
+            const byeStartDate = new Date(teamGames[i-1].date);
+            byeStartDate.setDate(byeStartDate.getDate() + 1);
+            
+            // Check if bye falls on preferred days (mid-week)
+            const byeDay = byeStartDate.getDay();
+            const isWeekend = byeDay === 0 || byeDay === 6; // Sunday or Saturday
+            
+            if (isWeekend && params.avoidWeekendByes) {
+              score *= 0.8;
+              suggestions.push({
+                type: 'weekend_bye',
+                priority: 'low',
+                description: `${team.name} has bye during weekend`,
+                implementation: 'Schedule bye during mid-week when possible',
+                expectedImprovement: 5
+              });
+            }
+            
+            if (!params.preferredByeDays.includes(byeDay)) {
+              score *= 0.9;
+              suggestions.push({
+                type: 'non_optimal_bye_day',
+                priority: 'low',
+                description: `${team.name} bye not on preferred mid-week days`,
+                implementation: 'Move bye to Tuesday or Wednesday when possible',
+                expectedImprovement: 3
+              });
+            }
+          }
+        }
+      }
+      
+      return {
+        constraintId: 'mbb-bye-placement',
+        status: score > 0.8 ? ConstraintStatus.SATISFIED : ConstraintStatus.PARTIALLY_SATISFIED,
+        satisfied: score > 0.8,
+        score,
+        message: `Bye placement optimization score: ${(score * 100).toFixed(1)}%`,
+        suggestions,
+        confidence: 0.8
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Optimizes bye date placement for mid-week timing',
+      tags: ['mens-basketball', 'bye-dates', 'temporal', 'mid-week']
+    },
+    cacheable: true,
+    parallelizable: true,
+    priority: 70
+  },
+
+  {
+    id: 'mbb-pab-balancing',
+    name: 'Plays After Byes (PAB) Balancing',
+    type: ConstraintType.FAIRNESS,
+    hardness: ConstraintHardness.SOFT,
+    weight: 65,
+    scope: {
+      sports: ['Men\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      maxPabImbalance: 1, // Max difference in PAB games between teams
+      penaltyPerImbalance: 0.1
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const suggestions: ConstraintSuggestion[] = [];
+      let score = 1.0;
+      
+      const teamPabCounts = new Map<string, number>();
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        let pabCount = 0;
+        
+        const teamGames = schedule.games
+          .filter(g => 
+            g.sport === 'Men\'s Basketball' &&
+            g.type === 'conference' &&
+            (g.homeTeamId === team.id || g.awayTeamId === team.id))
+          .sort((a, b) => a.date.getTime() - b.date.getTime());
+        
+        for (const game of teamGames) {
+          const opponentId = game.homeTeamId === team.id ? game.awayTeamId : game.homeTeamId;
+          
+          // Check if opponent had a bye before this game
+          const opponentGames = schedule.games
+            .filter(g => 
+              g.sport === 'Men\'s Basketball' &&
+              g.type === 'conference' &&
+              (g.homeTeamId === opponentId || g.awayTeamId === opponentId) &&
+              g.date < game.date)
+            .sort((a, b) => a.date.getTime() - b.date.getTime());
+          
+          if (opponentGames.length > 0) {
+            const lastOpponentGame = opponentGames[opponentGames.length - 1];
+            const daysSinceLastGame = Math.floor(
+              (game.date.getTime() - lastOpponentGame.date.getTime()) / 
+              (1000 * 60 * 60 * 24)
+            );
+            
+            if (daysSinceLastGame >= 7) { // Opponent had a bye
+              pabCount++;
+            }
+          }
+        }
+        
+        teamPabCounts.set(team.id, pabCount);
+      }
+      
+      // Check for imbalance in PAB games
+      const pabValues = Array.from(teamPabCounts.values());
+      const maxPab = Math.max(...pabValues);
+      const minPab = Math.min(...pabValues);
+      const imbalance = maxPab - minPab;
+      
+      if (imbalance > params.maxPabImbalance) {
+        score *= Math.pow(0.9, imbalance - params.maxPabImbalance);
+        
+        suggestions.push({
+          type: 'pab_imbalance',
+          priority: 'medium',
+          description: `PAB games vary by ${imbalance} (range: ${minPab}-${maxPab})`,
+          implementation: 'Balance teams playing opponents coming off byes',
+          expectedImprovement: 15
+        });
+      }
+      
+      return {
+        constraintId: 'mbb-pab-balancing',
+        status: imbalance <= params.maxPabImbalance ? ConstraintStatus.SATISFIED : ConstraintStatus.PARTIALLY_SATISFIED,
+        satisfied: imbalance <= params.maxPabImbalance,
+        score,
+        message: `PAB balance: ${minPab}-${maxPab} range (imbalance: ${imbalance})`,
+        suggestions,
+        confidence: 0.85,
+        details: {
+          teamPabCounts: Object.fromEntries(teamPabCounts),
+          imbalance,
+          maxAllowedImbalance: params.maxPabImbalance
+        }
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Balances teams playing opponents coming off bye dates',
+      tags: ['mens-basketball', 'pab', 'fairness', 'bye-advantage']
+    },
+    cacheable: true,
+    parallelizable: true,
+    priority: 65
+  },
+
+  {
+    id: 'mbb-big-monday-home-preceded-by-road',
+    name: 'Big Monday Home Game Preceded by Road Game',
+    type: ConstraintType.PERFORMANCE,
+    hardness: ConstraintHardness.SOFT,
+    weight: 60,
+    scope: {
+      sports: ['Men\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      bigMondayTimeSlot: '20:00', // 8 PM CT
+      requirePrecedingRoadGame: true,
+      maxDaysBetween: 5 // Must be within 5 days
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const suggestions: ConstraintSuggestion[] = [];
+      let score = 1.0;
+      
+      const bigMondayHomeGames = schedule.games.filter(g => 
+        g.sport === 'Men\'s Basketball' &&
+        g.type === 'conference' &&
+        g.date.getDay() === 1 && // Monday
+        g.time === params.bigMondayTimeSlot
+      );
+      
+      for (const mondayGame of bigMondayHomeGames) {
+        const homeTeam = schedule.teams.find(t => t.id === mondayGame.homeTeamId);
+        if (!homeTeam) continue;
+        
+        // Find the preceding game for the home team
+        const teamGames = schedule.games
+          .filter(g => 
+            g.sport === 'Men\'s Basketball' &&
+            g.type === 'conference' &&
+            (g.homeTeamId === homeTeam.id || g.awayTeamId === homeTeam.id) &&
+            g.date < mondayGame.date)
+          .sort((a, b) => b.date.getTime() - a.date.getTime()); // Most recent first
+        
+        if (teamGames.length > 0) {
+          const precedingGame = teamGames[0];
+          const daysBetween = Math.floor(
+            (mondayGame.date.getTime() - precedingGame.date.getTime()) / 
+            (1000 * 60 * 60 * 24)
+          );
+          
+          const wasRoadGame = precedingGame.awayTeamId === homeTeam.id;
+          
+          if (daysBetween <= params.maxDaysBetween) {
+            if (!wasRoadGame) {
+              score *= 0.9;
+              suggestions.push({
+                type: 'big_monday_not_preceded_by_road',
+                priority: 'low',
+                description: `${homeTeam.name} Big Monday home game not preceded by road game`,
+                implementation: 'Schedule preceding road game when possible',
+                expectedImprovement: 5
+              });
+            }
+          }
+        }
+      }
+      
+      return {
+        constraintId: 'mbb-big-monday-home-preceded-by-road',
+        status: score > 0.9 ? ConstraintStatus.SATISFIED : ConstraintStatus.PARTIALLY_SATISFIED,
+        satisfied: score > 0.9,
+        score,
+        message: `Big Monday road precedence score: ${(score * 100).toFixed(1)}%`,
+        suggestions,
+        confidence: 0.8,
+        details: {
+          bigMondayHomeGames: bigMondayHomeGames.length
+        }
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Prefers Big Monday home games to be preceded by road games',
+      tags: ['mens-basketball', 'big-monday', 'road-home-pattern']
+    },
+    cacheable: true,
+    parallelizable: true,
+    priority: 60
+  },
+
+  {
+    id: 'mbb-conference-game-count',
+    name: 'Men\'s Basketball Conference Game Count',
+    type: ConstraintType.LOGICAL,
+    hardness: ConstraintHardness.HARD,
+    weight: 100,
+    scope: {
+      sports: ['Men\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      requiredGames: 18,
+      playTwice: 3, // teams played twice
+      playOnce: 12, // teams played once
+      totalWindows: 19, // includes one bye
+      requiresBye: true
+    },
+    evaluation: (schedule: Schedule, params: ConstraintParameters): ConstraintResult => {
+      const violations: ConstraintViolation[] = [];
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const teamGames = schedule.games.filter(g => 
+          g.sport === 'Men\'s Basketball' &&
+          g.type === 'conference' &&
+          (g.homeTeamId === team.id || g.awayTeamId === team.id)
+        );
+        
+        if (teamGames.length !== params.requiredGames) {
+          violations.push({
+            type: 'incorrect_game_count',
+            severity: 'critical',
+            affectedEntities: [team.id],
+            description: `${team.name} has ${teamGames.length} games (required: ${params.requiredGames})`,
+            possibleResolutions: ['Adjust schedule to exactly 18 conference games']
+          });
+        }
+        
+        // Check play distribution
+        const opponents = new Map<string, number>();
+        for (const game of teamGames) {
+          const opponentId = game.homeTeamId === team.id ? game.awayTeamId : game.homeTeamId;
+          opponents.set(opponentId, (opponents.get(opponentId) || 0) + 1);
+        }
+        
+        const playTwiceCount = Array.from(opponents.values()).filter(count => count === 2).length;
+        const playOnceCount = Array.from(opponents.values()).filter(count => count === 1).length;
+        
+        if (playTwiceCount !== params.playTwice || playOnceCount !== params.playOnce) {
+          violations.push({
+            type: 'incorrect_play_distribution',
+            severity: 'critical',
+            affectedEntities: [team.id],
+            description: `${team.name} plays ${playTwiceCount} teams twice and ${playOnceCount} once (required: ${params.playTwice} twice, ${params.playOnce} once)`,
+            possibleResolutions: ['Adjust opponent distribution to 3 twice, 12 once']
+          });
+        }
+        
+        // Check for bye week (should have 19 windows for 18 games)
+        if (params.requiresBye) {
+          const sortedGames = teamGames.sort((a, b) => a.date.getTime() - b.date.getTime());
+          let hasBye = false;
+          
+          for (let i = 1; i < sortedGames.length; i++) {
+            const daysBetween = Math.floor(
+              (sortedGames[i].date.getTime() - sortedGames[i-1].date.getTime()) / 
+              (1000 * 60 * 60 * 24)
+            );
+            if (daysBetween >= 7) {
+              hasBye = true;
+              break;
+            }
+          }
+          
+          if (!hasBye) {
+            violations.push({
+              type: 'missing_bye_week',
+              severity: 'major',
+              affectedEntities: [team.id],
+              description: `${team.name} appears to be missing required bye week`,
+              possibleResolutions: ['Ensure 19 windows provide one bye week']
+            });
+          }
+        }
+      }
+      
+      return {
+        constraintId: 'mbb-conference-game-count',
+        status: violations.length === 0 ? ConstraintStatus.SATISFIED : ConstraintStatus.VIOLATED,
+        satisfied: violations.length === 0,
+        score: violations.length === 0 ? 1.0 : 0.0,
+        message: violations.length === 0 
+          ? 'All teams have correct game count, distribution, and bye weeks'
+          : `Found ${violations.length} game count/distribution violations`,
+        violations,
+        confidence: 1.0
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Ensures each team plays exactly 18 conference games with proper distribution and bye',
+      tags: ['mens-basketball', 'game-count', 'distribution', 'core', 'bye-week']
+    },
+    cacheable: true,
+    priority: 100
   }
 ];
 
-// Export helper function to get all basketball constraints
-export function getBasketballConstraints(): UnifiedConstraint[] {
-  return enhancedBasketballConstraints;
+// Enhanced Women's Basketball Constraints
+export const enhancedWomensBasketballConstraints: UnifiedConstraint[] = [
+  {
+    id: 'wbb-weekend-home-games-hard',
+    name: 'Weekend Home Games Requirement (CORE)',
+    type: ConstraintType.LOGICAL,
+    hardness: ConstraintHardness.HARD,
+    weight: 100,
+    scope: {
+      sports: ['Women\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      minimumWeekendHomeGames: 4,
+      weekendDays: [5, 6, 0], // Friday, Saturday, Sunday
+      requireSimilarDistribution: true
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const violations: ConstraintViolation[] = [];
+      let score = 1.0;
+      
+      const teamWeekendHomeGames = new Map<string, number>();
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const homeGames = schedule.games.filter(g => 
+          g.sport === 'Women\'s Basketball' &&
+          g.homeTeamId === team.id &&
+          g.type === 'conference'
+        );
+        
+        const weekendHomeGames = homeGames.filter(g => 
+          params.weekendDays.includes(g.date.getDay())
+        );
+        
+        teamWeekendHomeGames.set(team.id, weekendHomeGames.length);
+        
+        if (weekendHomeGames.length < params.minimumWeekendHomeGames) {
+          violations.push({
+            type: 'insufficient_weekend_home_games',
+            severity: 'critical',
+            affectedEntities: [team.id],
+            description: `${team.name} has only ${weekendHomeGames.length} weekend home games (minimum: ${params.minimumWeekendHomeGames})`,
+            possibleResolutions: ['Move weekday home games to weekends']
+          });
+          score = 0; // Hard constraint violation
+        }
+      }
+      
+      // Check for similar distribution
+      if (params.requireSimilarDistribution && teamWeekendHomeGames.size > 0) {
+        const counts = Array.from(teamWeekendHomeGames.values());
+        const maxCount = Math.max(...counts);
+        const minCount = Math.min(...counts);
+        
+        if (maxCount - minCount > 2) {
+          violations.push({
+            type: 'uneven_weekend_distribution',
+            severity: 'major',
+            affectedEntities: Array.from(teamWeekendHomeGames.keys()),
+            description: `Weekend home game distribution varies by ${maxCount - minCount} games (max variance should be 2)`,
+            possibleResolutions: ['Redistribute weekend home games more evenly']
+          });
+          score *= 0.8;
+        }
+      }
+      
+      return {
+        constraintId: 'wbb-weekend-home-games-hard',
+        status: violations.length === 0 ? ConstraintStatus.SATISFIED : ConstraintStatus.VIOLATED,
+        satisfied: score > 0,
+        score,
+        message: violations.length === 0 
+          ? 'All teams meet weekend home game requirements'
+          : `Found ${violations.length} weekend home game violations`,
+        violations,
+        confidence: 1.0,
+        details: {
+          teamWeekendHomeGames: Object.fromEntries(teamWeekendHomeGames)
+        }
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'CORE requirement: Each team must have minimum 4 weekend home games with similar distribution',
+      tags: ['womens-basketball', 'weekend', 'core', 'hard-constraint']
+    },
+    cacheable: true,
+    priority: 100
+  },
+
+  {
+    id: 'wbb-conference-game-count',
+    name: 'Women\'s Basketball Conference Game Count',
+    type: ConstraintType.LOGICAL,
+    hardness: ConstraintHardness.HARD,
+    weight: 100,
+    scope: {
+      sports: ['Women\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      requiredGames: 20,
+      playTwice: 5, // teams played twice
+      playOnce: 10 // teams played once
+    },
+    evaluation: (schedule: Schedule, params: ConstraintParameters): ConstraintResult => {
+      const violations: ConstraintViolation[] = [];
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const teamGames = schedule.games.filter(g => 
+          g.sport === 'Women\'s Basketball' &&
+          g.type === 'conference' &&
+          (g.homeTeamId === team.id || g.awayTeamId === team.id)
+        );
+        
+        if (teamGames.length !== params.requiredGames) {
+          violations.push({
+            type: 'incorrect_game_count',
+            severity: 'critical',
+            affectedEntities: [team.id],
+            description: `${team.name} has ${teamGames.length} games (required: ${params.requiredGames})`,
+            possibleResolutions: ['Adjust schedule to exactly 20 conference games']
+          });
+        }
+        
+        // Check play distribution
+        const opponents = new Map<string, number>();
+        for (const game of teamGames) {
+          const opponentId = game.homeTeamId === team.id ? game.awayTeamId : game.homeTeamId;
+          opponents.set(opponentId, (opponents.get(opponentId) || 0) + 1);
+        }
+        
+        const playTwiceCount = Array.from(opponents.values()).filter(count => count === 2).length;
+        const playOnceCount = Array.from(opponents.values()).filter(count => count === 1).length;
+        
+        if (playTwiceCount !== params.playTwice || playOnceCount !== params.playOnce) {
+          violations.push({
+            type: 'incorrect_play_distribution',
+            severity: 'critical',
+            affectedEntities: [team.id],
+            description: `${team.name} plays ${playTwiceCount} teams twice and ${playOnceCount} once (required: ${params.playTwice} twice, ${params.playOnce} once)`,
+            possibleResolutions: ['Adjust opponent distribution to 5 twice, 10 once']
+          });
+        }
+      }
+      
+      return {
+        constraintId: 'wbb-conference-game-count',
+        status: violations.length === 0 ? ConstraintStatus.SATISFIED : ConstraintStatus.VIOLATED,
+        satisfied: violations.length === 0,
+        score: violations.length === 0 ? 1.0 : 0.0,
+        message: violations.length === 0 
+          ? 'All teams have correct game count and distribution'
+          : `Found ${violations.length} game count/distribution violations`,
+        violations,
+        confidence: 1.0
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Ensures each team plays exactly 20 conference games with proper distribution',
+      tags: ['womens-basketball', 'game-count', 'distribution', 'core']
+    },
+    cacheable: true,
+    priority: 100
+  },
+
+  {
+    id: 'wbb-minimize-same-day-games',
+    name: 'Minimize Same-Day Men\'s/Women\'s Games',
+    type: ConstraintType.VENUE,
+    hardness: ConstraintHardness.SOFT,
+    weight: 85,
+    scope: {
+      sports: ['Women\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      maxSameDayGames: 2, // Allow some but minimize
+      penaltyPerConflict: 0.1
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const suggestions: ConstraintSuggestion[] = [];
+      let score = 1.0;
+      let sameDayConflicts = 0;
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const teamDates = new Set<string>();
+        
+        // Get all dates when team has home games
+        const womensHomeGames = schedule.games.filter(g => 
+          g.sport === 'Women\'s Basketball' &&
+          g.homeTeamId === team.id
+        );
+        
+        const mensHomeGames = schedule.games.filter(g => 
+          g.sport === 'Men\'s Basketball' &&
+          g.homeTeamId === team.id
+        );
+        
+        // Check for same-day conflicts
+        for (const wGame of womensHomeGames) {
+          const dateKey = wGame.date.toDateString();
+          
+          const sameDayMensGames = mensHomeGames.filter(mGame => 
+            mGame.date.toDateString() === dateKey
+          );
+          
+          if (sameDayMensGames.length > 0) {
+            sameDayConflicts++;
+            score *= (1 - params.penaltyPerConflict);
+            
+            suggestions.push({
+              type: 'same_day_game_conflict',
+              priority: 'medium',
+              description: `${team.name} has both men's and women's home games on ${dateKey}`,
+              implementation: 'Move one game to different date',
+              expectedImprovement: 10
+            });
+          }
+        }
+      }
+      
+      return {
+        constraintId: 'wbb-minimize-same-day-games',
+        status: sameDayConflicts <= params.maxSameDayGames ? ConstraintStatus.SATISFIED : ConstraintStatus.PARTIALLY_SATISFIED,
+        satisfied: sameDayConflicts <= params.maxSameDayGames,
+        score,
+        message: `Found ${sameDayConflicts} same-day game conflicts`,
+        suggestions,
+        confidence: 0.9,
+        details: {
+          sameDayConflicts,
+          maxAllowed: params.maxSameDayGames
+        }
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Minimizes scheduling men\'s and women\'s games on same day at home',
+      tags: ['womens-basketball', 'venue-sharing', 'same-day-games']
+    },
+    cacheable: true,
+    parallelizable: true,
+    priority: 85
+  },
+
+  {
+    id: 'wbb-consecutive-road-with-travel-efficiency',
+    name: 'Women\'s Basketball Consecutive Road Games with Travel Exception',
+    type: ConstraintType.LOGICAL,
+    hardness: ConstraintHardness.HARD,
+    weight: 95,
+    scope: {
+      sports: ['Women\'s Basketball'],
+      conferences: ['Big 12']
+    },
+    parameters: {
+      maxConsecutiveRoad: 2,
+      travelEfficiencyThreshold: 300, // miles - if both opponents within this distance, allow consecutive
+      minimizationWeight: 0.8
+    },
+    evaluation: async (schedule: Schedule, params: ConstraintParameters): Promise<ConstraintResult> => {
+      const violations: ConstraintViolation[] = [];
+      const suggestions: ConstraintSuggestion[] = [];
+      let score = 1.0;
+      
+      for (const team of schedule.teams.filter(t => t.conference === 'Big 12')) {
+        const teamGames = schedule.games
+          .filter(g => 
+            g.sport === 'Women\'s Basketball' &&
+            g.type === 'conference' &&
+            (g.homeTeamId === team.id || g.awayTeamId === team.id))
+          .sort((a, b) => a.date.getTime() - b.date.getTime());
+        
+        let consecutiveRoadCount = 0;
+        const roadStretch: any[] = [];
+        
+        for (let i = 0; i < teamGames.length; i++) {
+          const game = teamGames[i];
+          const isRoadGame = game.awayTeamId === team.id;
+          
+          if (isRoadGame) {
+            consecutiveRoadCount++;
+            roadStretch.push(game);
+            
+            if (consecutiveRoadCount > params.maxConsecutiveRoad) {
+              // Check for travel efficiency exception
+              const hasTravelException = this.checkTravelEfficiencyException(
+                roadStretch, 
+                team, 
+                schedule.teams, 
+                params.travelEfficiencyThreshold
+              );
+              
+              if (!hasTravelException) {
+                violations.push({
+                  type: 'excessive_consecutive_road',
+                  severity: 'critical',
+                  affectedEntities: [team.id, ...roadStretch.map(g => g.id)],
+                  description: `${team.name} has ${consecutiveRoadCount} consecutive road games without travel efficiency justification`,
+                  possibleResolutions: ['Insert home game in road stretch', 'Verify travel efficiency exception']
+                });
+                score = 0; // Hard constraint violation
+              } else {
+                suggestions.push({
+                  type: 'consecutive_road_with_travel_exception',
+                  priority: 'low',
+                  description: `${team.name} has ${consecutiveRoadCount} consecutive road games but qualifies for travel efficiency exception`,
+                  implementation: 'Continue monitoring for optimal travel patterns',
+                  expectedImprovement: 5
+                });
+                score *= params.minimizationWeight; // Soft penalty even with exception
+              }
+            }
+          } else {
+            consecutiveRoadCount = 0;
+            roadStretch.length = 0;
+          }
+        }
+      }
+      
+      return {
+        constraintId: 'wbb-consecutive-road-with-travel-efficiency',
+        status: violations.length === 0 ? ConstraintStatus.SATISFIED : ConstraintStatus.VIOLATED,
+        satisfied: score > 0,
+        score,
+        message: violations.length === 0 
+          ? 'Consecutive road games within limits or justified by travel efficiency'
+          : `Found ${violations.length} consecutive road violations`,
+        violations,
+        suggestions,
+        confidence: 0.95
+      };
+    },
+    metadata: {
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      version: '2.0',
+      author: 'FlexTime System',
+      description: 'Limits consecutive road games with exception for travel efficiency',
+      tags: ['womens-basketball', 'consecutive-road', 'travel-efficiency']
+    },
+    cacheable: true,
+    priority: 95
+  }
+];
+
+// Travel efficiency check helper
+function checkTravelEfficiencyException(
+  roadStretch: any[], 
+  team: any, 
+  allTeams: any[], 
+  threshold: number
+): boolean {
+  if (roadStretch.length < 2) return false;
+  
+  // Get opponent locations
+  const opponents = roadStretch.map(game => {
+    const opponentId = game.homeTeamId;
+    return allTeams.find(t => t.id === opponentId);
+  }).filter(Boolean);
+  
+  if (opponents.length < 2) return false;
+  
+  // Check if opponents are geographically close (travel efficient)
+  for (let i = 0; i < opponents.length - 1; i++) {
+    const distance = calculateDistance(
+      opponents[i].location?.lat || 0,
+      opponents[i].location?.lng || 0,
+      opponents[i + 1].location?.lat || 0,
+      opponents[i + 1].location?.lng || 0
+    );
+    
+    if (distance <= threshold) {
+      return true; // Travel efficient consecutive road trip
+    }
+  }
+  
+  return false;
+}
+
+// Simple distance calculation (haversine formula)
+function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 3959; // Earth's radius in miles
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+
+// Export helper functions to get constraints
+export function getMensBasketballConstraints(): UnifiedConstraint[] {
+  return enhancedMensBasketballConstraints;
+}
+
+export function getWomensBasketballConstraints(): UnifiedConstraint[] {
+  return enhancedWomensBasketballConstraints;
+}
+
+export function getAllBasketballConstraints(): UnifiedConstraint[] {
+  return [...enhancedMensBasketballConstraints, ...enhancedWomensBasketballConstraints];
 }
 
 // Export ML utilities for use in other modules

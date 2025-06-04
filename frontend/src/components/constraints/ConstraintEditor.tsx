@@ -23,18 +23,15 @@ import {
   CardContent,
   Grid,
   IconButton,
-  Tooltip,
   Autocomplete,
   FormHelperText,
   Divider
 } from '@mui/material';
 import {
   Save as SaveIcon,
-  Cancel as CancelIcon,
   Add as AddIcon,
   Delete as DeleteIcon,
-  Info as InfoIcon,
-  Help as HelpIcon
+  Info as InfoIcon
 } from '@mui/icons-material';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -174,7 +171,6 @@ const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
   const [selectedTeams, setSelectedTeams] = useState<Team[]>(constraint?.teams || []);
   const [availableTeams, setAvailableTeams] = useState<Team[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchTeams();
@@ -205,6 +201,7 @@ const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
     if (Object.keys(newParams).length > 0) {
       setParameters(prev => ({ ...prev, ...newParams }));
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
   const fetchTeams = async () => {
@@ -404,13 +401,6 @@ const ConstraintEditor: React.FC<ConstraintEditorProps> = ({
         return null;
     }
   };
-
-  const steps = [
-    'Select Constraint Type',
-    'Configure Parameters',
-    'Set Priority & Teams',
-    'Review & Save'
-  ];
 
   return (
     <Paper sx={{ p: 3 }}>

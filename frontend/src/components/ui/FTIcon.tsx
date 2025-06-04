@@ -1,6 +1,17 @@
 import React from 'react';
-import { Icon, IconifyIcon } from '@iconify/react';
+import { Icon } from '@iconify/react';
+import Image from 'next/image';
 import { CSSProperties } from 'react';
+
+// FlexTime Logo Icons (using actual logo files)
+export const FLEXTIME_LOGOS = {
+  'flextime-light': '/logos/flextime/flextime-light.svg',
+  'flextime-dark': '/logos/flextime/flextime-dark.svg',
+  'flextime-white': '/logos/flextime/flextime-white240x240.svg',
+  'flextime-black': '/logos/flextime/flextime-black240x240.svg',
+  'flextime-white-large': '/logos/flextime/flextime-white1028x1028.svg',
+  'flextime-black-large': '/logos/flextime/flextime-black1028x1028.svg',
+} as const;
 
 // Big 12 Sports Icon Mapping
 export const SPORT_ICONS = {
@@ -59,6 +70,7 @@ export const SPORT_ICONS = {
   play: 'lucide:play',
   pause: 'lucide:pause',
   stop: 'lucide:stop',
+  check: 'lucide:check',
   
   // Theme & UI
   theme: 'lucide:palette',
@@ -91,15 +103,17 @@ export const SPORT_ICONS = {
 } as const;
 
 export type SportIconName = keyof typeof SPORT_ICONS;
+export type FlexTimeLogoName = keyof typeof FLEXTIME_LOGOS;
 
 interface FTIconProps {
-  name: SportIconName | string;
+  name: SportIconName | FlexTimeLogoName | string;
   size?: number | string;
   color?: string;
   className?: string;
   style?: CSSProperties;
   onClick?: () => void;
   variant?: 'default' | 'glow' | 'accent' | 'muted';
+  alt?: string; // For FlexTime logos
 }
 
 const FTIcon: React.FC<FTIconProps> = ({
@@ -109,9 +123,53 @@ const FTIcon: React.FC<FTIconProps> = ({
   className = '',
   style = {},
   onClick,
-  variant = 'default'
+  variant = 'default',
+  alt = 'Icon'
 }) => {
-  // Get icon from mapping or use name directly if not found
+  // Check if this is a FlexTime logo
+  const isFlexTimeLogo = name in FLEXTIME_LOGOS;
+  
+  if (isFlexTimeLogo) {
+    // Handle FlexTime logos with Next.js Image
+    const logoPath = FLEXTIME_LOGOS[name as FlexTimeLogoName];
+    const logoSize = typeof size === 'number' ? size : parseInt(String(size)) || 24;
+    
+    // Apply glow effect for glow variant
+    const glowStyle = variant === 'glow' ? {
+      filter: 'drop-shadow(0 0 8px rgba(0, 191, 255, 0.5))',
+      ...style
+    } : style;
+    
+    return (
+      <div 
+        className={`ft-icon ft-logo ${variant} ${className} ${onClick ? 'cursor-pointer' : ''}`}
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: logoSize,
+          height: logoSize,
+          ...glowStyle
+        }}
+        onClick={onClick}
+      >
+        <Image
+          src={logoPath}
+          alt={alt}
+          width={logoSize}
+          height={logoSize}
+          className="object-contain"
+          style={{ 
+            width: logoSize, 
+            height: logoSize,
+            maxWidth: 'none'
+          }}
+        />
+      </div>
+    );
+  }
+  
+  // Handle regular iconify icons
   const iconName = SPORT_ICONS[name as SportIconName] || name;
   
   // Variant-based color mapping
@@ -160,5 +218,11 @@ export const UIIcon: React.FC<Omit<FTIconProps, 'name'> & { type: SportIconName 
   type,
   ...props
 }) => <FTIcon name={type} {...props} />;
+
+// Preset FlexTime Logo Icons for convenience
+export const FlexTimeLogo: React.FC<Omit<FTIconProps, 'name'> & { variant: FlexTimeLogoName }> = ({
+  variant,
+  ...props
+}) => <FTIcon name={variant} {...props} />;
 
 export default FTIcon;

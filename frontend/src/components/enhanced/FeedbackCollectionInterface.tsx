@@ -28,8 +28,7 @@ import {
   AlertTitle,
   AlertDescription,
   useToast,
-  VStack,
-  HStack
+  VStack
 } from '@chakra-ui/react';
 import { MdThumbUp, MdThumbDown, MdStar, MdStarBorder, MdSend, MdLightbulb } from 'react-icons/md';
 import axios from 'axios';

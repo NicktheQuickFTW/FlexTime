@@ -21,7 +21,15 @@ const ParallelSchedulingAgentSystem = function() {
     optimizeSchedule: async (schedule) => schedule
   };
 };
-const EnhancedFeedbackSystem = {};
+const EnhancedFeedbackSystem = function(config = {}) {
+  return {
+    config,
+    initialize: async () => {
+      logger.info('Mock Enhanced Feedback System initialized');
+      return true;
+    }
+  };
+};
 
 // Import sport-specific optimizers - COMMENTED OUT FOR DEVELOPMENT
 // const BasketballScheduleOptimizer = require('../agents/sport_specific/basketball_schedule_optimizer');
@@ -35,7 +43,7 @@ const BasketballScheduleOptimizer = function() {
 };
 
 // Import visualization tools
-const ScheduleVisualizationGenerator = require('../utils/visualization/schedule_visualization');
+const ScheduleVisualizationGenerator = require('../../utils/schedule_visualization');
 // const EnhancedScheduleAnalysisAgent = require('../agents/specialized/enhanced_schedule_analysis_agent');
 
 // Mock version for development
@@ -49,7 +57,7 @@ const EnhancedScheduleAnalysisAgent = function() {
 };
 
 // Logger for integration logging
-const logger = require('../utils/logger');
+const logger = require("../utils/logger");
 
 /**
  * Initialize and register all scheduling improvements

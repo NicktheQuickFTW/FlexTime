@@ -7,7 +7,7 @@
 
 const AgentSystem = require('./agent_system');
 const HistoricalDataAdapter = require('../../ml/historical-data-adapter');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 
 // Import models for integration - using direct imports for consistency
 const Schedule = require('../../models/schedule');

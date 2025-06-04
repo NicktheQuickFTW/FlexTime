@@ -12,8 +12,8 @@ const { Client } = require('@notionhq/client');
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const logger = require('../utils/logger');
-const neonConfig = require('../config/neon_db_config');
+const logger = require("../utils/logger");
+const neonConfig = require('../../config/neon_db_config');
 
 // Load Notion environment variables
 function loadNotionEnv() {

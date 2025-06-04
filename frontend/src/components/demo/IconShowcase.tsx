@@ -1,5 +1,5 @@
 import React from 'react';
-import FTIcon, { SPORT_ICONS, SportIcon, UIIcon } from '../ui/FTIcon';
+import FTIcon, { SportIcon, UIIcon } from '../ui/FTIcon';
 import './IconShowcase.css';
 
 const IconShowcase: React.FC = () => {

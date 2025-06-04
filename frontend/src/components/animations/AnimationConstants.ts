@@ -254,7 +254,7 @@ export const ANIMATION_BREAKPOINTS = {
   DESKTOP: '(min-width: 1025px)',
 } as const;
 
-export default {
+const animationConstants = {
   ANIMATION_DURATION,
   ANIMATION_EASING,
   SPRING_CONFIG,
@@ -277,3 +277,5 @@ export default {
   PERFORMANCE_CONFIG,
   ANIMATION_BREAKPOINTS,
 };
+
+export default animationConstants;

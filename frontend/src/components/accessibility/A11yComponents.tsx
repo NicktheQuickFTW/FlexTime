@@ -50,6 +50,7 @@ export const a11yUtils = {
   getContrastRatio: (color1: string, color2: string): number => {
     // Simplified contrast ratio calculation
     // In production, use a proper color library
+    console.log('Calculating contrast ratio for:', color1, color2);
     return 4.5; // Placeholder
   }
 };
@@ -438,7 +439,7 @@ export const AccessibleFormGroup: React.FC<AccessibleFormGroupProps> = ({
         ].filter(Boolean).join(' ') || undefined,
         'aria-invalid': error ? 'true' : undefined,
         required
-      })}
+      } as any)}
       
       {helpText && (
         <div id={helpId} className="ft-form-help text-sm text-flextime-text-secondary">
@@ -526,7 +527,7 @@ export const AccessibleTooltip: React.FC<AccessibleTooltipProps> = ({
         onMouseLeave: () => setIsVisible(false),
         onFocus: () => setIsVisible(true),
         onBlur: () => setIsVisible(false)
-      })}
+      } as any)}
       
       {isVisible && (
         <div

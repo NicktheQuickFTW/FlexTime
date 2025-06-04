@@ -5,10 +5,10 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const Schedule = require('../models/schedule');
-const Team = require('../models/team');
-const Game = require('../models/game');
-const { Constraint } = require('../models/constraint');
+const Schedule = require('../../models/schedule');
+const Team = require('../../models/team');
+const Game = require('../../models/game');
+const { Constraint } = require('../../models/constraint');
 
 class ScheduleGenerator {
   /**

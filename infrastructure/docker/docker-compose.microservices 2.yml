@@ -1,0 +1,268 @@
+# Docker Compose for microservices architecture
+version: '3.8'
+
+services:
+  # Redis Cache and Queue
+  redis:
+    image: redis:7-alpine
+    container_name: flextime-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    networks:
+      - flextime-network
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    healthcheck:
+      test: ["CMD", "redis-cli", "--no-auth-warning", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  # API Service
+  api-svc:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.api-svc
+      target: ${BUILD_TARGET:-production}
+    container_name: flextime-api-svc
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+      SERVICE_NAME: api-svc
+      
+      # Database Configuration
+      NEON_DB_CONNECTION_STRING: ${NEON_DB_CONNECTION_STRING}
+      NEON_DB_HOST: ${NEON_DB_HOST}
+      NEON_DB_PORT: ${NEON_DB_PORT}
+      NEON_DB_NAME: ${NEON_DB_NAME}
+      NEON_DB_USER: ${NEON_DB_USER}
+      NEON_DB_PASSWORD: ${NEON_DB_PASSWORD}
+      NEON_DB_SSL: ${NEON_DB_SSL}
+      USE_NEON_DB: true
+      
+      # Redis Configuration
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      
+      # API Keys
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      NOTION_API_KEY: ${NOTION_API_KEY}
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      
+      # Service Discovery
+      SCHEDULER_SVC_URL: http://scheduler-svc:4000
+      NOTIFICATION_SVC_URL: http://notification-svc:5000
+      IMPORT_SVC_URL: http://import-svc:6000
+      REPORTING_SVC_URL: http://reporting-svc:7000
+      COMMENT_SVC_URL: http://comment-svc:8000
+    volumes:
+      - api_logs:/app/logs
+      - api_data:/app/data
+    ports:
+      - "3001:3001"
+    networks:
+      - flextime-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+
+  # Scheduler Service
+  scheduler-svc:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.scheduler-svc
+      target: ${BUILD_TARGET:-production}
+    container_name: flextime-scheduler-svc
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      SERVICE_NAME: scheduler-svc
+      PYTHONPATH: /app/python
+      PYTHONUNBUFFERED: 1
+      
+      # Database Configuration
+      NEON_DB_CONNECTION_STRING: ${NEON_DB_CONNECTION_STRING}
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      
+      # OR-Tools Configuration
+      OR_TOOLS_VERSION: 9.7.2996
+      MAX_SOLVE_TIME: 300
+      NUM_WORKERS: 2
+      
+      # AI Services
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+    volumes:
+      - scheduler_data:/app/data
+      - scheduler_models:/app/models
+      - scheduler_logs:/app/logs
+    ports:
+      - "4000:4000"
+    networks:
+      - flextime-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # Notification Service
+  notification-svc:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.notification-svc
+      target: ${BUILD_TARGET:-production}
+    container_name: flextime-notification-svc
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 5000
+      SERVICE_NAME: notification-svc
+      
+      # Redis Configuration
+      REDIS_URL: redis://:${REDIS_PASSWORD}@redis:6379
+      
+      # Email Configuration
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM: ${SMTP_FROM}
+      
+      # Push Notification Services
+      FCM_SERVER_KEY: ${FCM_SERVER_KEY}
+      APNS_KEY_ID: ${APNS_KEY_ID}
+      APNS_TEAM_ID: ${APNS_TEAM_ID}
+      
+      # WebSocket Configuration
+      WS_PORT: 5001
+    volumes:
+      - notification_logs:/app/logs
+      - notification_templates:/app/templates
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    networks:
+      - flextime-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Frontend Service
+  frontend:
+    build:
+      context: .
+      dockerfile: infrastructure/docker/Dockerfile.frontend
+      target: ${BUILD_TARGET:-production}
+    container_name: flextime-frontend
+    depends_on:
+      - api-svc
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3000
+      REACT_APP_API_URL: ${REACT_APP_API_URL:-http://localhost:3001}
+      REACT_APP_WS_URL: ${REACT_APP_WS_URL:-ws://localhost:5001}
+      REACT_APP_ENVIRONMENT: ${NODE_ENV:-production}
+    ports:
+      - "3000:3000"
+    networks:
+      - flextime-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Nginx Load Balancer (Production only)
+  nginx:
+    image: nginx:alpine
+    container_name: flextime-nginx
+    depends_on:
+      - frontend
+      - api-svc
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/ssl:/etc/nginx/ssl:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - flextime-network
+    profiles:
+      - production
+    restart: unless-stopped
+
+  # RabbitMQ Message Broker (for event-driven communication)
+  rabbitmq:
+    image: rabbitmq:3.12-management-alpine
+    container_name: flextime-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./infrastructure/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Management UI
+    networks:
+      - flextime-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+networks:
+  flextime-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+  api_logs:
+    driver: local
+  api_data:
+    driver: local
+  scheduler_data:
+    driver: local
+  scheduler_models:
+    driver: local
+  scheduler_logs:
+    driver: local
+  notification_logs:
+    driver: local
+  notification_templates:
+    driver: local

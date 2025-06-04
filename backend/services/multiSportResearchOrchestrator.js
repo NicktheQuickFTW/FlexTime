@@ -1,12 +1,14 @@
 /**
- * Multi-Sport Research Orchestrator
- * Automated background research system for all Big 12 sports
- * Manages parallel research across multiple sports with progress tracking
+ * Enhanced Multi-Sport Research Orchestrator
+ * Automated background research system for all Big 12 sports with COMPASS integration
+ * Manages parallel research with 30-worker scaling and adaptive frequency updates
+ * Integrated with Unified Compass Report AI agent automation
  */
 
 const path = require('path');
 const fs = require('fs').promises;
 const ParallelResearchOrchestrator = require('./parallelResearchOrchestrator');
+const COMPASS = require('./enhanced/COMPASS');
 
 class MultiSportResearchOrchestrator {
   constructor() {
@@ -16,6 +18,41 @@ class MultiSportResearchOrchestrator {
     this.completedSports = new Set();
     this.results = new Map();
     this.progressCallbacks = [];
+    
+    // NEW: Enhanced COMPASS integration with 30-worker scaling
+    this.compass = new COMPASS();
+    this.workerMultiplier = 30;
+    this.maxConcurrentTasks = 150; // 5 base * 30 workers
+    
+    // NEW: Adaptive frequency configuration from Unified Compass Report
+    this.updateFrequencies = {
+      'tier_1': { // Football, Men's Basketball
+        'in_season': 'real_time',
+        'regular': 'daily',
+        'off_season': '3x_weekly'
+      },
+      'tier_2': { // Women's Basketball, Baseball, Softball
+        'in_season': '3x_daily',
+        'regular': '3x_weekly',
+        'off_season': 'weekly'
+      },
+      'tier_3': { // Volleyball, Soccer
+        'in_season': 'daily',
+        'regular': 'weekly',
+        'off_season': 'bi_weekly'
+      },
+      'tier_4': { // Tennis, Golf, Track
+        'competition': 'daily',
+        'regular': 'bi_weekly'
+      }
+    };
+    
+    // NEW: Agent task queue management
+    this.agentTasks = new Map();
+    this.taskQueue = [];
+    
+    // NEW: COMPASS update scheduling
+    this.compassUpdateSchedule = new Map();
   }
 
   // Big 12 Sports Configuration
@@ -514,6 +551,460 @@ class MultiSportResearchOrchestrator {
   // Method to add progress callback
   onProgress(callback) {
     this.progressCallbacks.push(callback);
+  }
+
+  // ============================================================================
+  // NEW: Enhanced AI Agent Integration Methods for Unified Compass Report
+  // ============================================================================
+
+  /**
+   * Initialize adaptive COMPASS update scheduling with 30-worker scaling
+   */
+  async initializeAdaptiveScheduling() {
+    try {
+      console.log('🤖 Initializing adaptive COMPASS scheduling with 30-worker scaling...');
+      
+      const sportsConfig = this.getSportsConfig();
+      
+      for (const [sport, config] of Object.entries(sportsConfig)) {
+        const tier = this.getSportTier(sport);
+        const teams = config.teams;
+        
+        for (const team of teams) {
+          // Calculate update frequency based on tier and team performance
+          const frequency = this.calculateUpdateFrequency(sport, tier, team);
+          
+          // Schedule initial COMPASS update
+          this.scheduleCompassUpdate(team, sport, frequency);
+        }
+      }
+      
+      console.log(`✅ Adaptive scheduling initialized for ${Object.keys(sportsConfig).length} sports`);
+      
+    } catch (error) {
+      console.error('❌ Error initializing adaptive scheduling:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Calculate adaptive update frequency based on sport tier and team performance
+   */
+  calculateUpdateFrequency(sport, tier, team) {
+    const baseFrequency = this.updateFrequencies[tier]?.regular || 'weekly';
+    
+    // Get team volatility and performance (mock data - integrate with actual team data)
+    const volatility = this.getTeamVolatility(team, sport);
+    const performanceTier = this.getTeamPerformanceTier(team, sport);
+    
+    // Increase frequency for high volatility or struggling programs
+    if (volatility > 5 || performanceTier === 'bottom_third') {
+      return this.increaseFrequency(baseFrequency);
+    }
+    
+    return baseFrequency;
+  }
+
+  /**
+   * Schedule COMPASS update for a team
+   */
+  scheduleCompassUpdate(team, sport, frequency) {
+    const taskId = `${team}_${sport}_compass_update`;
+    const scheduledTime = this.getNextScheduledTime(frequency);
+    
+    const task = {
+      id: taskId,
+      type: 'compass_update',
+      team,
+      sport,
+      frequency,
+      scheduledTime,
+      prompt: this.generateCOMPASSPrompt(team, sport),
+      priority: this.getSportTier(sport) === 'tier_1' ? 9 : 5,
+      workerPool: 'compass_enhanced'
+    };
+    
+    this.agentTasks.set(taskId, task);
+    this.taskQueue.push(task);
+    
+    // Update COMPASS schedule
+    this.compassUpdateSchedule.set(`${team}_${sport}`, {
+      team,
+      sport,
+      lastUpdate: null,
+      nextUpdate: scheduledTime,
+      frequency,
+      tier: this.getSportTier(sport)
+    });
+  }
+
+  /**
+   * Generate sport-specific COMPASS prompts from Unified Compass Report
+   */
+  generateCOMPASSPrompt(team, sport) {
+    const today = new Date().toISOString().split('T')[0];
+    
+    const sportSpecificPrompts = {
+      'football': `Research ${team} football as of ${today}:
+      
+      PERFORMANCE DATA:
+      - Current record (overall and conference)
+      - Last 3 games: scores, opponent ratings, home/away
+      - CFP rankings, AP Poll position
+      - Key injuries or suspensions
+      
+      COMPASS COMPONENTS:
+      - Competitive: Conference standing, quality wins/losses, strength metrics
+      - Operational: Coaching stability, facility updates, academic success (APR/GSR)
+      - Market: TV appearances, media coverage, brand strength, social media engagement
+      - Player: Recruiting class ranking, transfer portal activity, NIL collective strength
+      - Audience: Attendance figures, season ticket sales, fan engagement metrics
+      - Sport Standing: Big 12 performance, strength of schedule, rivalry preservation
+      - Sustainability: Financial health, donor support, long-term outlook
+      
+      SCHEDULING RELEVANCE:
+      - Optimal opponent strength for playoff consideration
+      - TV window preferences based on performance
+      - Travel burden assessment for conference games
+      
+      Return structured JSON with confidence scores for FlexTime integration.`,
+      
+      'mens_basketball': `Research ${team} men's basketball as of ${today}:
+      
+      PERFORMANCE DATA:
+      - Current record and last 5 games
+      - NET, KPI, and KenPom rankings
+      - Quad 1/2 wins and bad losses
+      - Tournament projection and bubble status
+      
+      COMPASS COMPONENTS:
+      - Competitive: Conference tournament seeding, quality opponent results
+      - Operational: Coaching consistency, practice facility quality, academic metrics
+      - Market: TV game count, March Madness exposure potential, regional coverage
+      - Player: Transfer portal net gain/loss, recruiting class, player development
+      - Audience: Arena capacity utilization, season ticket base, student engagement
+      - Sport Standing: Big 12 competitive balance, conference strength, rivalry games
+      - Sustainability: Program budget, NIL infrastructure, coaching stability
+      
+      SCHEDULING RELEVANCE:
+      - Conference tournament seeding implications
+      - Quadrant optimization for NET rankings
+      - Home court advantage maximization
+      
+      Format for FlexTime constraint system integration.`,
+      
+      'baseball': `Research ${team} baseball as of ${today}:
+      
+      PERFORMANCE DATA:
+      - Current record and RPI ranking
+      - Conference series results and standings
+      - Recent weekend series performance
+      - Regional tournament projection
+      
+      COMPASS COMPONENTS:
+      - Competitive: Series win percentage, quality opponent performance, RPI factors
+      - Operational: Coaching tenure, facility quality, academic compliance
+      - Market: Regional TV coverage, College World Series history, local media
+      - Player: MLB draft prospects, transfer activity, recruiting class
+      - Audience: Weekend series attendance, fan base engagement
+      - Sport Standing: Big 12 baseball competitiveness, weather considerations
+      - Sustainability: Program funding, facility maintenance, long-term viability
+      
+      SCHEDULING RELEVANCE:
+      - Weekend series optimization
+      - Weather contingency planning
+      - Conference tournament implications
+      
+      Return data optimized for series-based scheduling constraints.`
+    };
+    
+    return sportSpecificPrompts[sport] || this.generateGenericSportPrompt(team, sport, today);
+  }
+
+  /**
+   * Generate generic sport prompt for sports not specifically defined
+   */
+  generateGenericSportPrompt(team, sport, today) {
+    return `Research ${team} ${sport} as of ${today}:
+    
+    PERFORMANCE DATA:
+    - Current season record and conference standing
+    - Recent competition results
+    - Key player updates and roster changes
+    
+    COMPASS COMPONENTS:
+    - Competitive: Season performance vs expectations, key victories/defeats
+    - Operational: Coaching staff stability, facility adequacy, academic success
+    - Market: Media coverage level, conference visibility, fan interest
+    - Player: Recruiting success, retention rate, development indicators
+    - Audience: Event attendance, community support, engagement levels
+    - Sport Standing: Conference competitive level, scheduling considerations
+    - Sustainability: Program resources, financial support, growth potential
+    
+    Return structured data for FlexTime scheduling integration.`;
+  }
+
+  /**
+   * Execute COMPASS update with 30-worker parallel processing
+   */
+  async executeCOMPASSUpdate(task) {
+    try {
+      const startTime = Date.now();
+      
+      // Use enhanced orchestrator with COMPASS integration
+      const research = await this.orchestrator.executeResearch(task.prompt, {
+        sport: task.sport,
+        team: task.team,
+        workerMultiplier: this.workerMultiplier
+      });
+      
+      // Calculate enhanced COMPASS score with new research data
+      const compassScore = await this.compass.calculateCOMPASSScore({
+        id: `${task.team}_${task.sport}_schedule`,
+        sport: task.sport,
+        team: { id: task.team, name: task.team }
+      }, {
+        researchData: research,
+        enhancedCalculation: true
+      });
+      
+      // Store results and update scheduling
+      await this.storeCOMPASSResults(task.team, task.sport, compassScore, research);
+      
+      const processingTime = Date.now() - startTime;
+      
+      console.log(`✅ COMPASS update completed for ${task.team} ${task.sport} in ${processingTime}ms`);
+      console.log(`   Score: ${compassScore.overallScore.toFixed(2)} (base: ${compassScore.baseScore.toFixed(2)}, enhancement: +${compassScore.enhancedFeatures.totalEnhancement.toFixed(2)})`);
+      
+      return {
+        success: true,
+        team: task.team,
+        sport: task.sport,
+        compassScore,
+        processingTime,
+        research
+      };
+      
+    } catch (error) {
+      console.error(`❌ COMPASS update failed for ${task.team} ${task.sport}:`, error);
+      return {
+        success: false,
+        team: task.team,
+        sport: task.sport,
+        error: error.message
+      };
+    }
+  }
+
+  /**
+   * Process agent task queue with 30-worker distribution
+   */
+  async processAgentTaskQueue() {
+    if (this.taskQueue.length === 0) return;
+    
+    console.log(`🔄 Processing ${this.taskQueue.length} agent tasks with ${this.workerMultiplier}-worker scaling...`);
+    
+    // Sort tasks by priority and scheduled time
+    this.taskQueue.sort((a, b) => {
+      if (a.priority !== b.priority) return b.priority - a.priority;
+      return new Date(a.scheduledTime) - new Date(b.scheduledTime);
+    });
+    
+    // Process tasks in batches based on worker capacity
+    const batchSize = Math.min(this.maxConcurrentTasks, this.taskQueue.length);
+    const batch = this.taskQueue.splice(0, batchSize);
+    
+    const batchPromises = batch.map((task, index) => {
+      const workerId = (index % this.workerMultiplier) + 1;
+      return this.executeTaskWithWorker(task, workerId);
+    });
+    
+    const results = await Promise.allSettled(batchPromises);
+    
+    // Process results and reschedule as needed
+    results.forEach((result, index) => {
+      const task = batch[index];
+      
+      if (result.status === 'fulfilled' && result.value.success) {
+        // Reschedule next update
+        this.rescheduleTask(task);
+      } else {
+        // Handle failed tasks
+        this.handleFailedTask(task, result.reason);
+      }
+    });
+    
+    console.log(`✅ Batch processing completed: ${results.filter(r => r.status === 'fulfilled').length}/${results.length} successful`);
+  }
+
+  /**
+   * Execute task with specific worker assignment
+   */
+  async executeTaskWithWorker(task, workerId) {
+    task.workerId = workerId;
+    task.startTime = Date.now();
+    
+    console.log(`🤖 Worker ${workerId} executing ${task.type} for ${task.team} ${task.sport}`);
+    
+    switch (task.type) {
+      case 'compass_update':
+        return await this.executeCOMPASSUpdate(task);
+      case 'momentum_update':
+        return await this.executeMomentumUpdate(task);
+      case 'synergy_calculation':
+        return await this.executeSynergyCalculation(task);
+      default:
+        throw new Error(`Unknown task type: ${task.type}`);
+    }
+  }
+
+  // ============================================================================
+  // Helper Methods for Enhanced Functionality
+  // ============================================================================
+
+  getSportTier(sport) {
+    const tierMapping = {
+      'football': 'tier_1',
+      'mens_basketball': 'tier_1',
+      'womens_basketball': 'tier_2',
+      'baseball': 'tier_2',
+      'softball': 'tier_2',
+      'volleyball': 'tier_3',
+      'soccer': 'tier_3',
+      'tennis_mens': 'tier_4',
+      'tennis_womens': 'tier_4',
+      'wrestling': 'tier_4'
+    };
+    
+    return tierMapping[sport] || 'tier_4';
+  }
+
+  getTeamVolatility(team, sport) {
+    // Mock volatility calculation - in production, use actual performance data
+    return Math.random() * 10; // 0-10 scale
+  }
+
+  getTeamPerformanceTier(team, sport) {
+    // Mock performance tier - in production, use actual rankings/performance
+    const random = Math.random();
+    if (random < 0.33) return 'bottom_third';
+    if (random < 0.66) return 'middle_third';
+    return 'top_third';
+  }
+
+  increaseFrequency(baseFrequency) {
+    const frequencyMap = {
+      'bi_weekly': 'weekly',
+      'weekly': '3x_weekly',
+      '3x_weekly': 'daily',
+      'daily': '3x_daily',
+      '3x_daily': 'real_time'
+    };
+    
+    return frequencyMap[baseFrequency] || baseFrequency;
+  }
+
+  getNextScheduledTime(frequency) {
+    const now = new Date();
+    const frequencyMap = {
+      'real_time': 5 * 60 * 1000, // 5 minutes
+      '3x_daily': 8 * 60 * 60 * 1000, // 8 hours
+      'daily': 24 * 60 * 60 * 1000, // 24 hours
+      '3x_weekly': 2.33 * 24 * 60 * 60 * 1000, // ~2.33 days
+      'weekly': 7 * 24 * 60 * 60 * 1000, // 7 days
+      'bi_weekly': 14 * 24 * 60 * 60 * 1000 // 14 days
+    };
+    
+    const interval = frequencyMap[frequency] || frequencyMap['weekly'];
+    return new Date(now.getTime() + interval);
+  }
+
+  async storeCOMPASSResults(team, sport, compassScore, research) {
+    // Store in results map for immediate access
+    const key = `${team}_${sport}`;
+    this.results.set(key, {
+      team,
+      sport,
+      compassScore,
+      research,
+      timestamp: new Date(),
+      workerMultiplier: this.workerMultiplier
+    });
+    
+    // In production, this would also store in database
+    console.log(`💾 COMPASS results stored for ${team} ${sport}`);
+  }
+
+  rescheduleTask(task) {
+    const nextScheduledTime = this.getNextScheduledTime(task.frequency);
+    
+    const newTask = {
+      ...task,
+      scheduledTime: nextScheduledTime,
+      id: `${task.team}_${task.sport}_${Date.now()}`
+    };
+    
+    this.taskQueue.push(newTask);
+    this.agentTasks.set(newTask.id, newTask);
+  }
+
+  handleFailedTask(task, error) {
+    console.error(`❌ Task failed: ${task.type} for ${task.team} ${task.sport}`, error);
+    
+    // Retry logic could be implemented here
+    // For now, just reschedule with increased interval
+    task.frequency = this.increaseFrequency(task.frequency);
+    this.rescheduleTask(task);
+  }
+
+  /**
+   * Get enhanced progress with COMPASS integration metrics
+   */
+  getEnhancedProgress() {
+    const baseProgress = this.getProgress();
+    
+    return {
+      ...baseProgress,
+      compassIntegration: {
+        activeUpdates: this.agentTasks.size,
+        queuedTasks: this.taskQueue.length,
+        workerMultiplier: this.workerMultiplier,
+        maxConcurrentTasks: this.maxConcurrentTasks,
+        scheduledTeams: this.compassUpdateSchedule.size,
+        lastUpdateTime: new Date().toISOString()
+      },
+      systemMetrics: {
+        memoryUsage: process.memoryUsage(),
+        uptime: process.uptime(),
+        version: '3.0.0-enhanced'
+      }
+    };
+  }
+
+  /**
+   * Execute momentum update task
+   */
+  async executeMomentumUpdate(task) {
+    // Placeholder for momentum-specific update logic
+    return {
+      success: true,
+      team: task.team,
+      sport: task.sport,
+      type: 'momentum_update'
+    };
+  }
+
+  /**
+   * Execute synergy calculation task
+   */
+  async executeSynergyCalculation(task) {
+    // Placeholder for synergy-specific calculation logic
+    return {
+      success: true,
+      team: task.team,
+      sport: task.sport,
+      type: 'synergy_calculation'
+    };
   }
 }
 

@@ -451,6 +451,7 @@ app.post('/api/user/settings', authenticateToken, async (req, res) => {
 // Teams API - get teams for a specific conference
 app.get('/api/teams', async (req, res) => {
   try {
+    // eslint-disable-next-line no-unused-vars
     const { conference = 'BIG12', sport } = req.query;
     
     let query = `

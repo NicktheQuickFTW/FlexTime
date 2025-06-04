@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Paper,
@@ -16,7 +16,6 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  ListItemSecondaryAction,
   IconButton,
   Dialog,
   DialogTitle,
@@ -29,13 +28,8 @@ import {
   InputLabel,
   Grid,
   LinearProgress,
-  Tooltip,
   Badge,
-  Collapse,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormLabel
+  Collapse
 } from '@mui/material';
 import {
   Warning as WarningIcon,
@@ -45,7 +39,6 @@ import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   AutoFixHigh as AutoFixIcon,
-  Psychology as PsychologyIcon,
   Lightbulb as LightbulbIcon,
   Timeline as TimelineIcon,
   TipsAndUpdates as TipsIcon
@@ -92,7 +85,6 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
 }) => {
   const [conflicts, setConflicts] = useState<Conflict[]>([]);
   const [loading, setLoading] = useState(true);
-  const [analyzing, setAnalyzing] = useState(false);
   const [selectedConflict, setSelectedConflict] = useState<Conflict | null>(null);
   const [selectedResolution, setSelectedResolution] = useState<Resolution | null>(null);
   const [resolutionDialog, setResolutionDialog] = useState(false);
@@ -100,20 +92,18 @@ const ConflictResolver: React.FC<ConflictResolverProps> = ({
   const [resolutionNotes, setResolutionNotes] = useState('');
   const [autoResolveMode, setAutoResolveMode] = useState<'conservative' | 'balanced' | 'aggressive'>('balanced');
 
-  useEffect(() => {
-    analyzeConflicts();
-  }, [constraints]);
-
-  const analyzeConflicts = async () => {
-    setAnalyzing(true);
+  const analyzeConflicts = useCallback(async () => {
     // Simulate conflict analysis
     setTimeout(() => {
       const detectedConflicts = detectConflicts(constraints);
       setConflicts(detectedConflicts);
-      setAnalyzing(false);
       setLoading(false);
     }, 1500);
-  };
+  }, [constraints]);
+
+  useEffect(() => {
+    analyzeConflicts();
+  }, [analyzeConflicts]);
 
   const detectConflicts = (constraintList: Constraint[]): Conflict[] => {
     const conflicts: Conflict[] = [];

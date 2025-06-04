@@ -5,7 +5,7 @@
  * helping users understand schedule performance through visual representations.
  */
 
-const logger = require('../logger');
+const logger = require('../src/utils/logger');
 
 class ScheduleVisualizationGenerator {
   /**

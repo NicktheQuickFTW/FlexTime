@@ -14,9 +14,9 @@ const Redis = require('ioredis');
 const cluster = require('cluster');
 const os = require('os');
 
-const logger = require('../utils/logger');
-const PerformanceMonitor = require('../utils/performance-monitor');
-const PRODUCTION_SCALE_CONFIG = require('../config/production_scale_config');
+const logger = require("../utils/logger");
+const PerformanceMonitor = require('../../utils/performance-monitor');
+const PRODUCTION_SCALE_CONFIG = require('../../config/scale_config');
 
 // Import base constraint system
 const { ConstraintManagementSystem, ConstraintTypes } = require('./constraint-management-system');

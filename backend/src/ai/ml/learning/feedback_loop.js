@@ -8,7 +8,7 @@
  */
 
 const { Pool } = require('pg');
-const logger = require('../../utils/logger');
+const logger = require("../utils/logger");
 const IntelligenceEngineClient = require('../intelligence_engine_client');
 const intelligenceEngineConfig = require('../../config/intelligence_engine_config');
 const neonConfig = require('../../config/neon_db_config');

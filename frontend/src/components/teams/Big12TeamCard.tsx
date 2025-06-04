@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { TeamBranding } from '../../data/big12Teams';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useThemeContext } from '../../contexts/ThemeContext';
 import './Big12TeamCard.css';
 
 interface Big12TeamCardProps {
@@ -21,7 +21,7 @@ export const Big12TeamCard: React.FC<Big12TeamCardProps> = ({
   isSelected = false,
   className = ''
 }) => {
-  const { theme } = useTheme();
+  const { theme } = useThemeContext();
   const isDarkTheme = theme.mode === 'dark';
   
   const teamStyles = {

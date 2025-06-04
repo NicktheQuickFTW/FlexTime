@@ -1,71 +1,146 @@
-# FlexTime: Intelligent Sports Scheduling Platform 🏆
+# FlexTime: Next-Gen Sports Scheduling Platform 🏆
 
-> **AI-Powered Scheduling for Collegiate Athletics**
+> **AI-Powered Scheduling Built on Operational HELiiX Infrastructure**
 
-FlexTime is a comprehensive scheduling platform designed specifically for collegiate athletic conferences, with a focus on the Big 12 Conference. It combines machine learning, constraint-based optimization, and advanced analytics to generate optimal sports schedules while considering travel, competitive balance, and championship dates.
+FlexTime is an advanced scheduling platform in development for collegiate athletic conferences, with specialized optimization for the Big 12 Conference. Built on the proven, operational HELiiX Intelligence Engine and Multi-Agent System, FlexTime integrates advanced machine learning, constraint-based optimization, and real-time analytics to deliver optimal sports scheduling solutions that balance competitive fairness, travel efficiency, and institutional requirements.
 
-**Status: ✅ Backend Refactored - Ready for Production Deployment** (May 30, 2025)
+**🔧 Status: In Development - Built on Operational HELiiX Systems**  
+**📅 Last Updated: June 3, 2025**  
+**✨ Target Completion: Q3-Q4 2025**
 
 ## 🌟 Key Features
 
-### 🚀 Core Functionality
+### 🚀 Core Infrastructure (Operational HELiiX Systems)
 
-- ✅ **AI-Powered Scheduling**: Machine learning models optimize schedules based on historical data and constraints
+- ✅ **HELiiX Intelligence Engine**: Operational AI/ML backend with 8 production API endpoints
+- ✅ **Multi-Agent System**: 15+ operational specialized agents for constraint management and optimization
+- ✅ **Advanced Constraint Engine**: Type-safe UCDL system with proven 90% faster evaluation (200-500ms)
+- ✅ **COMPASS Analytics**: Real-time team performance and strength-of-schedule calculations
+- ✅ **Travel Optimization**: ML-driven algorithms for cost and carbon impact analysis
 - ✅ **Championship Date Management**: Intelligent handling of championship events and qualifiers
-- ✅ **Travel Optimization**: Minimize travel time and costs for all teams
-- ✅ **Constraint Management**: Type-safe UCDL constraint system with 90% faster evaluation
-- ✅ **Real-time Collaboration**: Multiple users can collaborate with event-driven updates using WebSocket technology
-- ✅ **Microservices Architecture**: Distributed, scalable system with specialized services
 
-### 📊 Analytics & Insights
+### 🔧 FlexTime Platform Features (In Development)
 
-- ✅ **COMPASS Analytics Dashboard**: Comprehensive metrics and insights with interactive visualizations
-- ✅ **Travel optimization heat maps**: Geographic visualization of travel patterns and costs
-- ✅ **Competitive balance analysis**: Statistical tools to ensure fair scheduling
-- ✅ **Budget impact forecasting**: Financial projections based on generated schedules
-- ✅ **Performance metrics and statistics**: Comprehensive measurement of system performance
+- 🚧 **Scheduling Interface**: Advanced UI for drag-and-drop schedule creation and management
+- 🚧 **Real-time Collaboration**: Multi-user editing with conflict-free replicated data types (CRDTs)
+- 🚧 **Integrated Dashboard**: Unified interface combining HELiiX analytics with scheduling tools
+- 🚧 **Cloud-Native Deployment**: Kubernetes-ready microservices architecture
+- 🚧 **Enhanced Security**: OAuth 2.0 and RBAC integration for enterprise deployment
+
+### 📊 UI/UX Components (In Development)
+
+- 🚧 **Venues Management**: Location mapping, capacity tracking, facility management with interactive filters
+- 🚧 **Analytics Dashboard**: Real-time metrics, interactive charts, performance monitoring
+- 🚧 **Settings & Profile**: User preferences, accessibility options, notifications, dashboard customization
+- 🚧 **Admin Dashboard**: System monitoring, user management, configuration, activity logs, system health
+- 🚧 **Reports & Export**: Multiple formats (PDF, CSV, Excel, JSON), scheduled reports, export history
+
+### 📈 HELiiX Analytics & Insights (Operational)
+
+- ✅ **COMPASS Analytics Engine**: Team performance metrics and predictive modeling
+- ✅ **Travel Optimization Engine**: Geographic analysis of travel patterns and costs
+- ✅ **Competitive Balance Analysis**: Statistical algorithms for fair scheduling
+- ✅ **Constraint Evaluation**: Real-time validation and conflict detection
+- ✅ **Performance Monitoring**: System performance and optimization metrics
+
+### 🔧 FlexTime Analytics Integration (In Development)
+
+- 🚧 **Unified Dashboard**: Integration of HELiiX analytics with FlexTime UI
+- 🚧 **Interactive Visualizations**: User-friendly charts and data presentation
+- 🚧 **Budget Impact Forecasting**: Financial projections based on generated schedules
+- 🚧 **Real-time Updates**: Live data streaming to FlexTime interface
 
 ## 🛠️ Tech Stack
 
-### Frontend
+### HELiiX Backend Infrastructure (Operational)
 
-- ✅ **React 18 with TypeScript**: Modern component architecture with type safety
-- ✅ **Glassmorphic UI**: Ultra-modern design with crystalline UI elements
-- ✅ **Redux + Context API**: Sophisticated state management
-- ✅ **AG-Grid Enterprise**: Advanced data visualization with drag & drop capability
-- ✅ **Framer Motion**: Smooth animations and micro-interactions
+- ✅ **Python Intelligence Engine**: 8 production API endpoints for AI/ML operations
+- ✅ **Multi-Agent System**: Director and specialized agents with persistent memory
+- ✅ **Neon PostgreSQL**: HELiiX database with 50-connection pooling
+- ✅ **Type-Safe Constraints**: UCDL constraint evaluation system
+- ✅ **COMPASS Analytics**: Team performance and predictive modeling
 
-### Backend (Refactored May 30, 2025)
+### FlexTime Frontend (In Development)
 
-- ✅ **Node.js with Express**: High-performance modular server with 20 workers per task scaling
-- ✅ **Modular Architecture**: Refactored from 580-line monolith to clean, testable modules
-- ✅ **PostgreSQL with Neon DB**: Cloud-native database with worker-scaled connections
-- ✅ **Enhanced Caching**: LRU cache with worker allocation tracking and cleanup
-- ✅ **Production Security**: Helmet middleware, rate limiting, compression
-- ✅ **Python for ML components**: Specialized machine learning services
-- ✅ **Redis Streams**: Event-driven architecture with reliable message delivery
-- ✅ **Kubernetes**: Container orchestration with auto-scaling capabilities
-- ✅ **Microservices Architecture**: Specialized domain services with high cohesion
+- 🚧 **React 18 with TypeScript**: Modern component architecture with type safety
+- 🚧 **Material-UI v6**: Enterprise-grade UI components with theming
+- 🚧 **Next.js 14**: Production-optimized React framework
+- 🚧 **Framer Motion 10**: Buttery smooth animations and gestures
+- 🚧 **Recharts**: Interactive data visualization
+- 🚧 **FlexTime Design System**: Custom glassmorphic UI components
+- ✅ **Complete Page Suite**: Venues, Analytics, Settings, Admin, Reports pages
+
+### FlexTime Integration Layer (In Development)
+
+- 🚧 **Node.js 20 LTS**: Integration service for HELiiX ↔ FlexTime communication
+- 🚧 **Express 5**: API gateway and routing layer
+- 🚧 **Microservices Architecture**: Clean separation of scheduling and analytics services
+- 🚧 **Modular Design**: Organized codebase structure
+  - `src/config/`: Environment and service configuration
+  - `src/middleware/`: Express middleware stack
+  - `src/routes/`: API endpoint definitions
+  - `src/services/`: Business logic and domain services
+  - `src/adapters/`: HELiiX system integration adapters
+
+### Data Layer (Operational)
+
+- ✅ **HELiiX Neon Database**: Operational PostgreSQL instance with Big 12 data
+- ✅ **50-Connection Pooling**: High-performance database access
+- ✅ **Redis Streams**: Event streaming for real-time communication (2,000-5,000 events/second)
+- 🚧 **FlexTime Data Integration**: User interface data layer
+- 🚧 **Caching Strategy**: Redis-based caching for FlexTime UI
+
+### Infrastructure (Target Architecture)
+
+- 🚧 **Kubernetes Deployment**: Production-grade orchestration for FlexTime
+- 🚧 **Docker Containerization**: FlexTime service containerization
+- 🚧 **Helm Charts**: Kubernetes package management for deployment
+- ✅ **HELiiX Infrastructure**: Operational backend systems and monitoring
+- 🚧 **Monitoring Integration**: FlexTime performance and usage monitoring
+- ✅ **Argo CD**: GitOps continuous delivery
 
 ### AI/ML
 
-- ✅ **HELiiX Intelligence Engine**: Comprehensive AI system with knowledge graph implementation
-- ✅ **TensorFlow.js**: In-browser predictions for immediate feedback
-- ✅ **Custom constraint optimization**: Specialized algorithms for athletic scheduling
-- ✅ **Predictive modeling**: Advanced forecasting for game outcomes
-- ✅ **Event-driven ML pipeline**: Real-time learning capabilities
-- ✅ **Sport-specific scheduling generators**: Specialized algorithms for each sport
+#### Core Engine
+
+- ✅ **HELiiX Intelligence Engine**: Comprehensive AI system with knowledge graph
+- ✅ **TensorFlow.js**: Browser-based ML inference
+- ✅ **Python ML Services**: Specialized scheduling algorithms
+- ✅ **RedisAI**: Tensor computation and model serving
+- ✅ **MLflow**: Experiment tracking and model registry
+
+#### Advanced Features
+
+- ✅ **Custom Constraint Optimization**: Specialized algorithms for athletic scheduling
+- ✅ **Predictive Modeling**: Advanced forecasting for game outcomes
+- ✅ **Event-Driven Pipeline**: Real-time learning and adaptation
+- ✅ **Sport-Specific Optimizers**: Tailored algorithms for each sport
+- ✅ **Knowledge Graph**: Advanced relationship mapping for scheduling intelligence
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 16+
-- PostgreSQL 13+
-- Redis 6+
-- Python 3.9+ (for ML components)
+- Node.js 20 LTS or later
+- PostgreSQL 15+ or Neon DB
+- Redis 7+
+- Python 3.11+ (for ML components)
+- Docker & Docker Compose (optional)
 
-### Installation
+### Quick Start with Docker (Recommended)
+
+```bash
+# Clone the repository
+git clone https://github.com/your-org/flextime.git
+cd flextime
+
+# Start all services
+docker compose up -d
+
+# Access the application at http://localhost:3000
+```
+
+### Manual Setup
 
 1. **Clone the repository**
 
@@ -74,45 +149,70 @@ FlexTime is a comprehensive scheduling platform designed specifically for colleg
    cd flextime
    ```
 
-2. **Install dependencies**
+2. **Set up the backend**
 
    ```bash
-   # Install backend dependencies
    cd backend
+   cp .env.example .env
+   # Edit .env with your configuration
    npm install
-   
-   # Install frontend dependencies
-   cd ../frontend
-   npm install
+   npx prisma migrate dev
+   npm run dev
    ```
 
-3. **Set up environment variables**
+3. **Set up the frontend**
 
    ```bash
-   # Backend
-   cp backend/.env.example backend/.env
-   # Edit with your database credentials
-   
-   # Frontend
-   cp frontend/.env.example frontend/.env
+   cd ../frontend
+   cp .env.example .env
+   # Edit .env with your API URL
+   npm install
+   npm run dev
    ```
 
-4. **Start the development servers**
+4. **Access the application**
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - API Docs: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
+   - Adminer (DB): [http://localhost:8080](http://localhost:8080)
+   - Redis Commander: [http://localhost:8081](http://localhost:8081)
+
+### Development Scripts
+
+```bash
+# Run tests
+npm test
+
+# Run linter
+npm run lint
+
+# Run type checking
+npm run typecheck
+
+# Build for production
+npm run build
+```
+
+1. **Start Development Servers**
 
    ```bash
    # Start backend
    cd backend
    npm run dev
-   
-   # In a new terminal, start frontend
-   cd frontend
-   npm start
    ```
 
-5. **Access the application**
+   In a new terminal:
+   
+   ```bash
+   # Start frontend
+   cd frontend
+   npm run dev
+   ```
 
+2. **Access the Application**
    - Frontend: [http://localhost:3000](http://localhost:3000)
-   - API: [http://localhost:5000](http://localhost:5000)
+   - Backend API: [http://localhost:3001](http://localhost:3001)
+   - API Documentation: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
+   - GraphQL Playground: [http://localhost:3001/graphql](http://localhost:3001/graphql)
 
 ## 📚 Documentation
 

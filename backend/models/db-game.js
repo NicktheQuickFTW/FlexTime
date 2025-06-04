@@ -15,11 +15,11 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     schedule_id: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: 'schedules',
-        key: 'schedule_id'
+        key: 'id'
       }
     },
     home_team_id: {

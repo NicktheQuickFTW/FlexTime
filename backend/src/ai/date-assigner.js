@@ -5,8 +5,8 @@
  * complex constraints like venue availability, academic calendars, and travel optimization.
  */
 
-const Schedule = require('../models/schedule');
-const Game = require('../models/game');
+const Schedule = require('../../models/schedule');
+const Game = require('../../models/game');
 
 class DateAssigner {
   /**

@@ -17,18 +17,20 @@
  * - Responsive design preserving existing styling
  */
 
+import React from 'react';
+
 function FlexTimeApp() {
   // Core Application State
   const [currentModule, setCurrentModule] = React.useState('dashboard'); // dashboard, schedules, teams, venues, reports, settings
   const [user, setUser] = React.useState(null);
   const [notifications, setNotifications] = React.useState([]);
-  const [systemHealth, setSystemHealth] = React.useState('healthy');
+  const [systemHealth] = React.useState('healthy');
   
   // Dashboard State
   const [activeSchedules, setActiveSchedules] = React.useState([]);
   const [recentActivity, setRecentActivity] = React.useState([]);
   const [upcomingDeadlines, setUpcomingDeadlines] = React.useState([]);
-  const [scheduleMetrics, setScheduleMetrics] = React.useState({
+  const [scheduleMetrics] = React.useState({
     travelDistance: { value: 85, change: -15, direction: 'down' },
     postseasonScore: { value: 78, change: 8, direction: 'up' },
     conflictResolution: { value: 95, change: 2, direction: 'up' },
@@ -48,7 +50,7 @@ function FlexTimeApp() {
   });
 
   // Collaboration State
-  const [activeUsers, setActiveUsers] = React.useState([
+  const [activeUsers] = React.useState([
     { id: 1, initials: 'JD', name: 'John Doe', role: 'Conference Admin', color: '#00BFFF' },
     { id: 2, initials: 'SM', name: 'Sarah Miller', role: 'University Admin', color: '#FF6B6B' },
     { id: 3, initials: 'MJ', name: 'Mike Johnson', role: 'Coach', color: '#4ECDC4' }
@@ -227,6 +229,8 @@ function FlexTimeApp() {
     console.log(`Switching to module: ${module}`);
   };
 
+  // Notification handler - used in notification components
+  // eslint-disable-next-line no-unused-vars
   const handleNotificationDismiss = (notificationId) => {
     setNotifications(prev => prev.filter(n => n.id !== notificationId));
   };

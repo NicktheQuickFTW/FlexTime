@@ -97,11 +97,15 @@ exports.getScheduleById = async (req, res) => {
  */
 exports.createSchedule = async (req, res) => {
   try {
+    console.log('Request body received:', JSON.stringify(req.body, null, 2));
+    
     const { 
       name, 
       sport_id, 
       championship_id, 
       season, 
+      season_name,
+      year,
       start_date, 
       end_date, 
       team_ids,
@@ -109,6 +113,8 @@ exports.createSchedule = async (req, res) => {
       generation_options,
       useBig12Database = false
     } = req.body;
+    
+    console.log('Extracted fields:', { name, sport_id, season, season_name, year });
     
     // Validate required fields
     if (!name || !sport_id || !season || !start_date || !end_date || (!team_ids && !useBig12Database) || (!team_ids || !team_ids.length) && !useBig12Database) {
@@ -124,7 +130,7 @@ exports.createSchedule = async (req, res) => {
         name,
         sport_id,
         championship_id: championship_id || null,
-        season,
+        year: season_name || year || season, // Use season_name first, then year, then season
         start_date: new Date(start_date),
         end_date: new Date(end_date),
         status: 'draft',

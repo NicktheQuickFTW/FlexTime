@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useTheme } from '../../contexts/ThemeContext';
 import './MobileNavigation.css';
 
 // Navigation Item Interface

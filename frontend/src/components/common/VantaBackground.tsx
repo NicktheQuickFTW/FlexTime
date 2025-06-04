@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, useTheme } from '@mui/material';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import useReducedMotion from '../../hooks/useReducedMotion';
 
 // We'll dynamically import Vanta to avoid SSR issues
 let VANTA: any = null;
@@ -35,29 +35,28 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({
         // Import the core Vanta library
         VANTA = await import('vanta/dist/vanta.js');
         
-        // Import the specific effect
-        let effectModule;
+        // Import the specific effect (loaded for side effects)
         switch (effect) {
           case 'waves':
-            effectModule = await import('vanta/dist/vanta.waves.min.js');
+            await import('vanta/dist/vanta.waves.min.js');
             break;
           case 'clouds':
-            effectModule = await import('vanta/dist/vanta.clouds.min.js');
+            await import('vanta/dist/vanta.clouds.min.js');
             break;
           case 'birds':
-            effectModule = await import('vanta/dist/vanta.birds.min.js');
+            await import('vanta/dist/vanta.birds.min.js');
             break;
           case 'net':
-            effectModule = await import('vanta/dist/vanta.net.min.js');
+            await import('vanta/dist/vanta.net.min.js');
             break;
           case 'globe':
-            effectModule = await import('vanta/dist/vanta.globe.min.js');
+            await import('vanta/dist/vanta.globe.min.js');
             break;
           case 'rings':
-            effectModule = await import('vanta/dist/vanta.rings.min.js');
+            await import('vanta/dist/vanta.rings.min.js');
             break;
           case 'halo':
-            effectModule = await import('vanta/dist/vanta.halo.min.js');
+            await import('vanta/dist/vanta.halo.min.js');
             break;
           default:
             console.error(`Unsupported Vanta effect: ${effect}`);
@@ -104,7 +103,7 @@ const VantaBackground: React.FC<VantaBackgroundProps> = ({
         vantaEffect.destroy();
       }
     };
-  }, [effect, options, theme.palette.mode, prefersReducedMotion]);
+  }, [effect, options, theme.palette.mode, prefersReducedMotion, vantaEffect]);
   
   // If user prefers reduced motion, render a simple gradient background instead
   if (prefersReducedMotion) {

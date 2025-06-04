@@ -52,10 +52,14 @@ export interface Venue {
   unavailableDates?: string[];
 }
 
-export interface Institution {
+export interface School {
   school_id?: number;
   name: string;
   abbreviation: string;
+  school_abbreviation?: string;  // Official school abbreviation from database
+  preferred_school_name?: string; // Preferred display name
+  short_display?: string; // Short display name
+  schedule_display?: string; // Name used in schedules
   mascot?: string;
   primary_color?: string;
   secondary_color?: string;
@@ -70,7 +74,7 @@ export interface Team {
   team_id?: number;
   name: string;
   code?: string;
-  institution: Institution;
+  school: School;
   championship_id?: number;
   division?: string;
   seed?: number;

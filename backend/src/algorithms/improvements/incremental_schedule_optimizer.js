@@ -5,9 +5,9 @@
  * that progressively improves schedules through specialized optimization stages.
  */
 
-const Schedule = require('../../models/schedule');
-const Game = require('../../models/game');
-const logger = require('../../utils/logger');
+const Schedule = require('../../../models/schedule');
+const Game = require('../../../models/game');
+const logger = require("../utils/logger");
 
 class IncrementalScheduleOptimizer {
   /**

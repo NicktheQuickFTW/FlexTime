@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import useReducedMotion from '../../hooks/useReducedMotion';
 import { useThemeContext } from '../../contexts/ThemeContext';
 
 // ============================================================================
@@ -422,6 +422,7 @@ export const LiveIndicators: React.FC<LiveIndicatorsProps> = ({
   const [cursors, setCursors] = useState<Map<string, CursorPosition>>(new Map());
   const [showActivityFeed, setShowActivityFeed] = useState(false);
   const { theme } = useThemeContext();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const prefersReducedMotion = useReducedMotion();
 
   // Filter out current user from active users for display
@@ -454,6 +455,7 @@ export const LiveIndicators: React.FC<LiveIndicatorsProps> = ({
   }, [showCursors, onCursorMove, handleMouseMove]);
 
   // Update cursor positions
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const updateCursorPosition = useCallback((userId: string, position: CursorPosition) => {
     setCursors(prev => new Map(prev.set(userId, position)));
   }, []);

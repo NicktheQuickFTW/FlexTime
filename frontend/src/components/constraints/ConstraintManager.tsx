@@ -3,7 +3,6 @@ import {
   Box,
   Paper,
   Typography,
-  Button,
   Tab,
   Tabs,
   Alert,
@@ -19,16 +18,14 @@ import {
 } from '@mui/material';
 import {
   Add as AddIcon,
-  Rule as RuleIcon,
   Warning as WarningIcon,
-  CheckCircle as CheckCircleIcon,
   Dashboard as DashboardIcon,
   ListAlt as ListIcon,
   Edit as EditIcon,
   Build as BuildIcon
 } from '@mui/icons-material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Schedule, Constraint, ApiResponse } from '../../types';
+import { Schedule, Constraint } from '../../types';
 import { ScheduleService } from '../../services/api';
 import ConstraintList from './ConstraintList';
 import ConstraintEditor from './ConstraintEditor';

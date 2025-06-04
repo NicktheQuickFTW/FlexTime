@@ -5,8 +5,8 @@
  * Implements algorithms to minimize total travel distance and create efficient road trips.
  */
 
-const Schedule = require('../models/schedule');
-const Game = require('../models/game');
+const Schedule = require('../../models/schedule');
+const Game = require('../../models/game');
 
 class TravelOptimizer {
   /**

@@ -254,8 +254,8 @@ export const getSportSponsors = (sportType: SportType): string[] => {
 };
 
 // Helper function to check if an institution sponsors a specific sport
-export const doesInstitutionSponsorSport = (institution: string, sportType: SportType): boolean => {
-  return sportSponsorship[sportType]?.includes(institution) || false;
+export const doesSchoolSponsorSport = (school: string, sportType: SportType): boolean => {
+  return sportSponsorship[sportType]?.includes(school) || false;
 };
 
 // Define which sports have regular season scheduling

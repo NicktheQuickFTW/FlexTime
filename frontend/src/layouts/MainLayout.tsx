@@ -14,7 +14,6 @@ import {
   AppBar, 
   Toolbar, 
   Typography, 
-  Container, 
   useTheme,
   useMediaQuery,
   IconButton,
@@ -23,7 +22,6 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  Divider,
   Paper,
   Fade,
   Collapse
@@ -39,7 +37,7 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon
 } from '@mui/icons-material';
-import { useLocation } from 'react-router-dom';
+import { useRouter } from 'next/router';
 
 // Enhanced interface definitions following FlexTime architecture
 interface MainLayoutProps {
@@ -216,7 +214,7 @@ const getFlexTimeStyles = (theme: any, isMobile: boolean, sidebarCollapsed: bool
  */
 const TopAppBar: React.FC<TopAppBarProps> = ({ onMenuToggle, isMobile, headerContent }) => {
   const theme = useTheme();
-  const location = useLocation();
+  const router = useRouter();
   
   return (
     <AppBar 
@@ -292,7 +290,7 @@ const TopAppBar: React.FC<TopAppBarProps> = ({ onMenuToggle, isMobile, headerCon
           }}
         >
           <Typography variant="caption" sx={{ color: theme.palette.primary.main, fontWeight: 600 }}>
-            {location.pathname.split('/')[1] || 'Dashboard'}
+            {router.pathname.split('/')[1] || 'Dashboard'}
           </Typography>
         </Paper>
       </Toolbar>
@@ -312,10 +310,11 @@ const FlexTimeSidebar: React.FC<SidebarProps & { collapsed?: boolean; onToggleCo
   children 
 }) => {
   const theme = useTheme();
-  const location = useLocation();
+  const router = useRouter();
   
   const menuItems = [
     { text: 'Dashboard', icon: <DashboardIcon />, path: '/', color: '#00bfff' },
+    { text: 'FT Builder', icon: <CalendarIcon />, path: '/builder', color: '#00d9ff' },
     { text: 'Schedules', icon: <CalendarIcon />, path: '/schedules', color: '#ff6b35' },
     { text: 'Teams', icon: <TeamsIcon />, path: '/teams', color: '#e91e63' },
     { text: 'Venues', icon: <VenueIcon />, path: '/venues', color: '#2e7d32' },
@@ -348,12 +347,12 @@ const FlexTimeSidebar: React.FC<SidebarProps & { collapsed?: boolean; onToggleCo
       {/* Navigation Menu */}
       <List sx={{ flexGrow: 1, px: 1, py: 2 }}>
         {menuItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive = router.pathname === item.path;
           return (
             <ListItemButton 
               key={item.text}
               onClick={() => {
-                // Navigation logic would go here
+                router.push(item.path);
                 if (variant === 'temporary') onClose();
               }}
               sx={{
@@ -443,6 +442,7 @@ const FlexTimeSidebar: React.FC<SidebarProps & { collapsed?: boolean; onToggleCo
 /**
  * FlexTimeGridSystem - Core grid layout component
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const FlexTimeGridSystem: React.FC<FlexTimeGridSystemProps> = ({ 
   children, 
   sidebar, 

@@ -4,8 +4,8 @@
  * Algorithms for optimizing existing schedules.
  */
 
-const Schedule = require('../models/schedule');
-const Game = require('../models/game');
+const Schedule = require('../../models/schedule');
+const Game = require('../../models/game');
 
 /**
  * Base class for schedule optimization algorithms

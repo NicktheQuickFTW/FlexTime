@@ -11,7 +11,7 @@
  * - Multi-destination optimization
  */
 
-const { Agent } = require('../../core/agent');
+const { Agent } = require('../../agent');
 
 class CircuitOptimizationAgent extends Agent {
   constructor(options = {}) {

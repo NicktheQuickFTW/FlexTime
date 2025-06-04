@@ -6,9 +6,9 @@
  * the external Intelligence Engine.
  */
 
-const logger = require('../utils/logger');
-const AgentMemoryManager = require('../src/intelligence/memory/agent_memory_manager');
-const neonConfig = require('../tools/neon_db_config');
+const logger = require('../src/utils/logger');
+const AgentMemoryManager = require('../src/ai/memory/agent_memory_manager');
+const neonConfig = require('../config/neon_db_config');
 
 /**
  * Advanced Scheduling Service that integrates historical learning,
