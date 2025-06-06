@@ -3,7 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
-const { middleware: { requestMiddleware } } = require('../utils/metrics');
+const { middleware: { requestMiddleware } } = require('../scripts/metrics');
 const path = require('path');
 
 function configureMiddleware(app, scaleConfig) {
@@ -40,11 +40,13 @@ function configureMiddleware(app, scaleConfig) {
       'http://localhost:3001',
       'http://localhost:3005',
       'http://localhost:64880',
+      'http://localhost:49956',
       'http://frontend:3000',
       'http://127.0.0.1:3000',
       'http://127.0.0.1:3001',
       'http://127.0.0.1:3005',
-      'http://127.0.0.1:64880'
+      'http://127.0.0.1:64880',
+      'http://127.0.0.1:49956'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],

@@ -11,7 +11,7 @@ require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
-const AdvancedMetricsSystem = require('../utils/advanced_metrics_system');
+const AdvancedMetricsSystem = require('../scripts/advanced_metrics_system');
 
 // Reuse test models from schedule export test
 class Location {

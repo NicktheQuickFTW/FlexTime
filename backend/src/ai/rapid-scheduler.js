@@ -12,7 +12,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const SchedulingServiceClient = require('../clients/scheduling-service-client');
 
 /**
@@ -41,7 +41,7 @@ class RapidScheduler {
     
     // Initialize performance monitoring
     if (this.config.performanceMonitoring) {
-      const PerformanceMonitor = require('../utils/performance-monitor');
+      const PerformanceMonitor = require('../scripts/performance-monitor');
       this.performanceMonitor = new PerformanceMonitor('Rapid_Scheduler_v2');
     }
     

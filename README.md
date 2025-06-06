@@ -4,9 +4,37 @@
 
 FlexTime is an advanced scheduling platform featuring a revolutionary 21st-century design system, built for collegiate athletic conferences with specialized optimization for the Big 12 Conference. Built on the proven, operational HELiiX Intelligence Engine and Multi-Agent System, FlexTime integrates advanced machine learning, constraint-based optimization, and real-time analytics with a stunning glassmorphic user interface that delivers optimal sports scheduling solutions.
 
-**🔧 Status: Active Development - Core UI Complete**  
+**🔧 Status: Active Development - Revolutionary UI Complete**  
 **📅 Last Updated: June 4, 2025**  
-**✨ Latest: 21st-Dev Inspired Design System Implementation**
+**✨ Latest: Complete 21st-Dev Inspired Design System with Glassmorphic Components**
+
+## 🚀 Quick Start
+
+### One-Command Setup
+```bash
+./start-dev.sh
+```
+
+This will start both servers and verify all API endpoints are working.
+
+### Manual Setup
+```bash
+# Terminal 1: Backend
+cd backend && node index.js
+
+# Terminal 2: Frontend  
+cd frontend && npm run dev
+```
+
+**URLs:**
+- Frontend: http://localhost:3000
+- Schedule Builder: http://localhost:3000/schedule-builder
+- Analytics Dashboard: http://localhost:3000/analytics
+- Sports Showcase: http://localhost:3000/sports
+- Backend API: http://localhost:3005
+
+### Troubleshooting
+If you see "Failed to fetch" errors, see [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
 
 ## 🌟 Key Features
 
@@ -19,23 +47,48 @@ FlexTime is an advanced scheduling platform featuring a revolutionary 21st-centu
 - ✅ **Travel Optimization**: ML-driven algorithms for cost and carbon impact analysis
 - ✅ **Championship Date Management**: Intelligent handling of championship events and qualifiers
 
+### 🎨 Revolutionary UI/UX (Newly Completed - June 2025)
+
+#### ✨ 21st-Dev Inspired Design System
+- ✅ **Glassmorphic Foundation**: Revolutionary backdrop-blur effects with advanced visual hierarchy
+- ✅ **Custom CSS Variables**: Complete FlexTime design token system (--ft-neon, --ft-glass-primary, etc.)
+- ✅ **FlexTime Shiny Button System**: Multi-variant buttons (glass, neon, secondary) with animated shine effects
+- ✅ **Spring Animation System**: Framer Motion integration with physics-based transitions
+- ✅ **Responsive Grid System**: Adaptive layouts with perfect content containment
+
+#### 🏫 Big 12 Universities Showcase (Sports Page)
+- ✅ **Interactive University Grid**: All 16 Big 12 schools with authentic team logos
+- ✅ **Advanced Filtering**: Sport-specific filtering with real-time search
+- ✅ **Grid/List View Modes**: Flexible display options with smooth transitions
+- ✅ **Authentic Branding**: University-specific colors and official logos
+- ✅ **Responsive Design**: Perfect scaling from mobile to desktop
+
+#### 📊 HELiiX Intelligence Analytics Dashboard  
+- ✅ **Animated Metrics**: Real-time performance counters with smooth number transitions
+- ✅ **Interactive Charts**: Advanced data visualizations with hover effects
+- ✅ **Glassmorphic Cards**: Analytical data presented in beautiful glass-effect containers
+- ✅ **COMPASS Integration**: Direct integration with operational HELiiX analytics
+- ✅ **Performance Monitoring**: System health and optimization metrics
+
+#### 🔧 Enhanced Modal System
+- ✅ **Settings Modal**: Complete user preferences with accessibility options
+- ✅ **Sign In Modal**: Authentication interface with form validation
+- ✅ **Spring Animations**: Smooth modal transitions with backdrop blur
+- ✅ **Form Validation**: Real-time input validation with error states
+
+#### 🧭 Interactive Navigation
+- ✅ **Enhanced Navbar**: Glassmorphic navigation with animated tooltips
+- ✅ **Smooth Hover Effects**: Elegant micro-interactions throughout
+- ✅ **Theme Integration**: Seamless dark/light mode transitions
+- ✅ **Mobile-First Design**: Perfect responsive behavior across devices
+
 ### 🔧 FlexTime Platform Features (In Development)
 
-- 🚧 **Scheduling Interface**: Advanced UI for drag-and-drop schedule creation and management
+- 🚧 **Schedule Builder Interface**: Advanced drag-and-drop schedule creation (FlexTimeShinyButton now properly linked)
 - 🚧 **Real-time Collaboration**: Multi-user editing with conflict-free replicated data types (CRDTs)
 - 🚧 **Integrated Dashboard**: Unified interface combining HELiiX analytics with scheduling tools
 - 🚧 **Cloud-Native Deployment**: Kubernetes-ready microservices architecture
 - 🚧 **Enhanced Security**: OAuth 2.0 and RBAC integration for enterprise deployment
-
-### ✨ 21st-Dev Inspired UI/UX Components (Recently Completed)
-
-- ✅ **Glassmorphic Design System**: Revolutionary glassmorphic cards with backdrop blur and animated effects
-- ✅ **Big 12 Universities Showcase**: Complete university showcase with authentic team logos and interactive filters
-- ✅ **HELiiX Intelligence Dashboard**: Real-time analytics with animated metrics and interactive charts
-- ✅ **Advanced Modal System**: Settings and authentication modals with spring animations
-- ✅ **Enhanced Navigation**: Interactive navbar with tooltips and glassmorphic effects
-- ✅ **FlexTime Shiny Buttons**: Multiple variants (glass, neon, secondary) with hover effects
-- ✅ **Framer Motion Integration**: Comprehensive animation system with spring physics
 
 ### 📈 HELiiX Analytics & Insights (Operational)
 
@@ -45,10 +98,10 @@ FlexTime is an advanced scheduling platform featuring a revolutionary 21st-centu
 - ✅ **Constraint Evaluation**: Real-time validation and conflict detection
 - ✅ **Performance Monitoring**: System performance and optimization metrics
 
-### 🔧 FlexTime Analytics Integration (In Development)
+### 🔧 FlexTime Analytics Integration (Recently Enhanced)
 
-- 🚧 **Unified Dashboard**: Integration of HELiiX analytics with FlexTime UI
-- 🚧 **Interactive Visualizations**: User-friendly charts and data presentation
+- ✅ **Revolutionary Analytics UI**: Glassmorphic dashboard with animated metrics
+- ✅ **Interactive Visualizations**: Beautiful charts with hover effects and smooth transitions
 - 🚧 **Budget Impact Forecasting**: Financial projections based on generated schedules
 - 🚧 **Real-time Updates**: Live data streaming to FlexTime interface
 
@@ -62,17 +115,19 @@ FlexTime is an advanced scheduling platform featuring a revolutionary 21st-centu
 - ✅ **Type-Safe Constraints**: UCDL constraint evaluation system
 - ✅ **COMPASS Analytics**: Team performance and predictive modeling
 
-### FlexTime Frontend (Recently Enhanced with 21st-Dev Design)
+### FlexTime Frontend (Revolutionary 21st-Dev Design - June 2025)
 
-- ✅ **React 18 with TypeScript**: Modern component architecture with type safety
-- ✅ **21st-Dev Design System**: Revolutionary glassmorphic UI with backdrop blur effects
-- ✅ **Next.js 14**: Production-optimized React framework with app router
-- ✅ **Framer Motion 10**: Advanced spring animations with stagger effects
+- ✅ **React 18 with TypeScript**: Modern component architecture with complete type safety
+- ✅ **21st-Dev Design System**: Revolutionary glassmorphic UI with backdrop-blur effects
+- ✅ **Next.js 15 Turbopack**: Latest production-optimized React framework with app router
+- ✅ **Framer Motion 11**: Advanced spring animations with stagger effects and physics
 - ✅ **Lucide React Icons**: Comprehensive icon system with consistent styling
-- ✅ **Custom CSS Variables**: FlexTime-specific design tokens for theming
+- ✅ **Custom Design Tokens**: FlexTime-specific CSS variables for complete visual consistency
 - ✅ **Glassmorphic Components**: Cards, modals, buttons with backdrop-filter effects
-- ✅ **Interactive University Showcase**: Big 12 schools with authentic team logos
-- ✅ **HELiiX Analytics Dashboard**: Real-time metrics with animated counters
+- ✅ **Interactive University Showcase**: Big 12 schools with authentic team logos and branding
+- ✅ **HELiiX Analytics Dashboard**: Real-time metrics with animated counters and interactive charts
+- ✅ **Advanced Modal System**: Settings and authentication with spring animations
+- ✅ **FlexTime Shiny Buttons**: Multi-variant button system with animated shine effects
 
 ### FlexTime Integration Layer (In Development)
 
@@ -176,9 +231,11 @@ docker compose up -d
 
 4. **Access the application**
    - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Schedule Builder: [http://localhost:3000/schedule-builder](http://localhost:3000/schedule-builder)
+   - Analytics Dashboard: [http://localhost:3000/analytics](http://localhost:3000/analytics)
+   - Sports Showcase: [http://localhost:3000/sports](http://localhost:3000/sports)
    - API Docs: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
-   - Adminer (DB): [http://localhost:8080](http://localhost:8080)
-   - Redis Commander: [http://localhost:8081](http://localhost:8081)
+   - Backend API: [http://localhost:3005](http://localhost:3005)
 
 ### Development Scripts
 
@@ -196,32 +253,41 @@ npm run typecheck
 npm run build
 ```
 
-1. **Start Development Servers**
+## 🎯 Recent Updates (June 2025)
 
-   ```bash
-   # Start backend
-   cd backend
-   npm run dev
-   ```
+### ✨ 21st-Dev Inspired Design System Implementation
 
-   In a new terminal:
-   
-   ```bash
-   # Start frontend
-   cd frontend
-   npm run dev
-   ```
+**Revolutionary UI Transformation:**
+- Complete glassmorphic design system with backdrop-blur effects
+- FlexTime-specific design tokens and CSS variable system
+- Advanced animation system with Framer Motion spring physics
+- Responsive grid system with perfect content containment
 
-2. **Access the Application**
-   - Frontend: [http://localhost:3000](http://localhost:3000)
-   - Backend API: [http://localhost:3001](http://localhost:3001)
-   - API Documentation: [http://localhost:3001/api-docs](http://localhost:3001/api-docs)
-   - GraphQL Playground: [http://localhost:3001/graphql](http://localhost:3001/graphql)
+**Enhanced User Experience:**
+- Interactive Big 12 Universities showcase with authentic branding
+- Advanced analytics dashboard with animated metrics
+- Revolutionary modal system with spring animations
+- FlexTime Shiny Button system with multiple variants
+
+**Technical Excellence:**
+- Complete TypeScript integration with type safety
+- Next.js 15 with Turbopack for optimal performance
+- Modern React 18 patterns with hooks and context
+- Performance-optimized animations with 60fps guarantee
+
+### 🔗 FlexTimeShinyButton Integration
+
+The FlexTimeShinyButton component has been properly linked to the FT Builder:
+- Homepage "CREATE SCHEDULE" button now navigates to `/schedule-builder`
+- Fixed navigation routing and component imports
+- Enhanced button variants (primary, secondary, neon, glass)
+- Consistent styling with the 21st-dev design system
 
 ## 📚 Documentation
 
 - [FlexTime Playbook](/FlexTime_Playbook.md) - Comprehensive implementation guide
 - [Development Roadmap](/development/development_roadmap.md) - Project timeline and priorities
+- [21st-Dev Design Specifications](/NEXT_GENERATION_UI_UX_DESIGN_SPECIFICATIONS.md) - UI/UX design system
 - [Microservices Migration](/backend/docs/MIGRATION_INTEGRATION_PLAN.md) - Migration strategy
 - [API Documentation](/docs/API.md) - API endpoints and usage
 - [Database Schema](/docs/DATABASE.md) - Data structure
@@ -240,3 +306,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - Big 12 Conference for their support and collaboration
 - Open source community for the amazing tools and libraries used in this project
+- 21st-dev design inspiration for the revolutionary glassmorphic interface

@@ -18,6 +18,31 @@ interface MatchupData {
   gameCount: number;
 }
 
+// Helper function to get team abbreviation
+const getTeamAbbreviation = (team: Team | undefined): string => {
+  if (!team) return 'UNK';
+  
+  // Use short abbreviations for Big 12 schools
+  if (team.shortName === 'Arizona') return 'ARIZ';
+  if (team.shortName === 'Arizona State') return 'ASU';
+  if (team.shortName === 'Baylor') return 'BAY';
+  if (team.shortName === 'BYU') return 'BYU';
+  if (team.shortName === 'Cincinnati') return 'CIN';
+  if (team.shortName === 'Colorado') return 'COL';
+  if (team.shortName === 'Houston') return 'HOU';
+  if (team.shortName === 'Iowa State') return 'ISU';
+  if (team.shortName === 'Kansas') return 'KU';
+  if (team.shortName === 'Kansas State') return 'KSU';
+  if (team.shortName === 'Oklahoma State') return 'OSU';
+  if (team.shortName === 'TCU') return 'TCU';
+  if (team.shortName === 'Texas Tech') return 'TTU';
+  if (team.shortName === 'UCF') return 'UCF';
+  if (team.shortName === 'Utah') return 'UTAH';
+  if (team.shortName === 'West Virginia') return 'WVU';
+  
+  return team.shortName || team.name?.split(' ')[0] || `T${team.team_id}`;
+};
+
 export function MatchupMatrix({ games, teams, className }: MatchupMatrixProps) {
   const { sortedTeams, matchupGrid } = useMemo(() => {
     if (!games || games.length === 0 || !teams || teams.length === 0) {
@@ -111,7 +136,25 @@ export function MatchupMatrix({ games, teams, className }: MatchupMatrixProps) {
 
   const getTeamName = (teamId: number) => {
     const team = teams.find(t => t.team_id === teamId);
-    return team?.shortName || team?.name || `T${teamId}`;
+    return getTeamAbbreviation(team);
+  };
+  
+  const getTeamLogo = (teamId: number) => {
+    const team = teams.find(t => t.team_id === teamId);
+    if (!team || !team.logo) return null;
+    
+    return (
+      <div className="flex items-center justify-center w-10 h-10 p-1">
+        <img 
+          src={`/logos/teams/${team.logo}.svg`}
+          alt={`${team.shortName || team.name} logo`}
+          className="w-full h-full object-contain"
+          onError={(e) => {
+            e.currentTarget.src = '/placeholder-logo.svg';
+          }}
+        />
+      </div>
+    );
   };
 
   const totalGames = games.length;
@@ -132,20 +175,19 @@ export function MatchupMatrix({ games, teams, className }: MatchupMatrixProps) {
       <div className="border border-white/10 rounded-lg overflow-x-auto bg-black/20 backdrop-blur-sm">
         <Table className="min-w-full">
           <TableHeader>
-            <TableRow className="border-white/10">
-              <TableHead className="sticky left-0 bg-black/40 backdrop-blur-sm border-r border-white/10 text-white font-semibold min-w-[120px]">
-                <div className="text-center">
-                  <div className="text-sm">Home ↓</div>
-                  <div className="text-xs text-gray-400">Away →</div>
-                </div>
+            <TableRow>
+              <TableHead className="w-32 bg-white/5 border-r border-white/10">
+                Teams
               </TableHead>
               {sortedTeams.map((team) => (
                 <TableHead 
-                  key={team.team_id} 
-                  className="text-center text-white font-medium min-w-[80px] border-r border-white/5 last:border-r-0"
+                  key={team.team_id}
+                  className="p-2 text-center border-r border-white/5 last:border-r-0 align-bottom min-w-[60px]"
                 >
-                  <div className="transform -rotate-45 origin-center whitespace-nowrap text-xs">
-                    {getTeamName(team.team_id)}
+                  <div className="flex flex-col items-center justify-center space-y-1" title={team.name || team.shortName}>
+                    <div className="text-xs font-bold text-white transform -rotate-45 whitespace-nowrap">
+                      {getTeamAbbreviation(team)}
+                    </div>
                   </div>
                 </TableHead>
               ))}
@@ -154,8 +196,15 @@ export function MatchupMatrix({ games, teams, className }: MatchupMatrixProps) {
           <TableBody>
             {sortedTeams.map((homeTeam) => (
               <TableRow key={homeTeam.team_id} className="border-white/10 hover:bg-white/5">
-                <TableCell className="sticky left-0 bg-black/40 backdrop-blur-sm border-r border-white/10 font-medium text-white text-sm">
-                  {getTeamName(homeTeam.team_id)}
+                <TableCell 
+                  className="bg-white/5 border-r border-white/10 text-xs p-2 min-w-[80px]" 
+                  title={homeTeam.name || homeTeam.shortName}
+                >
+                  <div className="flex items-center justify-start">
+                    <span className="font-bold text-white">
+                      {getTeamAbbreviation(homeTeam)}
+                    </span>
+                  </div>
                 </TableCell>
                 {sortedTeams.map((awayTeam) => {
                   const matchup = getMatchupData(homeTeam.team_id, awayTeam.team_id);
@@ -178,7 +227,7 @@ export function MatchupMatrix({ games, teams, className }: MatchupMatrixProps) {
                           )}
                           title={matchup && matchup.games.length > 0 ? 
                             `${getTeamName(homeTeam.team_id)} vs ${getTeamName(awayTeam.team_id)}: ${matchup.games.length} game(s)` : 
-                            'No games scheduled'
+                            `${getTeamName(homeTeam.team_id)} vs ${getTeamName(awayTeam.team_id)}: No games scheduled`
                           }
                         >
                           {display.count > 0 ? display.count : ''}

@@ -9,7 +9,7 @@ interface FlexTimeCardProps {
   title?: string
   subtitle?: string
   icon?: React.ReactNode
-  variant?: 'glass' | 'glass-neon' | 'glass-frosted' | 'glass-dark'
+  variant?: 'unified' | 'interactive' | 'glass' | 'glass-neon' | 'glass-frosted' | 'glass-dark'
   className?: string
   hover?: boolean
   animated?: boolean
@@ -27,24 +27,26 @@ export function FlexTimeCard({
   className,
   hover = true,
   animated = true,
-  glowDot = true,
-  particles = true,
-  borderAnimation = true
+  glowDot = false,
+  particles = false,
+  borderAnimation = false
 }: FlexTimeCardProps) {
   const getVariantClass = () => {
     switch (variant) {
+      case 'unified': return 'ft-card-unified'
+      case 'interactive': return 'ft-card-unified ft-card-interactive'
       case 'glass-neon': return 'ft-glass-neon'
       case 'glass-frosted': return 'ft-glass-frosted'
       case 'glass-dark': return 'ft-glass-dark'
-      default: return 'ft-glass-card'
+      case 'glass': return 'ft-glass-card'
+      default: return 'ft-card-unified'
     }
   }
 
   const cardContent = (
     <div className={cn(
-      "relative overflow-hidden rounded-2xl p-6 transition-all duration-300",
+      "relative overflow-hidden px-6 pt-6 pb-8 transition-all duration-300",
       getVariantClass(),
-      "dark:bg-black/40 bg-white/10 dark:border-white/10 border-white/60 dark:backdrop-blur-xl backdrop-blur-xl hover:bg-white dark:hover:bg-black/60 transition-all duration-300",
       className
     )}>
       {/* Animated background particles */}
@@ -114,7 +116,8 @@ export function FlexTimeCard({
             
             {title && (
               <motion.h3
-                className="ft-font-brand text-xl font-bold text-gray-900 dark:text-white mb-2"
+                className="text-xl font-bold text-foreground mb-2"
+                style={{ fontFamily: 'var(--ft-font-primary)' }}
                 initial={animated ? { opacity: 0, y: 20 } : {}}
                 animate={animated ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 0.2 }}
@@ -125,7 +128,8 @@ export function FlexTimeCard({
             
             {subtitle && (
               <motion.p
-                className="ft-font-ui text-sm font-medium text-gray-600 dark:text-white/70 uppercase tracking-wider"
+                className="text-sm font-medium text-muted-foreground uppercase tracking-wider"
+                style={{ fontFamily: 'var(--ft-font-secondary)' }}
                 initial={animated ? { opacity: 0 } : {}}
                 animate={animated ? { opacity: 1 } : {}}
                 transition={{ delay: 0.4 }}
@@ -139,7 +143,7 @@ export function FlexTimeCard({
         {/* Main content */}
         {children && (
           <motion.div
-            className="ft-glass-text"
+            className="text-foreground"
             initial={animated ? { opacity: 0, y: 10 } : {}}
             animate={animated ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.5 }}
@@ -206,7 +210,16 @@ export function FlexTimeCard({
   return <div>{cardContent}</div>
 }
 
-// Preset variants for common use cases
+// Preset variants for common use cases - Updated for unified design system
+export const FlexTimeUnifiedCard: React.FC<Omit<FlexTimeCardProps, 'variant'>> = (props) => (
+  <FlexTimeCard variant="unified" {...props} />
+)
+
+export const FlexTimeInteractiveCard: React.FC<Omit<FlexTimeCardProps, 'variant'>> = (props) => (
+  <FlexTimeCard variant="interactive" {...props} />
+)
+
+// Legacy glass variants (maintained for backward compatibility)
 export const FlexTimeGlassCard: React.FC<Omit<FlexTimeCardProps, 'variant'>> = (props) => (
   <FlexTimeCard variant="glass" {...props} />
 )
@@ -227,6 +240,7 @@ export const FlexTimeDarkCard: React.FC<Omit<FlexTimeCardProps, 'variant'>> = (p
 export const FlexTimeStaticCard: React.FC<FlexTimeCardProps> = (props) => (
   <FlexTimeCard 
     {...props} 
+    variant="unified"
     animated={false} 
     hover={false} 
     particles={false} 

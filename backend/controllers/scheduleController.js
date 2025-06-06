@@ -906,3 +906,21 @@ exports.getScheduleGames = async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve schedule games' });
   }
 };
+
+/**
+ * Get constraint violations/conflicts for a schedule
+ */
+exports.getScheduleConflicts = async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    // For now, return empty array as no conflicts exist yet
+    // This can be enhanced later with actual constraint violation logic
+    const conflicts = [];
+    
+    res.json(conflicts);
+  } catch (error) {
+    console.error('Error getting schedule conflicts:', error);
+    res.status(500).json({ error: 'Failed to retrieve schedule conflicts' });
+  }
+};

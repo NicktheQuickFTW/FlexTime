@@ -6,7 +6,7 @@
  * Uses Claude as the primary MCP for improved reasoning and consistency.
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const MCPConnectorV2 = require('./mcp_connector_v2');
 const AnthropicMCPConnector = require('./anthropic_mcp_connector');
 const AgentMemoryManager = require('./memory/agent_memory_manager');

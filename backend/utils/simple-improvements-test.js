@@ -12,7 +12,7 @@ const util = require('util');
 const MemoryOptimizedTravelOptimizer = require('../algorithms/improvements/memory_optimized_travel_optimizer');
 const IncrementalScheduleOptimizer = require('../algorithms/improvements/incremental_schedule_optimizer');
 const ConstraintEvaluator = require('../algorithms/improvements/constraint_evaluator');
-const ScheduleVisualizationGenerator = require('../utils/visualization/schedule_visualization');
+const ScheduleVisualizationGenerator = require('../scripts/visualization/schedule_visualization');
 
 // Import or create simple model classes for testing
 

@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { DndProvider, useDrop, useDrag } from 'react-dnd';
+import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDrag, useDrop } from 'react-dnd';
 import './ScheduleMatrix.css';
+
+// Import Team type from scheduleApi
+import { Team } from '../../utils/scheduleApi';
 
 // Types
 interface TimeSlot {
@@ -17,13 +21,16 @@ interface TimeSlot {
 
 interface Game {
   id: string;
-  homeTeam: string;
-  awayTeam: string;
+  homeTeam: string | Team;
+  awayTeam: string | Team;
   sport: string;
   slotId?: string;
   date?: string;
   time?: string;
   venue?: string;
+  venue_name?: string;
+  home_team_id?: number;
+  away_team_id?: number;
   status: 'scheduled' | 'pending' | 'conflict';
   priority: number;
   constraints: string[];
@@ -182,9 +189,15 @@ const GameCard: React.FC<GameCardProps> = ({ game, conflicts }) => {
     >
       <div className="ft-game-card-header">
         <div className="ft-game-teams">
-          <span className="ft-away-team">{game.awayTeam}</span>
+          <span className="ft-away-team">
+            {typeof game.awayTeam === 'object' && game.awayTeam?.shortName ? 
+              game.awayTeam.shortName : game.awayTeam}
+          </span>
           <span className="ft-vs">@</span>
-          <span className="ft-home-team">{game.homeTeam}</span>
+          <span className="ft-home-team">
+            {typeof game.homeTeam === 'object' && game.homeTeam?.shortName ? 
+              game.homeTeam.shortName : game.homeTeam}
+          </span>
         </div>
         {hasConflicts && (
           <div className="ft-game-conflicts">
@@ -408,6 +421,34 @@ export const ScheduleMatrix: React.FC<ScheduleMatrixProps> = ({
         return schedule.venues;
     }
   }, [viewMode, schedule.venues]);
+  
+  // Get team logo element for the given team
+  const getTeamLogo = useCallback((teamId: string | number) => {
+    const team = games.find(game => 
+      (typeof game.homeTeam === 'object' && game.homeTeam?.team_id === teamId) || 
+      (typeof game.awayTeam === 'object' && game.awayTeam?.team_id === teamId) || 
+      game.home_team_id === teamId);
+      
+    if (!team) return null;
+    
+    const teamObject = typeof team.homeTeam === 'object' ? team.homeTeam : 
+                      typeof team.awayTeam === 'object' ? team.awayTeam : null;
+    
+    if (!teamObject || !teamObject.logo) return null;
+    
+    return (
+      <div className="w-10 h-10 flex items-center justify-center">
+        <img 
+          src={`/logos/teams/${teamObject.logo}.svg`}
+          alt={`${teamObject.shortName || teamObject.name || 'Team'} logo`}
+          className="w-full h-full object-contain"
+          onError={(e) => {
+            e.currentTarget.src = '/placeholder-logo.svg';
+          }}
+        />
+      </div>
+    );
+  }, [games]);
 
   // Get row labels based on view mode
   const getRowLabel = useCallback((rowIndex: number) => {
@@ -465,19 +506,43 @@ export const ScheduleMatrix: React.FC<ScheduleMatrixProps> = ({
         {/* Matrix Header */}
         <div className="ft-matrix-header">
           <div className="ft-matrix-corner"></div>
-          {getHeaderLabels().map((label, index) => (
-            <div key={index} className="ft-matrix-header-cell">
-              {label}
-            </div>
-          ))}
+          {getHeaderLabels().map((label, index) => {
+            // Try to find a team associated with this venue
+            const venue = schedule.venues && schedule.venues[index];
+            const teamForVenue = games.find(g => 
+              (typeof g.venue === 'string' && g.venue === venue) || g.venue_name === venue);
+            const teamId = teamForVenue?.home_team_id;
+            
+            return (
+              <div key={index} className="ft-matrix-header-cell flex flex-col items-center justify-center">
+                {viewMode === 'matrix' && teamId ? (
+                  <>
+                    {getTeamLogo(teamId)}
+                    <span className="text-xs mt-1">{label}</span>
+                  </>
+                ) : (
+                  <span className="bg-gradient-to-r from-white to-[color:var(--ft-neon)] bg-clip-text text-transparent">
+                    {label}
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
 
         {/* Matrix Body */}
         <div className="ft-matrix-body">
           {matrix.map((row, rowIndex) => (
             <div key={rowIndex} className="ft-matrix-row">
-              <div className="ft-matrix-row-label">
-                {getRowLabel(rowIndex)}
+              <div className="ft-matrix-row-label flex items-center justify-center gap-2">
+                {viewMode === 'matrix' && games.length > 0 ? (
+                  <>
+                    {getTeamLogo(rowIndex + 1)}
+                    <span>{getRowLabel(rowIndex)}</span>
+                  </>
+                ) : (
+                  getRowLabel(rowIndex)
+                )}
               </div>
               {row.map((slot, colIndex) => (
                 <DropZone

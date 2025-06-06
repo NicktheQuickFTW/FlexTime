@@ -48,20 +48,20 @@ export const FlexTimeShinyButton: React.FC<FlexTimeShinyButtonProps> = ({
 }) => {
   const variantStyles = {
     primary: {
-      base: "bg-black dark:bg-[color:var(--ft-neon)] text-white dark:text-black border border-black dark:border-[color:var(--ft-neon)] hover:bg-gray-800 dark:hover:bg-[color:var(--ft-neon)]/80 shadow-lg hover:shadow-[color:var(--ft-neon-glow)]",
-      shine: "var(--ft-neon)" 
+      base: "ft-btn-primary shadow-lg hover:shadow-accent/25 dark:hover:shadow-[color:var(--ft-neon)]/25",
+      shine: "hsl(var(--accent))" 
     },
     secondary: {
-      base: "bg-white/80 dark:bg-transparent border border-white/60 dark:border-gray-600 text-black dark:text-white hover:bg-white/90 hover:border-white/80 dark:hover:border-[color:var(--ft-neon)] dark:hover:bg-[color:var(--ft-neon)]/10 backdrop-blur-sm",
-      shine: "var(--ft-neon)" 
+      base: "ft-btn-secondary",
+      shine: "hsl(var(--accent))" 
     },
     neon: {
-      base: "bg-black dark:bg-black border-2 border-black dark:border-[color:var(--ft-neon)] text-white dark:text-white hover:bg-gray-800 dark:hover:bg-[color:var(--ft-neon)]/10 shadow-[0_0_20px_rgba(0,191,255,0.4)] hover:shadow-[0_0_25px_rgba(0,191,255,0.6)]",
-      shine: "var(--ft-neon)" 
+      base: "bg-transparent border border-accent/30 dark:border-[color:var(--ft-neon)] text-accent dark:text-[color:var(--ft-neon)] hover:bg-accent/10 dark:hover:bg-[color:var(--ft-neon)]/10 shadow-[0_0_20px_hsla(var(--accent),0.2)] dark:shadow-[0_0_20px_rgba(0,191,255,0.2)] hover:shadow-[0_0_25px_hsla(var(--accent),0.4)] dark:hover:shadow-[0_0_25px_rgba(0,191,255,0.4)] backdrop-blur-sm rounded-lg transition-all duration-200",
+      shine: "hsl(var(--accent))" 
     },
     glass: {
-      base: "ft-glass-card text-black dark:text-white border border-gray-200 dark:border-[color:var(--ft-glass-border)] hover:border-black dark:hover:border-[color:var(--ft-neon)]/50 backdrop-blur-xl",
-      shine: "var(--ft-neon)" 
+      base: "bg-white/10 text-foreground border border-white/20 dark:border-[color:var(--ft-glass-border)] hover:border-accent/30 dark:hover:border-[color:var(--ft-neon)]/50 backdrop-blur-xl shadow-sm hover:shadow-lg hover:bg-white/20 transition-all duration-300 rounded-lg",
+      shine: "hsl(var(--accent))" 
     }
   };
 
@@ -73,11 +73,12 @@ export const FlexTimeShinyButton: React.FC<FlexTimeShinyButtonProps> = ({
       {...(animationProps as any)}
       {...props}
       className={cn(
-        "relative rounded-lg px-6 py-3 font-medium transition-all duration-300 ease-in-out ft-font-ui uppercase tracking-wide",
+        "relative font-medium transition-all duration-300 ease-in-out uppercase tracking-wide",
         currentVariant.base,
         className
       )}
       style={{
+        fontFamily: 'var(--ft-font-secondary)',
         '--primary': 'var(--ft-neon)' 
       } as React.CSSProperties}
     >

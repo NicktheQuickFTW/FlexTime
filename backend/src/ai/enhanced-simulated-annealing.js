@@ -16,11 +16,11 @@ const TravelDistanceCalculator = require('./travel-distance-calculator');
 const { ConstraintType } = require('../../models/constraint');
 const { Worker } = require('worker_threads');
 const path = require('path');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const EventEmitter = require('events');
 
 // Performance monitoring
-const PerformanceMonitor = require('../utils/performance-monitor');
+const PerformanceMonitor = require('../scripts/performance-monitor');
 
 // Smart constraint cache for faster evaluations
 class ConstraintCache {

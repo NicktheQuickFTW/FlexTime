@@ -5,7 +5,7 @@
  * that were previously dependent on external services like ElevenLabs.
  */
 
-const logger = require("../src/utils/logger")
+const logger = require('../lib/logger")
 const fs = require('fs').promises;
 const path = require('path');
 

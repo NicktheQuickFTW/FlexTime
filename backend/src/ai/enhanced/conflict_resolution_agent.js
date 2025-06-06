@@ -8,7 +8,7 @@
  * - Learning from past conflict resolutions
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const FlexTimeConnector = require('../flextime_connector');
 const EnhancedMemoryAgent = require('./enhanced_memory_agent');
 // FlexTime config removed, using default config instead

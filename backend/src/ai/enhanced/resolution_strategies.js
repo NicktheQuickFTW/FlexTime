@@ -8,7 +8,7 @@
  * - Team swapping strategies
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const MCPConnector = require('../mcp_connector');
 // MCP config removed, using default config instead
 const mcpConfig = {}; // Empty object as fallback

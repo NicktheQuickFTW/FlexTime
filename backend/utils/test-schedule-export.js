@@ -11,7 +11,7 @@ require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 const fs = require('fs');
-const ScheduleExporter = require('../utils/schedule_export');
+const ScheduleExporter = require('../scripts/schedule_export');
 
 // Simple model classes for testing
 

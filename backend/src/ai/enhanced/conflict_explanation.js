@@ -8,7 +8,7 @@
  * - Visualization data preparation
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const FlexTimeConnector = require('../flextime_connector');
 // FlexTime config removed, using default config instead
 const flexTimeConfig = {}; // Empty object as fallback

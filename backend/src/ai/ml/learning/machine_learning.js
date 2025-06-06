@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 /**
  * Manager for machine learning models and predictions.

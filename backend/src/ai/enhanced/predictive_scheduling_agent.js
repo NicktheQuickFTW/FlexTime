@@ -8,7 +8,7 @@
  * - Confidence scoring for predictions
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const MCPConnector = require('../mcp_connector');
 const EnhancedMemoryAgent = require('./enhanced_memory_agent');
 // MCP config removed, using default config instead

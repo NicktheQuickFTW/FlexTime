@@ -303,7 +303,7 @@ export function Big12WeatherGrid() {
   
   return (
     <Box sx={{
-      background: 'linear-gradient(135deg, #000000 0%, #111111 100%)',
+      background: 'transparent',
       minHeight: '100vh',
       p: 3,
     }}>
@@ -311,32 +311,6 @@ export function Big12WeatherGrid() {
         maxWidth: '1400px',
         margin: '0 auto',
       }}>
-        <Typography 
-          className="ft-font-brand"
-          sx={{
-            fontSize: '2.5rem',
-            fontWeight: 800,
-            color: '#ffffff',
-            textAlign: 'center',
-            mb: 1,
-            textShadow: '0 0 20px rgba(0, 191, 255, 0.3)',
-          }}
-        >
-          BIG 12 CONFERENCE
-        </Typography>
-        <Typography 
-          sx={{
-            fontSize: '1rem',
-            color: '#666666',
-            textAlign: 'center',
-            mb: 4,
-            textTransform: 'uppercase',
-            letterSpacing: '0.2em',
-            fontWeight: 600,
-          }}
-        >
-          Live Weather Across All 16 Venues
-        </Typography>
         
         <Box sx={{
           display: 'grid',

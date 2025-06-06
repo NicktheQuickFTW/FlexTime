@@ -6,7 +6,7 @@
  */
 
 const EventEmitter = require('events');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 /**
  * Manages communication between agents in the FlexTime multi-agent system.

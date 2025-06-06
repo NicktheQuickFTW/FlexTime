@@ -15,6 +15,7 @@ export function FlexTimeAnimatedBackground({
   showGrid = true,
   showFloatingElements = true 
 }: FlexTimeAnimatedBackgroundProps) {
+  const [mounted, setMounted] = useState(false);
   const [mouseGradientStyle, setMouseGradientStyle] = useState({
     left: '0px',
     top: '0px',
@@ -23,6 +24,11 @@ export function FlexTimeAnimatedBackground({
   const [ripples, setRipples] = useState<Array<{id: number, x: number, y: number}>>([]);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
     const handleMouseMove = (e: MouseEvent) => {
       setMouseGradientStyle({
         left: `${e.clientX}px`,
@@ -160,13 +166,23 @@ export function FlexTimeAnimatedBackground({
     }
   `;
 
+  // Prevent hydration mismatch by rendering the same structure
+  if (!mounted) {
+    return (
+      <>
+        <style>{backgroundStyles}</style>
+        <div className={`absolute inset-0 overflow-hidden ${className}`}></div>
+      </>
+    );
+  }
+
   return (
     <>
       <style>{backgroundStyles}</style>
       <div className={`absolute inset-0 overflow-hidden ${className}`}>
         
         {/* Animated Grid Background */}
-        {showGrid && (
+        {mounted && showGrid && (
           <svg 
             className="absolute inset-0 w-full h-full pointer-events-none" 
             xmlns="http://www.w3.org/2000/svg" 
@@ -205,21 +221,25 @@ export function FlexTimeAnimatedBackground({
         )}
 
         {/* Corner Elements */}
-        <div className="ft-corner-element top-4 left-4" style={{ animationDelay: '4s' }}>
-          <div className="absolute top-0 left-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
-        </div>
-        <div className="ft-corner-element top-4 right-4" style={{ animationDelay: '4.2s' }}>
-          <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
-        </div>
-        <div className="ft-corner-element bottom-4 left-4" style={{ animationDelay: '4.4s' }}>
-          <div className="absolute bottom-0 left-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
-        </div>
-        <div className="ft-corner-element bottom-4 right-4" style={{ animationDelay: '4.6s' }}>
-          <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
-        </div>
+        {mounted && (
+          <>
+            <div className="ft-corner-element top-4 left-4" style={{ animationDelay: '4s' }}>
+              <div className="absolute top-0 left-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
+            </div>
+            <div className="ft-corner-element top-4 right-4" style={{ animationDelay: '4.2s' }}>
+              <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
+            </div>
+            <div className="ft-corner-element bottom-4 left-4" style={{ animationDelay: '4.4s' }}>
+              <div className="absolute bottom-0 left-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
+            </div>
+            <div className="ft-corner-element bottom-4 right-4" style={{ animationDelay: '4.6s' }}>
+              <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-[color:var(--ft-neon)] opacity-20 rounded-full"></div>
+            </div>
+          </>
+        )}
 
         {/* Floating Elements */}
-        {showFloatingElements && (
+        {mounted && showFloatingElements && (
           <>
             <div className="ft-floating-element" style={{ top: '20%', left: '10%', animationDelay: '0.5s' }}></div>
             <div className="ft-floating-element" style={{ top: '60%', left: '85%', animationDelay: '1s' }}></div>
@@ -233,17 +253,19 @@ export function FlexTimeAnimatedBackground({
         )}
 
         {/* Mouse Gradient */}
-        <div 
-          className="ft-mouse-gradient w-96 h-96 blur-3xl"
-          style={{
-            left: mouseGradientStyle.left,
-            top: mouseGradientStyle.top,
-            opacity: mouseGradientStyle.opacity,
-          }}
-        ></div>
+        {mounted && (
+          <div 
+            className="ft-mouse-gradient w-96 h-96 blur-3xl"
+            style={{
+              left: mouseGradientStyle.left,
+              top: mouseGradientStyle.top,
+              opacity: mouseGradientStyle.opacity,
+            }}
+          ></div>
+        )}
 
         {/* Click Ripples */}
-        {ripples.map(ripple => (
+        {mounted && ripples.map(ripple => (
           <div
             key={ripple.id}
             className="ft-ripple-effect"

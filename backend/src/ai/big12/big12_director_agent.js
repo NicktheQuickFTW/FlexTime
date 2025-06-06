@@ -9,7 +9,7 @@
 const Agent = require('../agent');
 const { v4: uuidv4 } = require('uuid');
 const { Client } = require('pg');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const { Anthropic } = require('@anthropic-ai/sdk');
 const fs = require('fs').promises;
 const path = require('path');

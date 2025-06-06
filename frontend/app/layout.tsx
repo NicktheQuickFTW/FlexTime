@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from './components/Navbar'
 import { FlexTimeAnimatedBackground } from '../src/components/ui/FlexTimeAnimatedBackground'
+import { ThemeInitializer } from './components/ThemeInitializer'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,8 +18,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} min-h-screen relative overflow-x-hidden transition-colors duration-300`}>
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head />
+      <body className={`${inter.className} min-h-screen relative overflow-x-hidden transition-colors duration-300`} suppressHydrationWarning>
+        <ThemeInitializer />
         <div className="bg-gradient-to-br from-slate-50 via-white to-gray-100 dark:from-gray-950 dark:via-black dark:to-gray-900 text-black dark:text-white min-h-screen transition-colors duration-300">
           {/* Animated Background */}
           <FlexTimeAnimatedBackground 

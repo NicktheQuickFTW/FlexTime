@@ -13,7 +13,7 @@
  * - Conference rivalry and TV viewership optimization
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const { ConstraintManagementSystem } = require('./constraint-management-system');
 const EventEmitter = require('events');
 

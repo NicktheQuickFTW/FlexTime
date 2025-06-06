@@ -8,7 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const FTBuilderEngine = require('../../services/FT_Builder_Engine');
-const logger = require("../utils/logger")
+const logger = require('../scripts/logger")
 
 // Create service instance
 const schedulingService = new FTBuilderEngine();
@@ -458,6 +458,26 @@ router.get('/teams/:conference', async (req, res) => {
     });
   } catch (error) {
     logger.error(`Error getting teams for ${req.params.conference}: ${error.message}`);
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
+// Schools endpoints
+router.get('/schools', async (req, res) => {
+  try {
+    const { conference } = req.query;
+    const schools = await schedulingService.getSchools(conference);
+    
+    res.json({
+      success: true,
+      schools: schools,
+      count: schools.length
+    });
+  } catch (error) {
+    logger.error(`Error getting schools: ${error.message}`);
     res.status(500).json({
       success: false,
       error: error.message

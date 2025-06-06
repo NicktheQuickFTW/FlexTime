@@ -12,7 +12,7 @@ const helmet = require('helmet');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 
-const logger = require('./utils/logger');
+const logger = require('./scripts/logger');
 const metricsMiddleware = require('./middleware/metrics');
 const authMiddleware = require('./middleware/auth');
 const CommunicationHub = require('./services/CommunicationHub');

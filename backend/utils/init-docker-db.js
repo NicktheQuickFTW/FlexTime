@@ -10,7 +10,7 @@
 
 require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
-const { connectToDockerPostgres } = require('../utils/docker-db-connector');
+const { connectToDockerPostgres } = require('../scripts/docker-db-connector');
 const axios = require('axios');
 const path = require('path');
 const fs = require('fs');

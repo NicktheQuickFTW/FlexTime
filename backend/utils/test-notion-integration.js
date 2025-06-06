@@ -7,7 +7,7 @@
  */
 
 const notionAdapter = require('../adapters/notion-adapter');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Sample schedule data that would come from your FlexTime system
 const sampleScheduleData = [

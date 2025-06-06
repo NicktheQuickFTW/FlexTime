@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 const { program } = require('commander');
 const SchoolDataAgent = require('../agents/rag/school_data_agent');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Parse command line arguments
 program

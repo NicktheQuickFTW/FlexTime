@@ -20,7 +20,7 @@ interface BaseInputProps {
   error?: string;
   helperText?: string;
   icon?: React.ReactNode;
-  variant?: 'default' | 'glass' | 'minimal';
+  variant?: 'default' | 'unified' | 'glass' | 'minimal';
   size?: 'sm' | 'md' | 'lg';
   success?: boolean;
   loading?: boolean;
@@ -69,7 +69,7 @@ const getDefaultIcon = (type?: string) => {
   }
 };
 
-// Base styles for all input components
+// Base styles for all input components - Updated for unified design system
 const getBaseStyles = (variant: string, size: string, hasError: boolean, hasSuccess: boolean, fullWidth: boolean) => {
   const sizeStyles = {
     sm: 'px-3 py-2 text-sm',
@@ -78,11 +78,8 @@ const getBaseStyles = (variant: string, size: string, hasError: boolean, hasSucc
   };
 
   const variantStyles = {
-    default: `
-      bg-white border border-gray-200 
-      focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
-      hover:border-gray-300
-    `,
+    default: 'ft-input-unified',
+    unified: 'ft-input-unified',
     glass: `
       bg-white/10 backdrop-blur-md border border-white/20
       focus:border-blue-400/50 focus:ring-2 focus:ring-blue-400/30
@@ -90,9 +87,9 @@ const getBaseStyles = (variant: string, size: string, hasError: boolean, hasSucc
       placeholder:text-white/60 text-white
     `,
     minimal: `
-      bg-transparent border-0 border-b-2 border-gray-200 rounded-none
-      focus:border-blue-500 focus:ring-0
-      hover:border-gray-300
+      bg-transparent border-0 border-b-2 border-border rounded-none
+      focus:border-accent focus:ring-0
+      hover:border-border/60
     `
   };
 
@@ -102,7 +99,7 @@ const getBaseStyles = (variant: string, size: string, hasError: boolean, hasSucc
     ${fullWidth ? 'w-full' : ''}
     ${hasError ? '!border-red-500 focus:!border-red-500 focus:!ring-red-500/20' : ''}
     ${hasSuccess ? '!border-green-500 focus:!border-green-500 focus:!ring-green-500/20' : ''}
-    rounded-lg font-medium transition-all duration-300 ease-in-out
+    font-medium transition-all duration-200 ease-in-out
     disabled:opacity-50 disabled:cursor-not-allowed
     outline-none focus:outline-none
   `;
@@ -136,7 +133,7 @@ const InputWrapper = ({
 }) => (
   <div className={`flex flex-col gap-1.5 ${fullWidth ? 'w-full' : ''}`}>
     {label && (
-      <label className="text-sm font-semibold text-gray-700 flex items-center gap-1">
+      <label className="ft-label-unified flex items-center gap-1">
         {label}
         {required && <span className="text-red-500">*</span>}
       </label>
@@ -169,7 +166,7 @@ export const FTInput = forwardRef<HTMLInputElement, FTInputProps>(({
   error,
   helperText,
   icon,
-  variant = 'glass',
+  variant = 'unified',
   size = 'md',
   success,
   loading,
@@ -264,7 +261,7 @@ export const FTSelect = forwardRef<HTMLSelectElement, FTSelectProps>(({
   error,
   helperText,
   icon,
-  variant = 'glass',
+  variant = 'unified',
   size = 'md',
   success,
   loading,
@@ -359,7 +356,7 @@ export const FTTextarea = forwardRef<HTMLTextAreaElement, FTTextareaProps>(({
   error,
   helperText,
   icon,
-  variant = 'glass',
+  variant = 'unified',
   size = 'md',
   success,
   loading,

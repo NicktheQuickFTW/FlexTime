@@ -81,19 +81,22 @@ sports (
 )
 ```
 
-**FlexTime Managed Sports (10 active):**
+**FlexTime Managed Sports (12 active):**
+
 | ID | Code | Sport Name | Season | Teams | Status |
-|----|------|------------|--------|-------|---------|
-| 1 | BSB | Baseball | Spring | 14 | ✅ Active |
-| 2 | MBB | Men's Basketball | Winter | 16 | ✅ Active |
-| 3 | WBB | Women's Basketball | Winter | 16 | ✅ Active |
-| 8 | FB | Football | Fall | 16 | ✅ Active |
-| 14 | SOC | Soccer (Women's) | Fall | 16 | ✅ Active |
-| 15 | SB | Softball | Spring | 11 | ✅ Active |
-| 18 | MTN | Men's Tennis | Spring | 9 | ✅ Active |
-| 19 | WTN | Women's Tennis | Spring | 16 | ✅ Active |
-| 24 | VB | Volleyball (Women's) | Fall | 15 | ✅ Active |
-| 25 | WRE | Wrestling | Winter | 14 | ✅ Active |
+|----|------|------------|--------|-------|--------|
+| 1  | BSB  | Baseball   | Spring | 14    | ✅ Active |
+| 2  | MBB  | Men's Basketball | Winter | 16 | ✅ Active |
+| 3  | WBB  | Women's Basketball | Winter | 16 | ✅ Active |
+| 8  | FB   | Football   | Fall   | 16    | ✅ Active |
+| 11 | GYM  | Gymnastics (Women's) | Winter | 7 | ✅ Active (6 Big 12 + Denver affiliate) |
+| 13 | LAX  | Lacrosse (Women's) | Spring | 6 | ✅ Active (3 Big 12 + 3 affiliates) |
+| 14 | SOC  | Soccer (Women's) | Fall | 16 | ✅ Active |
+| 15 | SB   | Softball   | Spring | 11    | ✅ Active |
+| 18 | MTN  | Men's Tennis | Spring | 9 | ✅ Active |
+| 19 | WTN  | Women's Tennis | Spring | 16 | ✅ Active |
+| 24 | VB   | Volleyball (Women's) | Fall | 15 | ✅ Active |
+| 25 | WRE  | Wrestling  | Winter | 14    | ✅ Active (4 Big 12 + 10 affiliates) |
 
 **Other Big 12 Sports (not managed by FlexTime):**
 | ID | Code | Sport Name | Teams |
@@ -104,8 +107,6 @@ sports (
 | 7 | EQ | Equestrian | 4 |
 | 9 | MGO | Men's Golf | 16 |
 | 10 | WGO | Women's Golf | 14 |
-| 11 | GYM | Gymnastics (Women's) | 7 |
-| 12 | LAX | Lacrosse (Women's) | 6 |
 | 13 | ROW | Rowing | 6 |
 | 16 | MSD | Men's Swimming & Diving | 7 |
 | 17 | WSD | Women's Swimming & Diving | 10 |
@@ -113,6 +114,48 @@ sports (
 | 21 | WITF | Women's Indoor Track & Field | 16 |
 | 22 | MOTF | Men's Outdoor Track & Field | 13 |
 | 23 | WOTF | Women's Outdoor Track & Field | 16 |
+
+---
+
+## 🤝 **Affiliate Team Support**
+
+### **Big 12 Sports with Affiliate Members**
+
+The FlexTime FT Builder Engine now supports all affiliate teams across Big 12 sports. This ensures complete scheduling coverage for sports where the Big 12 Conference includes non-member institutions.
+
+#### **Complete Affiliate Team Listings:**
+
+**🥍 Lacrosse (6 teams total)**
+- **Big 12 Members (3)**: Arizona State, Cincinnati, Colorado
+- **Affiliates (3)**: Florida, San Diego State, UC Davis
+
+**🤸 Gymnastics (7 teams total)**
+- **Big 12 Members (6)**: Arizona, Arizona State, BYU, Iowa State, Utah, West Virginia
+- **Affiliates (1)**: Denver
+
+**🤼 Wrestling (14 teams total)**
+- **Big 12 Members (4)**: Arizona State, Iowa State, Oklahoma State, West Virginia
+- **Affiliates (10)**: Air Force, Cal Baptist, Missouri, North Dakota State, Northern Colorado, Northern Iowa, Oklahoma, South Dakota State, Utah Valley, Wyoming
+
+**🚣 Rowing (6 teams total)**
+- **Big 12 Members (4)**: Kansas, Kansas State, UCF, West Virginia
+- **Affiliates (2)**: Old Dominion, Tulsa
+
+**🐎 Equestrian (4 teams total)**
+- **Big 12 Members (3)**: Baylor, Oklahoma State, TCU
+- **Affiliates (1)**: Fresno State
+
+**🏐 Beach Volleyball (3 teams total)**
+- **Big 12 Members (3)**: Arizona, Arizona State, TCU
+- **Affiliates**: None
+
+#### **FT Builder Engine Support Status**
+
+✅ **All affiliate teams are now supported** in the FT Builder Engine configuration (`backend/services/FT_Builder_Engine.js` lines 1388-1396).
+
+The `sportParticipation` mapping includes complete team lists for all sports with affiliates, ensuring that schedule generation includes all participating teams, not just Big 12 members.
+
+---
 
 ### **Teams Table**
 ```sql

@@ -344,6 +344,69 @@ class NeonDatabase {
     }
   }
 
+  async getSchools() {
+    const client = await this.pool.connect();
+    
+    try {
+      // Try to get Big 12 schools specifically first
+      const big12SchoolNames = [
+        'Arizona', 'Arizona State', 'Baylor', 'BYU', 'UCF', 'Cincinnati', 
+        'Colorado', 'Houston', 'Iowa State', 'Kansas', 'Kansas State', 
+        'Oklahoma State', 'TCU', 'Texas Tech', 'Utah', 'West Virginia'
+      ];
+      
+      const result = await client.query(`
+        SELECT school_id, school, short_display, primary_color, secondary_color, 
+               mascot, location, website, conference_id,
+               schedule_display, school_abbreviation, preferred_school_name,
+               created_at, updated_at
+        FROM schools
+        WHERE school = ANY($1)
+        ORDER BY school
+      `, [big12SchoolNames]);
+      
+      // If we found Big 12 schools in the database, return them
+      if (result.rows && result.rows.length > 0) {
+        console.log(`Found ${result.rows.length} Big 12 schools in database`);
+        
+        const schools = result.rows.map(row => ({
+          school_id: row.school_id,
+          school: row.school,
+          short_display: row.short_display || row.school,
+          primary_color: row.primary_color,
+          secondary_color: row.secondary_color,
+          mascot: row.mascot,
+          location: row.location,
+          website: row.website,
+          // Provide fallback values for fields that don't exist in DB
+          founded_year: null, // Not available in current schema
+          enrollment: null, // Not available in current schema
+          conference: 'big12', // Default to big12 since that's what we're filtering for
+          division: 'FBS', // Default value
+          city: row.location ? row.location.split(',')[0] : null, // Extract city from location
+          state: row.location ? row.location.split(',')[1]?.trim() : null, // Extract state from location
+          // Additional fields from actual schema
+          conference_id: row.conference_id,
+          schedule_display: row.schedule_display,
+          school_abbreviation: row.school_abbreviation,
+          preferred_school_name: row.preferred_school_name
+        }));
+        
+        return schools;
+      } else {
+        // No Big 12 schools found in database, return empty array to trigger fallback
+        console.log('No Big 12 schools found in database, returning empty array for fallback');
+        return [];
+      }
+      
+    } catch (error) {
+      console.error('Failed to fetch schools:', error);
+      return [];
+    } finally {
+      client.release();
+    }
+  }
+
   // Create a new schedule
   async createSchedule(scheduleData) {
     const client = await this.pool.connect();

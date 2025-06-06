@@ -1,47 +1,47 @@
+import React from 'react'
 import { notFound } from 'next/navigation'
-import SchoolPageClient from './SchoolPageClient'
-import { SCHOOL_DATA } from '../../../src/pages/universities/UniversityPage'
 
-interface UniversityPageProps {
-  params: {
-    schoolName: string
-  }
+// Import client components
+import { UniversityHero, TeamsSection } from './components'
+
+// Import the comprehensive university data
+import { getBig12UniversityBySlug } from '../../../src/data/big12-universities-complete'
+
+interface PageProps {
+  params: { schoolName: string }
 }
 
-// Map school names to school IDs based on our database mappings
-const SCHOOL_NAME_TO_ID: { [key: string]: number } = {
-  'arizona': 1,         // University of Arizona
-  'arizona-state': 2,   // Arizona State University  
-  'baylor': 3,          // Baylor University
-  'byu': 4,             // Brigham Young University
-  'ucf': 5,             // University of Central Florida
-  'cincinnati': 6,      // University of Cincinnati
-  'colorado': 7,        // University of Colorado Boulder
-  'houston': 8,         // University of Houston
-  'iowa-state': 9,      // Iowa State University
-  'kansas': 10,         // University of Kansas
-  'kansas-state': 11,   // Kansas State University
-  'oklahoma-state': 12, // Oklahoma State University
-  'tcu': 13,            // Texas Christian University
-  'texas-tech': 14,     // Texas Tech University
-  'utah': 15,           // University of Utah
-  'west-virginia': 16   // West Virginia University
-}
-
-export default function DynamicUniversityPage({ params }: UniversityPageProps) {
+export default function UniversityPage({ params }: PageProps) {
   const { schoolName } = params
-  const schoolId = SCHOOL_NAME_TO_ID[schoolName]
+  const university = getBig12UniversityBySlug(schoolName)
   
-  if (!schoolId || !SCHOOL_DATA[schoolId]) {
+  // If university not found, show 404
+  if (!university) {
     notFound()
   }
   
-  return <SchoolPageClient schoolId={schoolId} />
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900">
+      {/* University Hero Section with header, stats, location */}
+      <UniversityHero university={university} />
+      
+      {/* Teams Section with filtering and team cards */}
+      <TeamsSection university={university} />
+    </div>
+  )
 }
 
 // Generate static paths for all schools
 export async function generateStaticParams() {
-  return Object.keys(SCHOOL_NAME_TO_ID).map((schoolName) => ({
+  // All 16 Big 12 schools
+  const schoolSlugs = [
+    'arizona', 'arizona-state', 'baylor', 'byu',
+    'ucf', 'cincinnati', 'colorado', 'houston', 
+    'iowa-state', 'kansas', 'kansas-state', 'oklahoma-state',
+    'tcu', 'texas-tech', 'utah', 'west-virginia'
+  ]
+  
+  return schoolSlugs.map((schoolName) => ({
     schoolName,
   }))
 }

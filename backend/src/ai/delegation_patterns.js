@@ -5,7 +5,7 @@
  * between agents to handle complex decisions collaboratively.
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 /**
  * Delegation patterns for the FlexTime multi-agent system

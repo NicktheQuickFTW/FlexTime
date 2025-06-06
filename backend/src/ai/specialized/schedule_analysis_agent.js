@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 /**
  * Specialized agent for analyzing schedules.

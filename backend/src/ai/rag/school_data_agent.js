@@ -9,7 +9,7 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const AIAdapter = require('../../adapters/ai-adapter');
 
 class SchoolDataAgent {

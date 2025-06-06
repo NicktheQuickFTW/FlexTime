@@ -6,7 +6,7 @@
  */
 
 const Agent = require('./agent');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const { SchedulingDirectorAgent } = require('./director/scheduling_director');
 const { OperationsDirectorAgent } = require('./director/operations_director');
 const { AnalysisDirectorAgent } = require('./director/analysis_director');

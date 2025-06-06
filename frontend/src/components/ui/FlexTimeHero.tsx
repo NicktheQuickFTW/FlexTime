@@ -68,7 +68,7 @@ export function FlexTimeHero() {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="flex flex-col sm:flex-row gap-6 justify-center items-center mt-10"
         >
-          <Link href="/schedules">
+          <Link href="/schedule-builder">
             <FlexTimePrimaryButton className="px-8 py-4 text-lg font-bold">
               CREATE SCHEDULE →
             </FlexTimePrimaryButton>

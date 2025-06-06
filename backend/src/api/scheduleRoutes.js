@@ -44,4 +44,7 @@ router.post('/schedules/:id/games/:gameId/move', scheduleController.moveGame);
 // Get available time slots for a schedule
 router.get('/schedules/:id/timeslots', scheduleController.getTimeSlots);
 
+// Get constraint violations/conflicts for a schedule
+router.get('/schedules/:id/conflicts', scheduleController.getScheduleConflicts);
+
 module.exports = router;

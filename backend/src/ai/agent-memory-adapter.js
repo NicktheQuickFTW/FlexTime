@@ -4,7 +4,7 @@
  * Provides basic memory storage for agents without external dependencies
  */
 
-const logger = require("../utils/logger");
+const logger = require('../../lib/logger');
 
 /**
  * Simple memory adapter for agent storage

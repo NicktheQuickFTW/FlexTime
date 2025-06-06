@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { Sequelize } = require('sequelize');
 const tf = require('@tensorflow/tfjs-node');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Set up logging to file
 const logDir = path.join(__dirname, '../logs');

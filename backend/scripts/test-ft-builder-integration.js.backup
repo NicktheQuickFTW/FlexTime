@@ -1,0 +1,178 @@
+/**
+ * Test FT Builder Integration
+ * 
+ * This script tests the end-to-end flow of the FT Builder:
+ * 1. Tests data endpoints (teams, venues, sports)
+ * 2. Tests schedule generation
+ * 3. Tests constraint evaluation
+ */
+
+const Big12DataService = require('../services/big12DataService');
+const SimpleSchedulingService = require('../services/simpleSchedulingService');
+const FTBuilderEngine = require('../services/FT_Builder_Engine');
+const logger = require('../src/utils/logger');
+
+async function testDataEndpoints() {
+  console.log('\n=== Testing Data Endpoints ===\n');
+  
+  try {
+    // Test getting teams for football
+    console.log('1. Testing Big12DataService.getTeams for Football (sport_id: 8)');
+    const footballTeams = Big12DataService.getTeams({ sport_id: 8 });
+    console.log(`   ✅ Found ${footballTeams.length} football teams`);
+    console.log(`   First team: ${footballTeams[0].team_name} (ID: ${footballTeams[0].team_id})`);
+    
+    // Test getting venues
+    console.log('\n2. Testing Big12DataService.getVenues');
+    const venues = Big12DataService.getVenues({ sport_id: 8 });
+    console.log(`   ✅ Found ${venues.length} venues for football`);
+    
+    // Test getting sports
+    console.log('\n3. Testing Big12DataService.getSports');
+    const sports = Big12DataService.getSports();
+    console.log(`   ✅ Found ${Object.keys(sports).length} sports`);
+    
+    // Test getting schools
+    console.log('\n4. Testing Big12DataService.getSchools');
+    const schools = Big12DataService.getSchools();
+    console.log(`   ✅ Found ${Object.keys(schools).length} schools`);
+    
+    return true;
+  } catch (error) {
+    console.error('❌ Data endpoint test failed:', error);
+    return false;
+  }
+}
+
+async function testScheduleGeneration() {
+  console.log('\n=== Testing Schedule Generation ===\n');
+  
+  try {
+    // Get some teams for testing
+    const teams = Big12DataService.getTeams({ sport_id: 2 }); // Men's Basketball
+    const teamIds = teams.slice(0, 4).map(t => t.team_id); // Just 4 teams for quick test
+    
+    console.log('1. Testing SimpleSchedulingService.generateSchedule');
+    console.log(`   Teams: ${teamIds.join(', ')}`);
+    
+    const schedule = await SimpleSchedulingService.generateSchedule({
+      sport_id: 2,
+      team_ids: teamIds,
+      start_date: '2025-11-01',
+      end_date: '2025-12-31',
+      games_per_team: 6,
+      constraints: [],
+      schedule_type: 'round_robin'
+    });
+    
+    console.log(`   ✅ Generated schedule with ${schedule.games.length} games`);
+    console.log(`   Date range: ${schedule.metadata.start_date} to ${schedule.metadata.end_date}`);
+    
+    return schedule;
+  } catch (error) {
+    console.error('❌ Schedule generation test failed:', error);
+    return null;
+  }
+}
+
+async function testFTBuilderEngine() {
+  console.log('\n=== Testing FT Builder Engine ===\n');
+  
+  try {
+    const engine = new FTBuilderEngine();
+    
+    // Get teams for testing
+    const teams = Big12DataService.getTeams({ sport_id: 2 }); // Men's Basketball
+    const teamIds = teams.slice(0, 8).map(t => t.team_id); // 8 teams
+    
+    console.log('1. Testing FTBuilderEngine.generateSchedule');
+    console.log(`   Sport: Men's Basketball (ID: 2)`);
+    console.log(`   Teams: ${teamIds.length} teams`);
+    
+    const result = await engine.generateSchedule({
+      sportId: 2,
+      teamIds: teamIds,
+      startDate: '2025-11-01',
+      endDate: '2025-12-31',
+      gamesPerTeam: 10,
+      scheduleType: 'round_robin',
+      season: '2025-26',
+      saveToDatabase: false // Don't save for test
+    });
+    
+    if (result.success) {
+      console.log(`   ✅ FT Builder generated schedule successfully`);
+      console.log(`   Games: ${result.schedule.games.length}`);
+      console.log(`   Constraints applied: ${result.metadata.constraints_applied}`);
+      console.log(`   Violations: ${result.metadata.violations}`);
+      console.log(`   Score: ${result.metadata.score}`);
+    } else {
+      console.log(`   ❌ FT Builder failed: ${result.error}`);
+    }
+    
+    return result;
+  } catch (error) {
+    console.error('❌ FT Builder test failed:', error);
+    return null;
+  }
+}
+
+async function testAPIEndpoint() {
+  console.log('\n=== Testing API Endpoint ===\n');
+  
+  try {
+    const baseUrl = 'http://localhost:3005';
+    
+    console.log('1. Testing GET /api/teams');
+    const teamsResponse = await fetch(`${baseUrl}/api/teams?sport_id=8`);
+    
+    if (teamsResponse.ok) {
+      const data = await teamsResponse.json();
+      console.log(`   ✅ API returned ${data.count} teams`);
+      console.log(`   Success: ${data.success}`);
+    } else {
+      console.log(`   ❌ API returned ${teamsResponse.status}: ${teamsResponse.statusText}`);
+    }
+    
+    console.log('\n2. Testing GET /api/sports');
+    const sportsResponse = await fetch(`${baseUrl}/api/sports`);
+    
+    if (sportsResponse.ok) {
+      const data = await sportsResponse.json();
+      console.log(`   ✅ API returned sports data`);
+      console.log(`   Success: ${data.success}`);
+    } else {
+      console.log(`   ❌ API returned ${sportsResponse.status}: ${sportsResponse.statusText}`);
+    }
+    
+  } catch (error) {
+    console.error('❌ API endpoint test failed:', error);
+    console.log('   Make sure the server is running on http://localhost:3005');
+  }
+}
+
+// Run all tests
+async function runTests() {
+  console.log('Starting FT Builder Integration Tests...');
+  
+  // Test data layer
+  const dataOk = await testDataEndpoints();
+  
+  if (dataOk) {
+    // Test schedule generation
+    const schedule = await testScheduleGeneration();
+    
+    if (schedule) {
+      // Test FT Builder
+      await testFTBuilderEngine();
+    }
+  }
+  
+  // Test API if server is running
+  await testAPIEndpoint();
+  
+  console.log('\n=== Test Complete ===');
+}
+
+// Run the tests
+runTests().catch(console.error);

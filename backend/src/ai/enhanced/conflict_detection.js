@@ -9,8 +9,8 @@
  * - Resource conflicts (equipment, personnel, etc.)
  */
 
-const logger = require("../utils/logger");
-const { calculateDistance } = require('../utils/geo_utils');
+const logger = require('../scripts/logger");
+const { calculateDistance } = require('../scripts/geo_utils');
 
 /**
  * Check for venue conflicts in a schedule

@@ -159,7 +159,7 @@ export class ScheduleAPI {
   }
 
   async getTeam(id: number): Promise<Team> {
-    const response = await fetch(`${this.baseUrl}/api/teams/${id}`);
+    const response = await fetch(`${this.baseUrl}/api/scheduling-service/teams/${id}`);
     if (!response.ok) throw new Error('Failed to fetch team');
     return response.json();
   }
@@ -297,7 +297,7 @@ export class ScheduleAPI {
   }
 
   async getConstraintViolations(scheduleId: string): Promise<ConstraintViolation[]> {
-    const response = await fetch(`${this.baseUrl}/api/scheduling-service/schedules/${scheduleId}/conflicts`);
+    const response = await fetch(`${this.baseUrl}/api/schedule/schedules/${scheduleId}/conflicts`);
     if (!response.ok) throw new Error('Failed to fetch constraint violations');
     return response.json();
   }

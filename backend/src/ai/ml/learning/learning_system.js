@@ -6,7 +6,7 @@
  * It now connects with the HELiiX Intelligence Engine for enhanced learning capabilities.
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const { CentralizedMemoryManager } = require('../../enhanced/centralized_memory_manager');
 const { MachineLearningManager } = require('./machine_learning');
 const FeedbackLoopSystem = require('./feedback_loop');

@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const fs = require('fs').promises;
 const path = require('path');
 const AIAdapter = require('../../adapters/ai-adapter');

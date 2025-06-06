@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const plotly = require('plotly.js-dist');
 const d3 = require('d3');
 const moment = require('moment');

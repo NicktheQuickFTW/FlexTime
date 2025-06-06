@@ -1,0 +1,548 @@
+{
+  "games": [
+    {
+      "date": "23-Jan",
+      "home_team": "arizona-state",
+      "away_team": "byu",
+      "home_team_name": "Arizona State",
+      "away_team_name": "BYU"
+    },
+    {
+      "date": "23-Jan",
+      "home_team": "west-virginia",
+      "away_team": "denver",
+      "home_team_name": "West Virginia",
+      "away_team_name": "Denver"
+    },
+    {
+      "date": "23-Jan",
+      "home_team": "iowa-state",
+      "away_team": "utah",
+      "home_team_name": "Iowa State",
+      "away_team_name": "Utah"
+    },
+    {
+      "date": "30-Jan",
+      "home_team": "byu",
+      "away_team": "arizona",
+      "home_team_name": "BYU",
+      "away_team_name": "Arizona"
+    },
+    {
+      "date": "30-Jan",
+      "home_team": "utah",
+      "away_team": "arizona-state",
+      "home_team_name": "Utah",
+      "away_team_name": "Arizona State"
+    },
+    {
+      "date": "30-Jan",
+      "home_team": "denver",
+      "away_team": "iowa-state",
+      "home_team_name": "Denver",
+      "away_team_name": "Iowa State"
+    },
+    {
+      "date": "6-Feb",
+      "home_team": "arizona-state",
+      "away_team": "denver",
+      "home_team_name": "Arizona State",
+      "away_team_name": "Denver"
+    },
+    {
+      "date": "6-Feb",
+      "home_team": "arizona",
+      "away_team": "utah",
+      "home_team_name": "Arizona",
+      "away_team_name": "Utah"
+    },
+    {
+      "date": "6-Feb",
+      "home_team": "iowa-state",
+      "away_team": "west-virginia",
+      "home_team_name": "Iowa State",
+      "away_team_name": "West Virginia"
+    },
+    {
+      "date": "13-Feb",
+      "home_team": "denver",
+      "away_team": "arizona",
+      "home_team_name": "Denver",
+      "away_team_name": "Arizona"
+    },
+    {
+      "date": "13-Feb",
+      "home_team": "west-virginia",
+      "away_team": "arizona-state",
+      "home_team_name": "West Virginia",
+      "away_team_name": "Arizona State"
+    },
+    {
+      "date": "13-Feb",
+      "home_team": "utah",
+      "away_team": "byu",
+      "home_team_name": "Utah",
+      "away_team_name": "BYU"
+    },
+    {
+      "date": "20-Feb",
+      "home_team": "byu",
+      "away_team": "denver",
+      "home_team_name": "BYU",
+      "away_team_name": "Denver"
+    },
+    {
+      "date": "20-Feb",
+      "home_team": "arizona-state",
+      "away_team": "iowa-state",
+      "home_team_name": "Arizona State",
+      "away_team_name": "Iowa State"
+    },
+    {
+      "date": "20-Feb",
+      "home_team": "arizona",
+      "away_team": "west-virginia",
+      "home_team_name": "Arizona",
+      "away_team_name": "West Virginia"
+    },
+    {
+      "date": "27-Feb",
+      "home_team": "iowa-state",
+      "away_team": "arizona",
+      "home_team_name": "Iowa State",
+      "away_team_name": "Arizona"
+    },
+    {
+      "date": "27-Feb",
+      "home_team": "denver",
+      "away_team": "utah",
+      "home_team_name": "Denver",
+      "away_team_name": "Utah"
+    },
+    {
+      "date": "6-Mar",
+      "home_team": "arizona",
+      "away_team": "arizona-state",
+      "home_team_name": "Arizona",
+      "away_team_name": "Arizona State"
+    },
+    {
+      "date": "6-Mar",
+      "home_team": "byu",
+      "away_team": "iowa-state",
+      "home_team_name": "BYU",
+      "away_team_name": "Iowa State"
+    },
+    {
+      "date": "6-Mar",
+      "home_team": "utah",
+      "away_team": "west-virginia",
+      "home_team_name": "Utah",
+      "away_team_name": "West Virginia"
+    }
+  ],
+  "teamStats": {
+    "ARIZ": {
+      "home": 3,
+      "away": 3,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "BYU",
+        "UTAH",
+        "DEN",
+        "WVU",
+        "ISU",
+        "ASU"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "bye"
+        },
+        {
+          "week": 2,
+          "type": "away",
+          "opponent": "BYU"
+        },
+        {
+          "week": 3,
+          "type": "home",
+          "opponent": "UTAH"
+        },
+        {
+          "week": 4,
+          "type": "away",
+          "opponent": "DEN"
+        },
+        {
+          "week": 5,
+          "type": "home",
+          "opponent": "WVU"
+        },
+        {
+          "week": 6,
+          "type": "away",
+          "opponent": "ISU"
+        },
+        {
+          "week": 7,
+          "type": "home",
+          "opponent": "ASU"
+        }
+      ]
+    },
+    "ASU": {
+      "home": 3,
+      "away": 3,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "BYU",
+        "UTAH",
+        "DEN",
+        "WVU",
+        "ISU",
+        "ARIZ"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "home",
+          "opponent": "BYU"
+        },
+        {
+          "week": 2,
+          "type": "away",
+          "opponent": "UTAH"
+        },
+        {
+          "week": 3,
+          "type": "home",
+          "opponent": "DEN"
+        },
+        {
+          "week": 4,
+          "type": "away",
+          "opponent": "WVU"
+        },
+        {
+          "week": 5,
+          "type": "home",
+          "opponent": "ISU"
+        },
+        {
+          "week": 6,
+          "type": "bye"
+        },
+        {
+          "week": 7,
+          "type": "away",
+          "opponent": "ARIZ"
+        }
+      ]
+    },
+    "BYU": {
+      "home": 4,
+      "away": 2,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "ASU",
+        "ARIZ",
+        "UTAH",
+        "DEN",
+        "WVU",
+        "ISU"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "away",
+          "opponent": "ASU"
+        },
+        {
+          "week": 2,
+          "type": "home",
+          "opponent": "ARIZ"
+        },
+        {
+          "week": 3,
+          "type": "bye"
+        },
+        {
+          "week": 4,
+          "type": "away",
+          "opponent": "UTAH"
+        },
+        {
+          "week": 5,
+          "type": "home",
+          "opponent": "DEN"
+        },
+        {
+          "week": 6,
+          "type": "home",
+          "opponent": "WVU"
+        },
+        {
+          "week": 7,
+          "type": "home",
+          "opponent": "ISU"
+        }
+      ]
+    },
+    "DEN": {
+      "home": 3,
+      "away": 3,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "WVU",
+        "ISU",
+        "ASU",
+        "ARIZ",
+        "BYU",
+        "UTAH"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "away",
+          "opponent": "WVU"
+        },
+        {
+          "week": 2,
+          "type": "home",
+          "opponent": "ISU"
+        },
+        {
+          "week": 3,
+          "type": "away",
+          "opponent": "ASU"
+        },
+        {
+          "week": 4,
+          "type": "home",
+          "opponent": "ARIZ"
+        },
+        {
+          "week": 5,
+          "type": "away",
+          "opponent": "BYU"
+        },
+        {
+          "week": 6,
+          "type": "home",
+          "opponent": "UTAH"
+        },
+        {
+          "week": 7,
+          "type": "bye"
+        }
+      ]
+    },
+    "ISU": {
+      "home": 3,
+      "away": 3,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "UTAH",
+        "DEN",
+        "WVU",
+        "ASU",
+        "ARIZ",
+        "BYU"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "home",
+          "opponent": "UTAH"
+        },
+        {
+          "week": 2,
+          "type": "away",
+          "opponent": "DEN"
+        },
+        {
+          "week": 3,
+          "type": "home",
+          "opponent": "WVU"
+        },
+        {
+          "week": 4,
+          "type": "bye"
+        },
+        {
+          "week": 5,
+          "type": "away",
+          "opponent": "ASU"
+        },
+        {
+          "week": 6,
+          "type": "home",
+          "opponent": "ARIZ"
+        },
+        {
+          "week": 7,
+          "type": "away",
+          "opponent": "BYU"
+        }
+      ]
+    },
+    "UTAH": {
+      "home": 3,
+      "away": 3,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "ISU",
+        "ASU",
+        "ARIZ",
+        "BYU",
+        "DEN",
+        "WVU"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "away",
+          "opponent": "ISU"
+        },
+        {
+          "week": 2,
+          "type": "home",
+          "opponent": "ASU"
+        },
+        {
+          "week": 3,
+          "type": "away",
+          "opponent": "ARIZ"
+        },
+        {
+          "week": 4,
+          "type": "home",
+          "opponent": "BYU"
+        },
+        {
+          "week": 5,
+          "type": "bye"
+        },
+        {
+          "week": 6,
+          "type": "away",
+          "opponent": "DEN"
+        },
+        {
+          "week": 7,
+          "type": "home",
+          "opponent": "WVU"
+        }
+      ]
+    },
+    "WVU": {
+      "home": 3,
+      "away": 3,
+      "bye": 1,
+      "total": 6,
+      "opponents": [
+        "DEN",
+        "ISU",
+        "ASU",
+        "ARIZ",
+        "BYU",
+        "UTAH"
+      ],
+      "weeklySchedule": [
+        {
+          "week": 1,
+          "type": "home",
+          "opponent": "DEN"
+        },
+        {
+          "week": 2,
+          "type": "bye"
+        },
+        {
+          "week": 3,
+          "type": "away",
+          "opponent": "ISU"
+        },
+        {
+          "week": 4,
+          "type": "home",
+          "opponent": "ASU"
+        },
+        {
+          "week": 5,
+          "type": "away",
+          "opponent": "ARIZ"
+        },
+        {
+          "week": 6,
+          "type": "home",
+          "opponent": "BYU"
+        },
+        {
+          "week": 7,
+          "type": "away",
+          "opponent": "UTAH"
+        }
+      ]
+    }
+  },
+  "constraints": {
+    "format": "round_robin",
+    "weeksInSeason": 7,
+    "meetsPerWeek": 1,
+    "byeWeeks": 1,
+    "dayOfWeek": "Friday",
+    "homeAwayBalance": true,
+    "affiliateIntegration": true,
+    "teams": [
+      {
+        "id": "arizona",
+        "name": "Arizona",
+        "isAffiliate": false
+      },
+      {
+        "id": "arizona-state",
+        "name": "Arizona State",
+        "isAffiliate": false
+      },
+      {
+        "id": "byu",
+        "name": "BYU",
+        "isAffiliate": false
+      },
+      {
+        "id": "denver",
+        "name": "Denver",
+        "isAffiliate": true
+      },
+      {
+        "id": "iowa-state",
+        "name": "Iowa State",
+        "isAffiliate": false
+      },
+      {
+        "id": "utah",
+        "name": "Utah",
+        "isAffiliate": false
+      },
+      {
+        "id": "west-virginia",
+        "name": "West Virginia",
+        "isAffiliate": false
+      }
+    ]
+  },
+  "analysis": {
+    "totalMeets": 20,
+    "uniqueMatchups": 20,
+    "seasonLength": 7,
+    "isCompleteRoundRobin": false
+  }
+}

@@ -259,6 +259,86 @@ export class FlexTimeAPI {
   }
 
   // ===================
+  // VENUE OPERATIONS
+  // ===================
+
+  /**
+   * Get all venues or filter by parameters
+   */
+  async getVenues(filters?: { school_id?: number; sport_id?: number; venue_type?: number }): Promise<Venue[]> {
+    const params = new URLSearchParams();
+    if (filters?.school_id) params.append('school_id', filters.school_id.toString());
+    if (filters?.sport_id) params.append('sport_id', filters.sport_id.toString());
+    if (filters?.venue_type) params.append('venue_type', filters.venue_type.toString());
+    
+    const response = await this.request<ApiResponse<Venue[]>>(
+      `/api/venues?${params}`
+    );
+    
+    return response.data || response as unknown as Venue[];
+  }
+
+  /**
+   * Get a specific venue by ID
+   */
+  async getVenue(id: number): Promise<Venue> {
+    const response = await this.request<ApiResponse<Venue>>(
+      `/api/venues/${id}`
+    );
+    
+    return response.data || response as unknown as Venue;
+  }
+
+  // ===================
+  // SPORT OPERATIONS
+  // ===================
+
+  /**
+   * Get all sports
+   */
+  async getSports(): Promise<Record<string, any>> {
+    const response = await this.request<ApiResponse<Record<string, any>>>(
+      `/api/sports`
+    );
+    
+    return response.data || response as unknown as Record<string, any>;
+  }
+
+  /**
+   * Get a specific sport by ID
+   */
+  async getSport(id: number): Promise<any> {
+    const sports = await this.getSports();
+    return sports[id] || null;
+  }
+
+  // ===================
+  // SCHOOL OPERATIONS
+  // ===================
+
+  /**
+   * Get all schools with optional filters
+   */
+  async getSchools(filters?: { conference_status?: string }): Promise<Record<string, any>> {
+    const params = new URLSearchParams();
+    if (filters?.conference_status) params.append('conference_status', filters.conference_status);
+    
+    const response = await this.request<ApiResponse<Record<string, any>>>(
+      `/api/schools?${params}`
+    );
+    
+    return response.data || response as unknown as Record<string, any>;
+  }
+
+  /**
+   * Get a specific school by ID
+   */
+  async getSchool(id: number): Promise<any> {
+    const schools = await this.getSchools();
+    return schools[id] || null;
+  }
+
+  // ===================
   // SCHEDULE OPERATIONS
   // ===================
 
@@ -541,10 +621,54 @@ export const TeamService = {
 };
 
 export const VenueService = {
-  getVenues: async () => { throw new Error('Venue endpoints not yet implemented'); },
-  createVenue: async () => { throw new Error('Venue endpoints not yet implemented'); },
-  updateVenue: async () => { throw new Error('Venue endpoints not yet implemented'); },
-  addUnavailableDates: async () => { throw new Error('Venue endpoints not yet implemented'); },
+  getVenues: () => api.getVenues(),
+  getVenueById: (id: number) => api.getVenue(id),
+  createVenue: async () => { throw new Error('Venue create endpoint not yet implemented'); },
+  updateVenue: async () => { throw new Error('Venue update endpoint not yet implemented'); },
+  addUnavailableDates: async () => { throw new Error('Venue unavailable dates endpoint not yet implemented'); },
+};
+
+// FlexTime API instance for compatibility
+export const flexTimeAPI = {
+  // Teams
+  getTeams: (filters?: { sport_id?: number; school_id?: number }) => api.getTeams(
+    filters?.sport_id?.toString(),
+    undefined
+  ),
+  getTeamById: (id: number) => api.getTeam(id),
+  
+  // Venues
+  getVenues: (filters?: { school_id?: number; sport_id?: number; venue_type?: number }) => api.getVenues(filters),
+  getVenueById: (id: number) => api.getVenue(id),
+  
+  // Sports
+  getSports: () => api.getSports(),
+  getSportById: (id: number) => api.getSport(id),
+  
+  // Schools
+  getSchools: (filters?: { conference_status?: string }) => api.getSchools(filters),
+  getSchoolById: (id: number) => api.getSchool(id),
+  
+  // Schedules
+  createSchedule: async (scheduleData: any) => {
+    // Ensure team_ids are calculated correctly
+    const Big12DataService = {
+      calculateTeamId: (schoolId: number, sportId: number) => {
+        return schoolId * 100 + sportId;
+      }
+    };
+    
+    if (scheduleData.teams) {
+      scheduleData.teams = scheduleData.teams.map((team: any) => ({
+        ...team,
+        team_id: team.team_id || Big12DataService.calculateTeamId(team.school_id, team.sport_id)
+      }));
+    }
+    
+    return api.createSchedule(scheduleData);
+  },
+  getSchedules: () => api.getSchedules(),
+  getScheduleById: (id: string) => api.getSchedule(id),
 };
 
 // Default export

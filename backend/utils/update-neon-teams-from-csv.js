@@ -7,7 +7,7 @@
 
 require('dotenv').config();
 const { Client } = require('pg');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Connection string from environment
 const connectionString = process.env.NEON_DB_CONNECTION_STRING || 

@@ -9,7 +9,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const path = require('path');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 const mcpConfig = require('../config/mcp_config');
 
 // Import API routers

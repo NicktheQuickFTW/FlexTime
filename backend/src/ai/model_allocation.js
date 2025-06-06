@@ -5,7 +5,7 @@
  * balancing performance and cost effectiveness.
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 /**
  * Model allocation optimizer for the FlexTime agent system

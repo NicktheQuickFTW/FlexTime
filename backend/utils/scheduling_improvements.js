@@ -35,7 +35,7 @@ const BasketballScheduleOptimizer = function() {
 };
 
 // Import visualization tools
-const ScheduleVisualizationGenerator = require('../utils/visualization/schedule_visualization');
+const ScheduleVisualizationGenerator = require('../scripts/visualization/schedule_visualization');
 // const EnhancedScheduleAnalysisAgent = require('../agents/specialized/enhanced_schedule_analysis_agent');
 
 // Mock version for development
@@ -49,7 +49,7 @@ const EnhancedScheduleAnalysisAgent = function() {
 };
 
 // Logger for integration logging
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 /**
  * Initialize and register all scheduling improvements

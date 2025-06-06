@@ -6,8 +6,10 @@ import { Toggle } from '../../../components/ui/toggle';
 
 export function FlexTimeThemeToggle() {
   const [isDark, setIsDark] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     // Check for saved theme or system preference
     const savedTheme = localStorage.getItem('flextime-theme-mode');
     const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -40,6 +42,24 @@ export function FlexTimeThemeToggle() {
       document.documentElement.classList.remove('dark');
     }
   };
+
+  // Prevent hydration mismatch by not rendering until mounted
+  if (!mounted) {
+    return (
+      <Toggle
+        pressed={true}
+        aria-label="Theme toggle"
+        className="relative w-12 h-12 rounded-lg bg-white/10 backdrop-blur-sm border border-white/20 transition-all duration-300"
+      >
+        <div className="relative w-6 h-6">
+          <Moon 
+            className="absolute inset-0 text-[color:var(--ft-neon)]"
+            size={24}
+          />
+        </div>
+      </Toggle>
+    );
+  }
 
   return (
     <Toggle

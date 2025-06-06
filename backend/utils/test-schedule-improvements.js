@@ -18,7 +18,7 @@ const MemoryOptimizedTravelOptimizer = require('../algorithms/improvements/memor
 const IncrementalScheduleOptimizer = require('../algorithms/improvements/incremental_schedule_optimizer');
 const ConstraintEvaluator = require('../algorithms/improvements/constraint_evaluator');
 const BasketballScheduleOptimizer = require('../agents/sport_specific/basketball_schedule_optimizer');
-const ScheduleVisualizationGenerator = require('../utils/visualization/schedule_visualization');
+const ScheduleVisualizationGenerator = require('../scripts/visualization/schedule_visualization');
 
 // Import regular models
 const Schedule = require('../models/schedule');

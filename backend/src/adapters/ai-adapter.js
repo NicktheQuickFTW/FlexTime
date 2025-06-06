@@ -31,7 +31,7 @@ const Anthropic = function() {
   };
 };
 const modelConfig = require('../../config/ai-services');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 class AIAdapter {
   constructor(options = {}) {

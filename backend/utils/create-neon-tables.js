@@ -7,7 +7,7 @@
 
 require('dotenv').config();
 const { Client } = require('pg');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 async function createNeonTables() {
   logger.info('Creating tables in Neon DB...');

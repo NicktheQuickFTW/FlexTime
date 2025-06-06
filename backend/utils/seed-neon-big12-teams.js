@@ -8,7 +8,7 @@
 
 require('dotenv').config();
 const { Client } = require('pg');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Big 12 Teams data
 const big12TeamsData = [

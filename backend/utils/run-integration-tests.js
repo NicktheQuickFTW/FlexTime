@@ -11,7 +11,7 @@
 const path = require('path');
 const { spawn } = require('child_process');
 const axios = require('axios');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Parse command line arguments
 const args = process.argv.slice(2);

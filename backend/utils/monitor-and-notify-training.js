@@ -9,7 +9,7 @@ require('dotenv').config();
 const path = require('path');
 const fs = require('fs');
 const { spawn } = require('child_process');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Configuration
 const config = {

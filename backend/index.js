@@ -14,13 +14,13 @@ const scheduleService = require('./src/services/scheduleService');
 //   registerCOMPASSEndpoints, 
 //   integrateCOMPASSWithMetrics 
 // } = require('./src/integrations/compass/compass');
-const logger = require('./src/utils/logger');
+const logger = require('./lib/logger');
 
 // Import refactored modules
 const { setupDatabase } = require('./src/config/database');
 const configureMiddleware = require('./src/middleware/middleware');
 const registerRoutes = require('./src/config/routes');
-const CacheManager = require('./src/utils/cacheManager');
+const CacheManager = require('./lib/cacheManager');
 const { 
   shouldUseCluster, 
   startCluster, 
@@ -88,7 +88,7 @@ async function initializeApplication() {
       // });
       
       // Initialize Advanced Metrics System
-      const AdvancedMetricsSystem = require('./src/utils/advanced_metrics_system');
+      const AdvancedMetricsSystem = require('./lib/advanced_metrics_system');
       const advancedMetricsSystem = new AdvancedMetricsSystem({
         enablePredictiveModels: process.env.ENABLE_PREDICTIVE_METRICS !== 'false',
         enableRevenueOptimization: process.env.ENABLE_REVENUE_METRICS !== 'false',

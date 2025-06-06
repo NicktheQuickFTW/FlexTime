@@ -10,7 +10,7 @@
 const { FeedbackSystem } = require('../ml/feedback_system');
 const { CentralizedMemoryManager } = require('./enhanced/centralized_memory_manager');
 const { ModelAllocation } = require('../model_allocation');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 class EnhancedFeedbackSystem extends FeedbackSystem {
   /**

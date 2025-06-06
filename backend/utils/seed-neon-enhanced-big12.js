@@ -8,7 +8,7 @@
 
 require('dotenv').config();
 const { Sequelize, DataTypes } = require('sequelize');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 const path = require('path');
 const fs = require('fs');
 

@@ -6,9 +6,9 @@
  */
 
 const FTBuilderEngine = require('../../FT_Builder_Engine');
-const PerformanceMonitor = require('../utils/PerformanceMonitor');
-const MemoryLeakDetector = require('../utils/MemoryLeakDetector');
-const MockDataGenerator = require('../utils/MockDataGenerator');
+const PerformanceMonitor = require('../scripts/PerformanceMonitor');
+const MemoryLeakDetector = require('../scripts/MemoryLeakDetector');
+const MockDataGenerator = require('../scripts/MockDataGenerator');
 
 describe('FTBuilderEngine Unit Tests', () => {
   let engine;

@@ -8,7 +8,7 @@ require('dotenv').config();
 const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Ensure necessary directories exist
 const directories = [

@@ -10,7 +10,7 @@ const path = require('path');
 const fs = require('fs');
 const { program } = require('commander');
 const PredictiveModelTrainer = require('../compass/models/predictive_model_trainer');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Parse command line arguments
 program

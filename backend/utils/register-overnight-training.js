@@ -7,7 +7,7 @@
 
 require('dotenv').config();
 const { program } = require('commander');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 const OvernightTrainingJob = require('../compass/jobs/overnight_training_job');
 
 // Parse command line arguments

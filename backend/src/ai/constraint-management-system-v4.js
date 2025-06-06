@@ -14,7 +14,7 @@ const Redis = require('ioredis');
 const cluster = require('cluster');
 const os = require('os');
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 const PerformanceMonitor = require('../../utils/performance-monitor');
 const PRODUCTION_SCALE_CONFIG = require('../../config/scale_config');
 

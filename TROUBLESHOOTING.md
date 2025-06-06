@@ -192,5 +192,21 @@ Schedule builder shows "Failed to fetch constraint violations" after generating 
 
 ---
 
+## ✅ RESOLVED: June 4, 2025 - "Failed to fetch" Errors Fixed
+
+**Resolution Summary:**
+1. **CORS Configuration Updated**: Added port 49956 to backend CORS allowlist in `/backend/src/middleware/middleware.js`
+2. **API Endpoints Fixed**: Updated `/frontend/src/utils/scheduleApi.ts` to use correct endpoints:
+   - `/api/teams` → `/api/scheduling-service/teams`
+   - `/api/constraints` → `/api/scheduling-service/constraints`
+3. **Backend Server Restarted**: Applied CORS changes and verified API endpoints working
+
+**Verification:**
+- ✅ Backend running on port 3005
+- ✅ Frontend running on port 49956 with proper CORS access
+- ✅ Teams API: `curl http://localhost:3005/api/scheduling-service/teams` returns 153 teams
+- ✅ Constraints API: `curl http://localhost:3005/api/scheduling-service/constraints` returns 10 constraints
+- ✅ Schedule builder should now load teams and constraints without "Failed to fetch" errors
+
 *Last updated: June 4, 2025*
-*Issue resolved: Multiple API files + backend not running + constraint violations endpoint*
+*Issue resolved: Multiple API files + backend not running + constraint violations endpoint + CORS configuration*

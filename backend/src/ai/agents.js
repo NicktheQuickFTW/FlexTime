@@ -7,7 +7,7 @@
  * Gracefully handles missing dependencies during refactoring phase.
  */
 
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 // Try to load AgentSystem, with fallback for missing dependencies
 let AgentSystem;

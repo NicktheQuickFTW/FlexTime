@@ -24,30 +24,30 @@ export default function UniversitiesIndexPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950/20 to-slate-950 text-white">
+    <div className="universities-page-container">
       <div className="container mx-auto px-6 py-12">
         <div className="text-center mb-16">
-          <h1 className="text-6xl md:text-7xl font-bold mb-6 tracking-tight">
-            <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <h1 className="universities-page-title">
+            <span className="universities-title-gradient">
               Big 12 Universities
             </span>
           </h1>
-          <p className="text-xl text-slate-400 mb-8 max-w-3xl mx-auto">
+          <p className="universities-page-subtitle">
             Explore all 16 member universities in the Big 12 Conference
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="universities-grid">
           {schools.map((school) => {
             const logoSrc = getTeamLogo(school.id, 'dark')
             return (
               <a 
                 key={school.id} 
                 href={`/universities/${school.url}`}
-                className="backdrop-blur-xl bg-white/5 border border-slate-800 hover:border-cyan-500/30 rounded-lg p-6 h-full transition-all duration-300 group cursor-pointer"
+                className="university-card"
               >
-                <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 mr-3 flex items-center justify-center relative">
+                <div className="university-card-header">
+                  <div className="university-logo">
                     {logoSrc ? (
                       <Image
                         src={logoSrc}
@@ -58,7 +58,7 @@ export default function UniversitiesIndexPage() {
                       />
                     ) : (
                       <div 
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg"
+                        className="university-logo-fallback"
                         style={{ backgroundColor: school.colors[0] }}
                       >
                         {school.name.split(' ')[0][0]}{school.name.split(' ')[school.name.split(' ').length - 1][0]}
@@ -66,16 +66,16 @@ export default function UniversitiesIndexPage() {
                     )}
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-white group-hover:text-cyan-400 transition-colors">
+                    <h3 className="university-name">
                       {school.name.replace('University of ', '').replace(' University', '')}
                     </h3>
-                    <p className="text-sm text-slate-400">School ID: {school.id}</p>
+                    <p className="university-id">School ID: {school.id}</p>
                   </div>
                 </div>
-                <p className="text-slate-400 text-sm leading-relaxed group-hover:text-slate-300 transition-colors mb-2">
+                <p className="university-mascot">
                   {school.mascot}
                 </p>
-                <div className="mt-4 text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-1 transition-all duration-300">
+                <div className="university-card-arrow">
                   →
                 </div>
               </a>

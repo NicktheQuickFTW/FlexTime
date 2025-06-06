@@ -8,7 +8,7 @@
 const path = require('path');
 const fs = require('fs').promises;
 const { EventEmitter } = require('events');
-const logger = require("../utils/logger");
+const logger = require('../scripts/logger");
 
 class OptimizationSystem extends EventEmitter {
   /**

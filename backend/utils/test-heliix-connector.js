@@ -6,7 +6,7 @@
  */
 
 const { heliixConnector } = require('../agents').agents;
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 // Create and initialize the Intelligence Connector agent
 async function main() {

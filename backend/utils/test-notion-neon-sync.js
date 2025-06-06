@@ -6,7 +6,7 @@
  */
 
 const notionNeonSync = require('../adapters/notion-neon-sync-adapter');
-const logger = require('../utils/logger');
+const logger = require('../scripts/logger');
 
 async function testNotionNeonSync() {
   try {
