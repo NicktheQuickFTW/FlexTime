@@ -5,7 +5,7 @@
  * implementing the main agent initialization, coordination, and lifecycle management.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const FTBuilderEngine = require('../../services/FT_Builder_Engine');
 const AdvancedSchedulingService = require('../../services/advanced_scheduling_service');
 

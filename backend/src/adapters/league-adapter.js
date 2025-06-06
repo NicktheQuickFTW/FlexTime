@@ -6,7 +6,7 @@
  * automatically adjust to different sports and conference requirements.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const IntelligenceEngineClient = require('../clients/intelligence-engine-client');
 
 /**

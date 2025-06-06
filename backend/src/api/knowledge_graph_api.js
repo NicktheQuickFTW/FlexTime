@@ -7,7 +7,7 @@
 
 const express = require('express');
 const router = express.Router();
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Initialize Knowledge Graph API routes

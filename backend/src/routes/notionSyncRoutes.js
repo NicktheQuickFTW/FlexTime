@@ -7,7 +7,7 @@
 const express = require('express');
 const router = express.Router();
 const notionNeonSync = require('../adapters/notion-neon-sync-adapter');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * @route   GET /api/notion-sync/test-connections

@@ -5,7 +5,7 @@
  * implementing domain-specific queries and operations for scheduling entities.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Knowledge Repository

@@ -6,7 +6,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const logger = require('../../../lib/logger');
+const logger = require('../../../src/lib/logger');
 
 class SportScheduler {
   constructor(config = {}) {

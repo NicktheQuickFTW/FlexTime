@@ -13,7 +13,7 @@
  */
 
 const SportScheduler = require('../base/SportScheduler');
-const logger = require('../../../lib/logger');
+const logger = require('../../../src/lib/logger');
 const { v4: uuidv4 } = require('uuid');
 
 class VolleyballScheduler extends SportScheduler {

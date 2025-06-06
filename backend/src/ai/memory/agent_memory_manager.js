@@ -8,7 +8,7 @@
  */
 
 const { Pool } = require('pg');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { v4: uuidv4 } = require('uuid');
 
 // Mock memory storage for when database is disabled

@@ -15,7 +15,7 @@ const ConstraintCache = require('./caching/ConstraintCache');
 const ConstraintPipeline = require('./pipeline/ConstraintPipeline');
 const PerformanceMonitor = require('./monitoring/PerformanceMonitor');
 const DependencyAnalyzer = require('./analysis/DependencyAnalyzer');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class OptimizedConstraintEngine extends EventEmitter {
   constructor(options = {}) {

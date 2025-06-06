@@ -7,7 +7,7 @@
 
 const { Sequelize, Op } = require('sequelize');
 const neonConfig = require('../../config/neon_db_config');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class NeonDBAdapter {
   /**

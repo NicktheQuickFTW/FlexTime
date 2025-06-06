@@ -5,7 +5,7 @@
  * using FlexTime AI to add contextual information and relationships.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Semantic Enricher class

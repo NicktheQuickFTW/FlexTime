@@ -7,7 +7,7 @@
  * the external Intelligence Engine.
  */
 
-const logger = require('../scripts/logger")
+const logger = require("../lib/logger");
 const AgentMemoryManager = require('../src/ai/agent-memory-adapter');
 const neonConfig = require('../config/neon_db_config');
 

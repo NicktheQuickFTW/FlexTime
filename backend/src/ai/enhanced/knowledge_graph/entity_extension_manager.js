@@ -6,7 +6,7 @@
  * over time with new capabilities.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 // FlexTime AI client
 // const { createFlexTimeClient } = require('../../../utils/flextime_ai_client');
 

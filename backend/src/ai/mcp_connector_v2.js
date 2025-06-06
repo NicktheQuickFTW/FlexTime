@@ -6,7 +6,7 @@
  */
 
 const axios = require('axios');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const mcpConfig = require('../../config/mcp_config');
 
 /**

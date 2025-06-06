@@ -16,7 +16,7 @@ const TravelDistanceCalculator = require('./travel-distance-calculator');
 const { ConstraintType } = require('../../models/constraint');
 const { Worker } = require('worker_threads');
 const path = require('path');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const EventEmitter = require('events');
 
 // Performance monitoring

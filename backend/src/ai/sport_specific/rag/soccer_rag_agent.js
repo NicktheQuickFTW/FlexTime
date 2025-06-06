@@ -5,7 +5,7 @@
  */
 
 const BaseSportRagAgent = require('./base_sport_rag_agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const path = require('path');
 const axios = require('axios');
 const fs = require('fs').promises;

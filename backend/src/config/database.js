@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 const heliiXConfig = require('../../config/neon_db_config');
 // Note: fix-schedules-table script removed during refactoring
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 // Database connection with HELiiX validation
 async function connectToDatabase() {

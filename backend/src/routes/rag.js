@@ -7,7 +7,7 @@
 const express = require('express');
 const router = express.Router();
 const SchoolDataAgent = require('../agents/rag/school_data_agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 // Initialize the agent
 let agentInstance = null;

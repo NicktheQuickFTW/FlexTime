@@ -17,7 +17,7 @@
 
 const EventEmitter = require('events');
 const os = require('os');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Advanced performance monitoring for scheduling operations

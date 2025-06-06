@@ -6,7 +6,7 @@
 
 const express = require('express');
 const router = express.Router();
-const ScheduleExporter = require('../scripts/schedule_export');
+const ScheduleExporter = require('../lib/schedule_export');
 
 // Create schedule exporter
 const scheduleExporter = new ScheduleExporter();

@@ -5,7 +5,7 @@
  */
 
 const express = require('express');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const scheduleRoutes = require('./schedule_api');
 const teamRoutes = require('./team_api');
 const venueRoutes = require('./venue_api');

@@ -13,7 +13,7 @@
  * @author FlexTime AI Engine
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class COMPASS {
     constructor() {

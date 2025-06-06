@@ -9,7 +9,7 @@
  * - Conference tournament seeding considerations
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { ConstraintTypes } = require('../constraint-management-system');
 
 /**

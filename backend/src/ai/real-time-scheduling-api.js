@@ -16,7 +16,7 @@
 const express = require('express');
 const WebSocket = require('ws');
 const EventEmitter = require('events');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { ConstraintManagementSystem } = require('./constraint-management-system');
 const ConstraintResolver = require('./constraint-resolver');
 const Big12SportSpecificOptimizer = require('./big12-sport-specific-optimizer');

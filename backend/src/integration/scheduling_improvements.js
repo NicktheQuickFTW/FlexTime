@@ -57,7 +57,7 @@ const EnhancedScheduleAnalysisAgent = function() {
 };
 
 // Logger for integration logging
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Initialize and register all scheduling improvements

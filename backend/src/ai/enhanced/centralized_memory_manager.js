@@ -6,7 +6,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Memory types supported by the system

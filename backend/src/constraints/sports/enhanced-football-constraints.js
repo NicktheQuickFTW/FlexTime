@@ -9,7 +9,7 @@
  * - Rivalry game placement optimization
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { ConstraintTypes } = require('../constraint-management-system');
 
 /**

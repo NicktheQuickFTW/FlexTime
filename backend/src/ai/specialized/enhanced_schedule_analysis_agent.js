@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const ScheduleVisualizationGenerator = require('../../utils/visualization/schedule_visualization');
 const { ConstraintEvaluator } = require('../../algorithms/improvements/constraint_evaluator');
 

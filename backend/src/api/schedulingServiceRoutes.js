@@ -8,7 +8,7 @@
 const express = require('express');
 const router = express.Router();
 const FTBuilderEngine = require('../../services/FT_Builder_Engine');
-const logger = require('../scripts/logger")
+const logger = require("../lib/logger");
 
 // Create service instance
 const schedulingService = new FTBuilderEngine();

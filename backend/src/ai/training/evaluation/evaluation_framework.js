@@ -8,7 +8,7 @@
 const path = require('path');
 const fs = require('fs').promises;
 const { EventEmitter } = require('events');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class EvaluationFramework extends EventEmitter {
   /**

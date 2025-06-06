@@ -11,7 +11,7 @@
  */
 
 const EventEmitter = require('events');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const PerformanceMonitor = require('../../utils/performance-monitor');
 
 /**

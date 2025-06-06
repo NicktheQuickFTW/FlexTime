@@ -11,7 +11,7 @@ const exportRoutes = require('../api/exportRoutes');
 const aguiRoutes = require('../api/aguiRoutes');
 
 // Enhanced schedule routes with data endpoints
-const enhancedScheduleRoutes = require('../../routes/enhancedScheduleRoutes');
+// const enhancedScheduleRoutes = require('../../routes/enhancedScheduleRoutes'); // Temporarily disabled due to path issues
 const FTBuilderEngine = require('../../services/FT_Builder_Engine');
 // OpenAI AGUI routes removed
 // Big12 News routes removed
@@ -69,7 +69,7 @@ function registerRoutes(app) {
   app.use('/api/research-docs', researchDocsRoutes);
   
   // Enhanced routes with data endpoints (IMPORTANT: Register before generic /api)
-  app.use('/api', enhancedScheduleRoutes);
+  // app.use('/api', enhancedScheduleRoutes); // Temporarily disabled due to path issues
   
   // FT Builder specific endpoint
   app.post('/api/ft-builder/generate', async (req, res) => {

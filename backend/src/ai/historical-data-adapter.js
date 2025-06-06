@@ -6,7 +6,7 @@
  * historical scheduling data.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const IntelligenceEngineClient = require('../clients/intelligence-engine-client');
 
 /**

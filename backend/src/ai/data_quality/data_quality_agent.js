@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const path = require('path');
 const fs = require('fs').promises;
 const Ajv = require('ajv');

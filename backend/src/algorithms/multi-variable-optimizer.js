@@ -5,7 +5,7 @@
  * simultaneously, balancing competing priorities using a weighted scoring system.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Multi-Variable Optimizer for complex scheduling constraints

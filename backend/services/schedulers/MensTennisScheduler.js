@@ -40,7 +40,7 @@ class MensTennisScheduler {
         2025: ['baylor', 'arizona-state'],
         2026: ['baylor', 'arizona-state'],
         2027: [] // Normal scheduling resumes
-      }
+      },
       
       // Hybrid travel partner model
       travelPartners: {

@@ -9,7 +9,7 @@
  * - Resource conflicts (equipment, personnel, etc.)
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { calculateDistance } = require('../scripts/geo_utils');
 
 /**

@@ -6,7 +6,7 @@
  */
 
 const axios = require('axios');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 // Use a basic configuration or load from a separate file
 const flexTimeConfig = {
   enabled: true,

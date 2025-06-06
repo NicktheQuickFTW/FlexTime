@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Scheduling Director Agent that coordinates scheduling-related specialized agents.

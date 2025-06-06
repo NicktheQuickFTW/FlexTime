@@ -5,7 +5,7 @@
  */
 
 const BaseRecruitingAgent = require('./base_recruiting_agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const axios = require('axios');
 const cheerio = require('cheerio');
 

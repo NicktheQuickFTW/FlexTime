@@ -7,7 +7,7 @@
 
 require('dotenv').config();
 const AgentSystemManager = require('./agent_system_manager');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 // Test scenarios for different agent components
 const TEST_SCENARIOS = {

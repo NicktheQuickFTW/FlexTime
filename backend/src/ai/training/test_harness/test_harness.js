@@ -9,7 +9,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const { EventEmitter } = require('events');
 const { v4: uuidv4 } = require('uuid');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const os = require('os');
 
 class TestHarness extends EventEmitter {

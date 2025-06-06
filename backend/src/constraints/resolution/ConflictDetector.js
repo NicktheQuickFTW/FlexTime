@@ -5,7 +5,7 @@
  * cascading conflict analysis, and intelligent severity assessment.
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { evaluateBYUSundayConstraint, isSunday } = require('../../ai/specialized/global_constraints');
 
 class ConflictDetector {

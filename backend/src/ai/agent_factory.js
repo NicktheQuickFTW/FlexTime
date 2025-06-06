@@ -16,7 +16,7 @@ const MCPIntegration = require('../mcp_integration');
 const mcpConfig = { agents: { knowledge_graph: {} } }; // Empty config with structure
 const LearningSystem = require('../ml/learning_system');
 const { CentralizedMemoryManager } = require('./enhanced/centralized_memory_manager');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const KnowledgeGraphAgent = require('../enhanced/knowledge_graph/knowledge_graph_agent');
 const ConflictExplanation = require('../enhanced/conflict_explanation');
 // HELiiX Intelligence Connector removed

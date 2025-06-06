@@ -5,7 +5,7 @@
  * Works with the enhanced constraint management system
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class ConstraintResolver {
   constructor() {

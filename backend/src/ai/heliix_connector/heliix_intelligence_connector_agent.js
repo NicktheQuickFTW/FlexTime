@@ -10,7 +10,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const IntelligenceEngineClient = require('../intelligence_engine_client');
 const { v4: uuidv4 } = require('uuid');
 

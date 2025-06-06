@@ -4,7 +4,7 @@
  * Advanced constraint evaluation system with weighted penalties and learning capabilities
  */
 
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class ConstraintEvaluator {
   /**

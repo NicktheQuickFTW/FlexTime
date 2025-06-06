@@ -9,7 +9,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const { ConstraintManagementSystem } = require('../constraint-management-system');
 const ConstraintResolver = require('../constraint-resolver');
 const { 

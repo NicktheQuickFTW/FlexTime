@@ -12,7 +12,7 @@
 const { Worker } = require('worker_threads');
 const EventEmitter = require('events');
 const path = require('path');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class ConstraintPipeline extends EventEmitter {
   constructor(options = {}) {

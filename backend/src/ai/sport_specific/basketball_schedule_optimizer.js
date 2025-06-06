@@ -8,7 +8,7 @@
 const { ScheduleOptimizer } = require('../../algorithms/schedule-optimizer');
 const Schedule = require('../../models/schedule');
 const Game = require('../../models/game');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class BasketballScheduleOptimizer extends ScheduleOptimizer {
   /**

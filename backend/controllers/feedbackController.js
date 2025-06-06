@@ -10,7 +10,7 @@
 
 const express = require('express');
 const router = express.Router();
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const MCPIntegration = require('../agents/mcp_integration');
 const { FlexTimeAgentSystem } = require('../agents');
 const { FeedbackSystem } = require('../agents/learning/feedback_system');

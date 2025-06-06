@@ -11,7 +11,7 @@
 
 const EventEmitter = require('events');
 const crypto = require('crypto');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class ConstraintCache extends EventEmitter {
   constructor(options = {}) {

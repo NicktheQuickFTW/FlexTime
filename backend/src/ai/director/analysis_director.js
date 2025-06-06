@@ -6,7 +6,7 @@
  */
 
 const Agent = require('../agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Analysis Director Agent that coordinates analysis-related specialized agents.

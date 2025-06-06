@@ -9,7 +9,7 @@ const EnhancedMemoryAgent = require('./enhanced_memory_agent');
 const PredictiveSchedulingAgent = require('./predictive_scheduling_agent');
 const ConflictResolutionAgent = require('./conflict_resolution_agent');
 const mcpConfig = require('../../config/mcp_config');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Manager for enhanced agent system

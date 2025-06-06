@@ -7,7 +7,7 @@
 
 const Schedule = require('../../../models/schedule');
 const Game = require('../../../models/game');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 class IncrementalScheduleOptimizer {
   /**

@@ -6,7 +6,7 @@
  */
 
 const BaseMonitoringAgent = require('./base_monitoring_agent');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 const os = require('os');
 const fs = require('fs').promises;
 const path = require('path');

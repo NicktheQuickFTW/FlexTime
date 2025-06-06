@@ -6,7 +6,7 @@
  */
 
 const EventEmitter = require('events');
-const logger = require('../scripts/logger");
+const logger = require("../../lib/logger");;
 
 /**
  * Communication protocol for agent interaction.
