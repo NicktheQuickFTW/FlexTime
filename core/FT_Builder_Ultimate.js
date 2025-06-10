@@ -42,7 +42,7 @@ const { SportSchedulerRegistry } = require('./SportSchedulerRegistry');
 /**
  * The FT Builder Engine
  */
-class FTBuilderUltimate extends EventEmitter {
+class FTBuilder extends EventEmitter {
   constructor(config = {}) {
     super();
     
@@ -545,9 +545,9 @@ class FTBuilderUltimate extends EventEmitter {
   // ... Additional private methods would continue here ...
 }
 
-// Export the Ultimate Engine
-module.exports = FTBuilderUltimate;
+// Export the FT Builder Engine
+module.exports = FTBuilder;
 
 // Also export for ESM
-module.exports.FTBuilderUltimate = FTBuilderUltimate;
-module.exports.default = FTBuilderUltimate;
+module.exports.FTBuilder = FTBuilder;
+module.exports.default = FTBuilder;

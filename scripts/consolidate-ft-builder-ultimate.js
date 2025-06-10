@@ -1,5 +1,5 @@
 /**
- * Consolidate FT Builder Ultimate
+ * Consolidate FT Builder
  * 
  * Creates a clean, consolidated workspace with only essential components
  * for the ultimate FlexTime Builder based on our analysis and findings
@@ -8,7 +8,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-class FTBuilderUltimateConsolidator {
+class FTBuilderConsolidator {
   constructor() {
     this.sourceRoot = '/Users/nickw/Documents/GitHub/Flextime';
     this.targetRoot = '/Users/nickw/Documents/GitHub/Flextime/FT_Builder_Ultimate';
@@ -86,7 +86,7 @@ class FTBuilderUltimateConsolidator {
    * Execute the complete consolidation
    */
   async consolidate() {
-    console.log('🚀 Consolidating FT Builder Ultimate Workspace');
+    console.log('🚀 Consolidating FT Builder Workspace');
     console.log('==============================================\n');
 
     try {
@@ -108,7 +108,7 @@ class FTBuilderUltimateConsolidator {
       // 6. Generate consolidation report
       await this.generateConsolidationReport();
       
-      console.log('✅ FT Builder Ultimate consolidation complete!');
+      console.log('✅ FT Builder consolidation complete!');
       return this.consolidationReport;
       
     } catch (error) {
@@ -472,7 +472,7 @@ This ultimate builder represents the consolidation of advanced scheduling resear
  * Build Ultimate FT Builder
  */
 
-console.log('🏗️ Building FT Builder Ultimate...');
+console.log('🏗️ Building FT Builder...');
 console.log('✅ Build complete - ready for production!');
 `;
 
@@ -545,10 +545,10 @@ console.log('✅ Build complete - ready for production!');
 // Execute consolidation
 async function main() {
   try {
-    const consolidator = new FTBuilderUltimateConsolidator();
+    const consolidator = new FTBuilderConsolidator();
     const results = await consolidator.consolidate();
     
-    console.log('\n🎉 FT Builder Ultimate Consolidation Complete!');
+    console.log('\n🎉 FT Builder Consolidation Complete!');
     console.log('===============================================');
     console.log(`📁 Location: /Users/nickw/Documents/GitHub/Flextime/FT_Builder_Ultimate`);
     console.log(`📄 Files: ${results.filesCopied}`);
@@ -565,4 +565,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-export default FTBuilderUltimateConsolidator;
+export default FTBuilderConsolidator;

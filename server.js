@@ -13,7 +13,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 // Import FT Builder core
-const FTBuilderUltimate = require('./core/FT_Builder_Ultimate.js');
+const FTBuilder = require('./core/FT_Builder_Ultimate.js');
 const FTBuilderAPI = require('./api/FTBuilderAPI.js');
 const aiRoutes = require('./api/routes/ai-scheduling-routes.js');
 
@@ -32,7 +32,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Initialize FT Builder Engine
-const ftBuilder = new FTBuilderUltimate({
+const ftBuilder = new FTBuilder({
   // Configuration options
   useHistoricalData: true,
   useAdaptiveOptimization: true,

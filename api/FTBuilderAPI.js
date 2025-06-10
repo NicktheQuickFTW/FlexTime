@@ -13,7 +13,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const WebSocket = require('ws');
 
-const FTBuilderUltimate = require('../core/FT_Builder_Ultimate');
+const FTBuilder = require('../core/FT_Builder_Ultimate');
 const logger = require('../utils/logger');
 // TODO: Implement middleware
 // const { authenticateRequest } = require('../middleware/auth');
@@ -70,7 +70,7 @@ class FTBuilderAPI {
   async initialize() {
     try {
       // Initialize the FT Builder engine
-      this.engine = new FTBuilderUltimate(this.config.engineConfig);
+      this.engine = new FTBuilder(this.config.engineConfig);
       await this.engine.initialize();
       
       // Start HTTP server
