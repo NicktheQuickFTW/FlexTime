@@ -1,0 +1,230 @@
+{
+  "schools": [
+    {
+      "id": 1,
+      "school_name": "Arizona",
+      "school_code": "ARIZ",
+      "latitude": 32.2319,
+      "longitude": -110.9501,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 2,
+      "school_name": "Arizona State",
+      "school_code": "ASU",
+      "latitude": 33.4242,
+      "longitude": -111.9281,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 3,
+      "school_name": "Baylor",
+      "school_code": "BAY",
+      "latitude": 31.5489,
+      "longitude": -97.1131,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 4,
+      "school_name": "BYU",
+      "school_code": "BYU",
+      "latitude": 40.2518,
+      "longitude": -111.6493,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 5,
+      "school_name": "Cincinnati",
+      "school_code": "CIN",
+      "latitude": 39.1032,
+      "longitude": -84.512,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 6,
+      "school_name": "Colorado",
+      "school_code": "COL",
+      "latitude": 40.0076,
+      "longitude": -105.2659,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 7,
+      "school_name": "Houston",
+      "school_code": "HOU",
+      "latitude": 29.7604,
+      "longitude": -95.3698,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 8,
+      "school_name": "Iowa State",
+      "school_code": "ISU",
+      "latitude": 42.0308,
+      "longitude": -93.6319,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 9,
+      "school_name": "Kansas",
+      "school_code": "KU",
+      "latitude": 38.9717,
+      "longitude": -95.2353,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 10,
+      "school_name": "Kansas State",
+      "school_code": "KSU",
+      "latitude": 39.1836,
+      "longitude": -96.5717,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 11,
+      "school_name": "Oklahoma State",
+      "school_code": "OSU",
+      "latitude": 36.1156,
+      "longitude": -97.0583,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 12,
+      "school_name": "TCU",
+      "school_code": "TCU",
+      "latitude": 32.7297,
+      "longitude": -97.2909,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 13,
+      "school_name": "Texas Tech",
+      "school_code": "TTU",
+      "latitude": 33.5779,
+      "longitude": -101.8552,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 14,
+      "school_name": "UCF",
+      "school_code": "UCF",
+      "latitude": 28.6024,
+      "longitude": -81.2001,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 15,
+      "school_name": "Utah",
+      "school_code": "UTAH",
+      "latitude": 40.7649,
+      "longitude": -111.8421,
+      "tier": "TIER_2"
+    },
+    {
+      "id": 16,
+      "school_name": "West Virginia",
+      "school_code": "WVU",
+      "latitude": 39.6295,
+      "longitude": -79.9559,
+      "tier": "TIER_2"
+    }
+  ],
+  "travel_costs": [
+    {
+      "id": 1,
+      "tier": "TIER_2",
+      "transport_mode": "charter_bus",
+      "base_cost": 1500,
+      "cost_per_mile": 2.8,
+      "max_distance": 600,
+      "min_distance": 0,
+      "capacity": 56,
+      "comfort_rating": 0.7
+    },
+    {
+      "id": 2,
+      "tier": "TIER_2",
+      "transport_mode": "charter_flight",
+      "base_cost": 24000,
+      "cost_per_mile": 30,
+      "max_distance": null,
+      "min_distance": 300,
+      "capacity": 120,
+      "comfort_rating": 0.95
+    },
+    {
+      "id": 3,
+      "tier": "TIER_2",
+      "transport_mode": "commercial_flight",
+      "cost_per_person": 400,
+      "min_distance": 800,
+      "comfort_rating": 0.6
+    }
+  ],
+  "travel_partners": [
+    {
+      "id": 1,
+      "school_1": "Arizona",
+      "school_2": "Arizona State",
+      "efficiency_rating": 0.89,
+      "distance_between": 120,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 2,
+      "school_1": "BYU",
+      "school_2": "Utah",
+      "efficiency_rating": 0.84,
+      "distance_between": 45,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 3,
+      "school_1": "Baylor",
+      "school_2": "TCU",
+      "efficiency_rating": 0.92,
+      "distance_between": 100,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 4,
+      "school_1": "Kansas",
+      "school_2": "Kansas State",
+      "efficiency_rating": 0.87,
+      "distance_between": 80,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 5,
+      "school_1": "Cincinnati",
+      "school_2": "West Virginia",
+      "efficiency_rating": 0.76,
+      "distance_between": 320,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 6,
+      "school_1": "Colorado",
+      "school_2": "Texas Tech",
+      "efficiency_rating": 0.71,
+      "distance_between": 350,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 7,
+      "school_1": "Iowa State",
+      "school_2": "Houston",
+      "efficiency_rating": 0.83,
+      "distance_between": 550,
+      "partnership_type": "geographic"
+    },
+    {
+      "id": 8,
+      "school_1": "Oklahoma State",
+      "school_2": "UCF",
+      "efficiency_rating": 0.68,
+      "distance_between": 850,
+      "partnership_type": "geographic"
+    }
+  ]
+}

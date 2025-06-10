@@ -1,5 +1,5 @@
 /**
- * Gymnastics Scheduler V3 (2025 Update)
+ * Gymnastics Scheduler
  * 
  * Handles Big 12 Gymnastics scheduling with:
  * - Full round robin format (each team meets every other team)
@@ -13,7 +13,7 @@ const SportScheduler = require('../core/SportScheduler');
 const logger = require('../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
-class GymnasticsSchedulerV3 extends SportScheduler {
+class GymnasticsScheduler extends SportScheduler {
   constructor(config = {}) {
     super({
       ...config,
@@ -373,4 +373,4 @@ class GymnasticsSchedulerV3 extends SportScheduler {
   }
 }
 
-module.exports = GymnasticsSchedulerV3;
+module.exports = GymnasticsScheduler;

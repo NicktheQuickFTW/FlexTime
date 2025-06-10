@@ -13,7 +13,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const WebSocket = require('ws');
 
-const FTBuilder = require('../core/FT_Builder_Ultimate');
+const FTBuilder = require('../core/FT Builder');
 const logger = require('../utils/logger');
 // TODO: Implement middleware
 // const { authenticateRequest } = require('../middleware/auth');

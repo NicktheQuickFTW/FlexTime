@@ -1,15 +1,15 @@
 /**
- * Football Scheduler V2
+ * Football Scheduler
  * 
- * Improved version that ensures all teams get exactly 9 games
- * Uses a more sophisticated algorithm for partial round-robin
+ * Ensures all teams get exactly 9 games
+ * Uses a sophisticated algorithm for partial round-robin
  */
 
 const SportScheduler = require('../core/SportScheduler');
 const logger = require('../utils/logger');
 const { v4: uuidv4 } = require('uuid');
 
-class FootballSchedulerV2 extends SportScheduler {
+class FootballScheduler extends SportScheduler {
   constructor(config) {
     super({
       ...config,
@@ -404,4 +404,4 @@ class FootballSchedulerV2 extends SportScheduler {
   // Inherit other methods from parent class
 }
 
-module.exports = FootballSchedulerV2;
+module.exports = FootballScheduler;

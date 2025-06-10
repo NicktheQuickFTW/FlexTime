@@ -27,13 +27,25 @@ export const travelConstraints: UnifiedConstraint[] = [
       conferences: ['Big 12']
     },
     parameters: {
-      maxSingleTripMiles: 2000,
-      maxSeasonTravelMiles: 12000,
+      // Big 12 Tier 2 travel budget constraints
+      maxSingleTripMiles: 1200, // Tier 2: Strategic charter flight threshold
+      maxSeasonTravelMiles: 10000, // Reduced from 12000 for budget management
       consecutiveTravelGameLimit: 2,
-      crossCountryThreshold: 1500, // Miles for cross-country designation
+      crossCountryThreshold: 1000, // Reduced threshold for Tier 2 cost management
+      
+      // Transportation mode thresholds based on travel budget tiers
+      busOnlyThreshold: 300, // Under 300 miles = bus required (Tier 2)
+      charterOptionalThreshold: 600, // 300-600 miles = charter or bus
+      charterRequiredThreshold: 1200, // Over 1200 miles = charter required
+      
+      // Cost constraints for Big 12 Tier 2
+      charterFlightCostRange: { min: 24000, max: 50000 },
+      busCostPerMile: 2.8,
+      annualBudgetRange: { min: 3000000, max: 5000000 },
+      
       regionalPairs: {
         'Texas': ['Texas Tech', 'TCU', 'Baylor', 'Houston'],
-        'Midwest': ['Kansas', 'Kansas State', 'Iowa State'],
+        'Midwest': ['Kansas', 'Kansas State', 'Iowa State', 'Oklahoma State'],
         'Mountain': ['Colorado', 'Utah', 'BYU', 'Arizona', 'Arizona State'],
         'East': ['Cincinnati', 'West Virginia', 'UCF']
       }
@@ -398,13 +410,143 @@ export const travelConstraints: UnifiedConstraint[] = [
 
 // Helper functions
 function calculateDistance(team1: string, team2: string): number {
-  // This would use actual venue coordinates
-  // Placeholder implementation
+  // Enhanced distance calculation with travel budget tier considerations
   const distances: Record<string, number> = {
+    // Tier 2 Big 12 Conference distances (miles)
+    'Arizona-Arizona State': 120,
+    'Arizona-Colorado': 430,
+    'Arizona-Utah': 520,
+    'Arizona-BYU': 560,
+    'Arizona-Texas Tech': 650,
+    'Arizona-TCU': 850,
+    'Arizona-Baylor': 880,
+    'Arizona-Houston': 950,
+    'Arizona-Oklahoma State': 780,
+    'Arizona-Kansas State': 980,
+    'Arizona-Kansas': 1020,
+    'Arizona-Iowa State': 1100,
+    'Arizona-Cincinnati': 1650,
+    'Arizona-West Virginia': 1850,
+    'Arizona-UCF': 1750,
+    
+    'Arizona State-Colorado': 380,
+    'Arizona State-Utah': 470,
+    'Arizona State-BYU': 510,
+    'Arizona State-Texas Tech': 600,
+    'Arizona State-TCU': 800,
+    'Arizona State-Baylor': 830,
+    'Arizona State-Houston': 900,
+    'Arizona State-Oklahoma State': 730,
+    'Arizona State-Kansas State': 930,
+    'Arizona State-Kansas': 970,
+    'Arizona State-Iowa State': 1050,
+    'Arizona State-Cincinnati': 1600,
+    'Arizona State-West Virginia': 1800,
+    'Arizona State-UCF': 1700,
+    
+    'BYU-Utah': 45,
+    'BYU-Colorado': 340,
+    'BYU-Texas Tech': 650,
+    'BYU-TCU': 850,
+    'BYU-Baylor': 880,
+    'BYU-Houston': 950,
+    'BYU-Oklahoma State': 780,
+    'BYU-Kansas State': 680,
+    'BYU-Kansas': 720,
+    'BYU-Iowa State': 800,
+    'BYU-Cincinnati': 1400,
+    'BYU-West Virginia': 1600,
+    'BYU-UCF': 1500,
+    
+    'Utah-Colorado': 340,
+    'Utah-Texas Tech': 650,
+    'Utah-TCU': 850,
+    'Utah-Baylor': 880,
+    'Utah-Houston': 950,
+    'Utah-Oklahoma State': 780,
+    'Utah-Kansas State': 680,
+    'Utah-Kansas': 720,
+    'Utah-Iowa State': 800,
+    'Utah-Cincinnati': 1400,
+    'Utah-West Virginia': 1600,
+    'Utah-UCF': 1500,
+    
+    'Colorado-Texas Tech': 320,
+    'Colorado-TCU': 520,
+    'Colorado-Baylor': 550,
+    'Colorado-Houston': 620,
+    'Colorado-Oklahoma State': 450,
+    'Colorado-Kansas State': 350,
+    'Colorado-Kansas': 390,
+    'Colorado-Iowa State': 470,
+    'Colorado-Cincinnati': 1070,
+    'Colorado-West Virginia': 1270,
+    'Colorado-UCF': 1170,
+    
+    'Texas Tech-TCU': 200,
+    'Texas Tech-Baylor': 230,
+    'Texas Tech-Houston': 300,
+    'Texas Tech-Oklahoma State': 250,
+    'Texas Tech-Kansas State': 350,
+    'Texas Tech-Kansas': 390,
+    'Texas Tech-Iowa State': 470,
+    'Texas Tech-Cincinnati': 780,
+    'Texas Tech-West Virginia': 980,
+    'Texas Tech-UCF': 880,
+    
+    'TCU-Baylor': 100,
+    'TCU-Houston': 180,
+    'TCU-Oklahoma State': 120,
+    'TCU-Kansas State': 320,
+    'TCU-Kansas': 360,
+    'TCU-Iowa State': 440,
+    'TCU-Cincinnati': 650,
+    'TCU-West Virginia': 850,
+    'TCU-UCF': 750,
+    
+    'Baylor-Houston': 180,
+    'Baylor-Oklahoma State': 150,
+    'Baylor-Kansas State': 350,
+    'Baylor-Kansas': 390,
+    'Baylor-Iowa State': 470,
+    'Baylor-Cincinnati': 680,
+    'Baylor-West Virginia': 880,
+    'Baylor-UCF': 780,
+    
+    'Houston-Oklahoma State': 280,
+    'Houston-Kansas State': 480,
+    'Houston-Kansas': 520,
+    'Houston-Iowa State': 600,
+    'Houston-Cincinnati': 800,
+    'Houston-West Virginia': 1000,
+    'Houston-UCF': 900,
+    
+    'Oklahoma State-Kansas State': 200,
+    'Oklahoma State-Kansas': 240,
+    'Oklahoma State-Iowa State': 320,
+    'Oklahoma State-Cincinnati': 520,
+    'Oklahoma State-West Virginia': 720,
+    'Oklahoma State-UCF': 620,
+    
+    'Kansas State-Kansas': 80,
+    'Kansas State-Iowa State': 200,
+    'Kansas State-Cincinnati': 450,
+    'Kansas State-West Virginia': 650,
+    'Kansas State-UCF': 550,
+    
+    'Kansas-Iowa State': 200,
+    'Kansas-Cincinnati': 450,
+    'Kansas-West Virginia': 650,
+    'Kansas-UCF': 550,
+    
+    'Iowa State-Cincinnati': 450,
+    'Iowa State-West Virginia': 650,
+    'Iowa State-UCF': 550,
+    
+    'Cincinnati-West Virginia': 280,
     'Cincinnati-UCF': 950,
-    'West Virginia-Arizona': 2100,
-    'Colorado-UCF': 1700,
-    // Add more distance calculations
+    
+    'West Virginia-UCF': 850
   };
   
   const key = [team1, team2].sort().join('-');

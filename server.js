@@ -13,7 +13,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 // Import FT Builder core
-const FTBuilder = require('./core/FT_Builder_Ultimate.js');
+const FTBuilder = require('./core/FT Builder.js');
 const FTBuilderAPI = require('./api/FTBuilderAPI.js');
 const aiRoutes = require('./api/routes/ai-scheduling-routes.js');
 

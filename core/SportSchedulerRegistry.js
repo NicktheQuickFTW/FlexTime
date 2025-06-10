@@ -8,17 +8,17 @@
 const logger = require('../utils/logger.js');
 
 // Import sport schedulers as they're created
-const FootballSchedulerV2 = require('../schedulers/FootballSchedulerV2');
+const FootballScheduler = require('../schedulers/FootballScheduler');
 const MensBasketballScheduler = require('../schedulers/MensBasketballScheduler');
 const WomensBasketballScheduler = require('../schedulers/WomensBasketballScheduler');
 const SoccerScheduler = require('../schedulers/SoccerScheduler');
 const VolleyballScheduler = require('../schedulers/VolleyballScheduler');
-const WrestlingSchedulerV3 = require('../schedulers/WrestlingSchedulerV3');
+const WrestlingScheduler = require('../schedulers/WrestlingScheduler');
 const BaseballScheduler = require('../schedulers/BaseballScheduler');
 const SoftballScheduler = require('../schedulers/SoftballScheduler');
-const GymnasticsSchedulerV3 = require('../schedulers/GymnasticsSchedulerV3');
-const WomensTennisSchedulerV3 = require('../schedulers/WomensTennisSchedulerV3');
-const MensTennisSchedulerV3 = require('../schedulers/MensTennisSchedulerV3');
+const GymnasticsScheduler = require('../schedulers/GymnasticsScheduler');
+const WomensTennisScheduler = require('../schedulers/WomensTennisScheduler');
+const MensTennisScheduler = require('../schedulers/MensTennisScheduler');
 const LacrosseScheduler = require('../schedulers/LacrosseScheduler');
 
 class SportSchedulerRegistry {
@@ -72,7 +72,7 @@ class SportSchedulerRegistry {
    */
   registerDefaultSchedulers() {
     // Football
-    this.register(8, FootballSchedulerV2);       // Football - 9 conference games
+    this.register(8, FootballScheduler);       // Football - 9 conference games
     
     // Basketball (Split into Men's and Women's)
     this.register(2, MensBasketballScheduler);    // Men's Basketball
@@ -88,14 +88,14 @@ class SportSchedulerRegistry {
     // Volleyball
     this.register(19, VolleyballScheduler);      // Volleyball
     
-    // Tennis (Updated V3 schedulers)
-    this.register(17, MensTennisSchedulerV3);    // Men's Tennis - 8 matches, single round robin
-    this.register(18, WomensTennisSchedulerV3);  // Women's Tennis - 13 matches, travel partners
+    // Tennis
+    this.register(17, MensTennisScheduler);    // Men's Tennis - 8 matches, single round robin
+    this.register(18, WomensTennisScheduler);  // Women's Tennis - 13 matches, travel partners
     
-    // Other Sports (Updated V3 schedulers)
-    this.register(11, GymnasticsSchedulerV3);  // Gymnastics - Round robin meets
-    this.register(13, LacrosseScheduler);      // Lacrosse - Round robin 6 teams
-    this.register(20, WrestlingSchedulerV3);   // Wrestling - Matrix with divisions
+    // Other Sports
+    this.register(11, GymnasticsScheduler);  // Gymnastics - Round robin meets
+    this.register(13, LacrosseScheduler);    // Lacrosse - Round robin 6 teams
+    this.register(20, WrestlingScheduler);   // Wrestling - Matrix with divisions
     
     logger.info('Registered default sport schedulers', {
       schedulers: Array.from(this.schedulers.keys()),
