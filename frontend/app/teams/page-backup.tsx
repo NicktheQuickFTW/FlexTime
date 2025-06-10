@@ -102,7 +102,7 @@ const SchoolCard = ({
       onHoverEnd={() => setIsHovered(false)}
       className="group relative"
     >
-      <Link href={`/universities/${school.slug}`}>
+      <Link href={`/schools/${school.slug}`}>
         <motion.div
           whileHover={{ y: -8, scale: 1.02 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}

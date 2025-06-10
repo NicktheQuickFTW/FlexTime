@@ -1,0 +1,195 @@
+{
+  "executiveSummary": {
+    "sportsAnalyzed": 2,
+    "overallTravelEfficiency": "46.3%",
+    "keyInsight": "Significant travel optimization opportunities identified",
+    "aiReadiness": "Ready for ML training"
+  },
+  "keyFindings": [
+    {
+      "category": "Travel Optimization",
+      "finding": "1 sports have excessive consecutive away games",
+      "impact": "Increased travel costs and player fatigue",
+      "sports": [
+        "WTN"
+      ]
+    },
+    {
+      "category": "Schedule Balance",
+      "finding": "1 sports have home/away imbalances",
+      "impact": "Competitive fairness concerns",
+      "sports": [
+        "WTN"
+      ]
+    }
+  ],
+  "recommendations": [
+    {
+      "sport": "WTN",
+      "issue": "High consecutive away games",
+      "recommendation": "Implement travel partner system to reduce consecutive away matches",
+      "priority": "High"
+    },
+    {
+      "category": "Cross-Sport Optimization",
+      "recommendation": "Implement unified scheduling principles across all sports",
+      "rationale": "Pattern analysis shows opportunities for standardization",
+      "priority": "Medium"
+    },
+    {
+      "category": "AI Enhancement",
+      "recommendation": "Implement predictive scheduling models",
+      "rationale": "Historical patterns provide sufficient training data",
+      "priority": "High"
+    }
+  ],
+  "patterns": {
+    "travelOptimization": {
+      "averageConsecutiveAway": {
+        "WTN": 5.375
+      },
+      "maxConsecutiveAway": {
+        "WTN": 8
+      },
+      "travelEfficiency": {
+        "WTN": 0.4625
+      },
+      "recommendations": [
+        {
+          "sport": "WTN",
+          "issue": "High consecutive away games",
+          "recommendation": "Implement travel partner system to reduce consecutive away matches",
+          "priority": "High"
+        }
+      ]
+    },
+    "homeAwayBalance": {
+      "balanceScores": {
+        "LAX": {
+          "average": 0.09999999999999998,
+          "maximum": 0.09999999999999998,
+          "quality": 0.9
+        },
+        "WTN": {
+          "average": 0.5,
+          "maximum": 0.5,
+          "quality": 0.5
+        }
+      },
+      "imbalanceIssues": [
+        {
+          "sport": "WTN",
+          "issue": "Significant home/away imbalance",
+          "severity": "High"
+        }
+      ],
+      "optimalDistribution": {}
+    },
+    "seasonalDistribution": {
+      "peakPeriods": {
+        "LAX": {
+          "month": 4,
+          "games": 12,
+          "monthName": "April"
+        },
+        "WTN": {
+          "month": 3,
+          "games": 64,
+          "monthName": "March"
+        }
+      },
+      "seasonLength": {
+        "LAX": {
+          "days": 28,
+          "weeks": 4,
+          "totalGames": 15
+        },
+        "WTN": {
+          "days": 44.958333333333336,
+          "weeks": 6,
+          "totalGames": 106
+        }
+      },
+      "gameDistribution": {
+        "LAX": {
+          "3": 3,
+          "4": 12
+        },
+        "WTN": {
+          "2": 10,
+          "3": 64,
+          "4": 32
+        }
+      }
+    },
+    "constraintPatterns": {},
+    "crossSportInsights": {
+      "formatComparison": {},
+      "efficiencyComparison": {
+        "LAX": {
+          "travelEfficiency": 0,
+          "balanceQuality": 0.9,
+          "overallEfficiency": 0.45
+        },
+        "WTN": {
+          "travelEfficiency": 0.4625,
+          "balanceQuality": 0.5,
+          "overallEfficiency": 0.48125
+        }
+      },
+      "bestPractices": [
+        {
+          "sport": "WTN",
+          "practice": "Optimal scheduling efficiency",
+          "efficiency": "48.1%",
+          "recommendation": "Apply WTN scheduling patterns to other sports"
+        }
+      ],
+      "universalPatterns": [
+        {
+          "pattern": "Travel Optimization",
+          "averageEfficiency": "46.3%",
+          "recommendation": "Implement systematic travel optimization across all sports"
+        }
+      ]
+    }
+  },
+  "mlReadyData": {
+    "features": [
+      [
+        6,
+        2.5,
+        4,
+        0,
+        0.9
+      ],
+      [
+        16,
+        6.625,
+        6,
+        0.4625,
+        0.5
+      ]
+    ],
+    "labels": [
+      [
+        0.45
+      ],
+      [
+        0.48125
+      ]
+    ],
+    "metadata": {
+      "featureNames": [
+        "teams_count",
+        "games_per_team",
+        "season_length_weeks",
+        "travel_efficiency",
+        "balance_quality"
+      ],
+      "labelNames": [
+        "overall_efficiency"
+      ]
+    }
+  }
+}

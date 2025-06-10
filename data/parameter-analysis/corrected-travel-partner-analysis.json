@@ -1,0 +1,291 @@
+{
+  "timestamp": "2025-06-09T08:51:58.118Z",
+  "clarification": {
+    "important": "ALTITUDE ROTATION IS WOMEN'S TENNIS ONLY",
+    "universalSystems": "Travel partners and pods apply to WTN, MBB, WBB",
+    "sportSpecific": "Altitude rotation is unique to Women's Tennis format"
+  },
+  "systemBreakdown": {
+    "universal": {
+      "description": "Systems used across WTN, MBB, WBB",
+      "elements": [
+        "Travel Partners",
+        "Pod Structure",
+        "Weekend Coordination"
+      ],
+      "sports": [
+        "Women's Tennis",
+        "Men's Basketball",
+        "Women's Basketball"
+      ]
+    },
+    "womensTennisOnly": {
+      "description": "Systems unique to Women's Tennis",
+      "elements": [
+        "4-year Altitude Rotation",
+        "Altitude Pair Constraints"
+      ],
+      "rationale": "WTN format and competition structure requires special altitude considerations"
+    }
+  },
+  "analysis": {
+    "universalSystems": {
+      "travelPartners": {
+        "system": {
+          "arizona-arizona-state": [
+            "Arizona",
+            "Arizona State"
+          ],
+          "byu-utah": [
+            "BYU",
+            "Utah"
+          ],
+          "colorado-texas-tech": [
+            "Colorado",
+            "Texas Tech"
+          ],
+          "baylor-tcu": [
+            "Baylor",
+            "TCU"
+          ],
+          "ucf-houston": [
+            "UCF",
+            "Houston"
+          ],
+          "cincinnati-west-virginia": [
+            "Cincinnati",
+            "West Virginia"
+          ],
+          "iowa-state-kansas": [
+            "Iowa State",
+            "Kansas"
+          ],
+          "kansas-state-oklahoma-state": [
+            "Kansas State",
+            "Oklahoma State"
+          ]
+        },
+        "description": "Same 8 travel partner pairs used across WTN, MBB, WBB",
+        "efficiency": 80.62499999999999,
+        "benefits": [
+          "Consistent logistics across sports",
+          "Athletic department coordination",
+          "Shared travel arrangements",
+          "Fan travel consistency"
+        ]
+      },
+      "podSystem": {
+        "system": {
+          "pod1": [
+            "Arizona",
+            "Arizona State",
+            "BYU",
+            "Utah"
+          ],
+          "pod2": [
+            "Colorado",
+            "Texas Tech",
+            "Baylor",
+            "TCU"
+          ],
+          "pod3": [
+            "UCF",
+            "Houston",
+            "Cincinnati",
+            "West Virginia"
+          ],
+          "pod4": [
+            "Iowa State",
+            "Kansas",
+            "Kansas State",
+            "Oklahoma State"
+          ]
+        },
+        "description": "Same 4-pod structure (4 teams each) across WTN, MBB, WBB",
+        "coverage": "All teams must play pod opponents",
+        "efficiency": 88.25,
+        "benefits": [
+          "Geographic clustering",
+          "Reduced travel distances within pods",
+          "Competitive balance structure",
+          "Simplified scheduling logic"
+        ]
+      },
+      "weekendStructure": {
+        "description": "Travel partner weekend coordination",
+        "structure": {
+          "homeHomeWeekends": "Both partners host other pairs",
+          "awayAwayWeekends": "Both partners travel together",
+          "singlePlayWeekend": "Partners play each other"
+        },
+        "applicability": "Universal across WTN, MBB, WBB",
+        "efficiency": 0.85
+      }
+    },
+    "womensTennisSpecific": {
+      "altitudeRotation": {
+        "system": {
+          "2025": "Iowa State & Kansas",
+          "2026": "Oklahoma State & Kansas State",
+          "2027": "Arizona & Arizona State",
+          "2028": "Baylor & TCU",
+          "2029": "UCF & Houston",
+          "2030": "Cincinnati & West Virginia"
+        },
+        "cycle": "4-year rotation for non-altitude pairs visiting altitude",
+        "currentYear": 2026,
+        "currentVisitors": "Oklahoma State & Kansas State",
+        "efficiency": 0.85,
+        "fairness": 0.9,
+        "description": "Ensures all non-altitude pairs experience altitude conditions equally",
+        "note": "THIS SYSTEM IS WOMEN'S TENNIS ONLY - not used in MBB/WBB"
+      },
+      "altitudeTeams": {
+        "teams": [
+          "BYU",
+          "Utah",
+          "Colorado"
+        ],
+        "pairs": [
+          [
+            "BYU",
+            "Utah"
+          ],
+          [
+            "Colorado",
+            "Texas Tech"
+          ]
+        ],
+        "consideration": "Special scheduling to avoid both altitude pairs in same season",
+        "impact": "Competitive fairness and travel logistics"
+      },
+      "scheduleFormat": {
+        "matches": 13,
+        "format": "Near round-robin (86.7% coverage)",
+        "teams": 16,
+        "description": "Each team plays 13 of 15 possible opponents",
+        "uniqueFeatures": [
+          "4-year altitude rotation",
+          "Consecutive away limits (max 4)",
+          "Weekend match limits",
+          "BYU/Utah traditional finale"
+        ]
+      }
+    },
+    "crossSportCompatibility": {
+      "universalElements": {
+        "travelPartners": "Identical across WTN, MBB, WBB",
+        "pods": "Identical 4-pod structure across all three sports",
+        "weekendLogic": "Same home-home, away-away, single-play structure",
+        "compatibility": 0.95
+      },
+      "sportSpecificElements": {
+        "womensTennis": [
+          "Altitude rotation system (4-year cycle)",
+          "Near round-robin format (13 matches)",
+          "Consecutive away limits",
+          "Weekend match limits"
+        ],
+        "mensBasketball": [
+          "20 games (5 teams 2x, 10 teams 1x)",
+          "Different season timing",
+          "Arena-specific constraints"
+        ],
+        "womensBasketball": [
+          "18 games over 19 windows",
+          "Different season timing",
+          "Arena-specific constraints"
+        ]
+      },
+      "coordinationOpportunities": {
+        "sharedWeekends": "Coordinate travel partner weekends across sports",
+        "avoidDoubleHeaders": "Minimize same-weekend hosting conflicts",
+        "facilitySharing": "Optimize venue usage across sports",
+        "mediaCoordination": "Unified broadcast scheduling"
+      },
+      "limitations": {
+        "altitudeRotation": "Women's Tennis specific - cannot be applied to MBB/WBB",
+        "seasonTiming": "Different seasons prevent direct schedule coordination",
+        "formatDifferences": "Game counts and structures vary significantly"
+      }
+    },
+    "recommendations": [
+      {
+        "category": "Universal Travel Partner Optimization",
+        "priority": "High",
+        "scope": "WTN, MBB, WBB",
+        "recommendation": "Maximize Baylor-TCU partnership utilization across all three sports",
+        "rationale": "95% travel reduction potential (same metro area) applies universally",
+        "implementation": "Coordinate weekend scheduling across WTN, MBB, WBB for shared travel",
+        "impact": "Significant cost savings for DFW-area athletic programs"
+      },
+      {
+        "category": "Universal Pod System Enhancement",
+        "priority": "High",
+        "scope": "WTN, MBB, WBB",
+        "recommendation": "Optimize pod-based scheduling consistency across sports",
+        "rationale": "87.6% pod efficiency with identical structure across sports",
+        "implementation": "Ensure all sports prioritize pod opponent coverage",
+        "impact": "Simplified logistics and improved competitive balance"
+      },
+      {
+        "category": "Women's Tennis Altitude System",
+        "priority": "Medium",
+        "scope": "WTN ONLY",
+        "recommendation": "Optimize 4-year altitude rotation sequence",
+        "rationale": "85% efficiency with room for improvement in fairness",
+        "implementation": "Adjust rotation order considering pod geography and competitive balance",
+        "impact": "More equitable altitude exposure - WTN specific benefit",
+        "note": "Does NOT apply to MBB/WBB - they have different altitude considerations"
+      },
+      {
+        "category": "Cross-Sport Coordination",
+        "priority": "Medium",
+        "scope": "WTN, MBB, WBB",
+        "recommendation": "Implement unified travel partner weekend coordination",
+        "rationale": "Same partner pairs used across sports with 95% compatibility",
+        "implementation": "Create shared calendar for partner weekend scheduling",
+        "impact": "Reduced conflicts and improved athletic department coordination"
+      },
+      {
+        "category": "Sport-Specific Optimization",
+        "priority": "Medium",
+        "scope": "Individual sports",
+        "recommendation": "Respect sport-specific systems while maximizing universal benefits",
+        "rationale": "Altitude rotation is WTN-only; other sports have different optimal patterns",
+        "implementation": "Apply universal systems (partners/pods) while preserving sport-specific elements",
+        "impact": "Optimal scheduling for each sport without forcing incompatible systems"
+      },
+      {
+        "category": "Constraint Integration",
+        "priority": "High",
+        "scope": "All sports",
+        "recommendation": "Implement sport-aware constraint management",
+        "rationale": "Different sports have different altitude, timing, and format constraints",
+        "implementation": "Build constraint system that understands sport-specific vs universal rules",
+        "impact": "Accurate scheduling without inappropriate constraint application"
+      }
+    ]
+  },
+  "metadata": {
+    "correctionNote": "Altitude rotation system corrected to Women's Tennis only",
+    "analysisType": "Corrected Travel Partner & System Analysis",
+    "universalSports": [
+      "WTN",
+      "MBB",
+      "WBB"
+    ],
+    "sportSpecificSystems": {
+      "Women's Tennis": [
+        "Altitude rotation",
+        "Near round-robin format"
+      ],
+      "Men's Basketball": [
+        "20-game format"
+      ],
+      "Women's Basketball": [
+        "18-game format with bye"
+      ]
+    }
+  }
+}

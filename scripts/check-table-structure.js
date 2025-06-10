@@ -6,7 +6,7 @@
 
 require('dotenv').config();
 const { Client } = require('pg');
-const logger = require('../utils/logger');
+const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
 
 async function checkTableStructure() {
   logger.info('Checking table structure in Neon DB...');

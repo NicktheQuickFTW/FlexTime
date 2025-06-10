@@ -1,8 +1,0 @@
-{"timestamp":"2025-05-08T16:41:35.737Z","action":"test_start","status":"in_progress"}
-{"timestamp":"2025-05-08T16:41:38.704Z","action":"init_ml_workflow","status":"success"}
-{"timestamp":"2025-05-08T16:41:39.756Z","action":"generate_schedule_params","status":"success","sport":"Football","hasChampionshipConstraints":false,"resultPath":"/Users/nickw/Documents/XII-Ops/flextime-deploy/learning-system/test-results/schedule-params-Football-2025-05-08.json"}
-{"timestamp":"2025-05-08T16:41:39.904Z","action":"test_complete","status":"success"}
-{"timestamp":"2025-05-08T16:42:26.020Z","action":"test_start","status":"in_progress"}
-{"timestamp":"2025-05-08T16:42:28.718Z","action":"init_ml_workflow","status":"success"}
-{"timestamp":"2025-05-08T16:42:29.808Z","action":"generate_schedule_params","status":"success","sport":"Football","hasChampionshipConstraints":true,"resultPath":"/Users/nickw/Documents/XII-Ops/flextime-deploy/learning-system/test-results/schedule-params-Football-2025-05-08.json"}
-{"timestamp":"2025-05-08T16:42:29.956Z","action":"test_complete","status":"success"}

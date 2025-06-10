@@ -1439,4 +1439,314 @@
   .ft-list-item-meta {
     @apply text-right text-sm text-muted-foreground;
   }
+
+  /* ==========================================
+     SCHOOLS PAGE - 21st Century Design System
+     ========================================== */
+
+  /* Schools Page Specific Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+    50% {
+      box-shadow: 0 0 40px rgba(59, 130, 246, 0.4);
+    }
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  /* Enhanced University Card Styles */
+  .university-card {
+    @apply relative cursor-pointer transform transition-all duration-500 p-6 h-full;
+    @apply hover:scale-105 hover:-translate-y-2;
+    @apply rounded-2xl overflow-hidden backdrop-blur-xl;
+    position: relative;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  /* Light mode university card */
+  .university-card:not(.dark *) {
+    @apply bg-gradient-to-br from-white/95 to-slate-50/95;
+    @apply border border-slate-200/50 shadow-lg shadow-slate-200/25;
+    backdrop-filter: blur(25px);
+  }
+
+  /* Dark mode university card */
+  .dark .university-card {
+    @apply bg-gradient-to-br from-white/10 to-white/5;
+    @apply border border-white/20;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Enhanced hover effects with micro-animations */
+  .university-card:hover {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  /* Light mode hover effects */
+  .university-card:hover:not(.dark *) {
+    @apply shadow-blue-300/40 bg-gradient-to-br from-white to-blue-50/95;
+    @apply border-blue-300/60;
+    box-shadow: 
+      0 20px 60px rgba(59, 130, 246, 0.15),
+      0 8px 32px rgba(59, 130, 246, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* Dark mode hover effects */
+  .dark .university-card:hover {
+    @apply bg-gradient-to-br from-white/15 to-white/5;
+    @apply border-cyan-400/40;
+    box-shadow: 
+      0 20px 60px rgba(6, 182, 212, 0.2),
+      0 8px 32px rgba(6, 182, 212, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* University Card Header with enhanced styling */
+  .university-card-header {
+    @apply flex items-center mb-6;
+  }
+
+  .university-logo {
+    @apply w-14 h-14 mr-4 rounded-full flex items-center justify-center;
+    @apply backdrop-blur-sm border border-border/30 transition-all duration-500;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Logo glow effect on hover */
+  .university-card:hover .university-logo {
+    @apply shadow-lg;
+    animation: glow 2s ease-in-out infinite;
+  }
+
+  .university-logo-fallback {
+    @apply w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .university-logo img {
+    @apply w-8 h-8 object-contain;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* University name with enhanced typography */
+  .university-name {
+    @apply text-xl font-bold transition-all duration-300;
+    @apply text-foreground;
+    font-family: var(--ft-font-primary);
+    letter-spacing: 0.02em;
+    line-height: 1.3;
+  }
+
+  /* Light mode university name hover */
+  .university-card:hover:not(.dark *) .university-name {
+    @apply text-blue-700;
+    text-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+  }
+
+  /* Dark mode university name hover */
+  .dark .university-card:hover .university-name {
+    @apply text-cyan-300;
+    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+  }
+
+  /* Enhanced university ID styling */
+  .university-id {
+    @apply text-sm text-muted-foreground font-medium;
+    font-family: var(--ft-font-secondary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* Enhanced button with micro-interactions */
+  .university-view-button {
+    @apply w-full py-3 px-6 rounded-xl font-semibold;
+    @apply border backdrop-blur-sm;
+    @apply transform hover:scale-105;
+    @apply transition-all duration-300;
+    font-family: var(--ft-font-secondary);
+    letter-spacing: 0.05em;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Light mode button */
+  .university-view-button:not(.dark *) {
+    @apply bg-gradient-to-r from-blue-600 to-purple-600;
+    @apply text-white border-white/20;
+    @apply hover:from-blue-500 hover:to-purple-500;
+    @apply hover:shadow-lg hover:shadow-blue-500/25;
+  }
+
+  /* Dark mode button */
+  .dark .university-view-button {
+    @apply bg-gradient-to-r from-cyan-600 to-blue-600;
+    @apply text-white border-white/20;
+    @apply hover:from-cyan-500 hover:to-blue-500;
+    @apply hover:shadow-lg hover:shadow-cyan-500/25;
+  }
+
+  /* Button shimmer effect */
+  .university-view-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s;
+  }
+
+  .university-view-button:hover::before {
+    left: 100%;
+  }
+
+  /* Enhanced search and filter controls */
+  .search-input {
+    @apply transition-all duration-300 focus:scale-105;
+    @apply focus:shadow-lg focus:shadow-accent/20;
+  }
+
+  /* Tag hover effects */
+  .sport-tag {
+    @apply transition-all duration-200 hover:scale-110;
+    @apply hover:shadow-md hover:shadow-accent/20;
+  }
+
+  /* Responsive grid improvements */
+  .universities-grid {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  @media (max-width: 768px) {
+    .universities-grid {
+      @apply grid-cols-1 gap-4;
+      grid-template-columns: 1fr;
+    }
+    
+    .university-card {
+      @apply p-4;
+    }
+    
+    .university-logo {
+      @apply w-12 h-12 mr-3;
+    }
+    
+    .university-name {
+      @apply text-lg;
+    }
+  }
+
+  /* Loading states for university cards */
+  .university-card-loading {
+    @apply animate-pulse;
+  }
+
+  .university-card-loading .university-logo {
+    @apply bg-muted animate-pulse;
+  }
+
+  .university-card-loading .university-name {
+    @apply bg-muted text-transparent rounded h-6;
+  }
+
+  .university-card-loading .university-id {
+    @apply bg-muted/60 text-transparent rounded h-4 mt-1;
+  }
+
+  /* Enhanced stat displays */
+  .university-stat-value {
+    @apply text-2xl font-bold transition-all duration-300;
+    font-family: var(--ft-font-mono);
+  }
+
+  .university-card:hover .university-stat-value {
+    @apply scale-110;
+  }
+
+  /* Light mode stat values */
+  .university-stat-value:not(.dark *) {
+    @apply text-blue-600;
+  }
+
+  /* Dark mode stat values */
+  .dark .university-stat-value {
+    @apply text-cyan-400;
+  }
+
+  .university-stat-label {
+    @apply text-xs text-muted-foreground uppercase tracking-wider;
+    font-family: var(--ft-font-secondary);
+    font-weight: 500;
+  }
+
+  /* Enhanced spotlight sports tags */
+  .sport-tag {
+    @apply px-2 py-1 rounded-full text-xs font-medium;
+    @apply backdrop-blur-sm transition-all duration-200;
+    @apply bg-muted/50 text-muted-foreground;
+    @apply border border-border/30;
+    @apply hover:bg-muted hover:text-foreground;
+    @apply hover:scale-105 hover:shadow-sm;
+    font-family: var(--ft-font-secondary);
+  }
+
+  /* Enhanced page header */
+  .schools-page-header {
+    @apply relative z-10 text-center py-20 px-8;
+    animation: slideInFromLeft 0.8s ease-out;
+  }
+
+  /* Enhanced title gradient effects */
+  .universities-title-gradient {
+    @apply bg-gradient-to-r bg-clip-text text-transparent;
+    background-size: 200% 200%;
+    animation: metallicShimmer 4s ease-in-out infinite;
+  }
+
+  /* Quick stats enhancement */
+  .quick-stats-card {
+    @apply transition-all duration-300 hover:scale-105;
+    @apply hover:shadow-lg hover:shadow-accent/20;
+  }
 }

@@ -1,0 +1,301 @@
+{
+  "sports": {
+    "BSB": {
+      "files": [
+        "2025 Baseball Schedule.csv",
+        "2026 Baseball Schedule.csv"
+      ],
+      "seasons": [
+        2025,
+        2026
+      ],
+      "analysis": {
+        "2025 Baseball Schedule.csv": {
+          "format": "week-matrix",
+          "teams": 14,
+          "teamList": [
+            "ARIZ",
+            "ASU",
+            "BYU",
+            "UTAH",
+            "KU",
+            "KSU",
+            "OSU",
+            "TTU",
+            "TCU",
+            "BU"
+          ],
+          "dataRows": 10,
+          "estimatedGames": 70,
+          "year": 2025,
+          "summary": "week-matrix format, 14 teams, ~70 games, 2025"
+        },
+        "2026 Baseball Schedule.csv": {
+          "format": "week-matrix",
+          "teams": 14,
+          "teamList": [
+            "ARIZ",
+            "ASU",
+            "BYU",
+            "UTAH",
+            "KU",
+            "KSU",
+            "OSU",
+            "TTU",
+            "TCU",
+            "BU"
+          ],
+          "dataRows": 10,
+          "estimatedGames": 70,
+          "year": 2026,
+          "summary": "week-matrix format, 14 teams, ~70 games, 2026"
+        }
+      }
+    },
+    "GYM": {
+      "files": [
+        "2025 GYM Schedule.csv",
+        "2026 GYM Schedule.csv"
+      ],
+      "seasons": [
+        2025,
+        2026
+      ],
+      "analysis": {
+        "2025 GYM Schedule.csv": {
+          "format": "week-matrix",
+          "teams": 9,
+          "teamList": [
+            "Date",
+            "BYU",
+            "UTAH",
+            "ARIZ",
+            "ASU",
+            "ISU",
+            "WVU",
+            "DEN",
+            ""
+          ],
+          "dataRows": 9,
+          "estimatedGames": 32,
+          "year": 2025,
+          "summary": "week-matrix format, 9 teams, ~32 games, 2025"
+        },
+        "2026 GYM Schedule.csv": {
+          "format": "day-matrix",
+          "teams": 7,
+          "teamList": [
+            "ARIZ",
+            "ASU",
+            "BYU",
+            "DEN",
+            "ISU",
+            "UTAH",
+            "WVU"
+          ],
+          "dataRows": 8,
+          "estimatedGames": 21,
+          "year": 2026,
+          "summary": "day-matrix format, 7 teams, ~21 games, 2026"
+        }
+      }
+    },
+    "LAX": {
+      "files": [
+        "2025 LAX Schedule.csv",
+        "2026 LAX Schedule.csv"
+      ],
+      "seasons": [
+        2025,
+        2026
+      ],
+      "analysis": {
+        "2025 LAX Schedule.csv": {
+          "format": "week-matrix",
+          "teams": 6,
+          "teamList": [
+            "CIN",
+            "UF",
+            "ASU",
+            "COL",
+            "UCD",
+            "SDSU"
+          ],
+          "dataRows": 5,
+          "estimatedGames": 15,
+          "year": 2025,
+          "summary": "week-matrix format, 6 teams, ~15 games, 2025"
+        },
+        "2026 LAX Schedule.csv": {
+          "format": "week-matrix",
+          "teams": 6,
+          "teamList": [
+            "CIN",
+            "UF",
+            "ASU",
+            "COL",
+            "UCD",
+            "SDSU"
+          ],
+          "dataRows": 5,
+          "estimatedGames": 15,
+          "year": 2026,
+          "summary": "week-matrix format, 6 teams, ~15 games, 2026"
+        }
+      }
+    },
+    "MTN": {
+      "files": [
+        "2026 MTN Schedule.csv"
+      ],
+      "seasons": [
+        2026
+      ],
+      "analysis": {
+        "2026 MTN Schedule.csv": {
+          "format": "day-matrix",
+          "teams": 9,
+          "teamList": [
+            "U of A",
+            "ASU",
+            "BYu",
+            "UU",
+            "BU",
+            "TCU",
+            "OSU",
+            "TTU",
+            "UCF"
+          ],
+          "dataRows": 20,
+          "estimatedGames": 36,
+          "year": 2026,
+          "summary": "day-matrix format, 9 teams, ~36 games, 2026"
+        }
+      }
+    },
+    "VB": {
+      "files": [
+        "2025 Volleyball Schedule (3.13.25)[imported].csv"
+      ],
+      "seasons": [
+        2025
+      ],
+      "analysis": {
+        "2025 Volleyball Schedule (3.13.25)[imported].csv": {
+          "format": "day-matrix",
+          "teams": 29,
+          "teamList": [
+            "ARIZ",
+            "ASU",
+            "BYU",
+            "UTAH",
+            "COL",
+            "ISU",
+            "KU",
+            "KSU",
+            "TTU",
+            "TCU"
+          ],
+          "dataRows": 57,
+          "estimatedGames": 135,
+          "year": 2025,
+          "summary": "day-matrix format, 29 teams, ~135 games, 2025"
+        }
+      }
+    },
+    "WTN": {
+      "files": [
+        "2025 WTN Schedule.csv",
+        "2026 WTN Schedule.csv"
+      ],
+      "seasons": [
+        2025,
+        2026
+      ],
+      "analysis": {
+        "2025 WTN Schedule.csv": {
+          "format": "day-matrix",
+          "teams": 16,
+          "teamList": [
+            "U of A",
+            "ASU",
+            "BYu",
+            "UU",
+            "CU",
+            "TTU",
+            "BU",
+            "TCU",
+            "UCF",
+            "UH"
+          ],
+          "dataRows": 28,
+          "estimatedGames": 104,
+          "year": 2025,
+          "summary": "day-matrix format, 16 teams, ~104 games, 2025"
+        },
+        "2026 WTN Schedule.csv": {
+          "format": "day-matrix",
+          "teams": 16,
+          "teamList": [
+            "ARIZ",
+            "ASU",
+            "BYU",
+            "UTAH",
+            "COL",
+            "TTU",
+            "BU",
+            "TCU",
+            "UCF",
+            "UH"
+          ],
+          "dataRows": 33,
+          "estimatedGames": 104,
+          "year": 2026,
+          "summary": "day-matrix format, 16 teams, ~104 games, 2026"
+        }
+      }
+    },
+    "MISC": {
+      "files": [
+        "2024-25 Big 12 Campus Conflicts.csv",
+        "2025-26 Big 12 Campus Conflicts.csv",
+        "Big 12 Scheduling Formats 6.5.csv"
+      ],
+      "seasons": [],
+      "analysis": {
+        "2024-25 Big 12 Campus Conflicts.csv": {
+          "format": "csv-standard",
+          "teams": 0,
+          "teamList": [],
+          "dataRows": 1025,
+          "estimatedGames": 0,
+          "year": 2024,
+          "summary": "csv-standard format, 0 teams, ~0 games, 2024"
+        },
+        "2025-26 Big 12 Campus Conflicts.csv": {
+          "format": "csv-standard",
+          "teams": 0,
+          "teamList": [],
+          "dataRows": 1017,
+          "estimatedGames": 0,
+          "year": 2025,
+          "summary": "csv-standard format, 0 teams, ~0 games, 2025"
+        },
+        "Big 12 Scheduling Formats 6.5.csv": {
+          "format": "csv-standard",
+          "teams": 0,
+          "teamList": [],
+          "dataRows": 52,
+          "estimatedGames": 0,
+          "year": null,
+          "summary": "csv-standard format, 0 teams, ~0 games, unknown year"
+        }
+      }
+    }
+  },
+  "summary": {
+    "totalSports": 7,
+    "totalFiles": 13,
+    "totalSeasons": 10
+  }
+}

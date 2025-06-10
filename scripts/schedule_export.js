@@ -13,7 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const XLSX = require('xlsx');
 const ics = require('ics');
-const logger = require('../utils/logger');
+const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
 
 class ScheduleExporter {
   /**

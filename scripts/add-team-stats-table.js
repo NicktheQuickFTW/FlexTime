@@ -6,7 +6,7 @@
 
 require('dotenv').config();
 const { Client } = require('pg');
-const logger = require('../utils/logger');
+const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
 
 async function addTeamStatsTable() {
   logger.info('Starting to add team stats table to Neon DB...');

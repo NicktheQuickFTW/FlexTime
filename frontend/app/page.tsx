@@ -40,7 +40,7 @@ export default function Home() {
               {
                 title: 'Big 12 Universities',
                 description: 'Comprehensive profiles and analytics for all 16 member institutions',
-                href: '/universities',
+                href: '/schools',
                 features: ['16 Schools', 'Team Profiles', 'Performance-driven Data']
               },
               {
@@ -165,13 +165,13 @@ export default function Home() {
                 <div className="w-8 h-8 mb-2 flex items-center justify-center">
                   {/* Light mode logo */}
                   <img 
-                    src={`/logos/teams/light/${team.logo}-light.svg`}
+                    src={`/assets/logos/teams/light/${team.logo}-light.svg`}
                     alt={`${team.name} logo`}
                     className="w-full h-full object-contain dark:hidden"
                   />
                   {/* Dark mode logo */}
                   <img 
-                    src={`/logos/teams/dark/${team.logo}-dark.svg`}
+                    src={`/assets/logos/teams/dark/${team.logo}-dark.svg`}
                     alt={`${team.name} logo`}
                     className="w-full h-full object-contain hidden dark:block"
                   />

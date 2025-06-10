@@ -38,7 +38,9 @@ export default function Navbar() {
     { label: 'HOME', path: '/dashboard' },
     { label: 'FT BUILDER', path: '/schedule-builder' },
     { label: 'BIG 12 SPORTS', path: '/sports' },
+    { label: 'BIG 12 SCHOOLS', path: '/schools' },
     { label: 'INSIDE THE 12', path: '/teams' },
+    { label: 'VECTOR SEARCH', path: '/vector-search' },
   ];
 
   // Prevent hydration mismatch by not rendering dynamic content until mounted

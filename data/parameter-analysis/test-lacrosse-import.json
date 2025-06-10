@@ -1,0 +1,151 @@
+{
+  "source": "LAX/2026 LAX Schedule.csv",
+  "teams": [
+    "CIN",
+    "UF",
+    "ASU",
+    "COL",
+    "UCD",
+    "SDSU"
+  ],
+  "weeks": 5,
+  "games": [
+    {
+      "week": "Week 1",
+      "date": "3/28/26",
+      "home_team": "UCD",
+      "away_team": "CIN",
+      "location": "away"
+    },
+    {
+      "week": "Week 1",
+      "date": "3/28/26",
+      "home_team": "ASU",
+      "away_team": "UF",
+      "location": "away"
+    },
+    {
+      "week": "Week 1",
+      "date": "3/28/26",
+      "home_team": "COL",
+      "away_team": "SDSU",
+      "location": "home"
+    },
+    {
+      "week": "Week 2",
+      "date": "4/4/26",
+      "home_team": "CIN",
+      "away_team": "ASU",
+      "location": "home"
+    },
+    {
+      "week": "Week 2",
+      "date": "4/4/26",
+      "home_team": "UF",
+      "away_team": "COL",
+      "location": "home"
+    },
+    {
+      "week": "Week 2",
+      "date": "4/4/26",
+      "home_team": "UCD",
+      "away_team": "SDSU",
+      "location": "home"
+    },
+    {
+      "week": "Week 3",
+      "date": "4/11/26",
+      "home_team": "COL",
+      "away_team": "CIN",
+      "location": "away"
+    },
+    {
+      "week": "Week 3",
+      "date": "4/11/26",
+      "home_team": "SDSU",
+      "away_team": "UF",
+      "location": "away"
+    },
+    {
+      "week": "Week 3",
+      "date": "4/11/26",
+      "home_team": "ASU",
+      "away_team": "UCD",
+      "location": "home"
+    },
+    {
+      "week": "Week 4",
+      "date": "4/18/26",
+      "home_team": "CIN",
+      "away_team": "UF",
+      "location": "home"
+    },
+    {
+      "week": "Week 4",
+      "date": "4/18/26",
+      "home_team": "SDSU",
+      "away_team": "ASU",
+      "location": "away"
+    },
+    {
+      "week": "Week 4",
+      "date": "4/18/26",
+      "home_team": "UCD",
+      "away_team": "COL",
+      "location": "away"
+    },
+    {
+      "week": "Week 5",
+      "date": "4/25/26",
+      "home_team": "CIN",
+      "away_team": "SDSU",
+      "location": "home"
+    },
+    {
+      "week": "Week 5",
+      "date": "4/25/26",
+      "home_team": "UF",
+      "away_team": "UCD",
+      "location": "home"
+    },
+    {
+      "week": "Week 5",
+      "date": "4/25/26",
+      "home_team": "COL",
+      "away_team": "ASU",
+      "location": "away"
+    }
+  ],
+  "analysis": {
+    "UCD": {
+      "home": 6,
+      "away": 4,
+      "total": 10
+    },
+    "CIN": {
+      "home": 6,
+      "away": 4,
+      "total": 10
+    },
+    "ASU": {
+      "home": 4,
+      "away": 6,
+      "total": 10
+    },
+    "UF": {
+      "home": 4,
+      "away": 6,
+      "total": 10
+    },
+    "COL": {
+      "home": 6,
+      "away": 4,
+      "total": 10
+    },
+    "SDSU": {
+      "home": 4,
+      "away": 6,
+      "total": 10
+    }
+  }
+}

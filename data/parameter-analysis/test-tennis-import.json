@@ -1,0 +1,845 @@
+{
+  "source": "WTN/2026 WTN Schedule.csv",
+  "teams": [
+    "ARIZ",
+    "ASU",
+    "BYU",
+    "UTAH",
+    "COL",
+    "TTU",
+    "BU",
+    "TCU",
+    "UCF",
+    "UH",
+    "CIN",
+    "WVU",
+    "ISU",
+    "KU",
+    "KSU",
+    "OSU"
+  ],
+  "totalTeams": 16,
+  "matches": [
+    {
+      "day": "Thu",
+      "date": "26-Feb",
+      "home_team": "UCF",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Thu",
+      "date": "26-Feb",
+      "home_team": "UH",
+      "away_team": "UTAH"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Feb",
+      "home_team": "BU",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Feb",
+      "home_team": "TCU",
+      "away_team": "ASU"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Feb",
+      "home_team": "ISU",
+      "away_team": "COL"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Feb",
+      "home_team": "KU",
+      "away_team": "TTU"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Feb",
+      "home_team": "KSU",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Feb",
+      "home_team": "OSU",
+      "away_team": "WVU"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Feb",
+      "home_team": "UH",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Feb",
+      "home_team": "UCF",
+      "away_team": "UTAH"
+    },
+    {
+      "day": "Sun",
+      "date": "1-Mar",
+      "home_team": "TCU",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Sun",
+      "date": "1-Mar",
+      "home_team": "BU",
+      "away_team": "ASU"
+    },
+    {
+      "day": "Sun",
+      "date": "1-Mar",
+      "home_team": "KU",
+      "away_team": "COL"
+    },
+    {
+      "day": "Sun",
+      "date": "1-Mar",
+      "home_team": "ISU",
+      "away_team": "TTU"
+    },
+    {
+      "day": "Sun",
+      "date": "1-Mar",
+      "home_team": "OSU",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Sun",
+      "date": "1-Mar",
+      "home_team": "KSU",
+      "away_team": "WVU"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "ARIZ",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "ASU",
+      "away_team": "UH"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "COL",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "TTU",
+      "away_team": "OSU"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "CIN",
+      "away_team": "BU"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "CIN",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Fri",
+      "date": "6-Mar",
+      "home_team": "WVU",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Sat",
+      "date": "7-Mar",
+      "home_team": "UTAH",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Sat",
+      "date": "7-Mar",
+      "home_team": "KU",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "ARIZ",
+      "away_team": "UH"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "ASU",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "COL",
+      "away_team": "OSU"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "TTU",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "WVU",
+      "away_team": "BU"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "WVU",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Sun",
+      "date": "8-Mar",
+      "home_team": "CIN",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Thu",
+      "date": "12-Mar",
+      "home_team": "BYU",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Thu",
+      "date": "12-Mar",
+      "home_team": "UTAH",
+      "away_team": "WVU"
+    },
+    {
+      "day": "Fri",
+      "date": "13-Mar",
+      "home_team": "UCF",
+      "away_team": "COL"
+    },
+    {
+      "day": "Fri",
+      "date": "13-Mar",
+      "home_team": "UH",
+      "away_team": "TTU"
+    },
+    {
+      "day": "Fri",
+      "date": "13-Mar",
+      "home_team": "BU",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Fri",
+      "date": "13-Mar",
+      "home_team": "TCU",
+      "away_team": "KU"
+    },
+    {
+      "day": "Sat",
+      "date": "14-Mar",
+      "home_team": "ASU",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Sat",
+      "date": "14-Mar",
+      "home_team": "BYU",
+      "away_team": "WVU"
+    },
+    {
+      "day": "Sat",
+      "date": "14-Mar",
+      "home_team": "UTAH",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Sat",
+      "date": "14-Mar",
+      "home_team": "OSU",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Sun",
+      "date": "15-Mar",
+      "home_team": "UH",
+      "away_team": "COL"
+    },
+    {
+      "day": "Sun",
+      "date": "15-Mar",
+      "home_team": "UCF",
+      "away_team": "TTU"
+    },
+    {
+      "day": "Sun",
+      "date": "15-Mar",
+      "home_team": "BU",
+      "away_team": "KU"
+    },
+    {
+      "day": "Sun",
+      "date": "15-Mar",
+      "home_team": "TCU",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Thu",
+      "date": "19-Mar",
+      "home_team": "COL",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Thu",
+      "date": "19-Mar",
+      "home_team": "TTU",
+      "away_team": "UTAH"
+    },
+    {
+      "day": "Fri",
+      "date": "20-Mar",
+      "home_team": "CIN",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Fri",
+      "date": "20-Mar",
+      "home_team": "WVU",
+      "away_team": "ASU"
+    },
+    {
+      "day": "Fri",
+      "date": "20-Mar",
+      "home_team": "KSU",
+      "away_team": "BU"
+    },
+    {
+      "day": "Fri",
+      "date": "20-Mar",
+      "home_team": "OSU",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Fri",
+      "date": "20-Mar",
+      "home_team": "ISU",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Fri",
+      "date": "20-Mar",
+      "home_team": "KU",
+      "away_team": "UH"
+    },
+    {
+      "day": "Sat",
+      "date": "21-Mar",
+      "home_team": "TTU",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Sat",
+      "date": "21-Mar",
+      "home_team": "COL",
+      "away_team": "UTAH"
+    },
+    {
+      "day": "Sun",
+      "date": "22-Mar",
+      "home_team": "WVU",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Sun",
+      "date": "22-Mar",
+      "home_team": "CIN",
+      "away_team": "ASU"
+    },
+    {
+      "day": "Sun",
+      "date": "22-Mar",
+      "home_team": "OSU",
+      "away_team": "BU"
+    },
+    {
+      "day": "Sun",
+      "date": "22-Mar",
+      "home_team": "KSU",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Sun",
+      "date": "22-Mar",
+      "home_team": "KU",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Sun",
+      "date": "22-Mar",
+      "home_team": "ISU",
+      "away_team": "UH"
+    },
+    {
+      "day": "Thu",
+      "date": "26-Mar",
+      "home_team": "BYU",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Thu",
+      "date": "26-Mar",
+      "home_team": "UTAH",
+      "away_team": "OSU"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Mar",
+      "home_team": "ARIZ",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Fri",
+      "date": "27-Mar",
+      "home_team": "ASU",
+      "away_team": "KU"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Mar",
+      "home_team": "BYU",
+      "away_team": "OSU"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Mar",
+      "home_team": "UTAH",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Mar",
+      "home_team": "TTU",
+      "away_team": "COL"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Mar",
+      "home_team": "TCU",
+      "away_team": "BU"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Mar",
+      "home_team": "UH",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Sat",
+      "date": "28-Mar",
+      "home_team": "WVU",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Sun",
+      "date": "29-Mar",
+      "home_team": "ARIZ",
+      "away_team": "KU"
+    },
+    {
+      "day": "Sun",
+      "date": "29-Mar",
+      "home_team": "ASU",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Thu",
+      "date": "2-Apr",
+      "home_team": "BU",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Thu",
+      "date": "2-Apr",
+      "home_team": "TCU",
+      "away_team": "UTAH"
+    },
+    {
+      "day": "Fri",
+      "date": "3-Apr",
+      "home_team": "ARIZ",
+      "away_team": "COL"
+    },
+    {
+      "day": "Fri",
+      "date": "3-Apr",
+      "home_team": "ASU",
+      "away_team": "TTU"
+    },
+    {
+      "day": "Fri",
+      "date": "3-Apr",
+      "home_team": "UCF",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Fri",
+      "date": "3-Apr",
+      "home_team": "UH",
+      "away_team": "OSU"
+    },
+    {
+      "day": "Fri",
+      "date": "3-Apr",
+      "home_team": "ISU",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Fri",
+      "date": "3-Apr",
+      "home_team": "KU",
+      "away_team": "WVU"
+    },
+    {
+      "day": "Sat",
+      "date": "4-Apr",
+      "home_team": "TCU",
+      "away_team": "BYU"
+    },
+    {
+      "day": "Sat",
+      "date": "4-Apr",
+      "home_team": "BU",
+      "away_team": "UTAH"
+    },
+    {
+      "day": "Sun",
+      "date": "5-Apr",
+      "home_team": "ARIZ",
+      "away_team": "TTU"
+    },
+    {
+      "day": "Sun",
+      "date": "5-Apr",
+      "home_team": "ASU",
+      "away_team": "COL"
+    },
+    {
+      "day": "Sun",
+      "date": "5-Apr",
+      "home_team": "UCF",
+      "away_team": "OSU"
+    },
+    {
+      "day": "Sun",
+      "date": "5-Apr",
+      "home_team": "UH",
+      "away_team": "KSU"
+    },
+    {
+      "day": "Sun",
+      "date": "5-Apr",
+      "home_team": "KU",
+      "away_team": "CIN"
+    },
+    {
+      "day": "Sun",
+      "date": "5-Apr",
+      "home_team": "ISU",
+      "away_team": "WVU"
+    },
+    {
+      "day": "Thu",
+      "date": "9-Apr",
+      "home_team": "UTAH",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Thu",
+      "date": "9-Apr",
+      "home_team": "BYU",
+      "away_team": "ASU"
+    },
+    {
+      "day": "Fri",
+      "date": "10-Apr",
+      "home_team": "COL",
+      "away_team": "BU"
+    },
+    {
+      "day": "Fri",
+      "date": "10-Apr",
+      "home_team": "TTU",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Fri",
+      "date": "10-Apr",
+      "home_team": "CIN",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Fri",
+      "date": "10-Apr",
+      "home_team": "WVU",
+      "away_team": "UH"
+    },
+    {
+      "day": "Fri",
+      "date": "10-Apr",
+      "home_team": "KSU",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Fri",
+      "date": "10-Apr",
+      "home_team": "OSU",
+      "away_team": "KU"
+    },
+    {
+      "day": "Sat",
+      "date": "11-Apr",
+      "home_team": "BYU",
+      "away_team": "ARIZ"
+    },
+    {
+      "day": "Sat",
+      "date": "11-Apr",
+      "home_team": "UTAH",
+      "away_team": "ASU"
+    },
+    {
+      "day": "Sun",
+      "date": "12-Apr",
+      "home_team": "COL",
+      "away_team": "TCU"
+    },
+    {
+      "day": "Sun",
+      "date": "12-Apr",
+      "home_team": "TTU",
+      "away_team": "BU"
+    },
+    {
+      "day": "Sun",
+      "date": "12-Apr",
+      "home_team": "WVU",
+      "away_team": "UCF"
+    },
+    {
+      "day": "Sun",
+      "date": "12-Apr",
+      "home_team": "CIN",
+      "away_team": "UH"
+    },
+    {
+      "day": "Sun",
+      "date": "12-Apr",
+      "home_team": "OSU",
+      "away_team": "ISU"
+    },
+    {
+      "day": "Sun",
+      "date": "12-Apr",
+      "home_team": "KSU",
+      "away_team": "KU"
+    }
+  ],
+  "teamStats": [
+    {
+      "team": "ARIZ",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "ASU",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "BYU",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "UTAH",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "COL",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "TTU",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "BU",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "TCU",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "UCF",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "UH",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "CIN",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "WVU",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "ISU",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "KU",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    },
+    {
+      "team": "KSU",
+      "matches": 6.5,
+      "home": 3,
+      "away": 3.5,
+      "opponents": 13
+    },
+    {
+      "team": "OSU",
+      "matches": 6.5,
+      "home": 3.5,
+      "away": 3,
+      "opponents": 13
+    }
+  ],
+  "analysis": {
+    "avgMatches": 6.5,
+    "minMatches": 6.5,
+    "maxMatches": 6.5,
+    "travelPatterns": {
+      "ARIZ": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "ASU": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "BYU": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "UTAH": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "COL": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "TTU": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "BU": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "TCU": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "UCF": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "UH": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "CIN": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "WVU": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "ISU": {
+        "maxConsecutiveAway": 6,
+        "totalMatches": 26
+      },
+      "KU": {
+        "maxConsecutiveAway": 4,
+        "totalMatches": 26
+      },
+      "KSU": {
+        "maxConsecutiveAway": 8,
+        "totalMatches": 26
+      },
+      "OSU": {
+        "maxConsecutiveAway": 8,
+        "totalMatches": 26
+      }
+    }
+  }
+}

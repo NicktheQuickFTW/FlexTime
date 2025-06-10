@@ -7,7 +7,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const logger = require('../utils/logger');
+const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
 
 /**
  * API Documentation Generator

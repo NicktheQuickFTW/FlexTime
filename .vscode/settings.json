@@ -1,0 +1,6 @@
+{
+    "files.autoSave": "afterDelay",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "terminal.integrated.cwd": "/Users/nickw/Documents/XII-Ops/Flextime"
+}
