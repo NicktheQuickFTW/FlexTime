@@ -1,6 +1,7 @@
 {
   "name": "flextime",
   "version": "1.0.0",
+  "type": "module",
   "description": "FlexTime - Advanced Sports Scheduling Application",
   "main": "server.js",
   "scripts": {
