@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { AdvancedAnalyticsDashboard } from '@/src/components/dashboard/AdvancedAnalyticsDashboard'
+import { AdvancedAnalyticsDashboard } from '@/components/dashboard/AdvancedAnalyticsDashboard'
 
 /**
  * FlexTime Dashboard Page

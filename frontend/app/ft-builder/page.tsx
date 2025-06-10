@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import ScheduleBuilder from '@/components/scheduling/ScheduleBuilder'
 import AISchedulingAssistant from '@/components/scheduling/AISchedulingAssistant'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/shadcn-card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"

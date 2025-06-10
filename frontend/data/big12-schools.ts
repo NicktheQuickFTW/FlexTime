@@ -16,7 +16,7 @@ export interface Team {
   venueName?: string
 }
 
-export interface University {
+export interface School {
   id: number
   name: string
   slug: string
@@ -43,7 +43,7 @@ export interface University {
   stadiumCapacity?: number
 }
 
-const BIG12_UNIVERSITIES: University[] = [
+const BIG12_SCHOOLS: School[] = [
   {
     id: 1,
     name: 'University of Arizona',
@@ -872,24 +872,24 @@ const BIG12_UNIVERSITIES: University[] = [
 // Add more universities here - this would continue for all 16 Big 12 schools
 // For brevity, I'm showing the pattern with 4 detailed examples
 
-export function getBig12UniversityData(): University[] {
-  return BIG12_UNIVERSITIES
+export function getBig12SchoolData(): School[] {
+  return BIG12_SCHOOLS
 }
 
-export function getBig12UniversityBySlug(slug: string): University | null {
-  return BIG12_UNIVERSITIES.find(university => university.slug === slug) || null
+export function getBig12SchoolBySlug(slug: string): School | null {
+  return BIG12_SCHOOLS.find(school => school.slug === slug) || null
 }
 
-export function getBig12UniversityById(id: number): University | null {
-  return BIG12_UNIVERSITIES.find(university => university.id === id) || null
+export function getBig12SchoolById(id: number): School | null {
+  return BIG12_SCHOOLS.find(school => school.id === id) || null
 }
 
-export function getBig12UniversitiesByState(state: string): University[] {
-  return BIG12_UNIVERSITIES.filter(university => university.state === state)
+export function getBig12SchoolsByState(state: string): School[] {
+  return BIG12_SCHOOLS.filter(school => school.state === state)
 }
 
-export function getBig12UniversitiesByPerformanceLevel(level: string): University[] {
-  return BIG12_UNIVERSITIES.filter(university => 
-    university.teams.some(team => team.performanceLevel === level)
+export function getBig12SchoolsByPerformanceLevel(level: string): School[] {
+  return BIG12_SCHOOLS.filter(school => 
+    school.teams.some(team => team.performanceLevel === level)
   )
 }

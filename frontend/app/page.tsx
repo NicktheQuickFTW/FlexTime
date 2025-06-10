@@ -3,8 +3,8 @@
 import Link from 'next/link'
 // Image import removed as it's not currently used
 import { motion } from 'framer-motion'
-import { FlexTimeHero } from '@/src/components/ui/FlexTimeHero'
-import { FlexTimeShinyButton } from '@/src/components/ui/FlexTimeShinyButton'
+import { FlexTimeHero } from '@/components/ui/FlexTimeHero'
+import { FlexTimeShinyButton } from '@/components/ui/FlexTimeShinyButton'
 
 export default function Home() {
   return (

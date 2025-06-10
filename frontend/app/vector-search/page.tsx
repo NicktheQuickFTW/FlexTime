@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 
 // Dynamically import the VectorSearchInterface to avoid SSR issues
 const VectorSearchInterface = dynamic(
-  () => import('../../src/components/vector/VectorSearchInterface'),
+  () => import('../../components/vector/VectorSearchInterface'),
   { 
     ssr: false,
     loading: () => (

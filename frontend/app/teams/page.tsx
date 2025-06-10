@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { getBig12UniversityData } from '../../src/data/big12-schools'
-import { FlexTimeShinyButton } from '../../src/components/ui/FlexTimeShinyButton'
+import { getBig12SchoolData } from '../../data/big12-schools'
+import { FlexTimeShinyButton } from '../../components/ui/FlexTimeShinyButton'
 
 // Types for API data
 interface School {
@@ -140,7 +140,7 @@ export default function SportsPage() {
 
   useEffect(() => {
     // Start with static data immediately to ensure page always loads
-    setSchools(getBig12UniversityData());
+    setSchools(getBig12SchoolData());
     setLoading(false);
     
     // Then try to fetch from API in the background

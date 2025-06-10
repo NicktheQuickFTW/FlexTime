@@ -3,10 +3,10 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { FlexTimeShinyButton } from '../../src/components/ui/FlexTimeShinyButton';
-import { FTLogo } from '../../src/components/ui/FTLogo';
-import { FlexTimeThemeToggle } from '../../src/components/ui/FlexTimeThemeToggle';
-import { SignInModal } from '../../src/components/ui/SignInModal';
+import { FlexTimeShinyButton } from '../../components/ui/FlexTimeShinyButton';
+import { FTLogo } from '../../components/ui/FTLogo';
+import { FlexTimeThemeToggle } from '../../components/ui/FlexTimeThemeToggle';
+import { SignInModal } from '../../components/ui/SignInModal';
 
 // Glassmorphic navbar component for FlexTime
 export default function Navbar() {

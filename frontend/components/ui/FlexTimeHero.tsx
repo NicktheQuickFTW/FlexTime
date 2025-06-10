@@ -3,7 +3,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { FlexTimePrimaryButton, FlexTimeSecondaryButton } from '@/src/components/ui/FlexTimeShinyButton'
+import { FlexTimePrimaryButton, FlexTimeSecondaryButton } from '@/components/ui/FlexTimeShinyButton'
 
 export function FlexTimeHero() {
   return (

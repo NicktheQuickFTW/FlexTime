@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { FlexTimeNeonCard, FlexTimeGlassCard, FlexTimeFrostedCard } from '@/src/components/ui/FlexTimeCard'
+import { FlexTimeNeonCard, FlexTimeGlassCard, FlexTimeFrostedCard } from '@/components/ui/FlexTimeCard'
 import SystemMonitor from '@/components/ui/system-monitor'
 import { Component as GlassIcons } from '@/components/ui/glass-icons'
 import { 

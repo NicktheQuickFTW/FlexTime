@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import ComprehensiveSportPage from '../../../src/pages/sports/ComprehensiveSportPage'
+import ComprehensiveSportPage from '../../../components/SimpleSportProfile'
 
 interface SportPageClientProps {
   sportId: number

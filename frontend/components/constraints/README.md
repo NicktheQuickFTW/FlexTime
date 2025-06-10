@@ -1,16 +1,26 @@
-# Constraint Management Components
+# Scheduling Rules Management Components
 
-This directory contains React components for managing scheduling constraints in the FlexTime application.
+This directory contains React components for managing scheduling rules in the FlexTime application using the unified Parameters vs Constraints architecture.
+
+## Unified Architecture Overview
+
+FlexTime uses a 4-tier system for scheduling rules:
+
+1. **Parameters** - Business rules (games per team, season structure, travel partners)
+2. **Constraints** - Physical/logical restrictions (rest days, travel limits, venue availability) 
+3. **Conflicts** - Blackout dates (campus conflicts, graduations, religious observances)
+4. **Preferences** - Team desires (preferred game times, home during exams)
 
 ## Components
 
 ### ConstraintManager
-The main constraint management UI component that orchestrates all constraint-related operations.
+The main scheduling rules management UI component that orchestrates all rule-related operations.
 
 **Features:**
-- Tab-based navigation between different constraint management views
-- Quick stats overview (total constraints, high priority count)
+- Tab-based navigation between Parameters, Constraints, Conflicts, and Preferences
+- Quick stats overview (total rules by type, violation counts)
 - Speed dial for quick actions
+- Real-time validation and conflict detection
 - Error and success notifications
 
 **Usage:**
@@ -21,90 +31,123 @@ import { ConstraintManager } from '@/components/constraints';
 ```
 
 ### ConstraintList
-Displays all constraints in a filterable, sortable table with expandable rows for details.
+Displays all scheduling rules in a filterable, sortable table organized by rule type.
 
 **Features:**
-- Search and filter by type, category, and priority
-- Expandable rows showing detailed parameters
-- Statistics cards showing constraint distribution
+- Filter by rule type (Parameters, Constraints, Conflicts, Preferences)
+- Search and filter by category, priority, and entity
+- Expandable rows showing detailed rule definitions
+- Statistics cards showing rule distribution and status
+- Batch operations support
 - Pagination support
 
 **Props:**
-- `constraints`: Array of Constraint objects
+- `rules`: Array of scheduling rule objects (parameters, constraints, conflicts, preferences)
 - `onEdit`: Callback when edit button is clicked
 - `onDelete`: Callback when delete button is clicked
 - `scheduleId`: ID of the current schedule
+- `ruleType`: Filter for specific rule type
 
 ### ConstraintEditor
-Create and edit constraints with a step-by-step wizard interface.
+Create and edit scheduling rules with a step-by-step wizard interface that adapts to rule type.
 
 **Features:**
-- Guided constraint creation with 4 steps
-- Dynamic form fields based on constraint type
-- Parameter validation
-- Team selection
-- Priority slider
+- Rule type selection (Parameter, Constraint, Conflict, Preference)
+- Dynamic form fields based on rule type and category
+- Entity selection (sport, school, team, venue)
+- Rule definition with JSON schema validation
+- Weight/priority assignment
+- Real-time validation and preview
 - Review before saving
 
 **Props:**
-- `constraint`: Existing constraint to edit (null for new)
+- `rule`: Existing rule to edit (null for new)
+- `ruleType`: Type of rule to create/edit
 - `scheduleId`: ID of the current schedule
-- `onSave`: Callback with constraint data
+- `onSave`: Callback with rule data
 - `onCancel`: Callback to cancel editing
 
 ### ConflictResolver
-Interactive conflict detection and resolution interface.
+Interactive conflict detection and resolution interface for rule violations.
 
 **Features:**
-- Automatic conflict detection between constraints
+- Automatic conflict detection between all rule types
+- Rule hierarchy resolution (Parameters > Constraints > Conflicts > Preferences)
 - Severity-based conflict categorization
 - Multiple resolution options with confidence scores
 - Auto-resolution for simple conflicts
-- Manual resolution with notes
+- Manual resolution with detailed notes
+- Impact analysis for proposed changes
 
 **Props:**
 - `scheduleId`: ID of the current schedule
-- `constraints`: Array of constraints to analyze
+- `rules`: Array of all scheduling rules
 - `onResolve`: Callback when conflict is resolved
 
 ### ConstraintMonitor
-Real-time monitoring dashboard for constraint satisfaction.
+Real-time monitoring dashboard for scheduling rule satisfaction and system performance.
 
 **Features:**
-- Performance metrics and scores
+- Rule satisfaction metrics by type and category
 - Trend charts showing satisfaction over time
-- Category and priority distribution
-- Constraint type radar chart
-- Detailed status table
+- Rule type distribution and priority analysis
+- Violation tracking and resolution history
+- Performance impact analysis
 - Auto-refresh every 30 seconds
+- Export capabilities for reporting
 
 **Props:**
 - `scheduleId`: ID of the current schedule
-- `constraints`: Array of constraints to monitor
+- `rules`: Array of all scheduling rules
 
-## Constraint Types
+## Rule Type Definitions
 
-The system supports the following constraint types:
+### 1. Parameters (Business Rules)
+Configuration that defines how scheduling should work:
 
-1. **RestDays**: Minimum/maximum days between games
-2. **MaxConsecutiveAway**: Limit consecutive away games
-3. **MaxConsecutiveHome**: Limit consecutive home games
-4. **VenueUnavailability**: Mark venue unavailable dates
-5. **TeamUnavailability**: Mark team unavailable dates
-6. **RequiredMatchup**: Ensure specific teams play
-7. **AvoidBackToBack**: Prevent consecutive day games
+- **Season Structure**: `games_per_team`, `conference_games`, `non_conference_games`
+- **Home/Away Distribution**: `home_games`, `away_games`, `home_game_distribution`
+- **Travel Configuration**: `travel_partners`, `travel_pods`, `geographic_regions`
+- **Format Rules**: `series_format`, `weekend_structure`, `bye_weeks`
 
-## Constraint Categories
+### 2. Constraints (Physical/Logical Restrictions)
+Hard and soft limits that restrict scheduling options:
 
-- **Team**: Constraints affecting specific teams
-- **Venue**: Constraints related to venue availability
-- **Schedule**: General scheduling constraints
+- **Rest Requirements**: `minimum_rest_days`, `maximum_games_per_week`
+- **Travel Limits**: `maximum_travel_distance`, `consecutive_away_limit`
+- **Venue Restrictions**: `venue_availability`, `capacity_requirements`
+- **Format Constraints**: `back_to_back_prevention`, `doubleheader_limits`
 
-## Priority Levels
+### 3. Conflicts (Blackout Dates)
+Specific dates/periods when teams or venues cannot participate:
 
-- **High (8-10)**: Critical constraints that must be satisfied
-- **Medium (5-7)**: Important but flexible constraints
-- **Low (1-4)**: Nice-to-have constraints
+- **Campus Calendar**: `finals_week`, `graduation_dates`, `spring_break`
+- **Religious Observances**: `byu_sunday_restriction`, `religious_holidays`
+- **Facility Conflicts**: `venue_maintenance`, `other_events`, `renovations`
+- **Academic Restrictions**: `exam_periods`, `class_schedules`
+
+### 4. Preferences (Team Desires)
+Soft preferences that improve satisfaction but aren't mandatory:
+
+- **Scheduling Preferences**: `preferred_game_times`, `preferred_days`
+- **Home Game Timing**: `home_during_exams`, `rivalry_game_timing`
+- **Travel Preferences**: `minimize_long_trips`, `avoid_red_eye_flights`
+- **Competition Timing**: `peak_performance_periods`, `avoid_academic_stress`
+
+## Rule Categories
+
+### By Entity Type
+- **Sport-Specific**: Rules that apply to specific sports
+- **School-Specific**: Rules that apply to specific institutions
+- **Team-Specific**: Rules that apply to specific teams
+- **Venue-Specific**: Rules that apply to specific facilities
+- **Conference-Wide**: Rules that apply to all Big 12 teams
+
+### By Priority/Weight
+- **Critical (8-10)**: Hard constraints that must be satisfied
+- **Important (5-7)**: Strong preferences with flexibility
+- **Moderate (3-4)**: Nice-to-have preferences
+- **Low (1-2)**: Minor optimizations
 
 ## Integration
 

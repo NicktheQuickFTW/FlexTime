@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import Navbar from './components/Navbar'
-import { FlexTimeAnimatedBackground } from '../src/components/ui/FlexTimeAnimatedBackground'
+import { FlexTimeAnimatedBackground } from '../components/ui/FlexTimeAnimatedBackground'
 import { ThemeInitializer } from './components/ThemeInitializer'
 
 const inter = Inter({ subsets: ['latin'] })

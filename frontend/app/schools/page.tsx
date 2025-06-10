@@ -4,31 +4,31 @@ import React, { useState, useMemo } from 'react';
 import { Search, MapPin, Users, Calendar, Trophy, ArrowRight, Filter, SortDesc } from 'lucide-react';
 import Image from 'next/image';
 import GlassCard from '../components/GlassCard';
-import { big12Universities, Big12University } from '../../src/data/big12-universities-complete';
+import { getBig12SchoolData, School as Big12School } from '../../data/big12-schools';
 
 const SchoolsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState<'name' | 'enrollment' | 'founded'>('name');
   const [filterBy, setFilterBy] = useState<'all' | 'large' | 'medium' | 'small'>('all');
 
-  // Enhanced university data with additional info
-  const enhancedUniversities = useMemo(() => {
-    return big12Universities.map(university => ({
-      ...university,
-      sizeCategory: university.enrollment > 50000 ? 'large' : 
-                   university.enrollment > 30000 ? 'medium' : 'small',
-      logoPath: `/LOGOS/teams/${university.id.replace('kansas-state', 'kansas_state')
+  // Enhanced school data with additional info
+  const enhancedSchools = useMemo(() => {
+    return getBig12SchoolData().map(school => ({
+      ...school,
+      sizeCategory: parseInt(school.enrollment.replace(/,/g, '')) > 50000 ? 'large' : 
+                   parseInt(school.enrollment.replace(/,/g, '')) > 30000 ? 'medium' : 'small',
+      logoPath: `/LOGOS/teams/${school.slug.replace('kansas-state', 'kansas_state')
                                    .replace('arizona-state', 'arizona_state')
                                    .replace('iowa-state', 'iowa_state')
                                    .replace('west-virginia', 'west_virginia')
                                    .replace('texas-tech', 'texas_tech')
                                    .replace('oklahoma-state', 'oklahoma_state')}.svg`,
-      spotlightSports: getSpotlightSports(university.id),
-      establishedYears: new Date().getFullYear() - university.founded
+      spotlightSports: getSpotlightSports(school.slug),
+      establishedYears: new Date().getFullYear() - school.founded
     }));
   }, []);
 
-  function getSpotlightSports(universityId: string): string[] {
+  function getSpotlightSports(schoolSlug: string): string[] {
     const sportsBySchool: Record<string, string[]> = {
       'arizona': ['Football', 'Basketball', 'Baseball', 'Gymnastics'],
       'arizona-state': ['Football', 'Basketball', 'Baseball', 'Wrestling'],
@@ -50,43 +50,43 @@ const SchoolsPage = () => {
     return sportsBySchool[universityId] || ['Football', 'Basketball'];
   }
 
-  const filteredAndSortedUniversities = useMemo(() => {
-    let filtered = enhancedUniversities.filter(university =>
-      university.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      university.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      university.mascot.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredAndSortedSchools = useMemo(() => {
+    let filtered = enhancedSchools.filter(school =>
+      school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      school.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      school.nickname.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     if (filterBy !== 'all') {
-      filtered = filtered.filter(university => university.sizeCategory === filterBy);
+      filtered = filtered.filter(school => school.sizeCategory === filterBy);
     }
 
     return filtered.sort((a, b) => {
       switch (sortBy) {
         case 'enrollment':
-          return b.enrollment - a.enrollment;
+          return parseInt(b.enrollment.replace(/,/g, '')) - parseInt(a.enrollment.replace(/,/g, ''));
         case 'founded':
           return a.founded - b.founded;
         default:
           return a.name.localeCompare(b.name);
       }
     });
-  }, [enhancedUniversities, searchTerm, sortBy, filterBy]);
+  }, [enhancedSchools, searchTerm, sortBy, filterBy]);
 
   const stats = useMemo(() => {
-    const totalEnrollment = enhancedUniversities.reduce((sum, uni) => sum + uni.enrollment, 0);
-    const avgEnrollment = Math.round(totalEnrollment / enhancedUniversities.length);
-    const oldestYear = Math.min(...enhancedUniversities.map(uni => uni.founded));
-    const newestYear = Math.max(...enhancedUniversities.map(uni => uni.founded));
+    const totalEnrollment = enhancedSchools.reduce((sum, school) => sum + parseInt(school.enrollment.replace(/,/g, '')), 0);
+    const avgEnrollment = Math.round(totalEnrollment / enhancedSchools.length);
+    const oldestYear = Math.min(...enhancedSchools.map(school => school.founded));
+    const newestYear = Math.max(...enhancedSchools.map(school => school.founded));
     
     return {
-      totalSchools: enhancedUniversities.length,
+      totalSchools: enhancedSchools.length,
       totalEnrollment: totalEnrollment.toLocaleString(),
       avgEnrollment: avgEnrollment.toLocaleString(),
       establishedRange: `${oldestYear} - ${newestYear}`,
-      avgAge: Math.round(enhancedUniversities.reduce((sum, uni) => sum + uni.establishedYears, 0) / enhancedUniversities.length)
+      avgAge: Math.round(enhancedSchools.reduce((sum, school) => sum + school.establishedYears, 0) / enhancedSchools.length)
     };
-  }, [enhancedUniversities]);
+  }, [enhancedSchools]);
 
   return (
     <div className="universities-page-container">
@@ -180,19 +180,19 @@ const SchoolsPage = () => {
       {/* Universities Grid */}
       <div className="max-w-7xl mx-auto px-6 pb-12">
         <div className="universities-grid">
-          {filteredAndSortedUniversities.map((university, index) => (
-            <UniversityCard 
-              key={university.id} 
-              university={university} 
+          {filteredAndSortedSchools.map((school, index) => (
+            <SchoolCard 
+              key={school.id} 
+              school={school} 
               index={index}
             />
           ))}
         </div>
         
-        {filteredAndSortedUniversities.length === 0 && (
+        {filteredAndSortedSchools.length === 0 && (
           <div className="text-center py-20">
             <div className="text-6xl mb-4">🎓</div>
-            <h3 className="text-xl font-bold text-foreground mb-2">No universities found</h3>
+            <h3 className="text-xl font-bold text-foreground mb-2">No schools found</h3>
             <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
           </div>
         )}
@@ -201,8 +201,8 @@ const SchoolsPage = () => {
   );
 };
 
-interface UniversityCardProps {
-  university: Big12University & {
+interface SchoolCardProps {
+  school: Big12School & {
     sizeCategory: string;
     logoPath: string;
     spotlightSports: string[];
@@ -211,7 +211,7 @@ interface UniversityCardProps {
   index: number;
 }
 
-const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) => {
+const SchoolCard: React.FC<SchoolCardProps> = ({ school, index }) => {
   const [imageError, setImageError] = useState(false);
 
   return (
@@ -225,11 +225,11 @@ const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) =>
     >
       {/* Card Header */}
       <div className="university-card-header">
-        <div className="university-logo" style={{ backgroundColor: university.colors.primary }}>
+        <div className="university-logo" style={{ backgroundColor: school.primaryColor }}>
           {!imageError ? (
             <Image
-              src={university.logoPath}
-              alt={`${university.name} logo`}
+              src={school.logoPath}
+              alt={`${school.name} logo`}
               width={32}
               height={32}
               className="object-contain"
@@ -239,17 +239,17 @@ const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) =>
             <div 
               className="university-logo-fallback text-sm"
               style={{ 
-                backgroundColor: university.colors.primary,
-                color: university.colors.secondary 
+                backgroundColor: school.primaryColor,
+                color: school.secondaryColor || '#ffffff'
               }}
             >
-              {university.name.split(' ').map(word => word[0]).join('').slice(0, 2)}
+              {school.name.split(' ').map(word => word[0]).join('').slice(0, 2)}
             </div>
           )}
         </div>
         <div className="flex-1">
-          <h3 className="university-name">{university.name}</h3>
-          <p className="university-id ft-font-ui">{university.mascot}</p>
+          <h3 className="university-name">{school.name}</h3>
+          <p className="university-id ft-font-ui">{school.nickname}</p>
         </div>
       </div>
 
@@ -258,7 +258,7 @@ const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) =>
         {/* Location */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="w-4 h-4" />
-          <span>{university.location}</span>
+          <span>{school.location}</span>
         </div>
 
         {/* Stats Grid */}
@@ -268,7 +268,7 @@ const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) =>
               <Users className="w-4 h-4 text-muted-foreground" />
             </div>
             <div className="text-lg font-bold text-foreground ft-font-mono">
-              {(university.enrollment / 1000).toFixed(0)}K
+              {(parseInt(school.enrollment.replace(/,/g, '')) / 1000).toFixed(0)}K
             </div>
             <div className="text-xs text-muted-foreground ft-font-ui">Students</div>
           </div>
@@ -277,7 +277,7 @@ const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) =>
               <Calendar className="w-4 h-4 text-muted-foreground" />
             </div>
             <div className="text-lg font-bold text-foreground ft-font-mono">
-              {university.founded}
+              {school.founded}
             </div>
             <div className="text-xs text-muted-foreground ft-font-ui">Founded</div>
           </div>
@@ -290,7 +290,7 @@ const UniversityCard: React.FC<UniversityCardProps> = ({ university, index }) =>
             <span className="text-sm font-medium text-foreground">Spotlight Sports</span>
           </div>
           <div className="flex flex-wrap gap-1">
-            {university.spotlightSports.map((sport) => (
+            {school.spotlightSports.map((sport) => (
               <span
                 key={sport}
                 className="px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm transition-colors duration-200

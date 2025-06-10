@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import { FlexTimeShinyButton } from '../../src/components/ui/FlexTimeShinyButton'
-import FTIcon from '../../src/components/ui/FTIcon'
+import { FlexTimeShinyButton } from '../../components/ui/FlexTimeShinyButton'
+import FTIcon from '../../components/ui/FTIcon'
 
 // Big 12 Sports Data
 const big12Sports = [

@@ -32,17 +32,13 @@ import {
 } from 'lucide-react';
 
 // Import FlexTime components
-import { FlexTimeCard } from '../../src/components/ui/FlexTimeCard';
-import { FlexTimeShinyButton } from '../../src/components/ui/FlexTimeShinyButton';
-import FTIcon from '../../src/components/ui/FTIcon';
-import FTLogo from '../../src/components/ui/FTLogo';
-import { 
-  ConstraintPanel,
-  type ConstraintViolation as ConstraintPanelViolation,
-  type Constraint as ConstraintPanelConstraint
-} from '../../src/components/builder/ConstraintPanel';
-import { ScheduleGanttMatrix } from '../../src/components/scheduler/ScheduleGanttMatrix';
-import { MatchupMatrix } from '../../src/components/scheduler/MatchupMatrix';
+import { FlexTimeCard } from '../../components/ui/FlexTimeCard';
+import { FlexTimeShinyButton } from '../../components/ui/FlexTimeShinyButton';
+import FTIcon from '../../components/ui/FTIcon';
+import FTLogo from '../../components/ui/FTLogo';
+import SimpleConstraintManager from '../../components/constraints/SimpleConstraintManager';
+import { ScheduleMatrix } from '../../components/schedule/ScheduleMatrix';
+import { InteractiveMatrix } from '../../components/schedule/InteractiveMatrix';
 
 // Import the real API
 import { 
@@ -51,7 +47,7 @@ import {
   type Team, 
   type Constraint, 
   type ScheduleGenerationOptions 
-} from '../../src/utils/scheduleApi';
+} from '../../utils/scheduleApi';
 
 // Additional types for UI state
 interface UIState {
@@ -322,8 +318,8 @@ export default function FTBuilderPage() {
   // Season selector UI will be implemented in a future update
   const [selectedSeason] = useState<string>('2024-25');
   const [teams, setTeams] = useState<Team[]>([]);
-  const [constraints, setConstraints] = useState<ConstraintPanelConstraint[]>([]);
-  const [violations, setViolations] = useState<ConstraintPanelViolation[]>([]);
+  const [constraints, setConstraints] = useState<Constraint[]>([]);
+  const [violations, setViolations] = useState<any[]>([]);
   const [ui, setUi] = useState<UIState>({
     loading: false,
     optimizing: false,
@@ -398,17 +394,13 @@ export default function FTBuilderPage() {
     try {
       const constraintsData = await scheduleApi.getConstraints(sport);
       
-      // Transform the API constraints to match ConstraintPanel expectations
-      const adaptedConstraints: ConstraintPanelConstraint[] = constraintsData.map(constraint => ({
+      // Transform the API constraints
+      const adaptedConstraints: Constraint[] = constraintsData.map(constraint => ({
         id: constraint.id,
-        name: constraint.name,
-        type: constraint.type as 'hard' | 'soft',
-        // Map string category to expected union type
-        category: (constraint.category as 'travel' | 'rest' | 'venue' | 'broadcast' | 'academic' | 'competitive'),
-        description: constraint.description,
-        weight: constraint.weight,
-        active: constraint.active,
-        sportSpecific: constraint.sport_specific
+        type: constraint.type || constraint.name || 'unknown',
+        description: constraint.description || 'No description available',
+        weight: constraint.weight || 0.5,
+        active: constraint.active !== false
       }));
       
       setConstraints(adaptedConstraints);
@@ -422,8 +414,8 @@ export default function FTBuilderPage() {
       // Get violations from the API
       const violationsData = await scheduleApi.getConstraintViolations(scheduleId);
       
-      // Transform the API response to match the ConstraintPanel component expectations
-      const adaptedViolations: ConstraintPanelViolation[] = violationsData.map(violation => {
+      // Transform the API response
+      const adaptedViolations: any[] = violationsData.map(violation => {
         return {
           id: violation.id,
           constraintId: violation.constraint_id || violation.constraint?.id || 'unknown',
@@ -1808,14 +1800,9 @@ export default function FTBuilderPage() {
             </motion.div>
 
             {/* Constraint panel */}
-            <ConstraintPanel
-              violations={violations}
+            <SimpleConstraintManager
               constraints={constraints}
-              visible={showConstraints}
-              onVisibilityChange={setShowConstraints}
-              onConstraintUpdate={handleConstraintUpdate}
-              onAutoFix={handleAutoFix}
-              sport={selectedSport}
+              onConstraintChange={setConstraints}
             />
           </div>
         ) : null}

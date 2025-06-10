@@ -24,9 +24,12 @@ import dashboardAnalyticsService, {
   SystemMetrics, 
   SchedulingMetrics, 
   GameAnalytics, 
-  AIInsight,
+  AIInsights,
   ChartDataPoint 
-} from '@/src/services/dashboardAnalyticsService';
+} from '@/services/dashboardAnalyticsService';
+
+import campusContactsService from '@/services/campusContactsService';
+import financialAnalyticsService from '@/services/financialAnalyticsService';
 
 // Real-time Chart Component with Magic AI visualization
 const MagicChart: React.FC<{
@@ -438,6 +441,250 @@ export const AdvancedAnalyticsDashboard: React.FC = () => {
     return () => clearInterval(interval);
   }, [isRealTimeEnabled]);
 
+  // Campus Contacts Summary Component
+  const CampusContactsSummary: React.FC = () => {
+    const stats = campusContactsService.getContactStatistics();
+    const emergencyContacts = campusContactsService.getEmergencyContacts();
+    const conferenceStaff = campusContactsService.getConferenceStaff();
+
+    return (
+      <div className="ft-glass-card p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-foreground flex items-center">
+            <Users className="w-6 h-6 text-accent dark:text-cyan-400 mr-3" />
+            Campus Contacts Directory
+          </h3>
+          <button className="px-4 py-2 bg-accent/20 text-accent dark:bg-cyan-500/20 dark:text-cyan-300 rounded-lg text-sm hover:bg-accent/30 transition-colors">
+            View All Contacts
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-foreground">{stats.totalContacts}</div>
+            <div className="text-muted-foreground text-sm">Total Contacts</div>
+          </div>
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-green-400">{stats.availabilityBreakdown.available}</div>
+            <div className="text-muted-foreground text-sm">Available Now</div>
+          </div>
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-red-400">{stats.emergencyContacts}</div>
+            <div className="text-muted-foreground text-sm">Emergency</div>
+          </div>
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-accent dark:text-cyan-400">{stats.institutions}</div>
+            <div className="text-muted-foreground text-sm">Institutions</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Emergency Contacts */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center">
+              <AlertCircle className="w-4 h-4 text-red-400 mr-2" />
+              Emergency Contacts
+            </h4>
+            <div className="space-y-2">
+              {emergencyContacts.slice(0, 3).map((contact, index) => (
+                <motion.div
+                  key={contact.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center p-3 bg-muted/20 rounded-xl"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3">
+                    {contact.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-foreground font-medium text-sm truncate">{contact.name}</div>
+                    <div className="text-muted-foreground text-xs truncate">{contact.sportRole}</div>
+                  </div>
+                  <div className="w-2 h-2 bg-red-400 rounded-full animate-pulse" />
+                </motion.div>
+              ))}
+              {emergencyContacts.length > 3 && (
+                <div className="text-muted-foreground text-xs text-center py-2">
+                  +{emergencyContacts.length - 3} more emergency contacts
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Conference Staff */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center">
+              <Building className="w-4 h-4 text-purple-400 mr-2" />
+              Conference Administration
+            </h4>
+            <div className="space-y-2">
+              {conferenceStaff.slice(0, 3).map((contact, index) => (
+                <motion.div
+                  key={contact.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center p-3 bg-muted/20 rounded-xl"
+                >
+                  <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs mr-3">
+                    {contact.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-foreground font-medium text-sm truncate">{contact.name}</div>
+                    <div className="text-muted-foreground text-xs truncate">{contact.sportRole}</div>
+                  </div>
+                  <div className={`w-2 h-2 rounded-full ${
+                    contact.availability === 'available' ? 'bg-green-400 animate-pulse' :
+                    contact.availability === 'busy' ? 'bg-yellow-400' : 'bg-red-400'
+                  }`} />
+                </motion.div>
+              ))}
+              {conferenceStaff.length > 3 && (
+                <div className="text-muted-foreground text-xs text-center py-2">
+                  +{conferenceStaff.length - 3} more conference staff
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Financial Summary Component
+  const FinancialSummary: React.FC = () => {
+    const performanceSummary = financialAnalyticsService.getPerformanceSummary();
+    
+    return (
+      <div className="ft-glass-card p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-foreground flex items-center">
+            <DollarSign className="w-6 h-6 text-accent dark:text-cyan-400 mr-3" />
+            Financial Overview
+          </h3>
+          <button className="px-4 py-2 bg-accent/20 text-accent dark:bg-cyan-500/20 dark:text-cyan-300 rounded-lg text-sm hover:bg-accent/30 transition-colors">
+            View Full Dashboard
+          </button>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-green-400">
+              ${(performanceSummary.revenue.total / 1000000).toFixed(1)}M
+            </div>
+            <div className="text-muted-foreground text-sm">Total Revenue</div>
+            <div className="text-green-400 text-xs mt-1">
+              +{performanceSummary.revenue.growth.toFixed(1)}% YoY
+            </div>
+          </div>
+          
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-red-400">
+              ${(performanceSummary.expenses.total / 1000000).toFixed(1)}M
+            </div>
+            <div className="text-muted-foreground text-sm">Total Expenses</div>
+            <div className="text-red-400 text-xs mt-1">
+              {performanceSummary.expenses.variance.toFixed(1)}% variance
+            </div>
+          </div>
+          
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-accent dark:text-cyan-400">
+              {performanceSummary.budget.utilization.toFixed(1)}%
+            </div>
+            <div className="text-muted-foreground text-sm">Budget Utilization</div>
+            <div className="text-yellow-400 text-xs mt-1">
+              {performanceSummary.budget.alertCount} alerts
+            </div>
+          </div>
+          
+          <div className="bg-muted/20 rounded-xl p-4 text-center">
+            <div className="text-2xl font-bold text-purple-400">
+              ${((performanceSummary.revenue.total - performanceSummary.expenses.total) / 1000000).toFixed(1)}M
+            </div>
+            <div className="text-muted-foreground text-sm">Net Income</div>
+            <div className="text-green-400 text-xs mt-1">
+              Positive margin
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Budget Status */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center">
+              <Target className="w-4 h-4 text-green-400 mr-2" />
+              Budget Performance
+            </h4>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between p-3 bg-muted/20 rounded-xl">
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-green-400 rounded-full mr-2" />
+                  <span className="text-foreground text-sm">On Track</span>
+                </div>
+                <span className="text-green-400 text-sm">
+                  {10 - performanceSummary.budget.areasOverBudget} areas
+                </span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-muted/20 rounded-xl">
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-red-400 rounded-full mr-2" />
+                  <span className="text-foreground text-sm">Over Budget</span>
+                </div>
+                <span className="text-red-400 text-sm">
+                  {performanceSummary.budget.areasOverBudget} areas
+                </span>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-muted/20 rounded-xl">
+                <div className="flex items-center">
+                  <div className="w-2 h-2 bg-blue-400 rounded-full mr-2" />
+                  <span className="text-foreground text-sm">Staff Efficiency</span>
+                </div>
+                <span className="text-blue-400 text-sm">
+                  {performanceSummary.staff.avgEfficiency.toFixed(1)}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Revenue Streams */}
+          <div>
+            <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center">
+              <TrendingUp className="w-4 h-4 text-cyan-400 mr-2" />
+              Top Revenue Categories
+            </h4>
+            <div className="space-y-2">
+              {[
+                { name: 'Media Rights', amount: 380, trend: '+8.5%' },
+                { name: 'NCAA Revenue', amount: 45, trend: '+4.1%' },
+                { name: 'Partnerships', amount: 35, trend: '+12.3%' }
+              ].map((category, index) => (
+                <motion.div
+                  key={category.name}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="flex items-center justify-between p-3 bg-muted/20 rounded-xl"
+                >
+                  <div>
+                    <div className="text-foreground text-sm font-medium">{category.name}</div>
+                    <div className="text-green-400 text-xs">{category.trend}</div>
+                  </div>
+                  <div className="text-cyan-400 text-sm font-bold">
+                    ${category.amount}M
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   if (!systemMetrics || !schedulingMetrics) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -606,6 +853,16 @@ export const AdvancedAnalyticsDashboard: React.FC = () => {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Campus Contacts Summary */}
+        <div className="mt-8">
+          <CampusContactsSummary />
+        </div>
+
+        {/* Financial Summary */}
+        <div className="mt-8">
+          <FinancialSummary />
         </div>
       </div>
     </div>

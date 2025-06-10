@@ -17,7 +17,7 @@ import {
   Download,
   Maximize2
 } from 'lucide-react'
-import { FlexTimeShinyButton } from '../../src/components/ui/FlexTimeShinyButton'
+import { FlexTimeShinyButton } from '../../components/ui/FlexTimeShinyButton'
 
 // 21st-dev inspired glassmorphic card component
 const GlassCard = ({ children, className = '', hover = true }: { 

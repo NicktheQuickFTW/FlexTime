@@ -1,9 +1,9 @@
 'use client'
 
 import * as React from "react"
-import { NeonButton } from "@/src/components/ui/NeonButton"
-import { Toggle } from "@/src/components/ui/toggle"
-import { WeatherData, WeatherWidget } from "@/src/components/ui/weather-widget"
+import { NeonButton } from "@/components/ui/NeonButton"
+import { Toggle } from "@/components/ui/toggle"
+import { WeatherData, WeatherWidget } from "@/components/ui/weather-widget"
 import { Lightbulb, Thermometer } from "lucide-react"
 import { Box, Typography } from '@mui/material'
 import { motion } from 'framer-motion'

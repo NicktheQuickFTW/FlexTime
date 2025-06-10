@@ -8,8 +8,8 @@ import {
   FlexTimeFrostedCard, 
   FlexTimeDarkCard,
   FlexTimeStaticCard
-} from '@/src/components/ui/FlexTimeCard'
-import { FlexTimePrimaryButton, FlexTimeSecondaryButton } from '@/src/components/ui/FlexTimeShinyButton'
+} from '@/components/ui/FlexTimeCard'
+import { FlexTimePrimaryButton, FlexTimeSecondaryButton } from '@/components/ui/FlexTimeShinyButton'
 import { Calendar, Zap, Trophy, Users, Settings, BarChart3, Shield, Clock } from 'lucide-react'
 
 export function FlexTimeCardShowcase() {

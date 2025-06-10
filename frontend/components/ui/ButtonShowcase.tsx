@@ -7,7 +7,7 @@ import {
   FlexTimeSecondaryButton, 
   FlexTimeNeonButton, 
   FlexTimeGlassButton 
-} from '@/src/components/ui/FlexTimeShinyButton'
+} from '@/components/ui/FlexTimeShinyButton'
 import { Calendar, Zap, Trophy, Users } from 'lucide-react'
 
 export function ButtonShowcase() {

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sun, Moon } from 'lucide-react';
-import { Toggle } from '../../../components/ui/toggle';
+import { Toggle } from './toggle';
 
 export function FlexTimeThemeToggle() {
   const [isDark, setIsDark] = useState(true);

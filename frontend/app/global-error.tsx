@@ -1,8 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { FlexTimeShinyButton } from '../src/components/ui/FlexTimeShinyButton'
-import FTIcon from '../src/components/ui/FTIcon'
+import { FlexTimeShinyButton } from '../components/ui/FlexTimeShinyButton'
+import FTIcon from '../components/ui/FTIcon'
 
 // Global error component with consistent FlexTime styling
 export default function GlobalError({
