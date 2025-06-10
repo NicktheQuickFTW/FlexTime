@@ -5,7 +5,7 @@
  * Provides dynamic scheduler discovery and instantiation
  */
 
-const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
+const logger = require('../utils/logger.js');
 
 // Import sport schedulers as they're created
 const FootballSchedulerV2 = require('../schedulers/FootballSchedulerV2');

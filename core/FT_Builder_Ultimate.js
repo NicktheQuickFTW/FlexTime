@@ -28,7 +28,7 @@ const path = require('path');
 const { performance } = require('perf_hooks');
 
 // Core dependencies
-const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
+const logger = require('../utils/logger.js');
 
 // Import all sport schedulers
 const { SportSchedulerRegistry } = require('./SportSchedulerRegistry');

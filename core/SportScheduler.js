@@ -6,7 +6,7 @@
  */
 
 const { v4: uuidv4 } = require('uuid');
-const logger = require('/Users/nickw/Documents/GitHub/Flextime/FlexTime/utils/logger.js');
+const logger = require('../utils/logger.js');
 
 class SportScheduler {
   constructor(config = {}) {

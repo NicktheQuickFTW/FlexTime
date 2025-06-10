@@ -18,7 +18,7 @@ const FTBuilderAPI = require('./api/FTBuilderAPI.js');
 const aiRoutes = require('./api/routes/ai-scheduling-routes.js');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3005;
 
 // Middleware
 app.use(helmet());

@@ -4,7 +4,7 @@
   "description": "Frontend for FT Builder - Independent Sports Scheduling Application",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3003",
     "lint": "next lint",
